@@ -1,4 +1,10 @@
 package model;
 
-public class Buyer {
+import java.util.HashMap;
+import java.util.List;
+
+public class Buyer extends Account {
+
+    private HashMap<Discount , Integer> discountAndNumberOfAvailableDiscount;
+
 }

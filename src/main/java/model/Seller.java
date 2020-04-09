@@ -1,4 +1,4 @@
 package model;
 
-public class Seller {
+public class Seller extends Account {
 }
