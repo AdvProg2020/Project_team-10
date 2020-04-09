@@ -15,6 +15,7 @@ public class Good {
     private String description;
     private float averageScore;
     private List<Comment> comments;
+    private List<Buyer> buyers;
 
 
 
