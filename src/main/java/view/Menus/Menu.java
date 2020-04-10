@@ -10,7 +10,7 @@ public abstract class Menu {
     protected HashMap<Integer, Menu> subMenus;
 
     public Menu(String name, Menu parentMenu) {
-        subMenus = new HashMap<>();
+        subMenus = new HashMap<Integer, Menu>();
         this.name = name;
         this.parentMenu = parentMenu;
 
@@ -29,14 +29,14 @@ public abstract class Menu {
     }
 
     public void show() {
-        System.out.println(this.getName() + " :");
+        System.out.println(this.getName() + ":");
         for (Integer subNumber : subMenus.keySet()) {
-            System.out.println(subNumber + " : " + subMenus.get(subNumber).getName());
+            System.out.println(subNumber + ": " + subMenus.get(subNumber).getName());
         }
         if (this.parentMenu != null)
-            System.out.println((subMenus.size() + 1) + " : back");
+            System.out.println((subMenus.size() + 1) + ": back");
         else
-            System.out.println((subMenus.size() + 1) + " : exit");
+            System.out.println((subMenus.size() + 1) + ": exit");
     }
 
     public void execute() {

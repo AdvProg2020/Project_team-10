@@ -3,8 +3,8 @@ package view.Menus;
 public class UserMenu extends Menu {
     private boolean isLogged;
 
-    public UserMenu(Menu parentManu) {
-        super("user menu", parentManu);
+    public UserMenu(Menu parentMenu) {
+        super("user menu", parentMenu);
         subMenus.put(1, getRegisterMenu());
         subMenus.put(2, getLoginMenu());
         subMenus.put(3, getLogoutMenu());
@@ -21,21 +21,21 @@ public class UserMenu extends Menu {
 
     @Override
     public void show() {
-        System.out.println(this.getName() + " :");
+        System.out.println(this.getName() + ":");
         if (!isLogged) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber == 1 || subNumber == 2) {
-                    System.out.println(subNumber + " : " + subMenus.get(subNumber).getName());
+                    System.out.println(subNumber + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            System.out.println("3 : back");
+            System.out.println("3: back");
         } else {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber == 3 || subNumber == 4 || subNumber == 5) {
-                    System.out.println(subNumber - 2 + " : " + subMenus.get(subNumber).getName());
+                    System.out.println(subNumber - 2 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            System.out.println("4 : back");
+            System.out.println("4: back");
         }
     }
 
@@ -55,9 +55,9 @@ public class UserMenu extends Menu {
             } else {
                 nextMenu = subMenus.get(selectedMenu);
             }
-            nextMenu.show();
-            nextMenu.execute();
         }
+        nextMenu.show();
+        nextMenu.execute();
     }
 
     private Menu getRegisterMenu() {
