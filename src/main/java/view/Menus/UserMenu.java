@@ -21,7 +21,7 @@ public class UserMenu extends Menu {
 
     @Override
     public void show() {
-        System.out.println(this.getName() + ":");
+        System.out.println(this.getName());
         if (!isLogged) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber == 1 || subNumber == 2) {

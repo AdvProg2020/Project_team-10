@@ -29,7 +29,7 @@ public abstract class Menu {
     }
 
     public void show() {
-        System.out.println(this.getName() + ":");
+        System.out.println(this.getName());
         for (Integer subNumber : subMenus.keySet()) {
             System.out.println(subNumber + ": " + subMenus.get(subNumber).getName());
         }
