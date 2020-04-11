@@ -5,7 +5,7 @@ import model.Buyer;
 import model.Seller;
 
 public class UserMenu extends Menu {
-    private boolean isLogged = true;
+    private boolean isLogged;
     private String username;
 
     public UserMenu(Menu parentMenu) {
@@ -98,7 +98,13 @@ public class UserMenu extends Menu {
                     (selectedMenu == 9 && !(Manager.getRoleByUsername(username) instanceof Seller))) {
                 nextMenu = this.parentMenu;
             } else {
-                nextMenu = subMenus.get(selectedMenu + 2);
+                if (Manager.getRoleByUsername(username) instanceof Buyer) {
+                    nextMenu = subMenus.get(selectedMenu + 15);
+                } else if (Manager.getRoleByUsername(username) instanceof Seller) {
+                    nextMenu = subMenus.get(selectedMenu + 7);
+                } else {
+                    nextMenu = subMenus.get(selectedMenu + 2);
+                }
             }
         } else {
             if (selectedMenu == 3) {
