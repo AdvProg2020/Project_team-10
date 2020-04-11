@@ -14,7 +14,7 @@ public class GoodsMenu extends Menu {
     }
 
     private Menu getViewCategories() {
-        return new Menu("view catogories", this) {
+        return new Menu("view categories", this) {
             @Override
             public void show() {
                 //TODO
