@@ -1,7 +1,11 @@
 package view.Menus;
 
+import model.Buyer;
+import model.Seller;
+
 public class UserMenu extends Menu {
     private boolean isLogged;
+    private String username;
 
     public UserMenu(Menu parentMenu) {
         super("user menu", parentMenu);
@@ -10,6 +14,29 @@ public class UserMenu extends Menu {
         subMenus.put(3, getLogoutMenu());
         subMenus.put(4, getEditProfileMenu());
         subMenus.put(5, getShowProfileMenu());
+        // admin
+        subMenus.put(6 , new ManageUsersMenu(this));
+        subMenus.put(7 , new ManageAllProductsMenu(this));
+        subMenus.put(8 , new DiscountMenu(this));
+        subMenus.put(9 , new ManageRequestMenu(this));
+        subMenus.put(10 , getCreateDiscountCode());
+        //-------------------------
+        // seller
+        // get view company
+        // view history
+        subMenus.put(13 , new ManageProductsMenu(this));
+        //add product
+        //remove
+        //show category
+        subMenus.put(17 , new OffsMenuForSeller(this));
+        //balance
+        //-----------
+        //buyer
+        subMenus.put(19 , new CartMenu(this));
+        subMenus.put(20 , new PurchaseMenu(this));
+        subMenus.put(21 , new OrderMenu(this));
+        //balance
+        //discount code show
 
 
     }
@@ -18,6 +45,16 @@ public class UserMenu extends Menu {
         isLogged = logged;
     }
 
+//    private int completeShow() {
+//        if (Controller.Manager.getRoleByUsername(username) instanceof Buyer) {
+//
+//
+//        } else if (Controller.Manager.getRoleByUsername(username) instanceof Seller) {
+//
+//        } else {
+//            System.out.println();
+//        }
+//    }
 
     @Override
     public void show() {
@@ -129,6 +166,21 @@ public class UserMenu extends Menu {
             }
         };
     }
+
+    private Menu getCreateDiscountCode(){
+        return new Menu("create discount code" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
 
 
 }
