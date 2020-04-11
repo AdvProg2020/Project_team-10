@@ -1,7 +1,7 @@
 package view.Menus;
 
 public class UserMenu extends Menu {
-    private boolean isLogged;
+    private boolean isLogged = true;
     private String username;
 
     public UserMenu(Menu parentMenu) {
