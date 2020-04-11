@@ -5,7 +5,7 @@ import model.Buyer;
 import model.Seller;
 
 public class UserMenu extends Menu {
-    private boolean isLogged;
+    private boolean isLogged = true;
     private String username;
 
     public UserMenu(Menu parentMenu) {
