@@ -1,8 +1,5 @@
 package view.Menus;
 
-import model.Buyer;
-import model.Seller;
-
 public class UserMenu extends Menu {
     private boolean isLogged;
     private String username;
@@ -20,25 +17,21 @@ public class UserMenu extends Menu {
         subMenus.put(8 , new DiscountMenu(this));
         subMenus.put(9 , new ManageRequestMenu(this));
         subMenus.put(10 , getCreateDiscountCode());
-        //-------------------------
         // seller
-        // get view company
-        // view history
+        subMenus.put(11, getViewCompanyInfo());
+        subMenus.put(12, getViewSalesHistory());
         subMenus.put(13 , new ManageProductsMenu(this));
-        //add product
-        //remove
-        //show category
+        subMenus.put(14, getAddProduct());
+        subMenus.put(15, getRemoveProduct());
+        subMenus.put(16, getShowCategory());
         subMenus.put(17 , new OffsMenuForSeller(this));
-        //balance
-        //-----------
+        subMenus.put(18, getBalanceForSeller());
         //buyer
         subMenus.put(19 , new CartMenu(this));
         subMenus.put(20 , new PurchaseMenu(this));
         subMenus.put(21 , new OrderMenu(this));
-        //balance
-        //discount code show
-
-
+        subMenus.put(22, getBalanceForBuyer());
+        subMenus.put(23, getDiscountCodeShow());
     }
 
     public void setLogged(boolean logged) {
@@ -180,6 +173,119 @@ public class UserMenu extends Menu {
             }
         };
     }
+
+    private Menu getViewCompanyInfo(){
+        return new Menu("view company information" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getViewSalesHistory(){
+        return new Menu("view sales history" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getAddProduct(){
+        return new Menu("add product" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getRemoveProduct(){
+        return new Menu("remove product [product id]" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getShowCategory(){
+        return new Menu("show category" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getBalanceForSeller(){
+        return new Menu("view balance" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getBalanceForBuyer(){
+        return new Menu("view balance" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
+    private Menu getDiscountCodeShow(){
+        return new Menu("view discount codes" , this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
+
 
 
 
