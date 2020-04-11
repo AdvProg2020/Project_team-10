@@ -10,10 +10,9 @@ public abstract class Menu {
     protected HashMap<Integer, Menu> subMenus;
 
     public Menu(String name, Menu parentMenu) {
-        subMenus = new HashMap<Integer, Menu>();
+        subMenus = new HashMap<>();
         this.name = name;
         this.parentMenu = parentMenu;
-
     }
 
     public void setSubMenus(HashMap<Integer, Menu> subMenus) {
@@ -48,6 +47,9 @@ public abstract class Menu {
             } else {
                 nextMenu = this.parentMenu;
             }
+        } else if((selectedMenu > subMenus.size() + 1) || (selectedMenu < 1)) {
+            System.out.println("you must choose one of following options");
+            nextMenu = this;
         } else {
             nextMenu = subMenus.get(selectedMenu);
         }

@@ -8,6 +8,7 @@ public class CartMenu extends Menu {
         subMenus.put(3, getIncrease());
         subMenus.put(4, getDecrease());
         subMenus.put(5, getShowTotalPrice());
+        subMenus.put(6, purchase());
         // purchase
     }
 
@@ -76,8 +77,18 @@ public class CartMenu extends Menu {
         };
     }
 
-
-
+    private Menu purchase() {
+        return new Menu("purchase", this) {
+            @Override
+            public void show() {
+                //TODO
+            }
+            @Override
+            public void execute() {
+                //TODO
+            }
+        };
+    }
 
 
 }

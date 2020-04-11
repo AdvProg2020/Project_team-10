@@ -11,5 +11,12 @@ public class Off {
     private Date endDate;
     private int discount;
 
-
+    public Off(String id, List<Good> goods, String status, Date startDate, Date endDate, int discount) {
+        this.id = id;
+        this.goods = goods;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.discount = discount;
+    }
 }

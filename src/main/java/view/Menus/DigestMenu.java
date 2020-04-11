@@ -7,7 +7,6 @@ public class DigestMenu extends Menu {
         subMenus.put(1, getAddToCart());
         // get select seller ***
     }
-
     private Menu getAddToCart() {
         return new Menu("add to cart", this) {
             @Override

@@ -1,10 +1,15 @@
 package view.Menus;
 
-import controller.Manager;
+import controller.AccountManager;
 import model.Buyer;
 import model.Seller;
 
 public class UserMenu extends Menu {
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
     private boolean isLogged;
     private String username;
 
@@ -45,14 +50,14 @@ public class UserMenu extends Menu {
     }
 
     private int completeShow() {
-        if (Manager.getRoleByUsername(username) instanceof Buyer) {
+        if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 18 && subNumber < 24) {
                     System.out.println(subNumber - 15 + ": " + subMenus.get(subNumber).getName());
                 }
             }
             return 9;
-        } else if (Manager.getRoleByUsername(username) instanceof Seller) {
+        } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 10 && subNumber < 19) {
                     System.out.println(subNumber - 7 + ": " + subMenus.get(subNumber).getName());
@@ -94,21 +99,39 @@ public class UserMenu extends Menu {
         Menu nextMenu = null;
         int selectedMenu = scanner.nextInt();
         if (isLogged) {
-            if ((selectedMenu == 12 && Manager.getRoleByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 9 && !(Manager.getRoleByUsername(username) instanceof Seller))) {
+            if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 9 && !(AccountManager.getRoleByUsername(username) instanceof Seller))) {
                 nextMenu = this.parentMenu;
             } else {
-                if (Manager.getRoleByUsername(username) instanceof Buyer) {
-                    nextMenu = subMenus.get(selectedMenu + 15);
-                } else if (Manager.getRoleByUsername(username) instanceof Seller) {
-                    nextMenu = subMenus.get(selectedMenu + 7);
+                if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
+                    if (selectedMenu > 9 || selectedMenu < 1){
+                        System.out.println("you must choose one of following options");
+                        nextMenu = this;
+                    } else {
+                        nextMenu = subMenus.get(selectedMenu + 15);
+                    }
+                } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
+                    if (selectedMenu > 12 || selectedMenu < 1){
+                        System.out.println("you must choose one of following options");
+                        nextMenu = this;
+                    } else {
+                        nextMenu = subMenus.get(selectedMenu + 7);
+                    }
                 } else {
-                    nextMenu = subMenus.get(selectedMenu + 2);
+                    if (selectedMenu > 9 || selectedMenu < 1){
+                        System.out.println("you must choose one of following options");
+                        nextMenu = this;
+                    } else {
+                        nextMenu = subMenus.get(selectedMenu + 2);
+                    }
                 }
             }
         } else {
             if (selectedMenu == 3) {
                 nextMenu = this.parentMenu;
+            } else if (selectedMenu > 3 || selectedMenu < 1){
+                System.out.println("you must choose one of following options");
+                nextMenu = this;
             } else {
                 nextMenu = subMenus.get(selectedMenu);
             }
