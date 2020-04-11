@@ -91,7 +91,7 @@ public class AccountManager {
 
     }
 
-    public static void showAllcategories(){
+    public static void showAllCategories(){
 
     }
 
@@ -132,7 +132,7 @@ public class AccountManager {
 
     }
 
-    public static void addProdcut(String id, String status, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description){
+    public static void addProduct(String id, String status, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description){
 
     }
 

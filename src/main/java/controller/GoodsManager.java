@@ -31,7 +31,7 @@ public class GoodsManager {
 
     }
 
-    public static void currentSotr(){
+    public static void currentSort(){
 
     }
 
