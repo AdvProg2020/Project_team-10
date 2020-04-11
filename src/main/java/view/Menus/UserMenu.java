@@ -1,35 +1,41 @@
 package view.Menus;
 
+import controller.Manager;
+import model.Buyer;
+import model.Seller;
+
 public class UserMenu extends Menu {
     private boolean isLogged;
     private String username;
 
     public UserMenu(Menu parentMenu) {
         super("user menu", parentMenu);
+        //register
         subMenus.put(1, getRegisterMenu());
         subMenus.put(2, getLoginMenu());
+        //login
         subMenus.put(3, getLogoutMenu());
         subMenus.put(4, getEditProfileMenu());
         subMenus.put(5, getShowProfileMenu());
         // admin
-        subMenus.put(6 , new ManageUsersMenu(this));
-        subMenus.put(7 , new ManageAllProductsMenu(this));
-        subMenus.put(8 , new DiscountMenu(this));
-        subMenus.put(9 , new ManageRequestMenu(this));
-        subMenus.put(10 , getCreateDiscountCode());
+        subMenus.put(6, new ManageUsersMenu(this));
+        subMenus.put(7, new ManageAllProductsMenu(this));
+        subMenus.put(8, new DiscountMenu(this));
+        subMenus.put(9, new ManageRequestMenu(this));
+        subMenus.put(10, getCreateDiscountCode());
         // seller
         subMenus.put(11, getViewCompanyInfo());
         subMenus.put(12, getViewSalesHistory());
-        subMenus.put(13 , new ManageProductsMenu(this));
+        subMenus.put(13, new ManageProductsMenu(this));
         subMenus.put(14, getAddProduct());
         subMenus.put(15, getRemoveProduct());
         subMenus.put(16, getShowCategory());
-        subMenus.put(17 , new OffsMenuForSeller(this));
+        subMenus.put(17, new OffsMenuForSeller(this));
         subMenus.put(18, getBalanceForSeller());
         //buyer
-        subMenus.put(19 , new CartMenu(this));
-        subMenus.put(20 , new PurchaseMenu(this));
-        subMenus.put(21 , new OrderMenu(this));
+        subMenus.put(19, new CartMenu(this));
+        subMenus.put(20, new PurchaseMenu(this));
+        subMenus.put(21, new OrderMenu(this));
         subMenus.put(22, getBalanceForBuyer());
         subMenus.put(23, getDiscountCodeShow());
     }
@@ -38,16 +44,30 @@ public class UserMenu extends Menu {
         isLogged = logged;
     }
 
-//    private int completeShow() {
-//        if (Controller.Manager.getRoleByUsername(username) instanceof Buyer) {
-//
-//
-//        } else if (Controller.Manager.getRoleByUsername(username) instanceof Seller) {
-//
-//        } else {
-//            System.out.println();
-//        }
-//    }
+    private int completeShow() {
+        if (Manager.getRoleByUsername(username) instanceof Buyer) {
+            for (Integer subNumber : subMenus.keySet()) {
+                if (subNumber > 18 && subNumber < 24) {
+                    System.out.println(subNumber - 15 + ": " + subMenus.get(subNumber).getName());
+                }
+            }
+            return 9;
+        } else if (Manager.getRoleByUsername(username) instanceof Seller) {
+            for (Integer subNumber : subMenus.keySet()) {
+                if (subNumber > 10 && subNumber < 19) {
+                    System.out.println(subNumber - 7 + ": " + subMenus.get(subNumber).getName());
+                }
+            }
+            return 12;
+        } else {
+            for (Integer subNumber : subMenus.keySet()) {
+                if (subNumber > 5 && subNumber < 11) {
+                    System.out.println(subNumber - 2 + ": " + subMenus.get(subNumber).getName());
+                }
+            }
+            return 9;
+        }
+    }
 
     @Override
     public void show() {
@@ -65,7 +85,7 @@ public class UserMenu extends Menu {
                     System.out.println(subNumber - 2 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            System.out.println("4: back");
+            System.out.println(completeShow() + ": back");
         }
     }
 
@@ -74,7 +94,8 @@ public class UserMenu extends Menu {
         Menu nextMenu = null;
         int selectedMenu = scanner.nextInt();
         if (isLogged) {
-            if (selectedMenu == 4) {
+            if ((selectedMenu == 12 && Manager.getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 9 && !(Manager.getRoleByUsername(username) instanceof Seller))) {
                 nextMenu = this.parentMenu;
             } else {
                 nextMenu = subMenus.get(selectedMenu + 2);
@@ -160,8 +181,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getCreateDiscountCode(){
-        return new Menu("create discount code" , this) {
+    private Menu getCreateDiscountCode() {
+        return new Menu("create discount code", this) {
             @Override
             public void show() {
                 //TODO
@@ -174,8 +195,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getViewCompanyInfo(){
-        return new Menu("view company information" , this) {
+    private Menu getViewCompanyInfo() {
+        return new Menu("view company information", this) {
             @Override
             public void show() {
                 //TODO
@@ -188,8 +209,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getViewSalesHistory(){
-        return new Menu("view sales history" , this) {
+    private Menu getViewSalesHistory() {
+        return new Menu("view sales history", this) {
             @Override
             public void show() {
                 //TODO
@@ -202,8 +223,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getAddProduct(){
-        return new Menu("add product" , this) {
+    private Menu getAddProduct() {
+        return new Menu("add product", this) {
             @Override
             public void show() {
                 //TODO
@@ -216,8 +237,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getRemoveProduct(){
-        return new Menu("remove product [product id]" , this) {
+    private Menu getRemoveProduct() {
+        return new Menu("remove product", this) {
             @Override
             public void show() {
                 //TODO
@@ -230,8 +251,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getShowCategory(){
-        return new Menu("show category" , this) {
+    private Menu getShowCategory() {
+        return new Menu("show category", this) {
             @Override
             public void show() {
                 //TODO
@@ -244,8 +265,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getBalanceForSeller(){
-        return new Menu("view balance" , this) {
+    private Menu getBalanceForSeller() {
+        return new Menu("view balance", this) {
             @Override
             public void show() {
                 //TODO
@@ -258,8 +279,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getBalanceForBuyer(){
-        return new Menu("view balance" , this) {
+    private Menu getBalanceForBuyer() {
+        return new Menu("view balance", this) {
             @Override
             public void show() {
                 //TODO
@@ -272,8 +293,8 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getDiscountCodeShow(){
-        return new Menu("view discount codes" , this) {
+    private Menu getDiscountCodeShow() {
+        return new Menu("view discount codes", this) {
             @Override
             public void show() {
                 //TODO
@@ -285,8 +306,6 @@ public class UserMenu extends Menu {
             }
         };
     }
-
-
 
 
 }
