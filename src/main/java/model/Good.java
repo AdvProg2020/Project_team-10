@@ -20,9 +20,8 @@ public class Good {
     private int visitNumber;
 
 
-    public Good(String id, String status, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
+    public Good(String id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
         this.id = id;
-        this.status = status;
         this.name = name;
         this.company = company;
         this.number = number;

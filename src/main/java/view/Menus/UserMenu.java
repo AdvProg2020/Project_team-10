@@ -6,11 +6,6 @@ import model.Seller;
 
 public class UserMenu extends Menu {
 
-    public boolean isLogged() {
-        return isLogged;
-    }
-
-    private boolean isLogged;
     private String username;
 
     public UserMenu(Menu parentMenu) {
@@ -43,10 +38,6 @@ public class UserMenu extends Menu {
         subMenus.put(21, new OrderMenu(this));
         subMenus.put(22, getBalanceForBuyer());
         subMenus.put(23, getDiscountCodeShow());
-    }
-
-    public void setLogged(boolean logged) {
-        isLogged = logged;
     }
 
     private int completeShow() {

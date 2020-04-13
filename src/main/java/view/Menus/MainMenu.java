@@ -15,5 +15,47 @@ public class MainMenu extends Menu {
         //this.setSubMenus(subMenus);
     }
 
+    public Menu getRegisterMenu() {
+        return new Menu("register", this) {
+            @Override
+            public void show() {
+                System.out.println("show register");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe register");
+            }
+        };
+    }
+
+    public Menu getLoginMenu() {
+        return new Menu("login", this) {
+            @Override
+            public void show() {
+                System.out.println("show login");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe login");
+            }
+        };
+    }
+
+    public Menu getLogoutMenu() {
+        return new Menu("logout", this) {
+            @Override
+            public void show() {
+                System.out.println("show logout");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe logout");
+            }
+        };
+    }
+
 
 }

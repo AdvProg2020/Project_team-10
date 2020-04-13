@@ -6,7 +6,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Menu mainMenu = new MainMenu();
+        MainMenu mainMenu = new MainMenu();
+        Menu.setMainMenu(mainMenu);
         Menu.setScanner(scanner);
         mainMenu.show();
         mainMenu.execute();
