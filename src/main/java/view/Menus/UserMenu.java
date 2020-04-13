@@ -87,7 +87,7 @@ public class UserMenu extends Menu {
 
     @Override
     public void execute() {
-        Menu nextMenu = null;
+        Menu nextMenu;
         int selectedMenu = scanner.nextInt();
         if (isLogged) {
             if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||

@@ -1,6 +1,7 @@
 package view.Menus;
 
 import controller.AccountManager;
+import view.CommandProcessor;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -16,6 +17,9 @@ public abstract class Menu {
         subMenus = new HashMap<>();
         this.name = name;
         this.parentMenu = parentMenu;
+    }
+
+    public Menu() {
     }
 
 
@@ -36,7 +40,6 @@ public abstract class Menu {
     }
 
     public void show() {
-
         System.out.println(this.getName());
         for (Integer subNumber : subMenus.keySet()) {
             System.out.println(subNumber + ": " + subMenus.get(subNumber).getName());
@@ -74,7 +77,7 @@ public abstract class Menu {
                 nextMenu = this;
             } else {
                 if (selectedMenu == subMenus.size() + 1) {
-                   getLogoutMenu().show();
+                    getLogoutMenu().show();
                     getLogoutMenu().execute();
                     nextMenu = this;
                 } else {
@@ -93,12 +96,12 @@ public abstract class Menu {
                 nextMenu = this;
             } else {
                 if (selectedMenu == subMenus.size() + 1) {
-                  getRegisterMenu().show();
-                  getRegisterMenu().execute();
+                    getRegisterMenu().show();
+                    getRegisterMenu().execute();
                     nextMenu = this;
                 } else if (selectedMenu == subMenus.size() + 2) {
-                  getLoginMenu().show();
-                  getLoginMenu().execute();
+                    getLoginMenu().show();
+                    getLoginMenu().execute();
                     nextMenu = this;
                 } else {
                     nextMenu = subMenus.get(selectedMenu);
@@ -111,43 +114,42 @@ public abstract class Menu {
     }
 
     private Menu getRegisterMenu() {
-        return new Menu("register", this) {
+        return new Menu() {
             @Override
             public void show() {
-                System.out.println("show register");
+                System.out.println("register panel");
             }
 
             @Override
             public void execute() {
-                System.out.println("exe register");
+                CommandProcessor.processRegister();
             }
         };
     }
 
     private Menu getLoginMenu() {
-        return new Menu("login", this) {
+        return new Menu() {
             @Override
             public void show() {
-                System.out.println("show login");
+                System.out.println("login panel");
             }
 
             @Override
             public void execute() {
-                System.out.println("exe login");
+                CommandProcessor.processLogin();
             }
         };
     }
 
     private Menu getLogoutMenu() {
-        return new Menu("logout", this) {
+        return new Menu() {
             @Override
             public void show() {
-                System.out.println("show logout");
             }
 
             @Override
             public void execute() {
-                System.out.println("exe logout");
+                AccountManager.logout();
             }
         };
     }

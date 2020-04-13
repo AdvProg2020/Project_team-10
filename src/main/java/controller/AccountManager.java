@@ -13,12 +13,11 @@ public class AccountManager {
         return null;
     }
 
-    public static boolean canRegister(String username, String type) {
-        return false;
+    public static boolean canRegister(String username) {
+        return true;
     }
 
     public static void register(String username, String password, String type, String firstName, String lastName, String email, String phoneNumber) {
-
     }
 
     public static boolean login(String username, String password) {
