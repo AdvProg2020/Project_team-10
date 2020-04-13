@@ -10,8 +10,7 @@ public abstract class Menu {
     private String name;
     protected Menu parentMenu;
     protected HashMap<Integer, Menu> subMenus;
-    protected static boolean isLogged = true;
-    protected static MainMenu mainMenu;
+    protected static boolean isLogged = false;
 
     public Menu(String name, Menu parentMenu) {
         subMenus = new HashMap<>();
@@ -19,9 +18,6 @@ public abstract class Menu {
         this.parentMenu = parentMenu;
     }
 
-    public static void setMainMenu(MainMenu mainMenu) {
-        Menu.mainMenu = mainMenu;
-    }
 
     public static void setIsLogged(boolean isLogged) {
         Menu.isLogged = isLogged;
@@ -78,9 +74,9 @@ public abstract class Menu {
                 nextMenu = this;
             } else {
                 if (selectedMenu == subMenus.size() + 1) {
-                    mainMenu.getLogoutMenu().show();
-                    mainMenu.getLogoutMenu().execute();
-                    nextMenu = mainMenu;
+                   getLogoutMenu().show();
+                    getLogoutMenu().execute();
+                    nextMenu = this;
                 } else {
                     nextMenu = subMenus.get(selectedMenu);
                 }
@@ -97,12 +93,12 @@ public abstract class Menu {
                 nextMenu = this;
             } else {
                 if (selectedMenu == subMenus.size() + 1) {
-                   mainMenu.getRegisterMenu().show();
-                   mainMenu.getRegisterMenu().execute();
+                  getRegisterMenu().show();
+                  getRegisterMenu().execute();
                     nextMenu = this;
                 } else if (selectedMenu == subMenus.size() + 2) {
-                   mainMenu.getLoginMenu().show();
-                   mainMenu.getLoginMenu().execute();
+                  getLoginMenu().show();
+                  getLoginMenu().execute();
                     nextMenu = this;
                 } else {
                     nextMenu = subMenus.get(selectedMenu);
@@ -112,6 +108,48 @@ public abstract class Menu {
         }
         nextMenu.show();
         nextMenu.execute();
+    }
+
+    private Menu getRegisterMenu() {
+        return new Menu("register", this) {
+            @Override
+            public void show() {
+                System.out.println("show register");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe register");
+            }
+        };
+    }
+
+    private Menu getLoginMenu() {
+        return new Menu("login", this) {
+            @Override
+            public void show() {
+                System.out.println("show login");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe login");
+            }
+        };
+    }
+
+    private Menu getLogoutMenu() {
+        return new Menu("logout", this) {
+            @Override
+            public void show() {
+                System.out.println("show logout");
+            }
+
+            @Override
+            public void execute() {
+                System.out.println("exe logout");
+            }
+        };
     }
 
 
