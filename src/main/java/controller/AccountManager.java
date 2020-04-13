@@ -10,7 +10,7 @@ public class AccountManager {
     private Account onlineAccount;
 
     public static Account getRoleByUsername(String username) {
-        return null;
+        return new Buyer("f", "f");
     }
 
     public static boolean canRegister(String username) {

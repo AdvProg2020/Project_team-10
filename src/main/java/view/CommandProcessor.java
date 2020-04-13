@@ -60,57 +60,93 @@ public class CommandProcessor {
         return true;
     }
 
+    public static Menu getRegisterMenu() {
+        return new Menu("register") {
+            @Override
+            public void show() {
+                System.out.println("register panel");
+            }
+
+            @Override
+            public void execute() {
+                CommandProcessor.processRegister();
+            }
+        };
+    }
+
+    public static Menu getLoginMenu() {
+        return new Menu("login") {
+            @Override
+            public void show() {
+                System.out.println("login panel");
+            }
+
+            @Override
+            public void execute() {
+                CommandProcessor.processLogin();
+            }
+        };
+    }
+
+    public static Menu getLogoutMenu() {
+        return new Menu("logout") {
+            @Override
+            public void show() {
+            }
+
+            @Override
+            public void execute() {
+                AccountManager.logout();
+            }
+        };
+    }
+
     public static void processRegister() {
         ArrayList<String> info = new ArrayList<>();
-        boolean a = false, b = false, c = false, d = false, e = false, f = false;
+        int flag = 1;
         Menu.scanner.nextLine();
         while (true) {
-            if (!a) {
+            if (flag == 1) {
                 System.out.print("enter your username: ");
                 String username = Menu.scanner.nextLine();
                 if (checkUsernameInvalidation(username)) {
                     info.add(username);
-                    a = true;
-                    b = true;
+                    flag += 1;
                 }
-            } else if (b) {
+            } else if (flag == 2) {
                 System.out.print("enter your password: ");
                 String password = Menu.scanner.nextLine();
                 if (checkPasswordInvalidation(password)) {
                     info.add(password);
-                    b = false;
-                    c = true;
+                    flag += 1;
                 }
-            } else if (c) {
+            } else if (flag == 3) {
                 System.out.print("enter your type: ");
                 String type = Menu.scanner.nextLine();
                 if (checkTypeInvalidation(type)) {
                     info.add(type);
-                    c = false;
-                    d = true;
+                    flag += 1;
                 }
-            } else if (d) {
+            } else if (flag == 4) {
                 System.out.print("enter your first name: ");
                 String firstName = Menu.scanner.nextLine();
                 if (checkNameInvalidation(firstName)) {
                     info.add(firstName);
-                    d = false;
-                    e = true;
+                    flag += 1;
                 }
-            } else if (e) {
+            } else if (flag == 5) {
                 System.out.print("enter your last name: ");
                 String lastName = Menu.scanner.nextLine();
                 if (checkNameInvalidation(lastName)) {
                     info.add(lastName);
-                    e = false;
-                    f = true;
+                    flag += 1;
                 }
-            } else if (f) {
+            } else if (flag == 6) {
                 System.out.print("enter your email: ");
                 String email = Menu.scanner.nextLine();
                 if (checkEmailInvalidation(email)) {
                     info.add(email);
-                    f = false;
+                    flag += 1;
                 }
             } else {
                 System.out.print("enter your phone number: ");

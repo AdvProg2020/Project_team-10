@@ -1,7 +1,6 @@
 package view.Menus;
 
-import controller.AccountManager;
-import view.CommandProcessor;
+import static view.CommandProcessor.*;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -11,7 +10,7 @@ public abstract class Menu {
     private String name;
     protected Menu parentMenu;
     protected HashMap<Integer, Menu> subMenus;
-    protected static boolean isLogged = false;
+    protected static boolean isLogged = true;
 
     public Menu(String name, Menu parentMenu) {
         subMenus = new HashMap<>();
@@ -19,9 +18,9 @@ public abstract class Menu {
         this.parentMenu = parentMenu;
     }
 
-    public Menu() {
+    public Menu(String name) {
+        this.name = name;
     }
-
 
     public static void setIsLogged(boolean isLogged) {
         Menu.isLogged = isLogged;
@@ -111,47 +110,6 @@ public abstract class Menu {
         }
         nextMenu.show();
         nextMenu.execute();
-    }
-
-    private Menu getRegisterMenu() {
-        return new Menu() {
-            @Override
-            public void show() {
-                System.out.println("register panel");
-            }
-
-            @Override
-            public void execute() {
-                CommandProcessor.processRegister();
-            }
-        };
-    }
-
-    private Menu getLoginMenu() {
-        return new Menu() {
-            @Override
-            public void show() {
-                System.out.println("login panel");
-            }
-
-            @Override
-            public void execute() {
-                CommandProcessor.processLogin();
-            }
-        };
-    }
-
-    private Menu getLogoutMenu() {
-        return new Menu() {
-            @Override
-            public void show() {
-            }
-
-            @Override
-            public void execute() {
-                AccountManager.logout();
-            }
-        };
     }
 
 

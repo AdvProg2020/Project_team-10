@@ -4,6 +4,8 @@ import controller.AccountManager;
 import model.Buyer;
 import model.Seller;
 
+import static view.CommandProcessor.*;
+
 public class UserMenu extends Menu {
 
     private String username;
@@ -15,8 +17,9 @@ public class UserMenu extends Menu {
         subMenus.put(2, getLoginMenu());
         //login
         subMenus.put(3, getLogoutMenu());
-        subMenus.put(4, getEditProfileMenu());
-        subMenus.put(5, getShowProfileMenu());
+        subMenus.put(4, getShowProfileMenu());
+        subMenus.put(5, getEditProfileMenu());
+
         // admin
         subMenus.put(6, new ManageUsersMenu(this));
         subMenus.put(7, new ManageAllProductsMenu(this));
@@ -44,21 +47,21 @@ public class UserMenu extends Menu {
         if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 18 && subNumber < 24) {
-                    System.out.println(subNumber - 15 + ": " + subMenus.get(subNumber).getName());
+                    System.out.println(subNumber - 16 + ": " + subMenus.get(subNumber).getName());
                 }
             }
             return 9;
         } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 10 && subNumber < 19) {
-                    System.out.println(subNumber - 7 + ": " + subMenus.get(subNumber).getName());
+                    System.out.println(subNumber - 8 + ": " + subMenus.get(subNumber).getName());
                 }
             }
             return 12;
         } else {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 5 && subNumber < 11) {
-                    System.out.println(subNumber - 2 + ": " + subMenus.get(subNumber).getName());
+                    System.out.println(subNumber - 3 + ": " + subMenus.get(subNumber).getName());
                 }
             }
             return 9;
@@ -77,11 +80,13 @@ public class UserMenu extends Menu {
             System.out.println("3: back");
         } else {
             for (Integer subNumber : subMenus.keySet()) {
-                if (subNumber == 3 || subNumber == 4 || subNumber == 5) {
-                    System.out.println(subNumber - 2 + ": " + subMenus.get(subNumber).getName());
+                if (subNumber == 4 || subNumber == 5) {
+                    System.out.println(subNumber - 3 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            System.out.println(completeShow() + ": back");
+            int backNumber = completeShow();
+            System.out.println(backNumber - 1 + ": logout");
+            System.out.println(backNumber + ": back");
         }
     }
 
@@ -90,88 +95,63 @@ public class UserMenu extends Menu {
         Menu nextMenu;
         int selectedMenu = scanner.nextInt();
         if (isLogged) {
-            if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
+            if (selectedMenu == 1) {
+                nextMenu = subMenus.get(4);
+            } else if (selectedMenu == 2) {
+                nextMenu = subMenus.get(5);
+            }
+            else if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
                     (selectedMenu == 9 && !(AccountManager.getRoleByUsername(username) instanceof Seller))) {
                 nextMenu = this.parentMenu;
+            } else if ((selectedMenu == 11 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 8 && !(AccountManager.getRoleByUsername(username) instanceof Seller))) {
+                getLogoutMenu().show();
+                getLogoutMenu().execute();
+                nextMenu = this;
             } else {
                 if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
-                    if (selectedMenu > 9 || selectedMenu < 1){
+                    if (selectedMenu > 9 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
-                        nextMenu = subMenus.get(selectedMenu + 15);
+                        nextMenu = subMenus.get(selectedMenu + 16);
                     }
                 } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
-                    if (selectedMenu > 12 || selectedMenu < 1){
+                    if (selectedMenu > 12 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
-                        nextMenu = subMenus.get(selectedMenu + 7);
+                        nextMenu = subMenus.get(selectedMenu + 8);
                     }
                 } else {
-                    if (selectedMenu > 9 || selectedMenu < 1){
+                    if (selectedMenu > 9 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
-                        nextMenu = subMenus.get(selectedMenu + 2);
+                        nextMenu = subMenus.get(selectedMenu + 3);
                     }
                 }
             }
         } else {
-            if (selectedMenu == 3) {
-                nextMenu = this.parentMenu;
-            } else if (selectedMenu > 3 || selectedMenu < 1){
+            if (selectedMenu > 3 || selectedMenu < 1) {
                 System.out.println("you must choose one of following options");
                 nextMenu = this;
+            } else if (selectedMenu == 3) {
+                nextMenu = this.parentMenu;
+            } else if (selectedMenu == 2) {
+                getLoginMenu().show();
+                getLoginMenu().execute();
+                nextMenu = this;
             } else {
-                nextMenu = subMenus.get(selectedMenu);
+                getRegisterMenu().show();
+                getRegisterMenu().execute();
+                nextMenu = this;
             }
         }
         nextMenu.show();
         nextMenu.execute();
     }
 
-    private Menu getRegisterMenu() {
-        return new Menu("register", this) {
-            @Override
-            public void show() {
-                //TODO
-            }
-
-            @Override
-            public void execute() {
-                //TODO
-            }
-        };
-    }
-
-    private Menu getLoginMenu() {
-        return new Menu("login", this) {
-            @Override
-            public void show() {
-                //TODO
-            }
-
-            @Override
-            public void execute() {
-                //TODO
-            }
-        };
-    }
-
-    private Menu getLogoutMenu() {
-        return new Menu("logout", this) {
-            @Override
-            public void show() {
-                //TODO
-            }
-
-            @Override
-            public void execute() {
-                //TODO
-            }
-        };
-    }
 
     private Menu getEditProfileMenu() {
         return new Menu("edit profile", this) {
