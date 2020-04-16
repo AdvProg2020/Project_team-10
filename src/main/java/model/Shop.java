@@ -16,4 +16,36 @@ public class Shop {
         List<Off> allOffs = new ArrayList<>();
         List<Good> allGoods = new ArrayList<>();
     }
+
+    public Account getRoleByUsername(String username) {
+        return new Admin("f", "f");
+    }
+
+    public Good getProductWithId(String id) {
+        return null;
+    }
+
+    public Discount getDiscountWithCode(String code) {
+        return null;
+    }
+
+    public Account getAccountWithUsername(String username) {
+        return null;
+    }
+
+    public Category getCategory(String name) {
+        return null;
+    }
+
+    public boolean isThereEmail(String email) {
+        return false;
+    }
+
+    public boolean isTherePhoneNumber(String phoneNumber) {
+        return false;
+    }
+
+    public Off getOffWithId(String id) {
+        return null;
+    }
 }

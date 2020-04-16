@@ -1,11 +1,8 @@
 package view;
 
 import controller.AccountManager;
-import model.Account;
 import view.Menus.Menu;
-
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,10 +87,6 @@ public class CommandProcessor {
 
     public static Menu getLogoutMenu() {
         return new Menu("logout") {
-            @Override
-            public void show() {
-            }
-
             @Override
             public void execute() {
                 AccountManager.logout();

@@ -78,7 +78,6 @@ public abstract class Menu {
                 nextMenu = this;
             } else {
                 if (selectedMenu == subMenus.size() + 1) {
-                    getLogoutMenu().show();
                     getLogoutMenu().execute();
                     nextMenu = this;
                 } else {

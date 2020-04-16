@@ -4,6 +4,7 @@ import controller.AccountManager;
 import model.Admin;
 import model.Buyer;
 import model.Seller;
+import model.Shop;
 
 import static view.CommandProcessor.*;
 
@@ -45,14 +46,14 @@ public class UserMenu extends Menu {
     }
 
     private int completeShow() {
-        if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
+        if (Shop.getShop().getRoleByUsername(username) instanceof Buyer) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 18 && subNumber < 24) {
                     System.out.println(subNumber - 16 + ": " + subMenus.get(subNumber).getName());
                 }
             }
             return 8;
-        } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
+        } else if (Shop.getShop().getRoleByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 10 && subNumber < 19) {
                     System.out.println(subNumber - 8 + ": " + subMenus.get(subNumber).getName());
@@ -100,25 +101,25 @@ public class UserMenu extends Menu {
                 nextMenu = subMenus.get(4);
             } else if (selectedMenu == 2) {
                 nextMenu = subMenus.get(5);
-            } else if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 8 && AccountManager.getRoleByUsername(username) instanceof Buyer) ||
-                    (selectedMenu == 9 && AccountManager.getRoleByUsername(username) instanceof Admin)) {
+            } else if ((selectedMenu == 12 && Shop.getShop().getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 8 && Shop.getShop().getRoleByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 9 && Shop.getShop().getRoleByUsername(username) instanceof Admin)) {
                 nextMenu = this.parentMenu;
-            } else if ((selectedMenu == 11 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 7 && AccountManager.getRoleByUsername(username) instanceof Buyer) ||
-                    (selectedMenu == 8 && AccountManager.getRoleByUsername(username) instanceof Admin)) {
+            } else if ((selectedMenu == 11 && Shop.getShop().getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 7 && Shop.getShop().getRoleByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 8 && Shop.getShop().getRoleByUsername(username) instanceof Admin)) {
                 getLogoutMenu().show();
                 getLogoutMenu().execute();
                 nextMenu = this;
             } else {
-                if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
+                if (Shop.getShop().getRoleByUsername(username) instanceof Buyer) {
                     if (selectedMenu > 8 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
                         nextMenu = subMenus.get(selectedMenu + 16);
                     }
-                } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
+                } else if (Shop.getShop().getRoleByUsername(username) instanceof Seller) {
                     if (selectedMenu > 12 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
