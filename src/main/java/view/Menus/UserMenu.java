@@ -1,6 +1,7 @@
 package view.Menus;
 
 import controller.AccountManager;
+import model.Admin;
 import model.Buyer;
 import model.Seller;
 
@@ -37,10 +38,10 @@ public class UserMenu extends Menu {
         subMenus.put(18, getBalanceForSeller());
         //buyer
         subMenus.put(19, new CartMenu(this));
-        subMenus.put(20, new PurchaseMenu(this));
-        subMenus.put(21, new OrderMenu(this));
-        subMenus.put(22, getBalanceForBuyer());
-        subMenus.put(23, getDiscountCodeShow());
+        //subMenus.put(20, new PurchaseMenu(this));
+        subMenus.put(20, new OrderMenu(this));
+        subMenus.put(21, getBalanceForBuyer());
+        subMenus.put(22, getDiscountCodeShow());
     }
 
     private int completeShow() {
@@ -50,7 +51,7 @@ public class UserMenu extends Menu {
                     System.out.println(subNumber - 16 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            return 9;
+            return 8;
         } else if (AccountManager.getRoleByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 10 && subNumber < 19) {
@@ -99,18 +100,19 @@ public class UserMenu extends Menu {
                 nextMenu = subMenus.get(4);
             } else if (selectedMenu == 2) {
                 nextMenu = subMenus.get(5);
-            }
-            else if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 9 && !(AccountManager.getRoleByUsername(username) instanceof Seller))) {
+            } else if ((selectedMenu == 12 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
+                    (selectedMenu == 8 && AccountManager.getRoleByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 9 && AccountManager.getRoleByUsername(username) instanceof Admin)) {
                 nextMenu = this.parentMenu;
             } else if ((selectedMenu == 11 && AccountManager.getRoleByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 8 && !(AccountManager.getRoleByUsername(username) instanceof Seller))) {
+                    (selectedMenu == 7 && AccountManager.getRoleByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 8 && AccountManager.getRoleByUsername(username) instanceof Admin)) {
                 getLogoutMenu().show();
                 getLogoutMenu().execute();
                 nextMenu = this;
             } else {
                 if (AccountManager.getRoleByUsername(username) instanceof Buyer) {
-                    if (selectedMenu > 9 || selectedMenu < 1) {
+                    if (selectedMenu > 8 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
@@ -154,154 +156,176 @@ public class UserMenu extends Menu {
 
 
     private Menu getEditProfileMenu() {
-        return new Menu("edit profile", this) {
+        return new LastMenu("edit profile", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getShowProfileMenu() {
-        return new Menu("show profile", this) {
+        return new LastMenu("show profile", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getCreateDiscountCode() {
-        return new Menu("create discount code", this) {
+        return new LastMenu("create discount code", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getViewCompanyInfo() {
-        return new Menu("view company information", this) {
+        return new LastMenu("view company information", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getViewSalesHistory() {
-        return new Menu("view sales history", this) {
+        return new LastMenu("view sales history", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getAddProduct() {
-        return new Menu("add product", this) {
+        return new LastMenu("add product", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getRemoveProduct() {
-        return new Menu("remove product", this) {
+        return new LastMenu("remove product", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getShowCategory() {
-        return new Menu("show category", this) {
+        return new LastMenu("show category", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getBalanceForSeller() {
-        return new Menu("view balance", this) {
+        return new LastMenu("view balance", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getBalanceForBuyer() {
-        return new Menu("view balance", this) {
+        return new LastMenu("view balance", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getDiscountCodeShow() {
-        return new Menu("view discount codes", this) {
+        return new LastMenu("view discount codes", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };

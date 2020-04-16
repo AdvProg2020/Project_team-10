@@ -7,7 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 public class AccountManager {
-    private Account onlineAccount;
+    private static Account onlineAccount;
+
+    public static Account getOnlineAccount() {
+        return onlineAccount;
+    }
 
     public static Account getRoleByUsername(String username) {
         return new Buyer("f", "f");
@@ -21,6 +25,7 @@ public class AccountManager {
     }
 
     public static boolean login(String username, String password) {
+        onlineAccount = getRoleByUsername(username);
         return false;
     }
 

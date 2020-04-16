@@ -11,56 +11,64 @@ public class SortMenu extends Menu {
     }
 
     private Menu getShowAvailableShort() {
-        return new Menu("show available sort", this) {
+        return new LastMenu("show available sort", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getSort() {
-        return new Menu("sort", this) {
+        return new LastMenu("sort", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getShowCurrentSort() {
-        return new Menu("current sort", this) {
+        return new LastMenu("current sort", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
     private Menu getDisableSort() {
-        return new Menu("disable sort", this) {
+        return new LastMenu("disable sort", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };

@@ -3,11 +3,10 @@ package view.Menus;
 public class ProductMenu extends Menu {
 
     public ProductMenu(Menu parentMenu) {
-        super("product menu", parentMenu);
+        super("view a product", parentMenu);
         subMenus.put(1, new DigestMenu(this));
         subMenus.put(2, getAttributes());
         subMenus.put(3, getCompare());
-
 
     }
 

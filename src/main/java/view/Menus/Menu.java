@@ -22,6 +22,8 @@ public abstract class Menu {
         this.name = name;
     }
 
+    public Menu() {}
+
     public static void setIsLogged(boolean isLogged) {
         Menu.isLogged = isLogged;
     }

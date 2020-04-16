@@ -10,9 +10,10 @@ public class Shop {
         return shop;
     }
 
-    private List<Account> allAccounts;
-
     private Shop() {
-        allAccounts = new ArrayList<Account>();
+        List<Account> allAccounts = new ArrayList<>();
+        List<Request> allRequests = new ArrayList<>();
+        List<Off> allOffs = new ArrayList<>();
+        List<Good> allGoods = new ArrayList<>();
     }
 }

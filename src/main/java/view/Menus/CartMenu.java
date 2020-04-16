@@ -1,32 +1,21 @@
 package view.Menus;
 
+import view.Purchase;
+
 public class CartMenu extends Menu {
     public CartMenu(Menu parentMenu) {
         super("cart menu", parentMenu);
         subMenus.put(1, getShowProducts());
-        subMenus.put(2, getViewProduct());
+        subMenus.put(2, new ProductMenu(this));
         subMenus.put(3, getIncrease());
         subMenus.put(4, getDecrease());
         subMenus.put(5, getShowTotalPrice());
         subMenus.put(6, purchase());
-        // purchase
+
     }
 
     private Menu getShowProducts() {
         return new Menu("show products", this) {
-            @Override
-            public void show() {
-                //TODO
-            }
-            @Override
-            public void execute() {
-                //TODO
-            }
-        };
-    }
-
-    private Menu getViewProduct() {
-        return new Menu("view a product", this) {
             @Override
             public void show() {
                 //TODO
@@ -52,7 +41,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu getDecrease() {
-        return new Menu("view a product", this) {
+        return new Menu("decrease number of a product", this) {
             @Override
             public void show() {
                 //TODO
@@ -81,11 +70,14 @@ public class CartMenu extends Menu {
         return new Menu("purchase", this) {
             @Override
             public void show() {
-                //TODO
             }
             @Override
             public void execute() {
-                //TODO
+                Purchase.giveReceiverInformation();
+                Purchase.giveDiscountCode();
+                Purchase.payment();
+                this.parentMenu.show();
+                this.parentMenu.execute();
             }
         };
     }
