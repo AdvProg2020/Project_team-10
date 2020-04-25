@@ -14,8 +14,12 @@ public abstract class Account {
     private long credit;
     private List<Log> logs;
 
-    public Account(String username, String password) {
+    public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
     }
 }

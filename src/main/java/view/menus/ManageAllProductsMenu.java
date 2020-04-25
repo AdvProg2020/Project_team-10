@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class ManageAllProductsMenu extends Menu {
     public ManageAllProductsMenu(Menu parentMenu) {
@@ -7,7 +7,7 @@ public class ManageAllProductsMenu extends Menu {
     }
 
     private Menu getRemove(){
-        return new Menu("remove" , this) {
+        return new LastMenu("remove" , this) {
             @Override
             public void show() {
                 //TODO

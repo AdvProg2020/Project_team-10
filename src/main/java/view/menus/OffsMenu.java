@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class OffsMenu extends Menu {
 

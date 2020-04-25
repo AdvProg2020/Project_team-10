@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class CommentMenu extends Menu {
 
@@ -8,7 +8,7 @@ public class CommentMenu extends Menu {
     }
 
     private Menu getAddComment() {
-        return new Menu("add comment", this) {
+        return new LastMenu("add comment", this) {
             @Override
             public void show() {
                 //TODO

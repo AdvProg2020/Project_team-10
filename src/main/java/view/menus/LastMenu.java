@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public abstract class LastMenu extends Menu {
     public LastMenu(String name, Menu parentMenu) {

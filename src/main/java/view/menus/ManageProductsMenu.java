@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class ManageProductsMenu extends Menu {
     public ManageProductsMenu(Menu parentMenu) {
@@ -11,7 +11,7 @@ public class ManageProductsMenu extends Menu {
     }
 
     private Menu getShowAllProducts(){
-        return new Menu("show all products" , this) {
+        return new LastMenu("show all products" , this) {
             @Override
             public void show() {
                 //TODO
@@ -25,7 +25,7 @@ public class ManageProductsMenu extends Menu {
     }
 
     private Menu getViewProduct(){
-        return new Menu("view a product" , this) {
+        return new LastMenu("view a product" , this) {
             @Override
             public void show() {
                 //TODO
@@ -39,7 +39,7 @@ public class ManageProductsMenu extends Menu {
     }
 
     private Menu getViewBuyers(){
-        return new Menu("view buyers" , this) {
+        return new LastMenu("view buyers" , this) {
             @Override
             public void show() {
                 //TODO
@@ -53,7 +53,7 @@ public class ManageProductsMenu extends Menu {
     }
 
     private Menu getEdit(){
-        return new Menu("edit" , this) {
+        return new LastMenu("edit" , this) {
             @Override
             public void show() {
                 //TODO

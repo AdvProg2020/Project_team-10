@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class DigestMenu extends Menu {
 
@@ -8,7 +8,7 @@ public class DigestMenu extends Menu {
         // get select seller ***
     }
     private Menu getAddToCart() {
-        return new Menu("add to cart", this) {
+        return new LastMenu("add to cart", this) {
             @Override
             public void show() {
                 //TODO

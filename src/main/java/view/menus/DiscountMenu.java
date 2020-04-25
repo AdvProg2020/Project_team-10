@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class DiscountMenu extends Menu {
     public DiscountMenu(Menu parentMenu) {
@@ -11,7 +11,7 @@ public class DiscountMenu extends Menu {
     }
 
     private Menu getShowCode(){
-        return new Menu("show discount code" , this) {
+        return new LastMenu("show discount code" , this) {
             @Override
             public void show() {
                 //TODO
@@ -25,7 +25,7 @@ public class DiscountMenu extends Menu {
     }
 
     private Menu getViewDiscountCode(){
-        return new Menu("view discount code" , this) {
+        return new LastMenu("view discount code" , this) {
             @Override
             public void show() {
                 //TODO
@@ -39,7 +39,7 @@ public class DiscountMenu extends Menu {
     }
 
     private Menu getEditDiscountCode(){
-        return new Menu("edit discount code" , this) {
+        return new LastMenu("edit discount code" , this) {
             @Override
             public void show() {
                 //TODO
@@ -53,7 +53,7 @@ public class DiscountMenu extends Menu {
     }
 
     private Menu getRemoveDiscountCode(){
-        return new Menu("remove discount code" , this) {
+        return new LastMenu("remove discount code" , this) {
             @Override
             public void show() {
                 //TODO

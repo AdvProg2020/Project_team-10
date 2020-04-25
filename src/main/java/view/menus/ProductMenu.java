@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class ProductMenu extends Menu {
 
@@ -11,9 +11,10 @@ public class ProductMenu extends Menu {
     }
 
     private Menu getAttributes() {
-        return new Menu("attributes", this) {
+        return new LastMenu("attributes", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 
@@ -25,9 +26,10 @@ public class ProductMenu extends Menu {
     }
 
     private Menu getCompare() {
-        return new Menu("compare", this) {
+        return new LastMenu("compare", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 

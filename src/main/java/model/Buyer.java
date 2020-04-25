@@ -10,7 +10,7 @@ public class Buyer extends Account {
     private List<Good> cart;
 
 
-    public Buyer(String username, String password) {
-        super(username, password);
+    public Buyer(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
+        super(username, firstName, lastName, email, phoneNumber, password);
     }
 }

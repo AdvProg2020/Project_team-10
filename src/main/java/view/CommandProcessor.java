@@ -1,12 +1,18 @@
 package view;
 
 import controller.AccountManager;
-import view.Menus.Menu;
+import view.menus.Menu;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandProcessor {
+
+    private static String typeName;
+    private static boolean isAdminRegistered;
+    private static String company;
 
     public static Matcher getMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
@@ -30,19 +36,41 @@ public class CommandProcessor {
     }
 
     public static boolean checkPasswordInvalidation(String password) {
-        return true;
+        if (getMatcher(password, "(?=.*[0-9])(?=.*[a-z]).{8,}").matches()) {
+            return true;
+        } else {
+            System.out.println("invalid password");
+            return false;
+        }
     }
 
     public static boolean checkEmailInvalidation(String email) {
-        return true;
+        if (getMatcher(email, "\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b").matches()) {
+            return true;
+        } else {
+            System.out.println("invalid email");
+            return false;
+        }
+
     }
 
     public static boolean checkPhoneNumberInvalidation(String phoneNumber) {
-        return true;
+        if (getMatcher(phoneNumber, "09\\d{9}").matches()) {
+            return true;
+        } else {
+            System.out.println("invalid phone number");
+            return false;
+        }
     }
 
     public static boolean checkNameInvalidation(String name) {
-        return getMatcher(name, "(\\w+\\s?)+").matches();
+        if (getMatcher(name, "(\\w+\\s?)+").matches()) {
+            return true;
+        } else {
+            System.out.println("invalid name");
+            return false;
+        }
+
     }
 
     public static boolean checkCreditInvalidation(long credit) {
@@ -53,7 +81,24 @@ public class CommandProcessor {
         return false;
     }
 
-    public static boolean checkTypeInvalidation(String type) {
+    public static boolean checkTypeInvalidation(int type) {
+        if (type == 1) {
+            typeName = "buyer";
+        } else if (type == 2) {
+            typeName = "seller";
+            System.out.print("enter your company name: ");
+            company = Menu.scanner.nextLine();
+            if (!checkNameInvalidation(company)){
+                return false;
+            }
+
+        } else if (type == 3 && !isAdminRegistered){
+            typeName = "admin";
+            isAdminRegistered = true;
+        }else {
+            System.out.println("you must choose one of follow options");
+            return false;
+        }
         return true;
     }
 
@@ -114,10 +159,15 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                System.out.print("enter your type: ");
-                String type = Menu.scanner.nextLine();
+                if (isAdminRegistered){
+                    System.out.print("enter your type:\n1: buyer\n2: seller\n");
+                }else{
+                    System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
+                }
+                int type = Menu.scanner.nextInt();
+                Menu.scanner.nextLine();
                 if (checkTypeInvalidation(type)) {
-                    info.add(type);
+                    info.add(typeName);
                     flag += 1;
                 }
             } else if (flag == 4) {
@@ -146,8 +196,9 @@ public class CommandProcessor {
                 String phoneNumber = Menu.scanner.nextLine();
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
+                    info.add(company);
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6));
+                            , info.get(3), info.get(4), info.get(5), info.get(6) ,info.get(7));
                     break;
                 }
             }

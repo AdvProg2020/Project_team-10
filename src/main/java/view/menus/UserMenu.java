@@ -1,6 +1,5 @@
-package view.Menus;
+package view.menus;
 
-import controller.AccountManager;
 import model.Admin;
 import model.Buyer;
 import model.Seller;

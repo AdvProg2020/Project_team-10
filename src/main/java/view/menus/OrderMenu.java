@@ -1,20 +1,19 @@
-package view.Menus;
+package view.menus;
 
-public class ManageUsersMenu extends Menu {
-    public ManageUsersMenu(Menu parentMenu) {
-        super("manage users", parentMenu);
-        subMenus.put(1 ,getView());
-        subMenus.put(2 , getDeleteUser());
-        subMenus.put(3 , getCreateManager());
+public class OrderMenu extends Menu {
+    public OrderMenu(Menu parentMenu) {
+        super("order menu", parentMenu);
+        subMenus.put(1, getShowOrders());
+        subMenus.put(2, getShowAnOrder());
+        subMenus.put(3, getRate());
     }
 
-    private Menu getView(){
-        return new Menu("view" , this) {
+    private Menu getShowOrders() {
+        return new LastMenu("show orders", this) {
             @Override
             public void show() {
                 //TODO
             }
-
             @Override
             public void execute() {
                 //TODO
@@ -22,13 +21,12 @@ public class ManageUsersMenu extends Menu {
         };
     }
 
-    private Menu getDeleteUser(){
-        return new Menu("delete user" , this) {
+    private Menu getShowAnOrder() {
+        return new LastMenu("show an order", this) {
             @Override
             public void show() {
                 //TODO
             }
-
             @Override
             public void execute() {
                 //TODO
@@ -36,18 +34,20 @@ public class ManageUsersMenu extends Menu {
         };
     }
 
-    private Menu getCreateManager(){
-        return new Menu("create manager" , this) {
+    private Menu getRate() {
+        return new LastMenu("rate", this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
-
             @Override
             public void execute() {
                 //TODO
             }
         };
     }
+
+
 
 }

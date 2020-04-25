@@ -1,5 +1,5 @@
-import view.Menus.MainMenu;
-import view.Menus.Menu;
+import view.menus.MainMenu;
+import view.menus.Menu;
 
 import java.util.Scanner;
 

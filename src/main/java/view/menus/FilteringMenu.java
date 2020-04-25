@@ -1,17 +1,17 @@
-package view.Menus;
+package view.menus;
 
-public class SortMenu extends Menu {
-    public SortMenu(Menu parentMenu) {
-        super("sort menu", parentMenu);
-        subMenus.put(1, getShowAvailableShort());
-        subMenus.put(2, getSort());
-        subMenus.put(3, getShowCurrentSort());
-        subMenus.put(4, getDisableSort());
+public class FilteringMenu extends Menu{
+    public FilteringMenu(Menu parentMenu) {
+        super("filter menu", parentMenu);
+        subMenus.put(1, showAvailableFilters());
+        subMenus.put(2, filter());
+        subMenus.put(3, currentFilters());
+        subMenus.put(4, disableFilter());
 
     }
 
-    private Menu getShowAvailableShort() {
-        return new LastMenu("show available sort", this) {
+    private Menu showAvailableFilters() {
+        return new LastMenu("show available filters", this) {
             @Override
             public void show() {
                 super.show();
@@ -26,8 +26,8 @@ public class SortMenu extends Menu {
         };
     }
 
-    private Menu getSort() {
-        return new LastMenu("sort", this) {
+    private Menu filter() {
+        return new LastMenu("filter", this) {
             @Override
             public void show() {
                 super.show();
@@ -42,8 +42,8 @@ public class SortMenu extends Menu {
         };
     }
 
-    private Menu getShowCurrentSort() {
-        return new LastMenu("current sort", this) {
+    private Menu currentFilters() {
+        return new LastMenu("current filters", this) {
             @Override
             public void show() {
                 super.show();
@@ -58,8 +58,8 @@ public class SortMenu extends Menu {
         };
     }
 
-    private Menu getDisableSort() {
-        return new LastMenu("disable sort", this) {
+    private Menu disableFilter() {
+        return new LastMenu("disable filter", this) {
             @Override
             public void show() {
                 super.show();

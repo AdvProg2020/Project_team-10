@@ -1,15 +1,15 @@
-package view.Menus;
+package view.menus;
 
-public class ManageRequestMenu extends Menu {
-    public ManageRequestMenu(Menu parentMenu) {
-        super("manage requests", parentMenu);
-        subMenus.put(1, getDetail());
-        subMenus.put(2, getAccept());
-        subMenus.put(3, getDecline());
+public class ManageUsersMenu extends Menu {
+    public ManageUsersMenu(Menu parentMenu) {
+        super("manage users", parentMenu);
+        subMenus.put(1 ,getView());
+        subMenus.put(2 , getDeleteUser());
+        subMenus.put(3 , getCreateManager());
     }
 
-    private Menu getDetail() {
-        return new Menu("detail", this) {
+    private Menu getView(){
+        return new LastMenu("view" , this) {
             @Override
             public void show() {
                 //TODO
@@ -22,8 +22,8 @@ public class ManageRequestMenu extends Menu {
         };
     }
 
-    private Menu getAccept() {
-        return new Menu("accept", this) {
+    private Menu getDeleteUser(){
+        return new LastMenu("delete user" , this) {
             @Override
             public void show() {
                 //TODO
@@ -36,8 +36,8 @@ public class ManageRequestMenu extends Menu {
         };
     }
 
-    private Menu getDecline() {
-        return new Menu("decline", this) {
+    private Menu getCreateManager(){
+        return new LastMenu("create manager" , this) {
             @Override
             public void show() {
                 //TODO
@@ -49,4 +49,5 @@ public class ManageRequestMenu extends Menu {
             }
         };
     }
+
 }

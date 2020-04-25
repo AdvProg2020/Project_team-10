@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 public class OffsMenuForSeller extends Menu {
     public OffsMenuForSeller( Menu parentMenu) {
@@ -11,7 +11,7 @@ public class OffsMenuForSeller extends Menu {
     }
 
     private Menu getShowOffs(){
-        return new Menu("show offs" , this) {
+        return new LastMenu("show offs" , this) {
             @Override
             public void show() {
                 //TODO
@@ -25,7 +25,7 @@ public class OffsMenuForSeller extends Menu {
     }
 
     private Menu getView(){
-        return new Menu("view an off" , this) {
+        return new LastMenu("view an off" , this) {
             @Override
             public void show() {
                 //TODO
@@ -39,7 +39,7 @@ public class OffsMenuForSeller extends Menu {
     }
 
     private Menu getEdit(){
-        return new Menu("edit" , this) {
+        return new LastMenu("edit" , this) {
             @Override
             public void show() {
                 //TODO
@@ -53,9 +53,10 @@ public class OffsMenuForSeller extends Menu {
     }
 
     private Menu getAddOff(){
-        return new Menu("add off" , this) {
+        return new LastMenu("add off" , this) {
             @Override
             public void show() {
+                super.show();
                 //TODO
             }
 

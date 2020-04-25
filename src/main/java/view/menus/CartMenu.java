@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 import view.Purchase;
 
@@ -15,7 +15,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu getShowProducts() {
-        return new Menu("show products", this) {
+        return new LastMenu("show products", this) {
             @Override
             public void show() {
                 //TODO
@@ -28,7 +28,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu getIncrease() {
-        return new Menu("increase number of a product", this) {
+        return new LastMenu("increase number of a product", this) {
             @Override
             public void show() {
                 //TODO
@@ -41,7 +41,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu getDecrease() {
-        return new Menu("decrease number of a product", this) {
+        return new LastMenu("decrease number of a product", this) {
             @Override
             public void show() {
                 //TODO
@@ -54,7 +54,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu getShowTotalPrice() {
-        return new Menu("show total price", this) {
+        return new LastMenu("show total price", this) {
             @Override
             public void show() {
                 //TODO
@@ -67,7 +67,7 @@ public class CartMenu extends Menu {
     }
 
     private Menu purchase() {
-        return new Menu("purchase", this) {
+        return new LastMenu("purchase", this) {
             @Override
             public void show() {
             }

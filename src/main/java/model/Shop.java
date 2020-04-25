@@ -4,6 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Shop {
+    private List<Account> allAccounts = new ArrayList<>();
+    private List<Request> allRequests = new ArrayList<>();
+    private List<Off> allOffs = new ArrayList<>();
+    private List<Good> allGoods = new ArrayList<>();
+
+    public List<Account> getAllAccounts() {
+        return allAccounts;
+    }
+
+    public List<Request> getAllRequests() {
+        return allRequests;
+    }
+
+    public List<Off> getAllOffs() {
+        return allOffs;
+    }
+
+    public List<Good> getAllGoods() {
+        return allGoods;
+    }
+
     private static Shop shop = new Shop();
 
     public static Shop getShop() {
@@ -11,14 +32,10 @@ public class Shop {
     }
 
     private Shop() {
-        List<Account> allAccounts = new ArrayList<>();
-        List<Request> allRequests = new ArrayList<>();
-        List<Off> allOffs = new ArrayList<>();
-        List<Good> allGoods = new ArrayList<>();
     }
 
     public Account getRoleByUsername(String username) {
-        return new Admin("f", "f");
+        return null;
     }
 
     public Good getProductWithId(String id) {

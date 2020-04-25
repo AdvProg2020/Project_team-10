@@ -1,4 +1,4 @@
-package view.Menus;
+package view.menus;
 
 import static view.CommandProcessor.*;
 
@@ -10,7 +10,7 @@ public abstract class Menu {
     private String name;
     protected Menu parentMenu;
     protected HashMap<Integer, Menu> subMenus;
-    protected static boolean isLogged = true;
+    protected static boolean isLogged = false;
 
     public Menu(String name, Menu parentMenu) {
         subMenus = new HashMap<>();

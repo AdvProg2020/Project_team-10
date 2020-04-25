@@ -1,8 +1,4 @@
-package view.Menus;
-
-import view.Menus.Menu;
-
-import java.util.HashMap;
+package view.menus;
 
 public class MainMenu extends Menu {
 

@@ -1,19 +1,20 @@
-package view.Menus;
+package view.menus;
 
-public class OrderMenu extends Menu {
-    public OrderMenu(Menu parentMenu) {
-        super("order menu", parentMenu);
-        subMenus.put(1, getShowOrders());
-        subMenus.put(2, getShowAnOrder());
-        subMenus.put(3, getRate());
+public class ManageRequestMenu extends Menu {
+    public ManageRequestMenu(Menu parentMenu) {
+        super("manage requests", parentMenu);
+        subMenus.put(1, getDetail());
+        subMenus.put(2, getAccept());
+        subMenus.put(3, getDecline());
     }
 
-    private Menu getShowOrders() {
-        return new Menu("show orders", this) {
+    private Menu getDetail() {
+        return new LastMenu("detail", this) {
             @Override
             public void show() {
                 //TODO
             }
+
             @Override
             public void execute() {
                 //TODO
@@ -21,12 +22,13 @@ public class OrderMenu extends Menu {
         };
     }
 
-    private Menu getShowAnOrder() {
-        return new Menu("show an order", this) {
+    private Menu getAccept() {
+        return new LastMenu("accept", this) {
             @Override
             public void show() {
                 //TODO
             }
+
             @Override
             public void execute() {
                 //TODO
@@ -34,19 +36,17 @@ public class OrderMenu extends Menu {
         };
     }
 
-    private Menu getRate() {
-        return new Menu("rate", this) {
+    private Menu getDecline() {
+        return new LastMenu("decline", this) {
             @Override
             public void show() {
                 //TODO
             }
+
             @Override
             public void execute() {
                 //TODO
             }
         };
     }
-
-
-
 }
