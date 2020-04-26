@@ -24,12 +24,7 @@ public class CommandProcessor {
 
     public static boolean checkUsernameInvalidation(String username) {
         if (getMatcher(username, "\\w+").matches()) {
-            if (AccountManager.canRegister(username)) {
-                return true;
-            } else {
-                System.out.println("username exists");
-                return false;
-            }
+            return true;
         } else {
             System.out.println("invalid username");
             return false;
@@ -89,14 +84,14 @@ public class CommandProcessor {
             typeName = "seller";
             System.out.print("enter your company name: ");
             company = Menu.scanner.nextLine();
-            if (!checkNameInvalidation(company)){
+            if (!checkNameInvalidation(company)) {
                 return false;
             }
 
-        } else if (type == 3 && !isAdminRegistered){
+        } else if (type == 3 && !isAdminRegistered) {
             typeName = "admin";
             isAdminRegistered = true;
-        }else {
+        } else {
             System.out.println("you must choose one of follow options");
             return false;
         }
@@ -149,8 +144,12 @@ public class CommandProcessor {
                 System.out.print("enter your username: ");
                 String username = Menu.scanner.nextLine();
                 if (checkUsernameInvalidation(username)) {
-                    info.add(username);
-                    flag += 1;
+                    if (AccountManager.canRegister(username)) {
+                        info.add(username);
+                        flag += 1;
+                    } else {
+                        System.out.println("username exists");
+                    }
                 }
             } else if (flag == 2) {
                 System.out.print("enter your password: ");
@@ -160,9 +159,9 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                if (isAdminRegistered){
+                if (isAdminRegistered) {
                     System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                }else{
+                } else {
                     System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
                 }
                 int type = Menu.scanner.nextInt();
@@ -199,7 +198,7 @@ public class CommandProcessor {
                     info.add(phoneNumber);
                     info.add(company);
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6) ,info.get(7));
+                            , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
                     break;
                 }
             }
@@ -210,19 +209,22 @@ public class CommandProcessor {
         if (AccountManager.getOnlineAccount() != null) {
             System.out.println("you are logged in");
         } else {
-            String username = null, password;
+            String username = null, password = null;
             int flag = 0;
             Menu.scanner.nextLine();
-            while (true) {
+            while (flag < 2) {
                 if (flag == 0) {
                     System.out.println("enter your username: ");
                     username = Menu.scanner.nextLine();
-                    flag++;
-                    continue;
-                } else {
+                    if (checkUsernameInvalidation(username)) {
+                        flag++;
+                    }
+                } else if (flag == 1) {
                     System.out.println("enter your password: ");
                     password = Menu.scanner.nextLine();
-                    break;
+                    if (checkPasswordInvalidation(password)) {
+                        flag++;
+                    }
                 }
             }
             if (AccountManager.login(username, password)) {
@@ -280,6 +282,8 @@ public class CommandProcessor {
 
     public static void processLogout(){
         if (AccountManager.getOnlineAccount() == null){
+    public static void processLogout() {
+        if (AccountManager.getOnlineAccount() == null) {
             System.out.println("no body is logged in");
         } else {
             System.out.println("logout successful");

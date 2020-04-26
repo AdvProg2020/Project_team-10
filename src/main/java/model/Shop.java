@@ -35,6 +35,11 @@ public class Shop {
     }
 
     public Account getRoleByUsername(String username) {
+        for (Account account : allAccounts) {
+            if (account.getUsername().equals(username)){
+                return account;
+            }
+        }
         return null;
     }
 

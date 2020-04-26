@@ -13,7 +13,7 @@ import static view.CommandProcessor.*;
 
 public class UserMenu extends Menu {
 
-    private String username;
+    private static String username;
 
     public UserMenu(Menu parentMenu) {
         super("user menu", parentMenu);
@@ -335,5 +335,7 @@ public class UserMenu extends Menu {
         };
     }
 
-
+    public static void setUsername(String username) {
+        UserMenu.username = username;
+    }
 }
