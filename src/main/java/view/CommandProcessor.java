@@ -134,7 +134,7 @@ public class CommandProcessor {
         return new Menu("logout") {
             @Override
             public void execute() {
-                AccountManager.logout();
+                processLogout();
             }
         };
     }
@@ -206,7 +206,39 @@ public class CommandProcessor {
     }
 
     public static void processLogin() {
+        if (AccountManager.getOnlineAccount() != null) {
+            System.out.println("you are logged in");
+        } else {
+            String username = null, password;
+            int flag = 0;
+            Menu.scanner.nextLine();
+            while (true) {
+                if (flag == 0) {
+                    System.out.println("enter your username: ");
+                    username = Menu.scanner.nextLine();
+                    flag++;
+                    continue;
+                } else {
+                    System.out.println("enter your password: ");
+                    password = Menu.scanner.nextLine();
+                    break;
+                }
+            }
+            if (AccountManager.login(username, password)) {
+                System.out.println("login successful");
+            } else {
+                System.out.println("username/password is incorrect");
+            }
+        }
     }
 
-
+    public static void processLogout(){
+        if (AccountManager.getOnlineAccount() == null){
+            System.out.println("no body is logged in");
+        } else {
+            System.out.println("logout successful");
+            AccountManager.setOnlineAccount(null);
+            Menu.setIsLogged(false);
+        }
+    }
 }
