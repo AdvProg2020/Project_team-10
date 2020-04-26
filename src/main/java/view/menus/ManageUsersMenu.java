@@ -1,5 +1,10 @@
 package view.menus;
 
+import controller.AccountManager;
+import model.Account;
+import model.Shop;
+import view.CommandProcessor;
+
 public class ManageUsersMenu extends Menu {
     public ManageUsersMenu(Menu parentMenu) {
         super("manage users", parentMenu);
@@ -12,12 +17,17 @@ public class ManageUsersMenu extends Menu {
         return new LastMenu("view" , this) {
             @Override
             public void show() {
-                //TODO
+                for (Account allAccount : Shop.getShop().getAllAccounts()) {
+                    if (allAccount != AccountManager.getOnlineAccount()){
+                        System.out.println(allAccount.getUsername());
+                    }
+                }
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -26,12 +36,13 @@ public class ManageUsersMenu extends Menu {
         return new LastMenu("delete user" , this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.processDeleteAccountByAdmin();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -40,12 +51,13 @@ public class ManageUsersMenu extends Menu {
         return new LastMenu("create manager" , this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.processRegister(false);
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

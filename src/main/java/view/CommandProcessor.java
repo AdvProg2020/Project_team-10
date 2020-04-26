@@ -2,6 +2,8 @@ package view;
 
 import controller.AccountManager;
 import controller.AdminManager;
+import model.Account;
+import model.Shop;
 import view.menus.Menu;
 
 import java.util.ArrayList;
@@ -107,7 +109,7 @@ public class CommandProcessor {
 
             @Override
             public void execute() {
-                CommandProcessor.processRegister();
+                CommandProcessor.processRegister(true);
             }
         };
     }
@@ -135,7 +137,7 @@ public class CommandProcessor {
         };
     }
 
-    public static void processRegister() {
+    public static void processRegister(boolean register) {
         ArrayList<String> info = new ArrayList<>();
         int flag = 1;
         Menu.scanner.nextLine();
@@ -159,15 +161,19 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                if (isAdminRegistered) {
-                    System.out.print("enter your type:\n1: buyer\n2: seller\n");
+                if (register) {
+                    if (isAdminRegistered) {
+                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
+                    } else {
+                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
+                    }
+                    int type = Menu.scanner.nextInt();
+                    Menu.scanner.nextLine();
+                    if (checkTypeInvalidation(type)) {
+                        info.add(typeName);
+                        flag += 1;
+                    }
                 } else {
-                    System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
-                }
-                int type = Menu.scanner.nextInt();
-                Menu.scanner.nextLine();
-                if (checkTypeInvalidation(type)) {
-                    info.add(typeName);
                     flag += 1;
                 }
             } else if (flag == 4) {
@@ -197,8 +203,15 @@ public class CommandProcessor {
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
                     info.add(company);
+                    if (register){
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
                             , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
+                        System.out.println(info.get(0) + " was registered successfully");
+                    }else {
+                        AccountManager.register(info.get(0), info.get(1), "admin"
+                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
+                        System.out.println(info.get(0) + " The new manager was successfully registered");
+                    }
                     break;
                 }
             }
@@ -289,4 +302,19 @@ public class CommandProcessor {
             Menu.setIsLogged(false);
         }
     }
+
+    public static void processDeleteAccountByAdmin() {
+        System.out.print("Enter the desired username: ");
+        Menu.scanner.nextLine();
+        String username = Menu.scanner.nextLine();
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            if (allAccount.equals(Shop.getShop().getRoleByUsername(username))) {
+                System.out.println(username + " deleted");
+                Shop.getShop().getAllAccounts().remove(allAccount);
+                break;
+            }
+        }
+    }
+
+
 }
