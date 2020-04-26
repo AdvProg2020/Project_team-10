@@ -31,4 +31,44 @@ public class Good {
         this.categoryAttribute = categoryAttribute;
         this.description = description;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<Buyer> getBuyers() {
+        return buyers;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setCategoryAttribute(List<String> categoryAttribute) {
+        this.categoryAttribute = categoryAttribute;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

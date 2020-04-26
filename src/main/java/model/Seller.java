@@ -12,4 +12,23 @@ public class Seller extends Account {
         super(username, firstName, lastName, email, phoneNumber, password);
         this.company = company;
     }
+
+    public Good getProductWithId(String id) {
+        for (Good good : this.getGoods()) {
+            if (good.getId().equals(id)) {
+                return good;
+            }
+        }
+        return null;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public List<Good> getGoods() {
+        return goods;
+    }
+
+
 }
