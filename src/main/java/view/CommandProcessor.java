@@ -1,6 +1,7 @@
 package view;
 
 import controller.AccountManager;
+import controller.AdminManager;
 import view.menus.Menu;
 
 import java.util.ArrayList;
@@ -88,14 +89,14 @@ public class CommandProcessor {
             typeName = "seller";
             System.out.print("enter your company name: ");
             company = Menu.scanner.nextLine();
-            if (!checkNameInvalidation(company)){
+            if (!checkNameInvalidation(company)) {
                 return false;
             }
 
-        } else if (type == 3 && !isAdminRegistered){
+        } else if (type == 3 && !isAdminRegistered) {
             typeName = "admin";
             isAdminRegistered = true;
-        }else {
+        } else {
             System.out.println("you must choose one of follow options");
             return false;
         }
@@ -159,9 +160,9 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                if (isAdminRegistered){
+                if (isAdminRegistered) {
                     System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                }else{
+                } else {
                     System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
                 }
                 int type = Menu.scanner.nextInt();
@@ -198,7 +199,8 @@ public class CommandProcessor {
                     info.add(phoneNumber);
                     info.add(company);
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6) ,info.get(7));
+                            , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
+                    System.out.println("Registration was successful");
                     break;
                 }
             }
@@ -208,5 +210,49 @@ public class CommandProcessor {
     public static void processLogin() {
     }
 
+    public static void processEditProfile() {
+        int flag = 1;
+        ArrayList<String> info = new ArrayList<>();
+        Menu.scanner.nextLine();
+        while (true) {
+            if (flag == 1) {
+                System.out.print("enter your new password: ");
+                String password = Menu.scanner.nextLine();
+                if (checkPasswordInvalidation(password)) {
+                    info.add(password);
+                    flag += 1;
+                }
+            } else if (flag == 2) {
+                System.out.print("enter your new first name: ");
+                String firstName = Menu.scanner.nextLine();
+                if (checkNameInvalidation(firstName)) {
+                    info.add(firstName);
+                    flag += 1;
+                }
+            } else if (flag == 3) {
+                System.out.print("enter your new last name: ");
+                String lastName = Menu.scanner.nextLine();
+                if (checkNameInvalidation(lastName)) {
+                    info.add(lastName);
+                    flag += 1;
+                }
+            } else if (flag == 4) {
+                System.out.print("enter your new email: ");
+                String email = Menu.scanner.nextLine();
+                if (checkEmailInvalidation(email)) {
+                    info.add(email);
+                    flag += 1;
+                }
+            } else {
+                System.out.print("enter your phone number: ");
+                String phoneNumber = Menu.scanner.nextLine();
+                if (checkPhoneNumberInvalidation(phoneNumber)) {
+                    info.add(phoneNumber);
+                    AdminManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
+                    break;
+                }
+            }
+        }
+    }
 
 }

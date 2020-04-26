@@ -1,5 +1,6 @@
 package controller;
 
+import model.Account;
 import model.Buyer;
 
 import java.util.Date;
@@ -9,11 +10,15 @@ public class AdminManager {
 
     //Admin
     public static void showPersonalInfo() {
-
+        System.out.println(AccountManager.getOnlineAccount());
     }
 
-    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
-
+    public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber , String email) {
+        AccountManager.getOnlineAccount().setPassword(password);
+        AccountManager.getOnlineAccount().setFirstName(firstName);
+        AccountManager.getOnlineAccount().setLastName(lastName);
+        AccountManager.getOnlineAccount().setPhoneNumber(phoneNumber);
+        AccountManager.getOnlineAccount().setEmail(email);
     }
 
     public static void showAllAccount() {
