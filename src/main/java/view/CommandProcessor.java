@@ -1,6 +1,9 @@
 package view;
 
 import controller.AccountManager;
+import controller.AdminManager;
+import model.Account;
+import model.Shop;
 import view.menus.Menu;
 
 import java.util.ArrayList;
@@ -23,12 +26,7 @@ public class CommandProcessor {
 
     public static boolean checkUsernameInvalidation(String username) {
         if (getMatcher(username, "\\w+").matches()) {
-            if (AccountManager.canRegister(username)) {
-                return true;
-            } else {
-                System.out.println("username exists");
-                return false;
-            }
+            return true;
         } else {
             System.out.println("invalid username");
             return false;
@@ -88,14 +86,14 @@ public class CommandProcessor {
             typeName = "seller";
             System.out.print("enter your company name: ");
             company = Menu.scanner.nextLine();
-            if (!checkNameInvalidation(company)){
+            if (!checkNameInvalidation(company)) {
                 return false;
             }
 
-        } else if (type == 3 && !isAdminRegistered){
+        } else if (type == 3 && !isAdminRegistered) {
             typeName = "admin";
             isAdminRegistered = true;
-        }else {
+        } else {
             System.out.println("you must choose one of follow options");
             return false;
         }
@@ -111,7 +109,7 @@ public class CommandProcessor {
 
             @Override
             public void execute() {
-                CommandProcessor.processRegister();
+                CommandProcessor.processRegister(true);
             }
         };
     }
@@ -134,12 +132,12 @@ public class CommandProcessor {
         return new Menu("logout") {
             @Override
             public void execute() {
-                AccountManager.logout();
+                processLogout();
             }
         };
     }
 
-    public static void processRegister() {
+    public static void processRegister(boolean register) {
         ArrayList<String> info = new ArrayList<>();
         int flag = 1;
         Menu.scanner.nextLine();
@@ -148,8 +146,12 @@ public class CommandProcessor {
                 System.out.print("enter your username: ");
                 String username = Menu.scanner.nextLine();
                 if (checkUsernameInvalidation(username)) {
-                    info.add(username);
-                    flag += 1;
+                    if (AccountManager.canRegister(username)) {
+                        info.add(username);
+                        flag += 1;
+                    } else {
+                        System.out.println("username exists");
+                    }
                 }
             } else if (flag == 2) {
                 System.out.print("enter your password: ");
@@ -159,15 +161,19 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                if (isAdminRegistered){
-                    System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                }else{
-                    System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
-                }
-                int type = Menu.scanner.nextInt();
-                Menu.scanner.nextLine();
-                if (checkTypeInvalidation(type)) {
-                    info.add(typeName);
+                if (register) {
+                    if (isAdminRegistered) {
+                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
+                    } else {
+                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
+                    }
+                    int type = Menu.scanner.nextInt();
+                    Menu.scanner.nextLine();
+                    if (checkTypeInvalidation(type)) {
+                        info.add(typeName);
+                        flag += 1;
+                    }
+                } else {
                     flag += 1;
                 }
             } else if (flag == 4) {
@@ -197,8 +203,15 @@ public class CommandProcessor {
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
                     info.add(company);
+                    if (register){
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6) ,info.get(7));
+                            , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
+                        System.out.println(info.get(0) + " was registered successfully");
+                    }else {
+                        AccountManager.register(info.get(0), info.get(1), "admin"
+                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
+                        System.out.println(info.get(0) + " The new manager was successfully registered");
+                    }
                     break;
                 }
             }
@@ -206,6 +219,101 @@ public class CommandProcessor {
     }
 
     public static void processLogin() {
+        if (AccountManager.getOnlineAccount() != null) {
+            System.out.println("you are logged in");
+        } else {
+            String username = null, password = null;
+            int flag = 0;
+            Menu.scanner.nextLine();
+            while (flag < 2) {
+                if (flag == 0) {
+                    System.out.println("enter your username: ");
+                    username = Menu.scanner.nextLine();
+                    if (checkUsernameInvalidation(username)) {
+                        flag++;
+                    }
+                } else if (flag == 1) {
+                    System.out.println("enter your password: ");
+                    password = Menu.scanner.nextLine();
+                    if (checkPasswordInvalidation(password)) {
+                        flag++;
+                    }
+                }
+            }
+            if (AccountManager.login(username, password)) {
+                System.out.println("login successful");
+            } else {
+                System.out.println("username/password is incorrect");
+            }
+        }
+    }
+
+    public static void processEditProfile() {
+        int flag = 1;
+        ArrayList<String> info = new ArrayList<>();
+        Menu.scanner.nextLine();
+        while (true) {
+            if (flag == 1) {
+                System.out.print("enter your new password: ");
+                String password = Menu.scanner.nextLine();
+                if (checkPasswordInvalidation(password)) {
+                    info.add(password);
+                    flag += 1;
+                }
+            } else if (flag == 2) {
+                System.out.print("enter your new first name: ");
+                String firstName = Menu.scanner.nextLine();
+                if (checkNameInvalidation(firstName)) {
+                    info.add(firstName);
+                    flag += 1;
+                }
+            } else if (flag == 3) {
+                System.out.print("enter your new last name: ");
+                String lastName = Menu.scanner.nextLine();
+                if (checkNameInvalidation(lastName)) {
+                    info.add(lastName);
+                    flag += 1;
+                }
+            } else if (flag == 4) {
+                System.out.print("enter your new email: ");
+                String email = Menu.scanner.nextLine();
+                if (checkEmailInvalidation(email)) {
+                    info.add(email);
+                    flag += 1;
+                }
+            } else {
+                System.out.print("enter your phone number: ");
+                String phoneNumber = Menu.scanner.nextLine();
+                if (checkPhoneNumberInvalidation(phoneNumber)) {
+                    info.add(phoneNumber);
+                    AdminManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void processLogout() {
+        if (AccountManager.getOnlineAccount() == null) {
+            System.out.println("no body is logged in");
+        } else {
+            System.out.println("logout successful");
+            AccountManager.setOnlineAccount(null);
+            Menu.setIsLogged(false);
+        }
+    }
+
+    public static void processDeleteAccountByAdmin() {
+        System.out.print("Enter the desired username: ");
+        Menu.scanner.nextLine();
+        String username = Menu.scanner.nextLine();
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            if (allAccount.equals(Shop.getShop().getRoleByUsername(username))) {
+                System.out.println(username + " deleted");
+                Shop.getShop().getAllAccounts().remove(allAccount);
+                break;
+            }
+        }
     }
 
 

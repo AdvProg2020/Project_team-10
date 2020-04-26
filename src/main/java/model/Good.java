@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class Good {
-    private String id;
+    private int id;
     private String status;
     private String name;
     private String company;
@@ -20,7 +20,7 @@ public class Good {
     private int visitNumber;
 
 
-    public Good(String id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
+    public Good(int id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
         this.id = id;
         this.name = name;
         this.company = company;

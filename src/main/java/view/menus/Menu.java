@@ -10,7 +10,7 @@ public abstract class Menu {
     private String name;
     protected Menu parentMenu;
     protected HashMap<Integer, Menu> subMenus;
-    protected static boolean isLogged = false;
+    protected static boolean isLogged;
 
     public Menu(String name, Menu parentMenu) {
         subMenus = new HashMap<>();

@@ -1,15 +1,19 @@
 package view.menus;
 
+import controller.AdminManager;
 import model.Admin;
 import model.Buyer;
 import model.Seller;
 import model.Shop;
+import view.CommandProcessor;
+
+import java.util.Scanner;
 
 import static view.CommandProcessor.*;
 
 public class UserMenu extends Menu {
 
-    private String username;
+    private static String username;
 
     public UserMenu(Menu parentMenu) {
         super("user menu", parentMenu);
@@ -159,6 +163,7 @@ public class UserMenu extends Menu {
         return new LastMenu("edit profile", this) {
             @Override
             public void show() {
+                CommandProcessor.processEditProfile();
                 super.show();
                 //TODO
             }
@@ -175,14 +180,13 @@ public class UserMenu extends Menu {
         return new LastMenu("show profile", this) {
             @Override
             public void show() {
+                AdminManager.showPersonalInfo();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -331,5 +335,7 @@ public class UserMenu extends Menu {
         };
     }
 
-
+    public static void setUsername(String username) {
+        UserMenu.username = username;
+    }
 }

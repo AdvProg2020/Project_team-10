@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import view.menus.Menu;
+import view.menus.UserMenu;
 
 public class AccountManager {
     private static Account onlineAccount;
@@ -47,6 +48,11 @@ public class AccountManager {
     }
 
     public static boolean canRegister(String username) {
+        for (Account account : Shop.getShop().getAllAccounts()) {
+            if (account.getUsername().equals(username)){
+                return false;
+            }
+        }
         return true;
     }
 
@@ -63,13 +69,29 @@ public class AccountManager {
     }
 
     public static boolean login(String username, String password) {
-        onlineAccount = Shop.getShop().getRoleByUsername(username);
+        for (Account account : Shop.getShop().getAllAccounts()) {
+            if (account.getUsername().equals(username)){
+                if (account.getPassword().equals(password)){
+                    onlineAccount = Shop.getShop().getRoleByUsername(username);
+                    Menu.setIsLogged(true);
+                    UserMenu.setUsername(username);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    public static void logout() {
-        Menu.setIsLogged(false);
+    public static void setOnlineAccount(Account onlineAccount) {
+        AccountManager.onlineAccount = onlineAccount;
     }
 
+    public static void showPersonalInfo() {
+
+    }
+
+    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
+
+    }
 
 }
