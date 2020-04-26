@@ -89,14 +89,14 @@ public class CommandProcessor {
             typeName = "seller";
             System.out.print("enter your company name: ");
             company = Menu.scanner.nextLine();
-            if (!checkNameInvalidation(company)) {
+            if (!checkNameInvalidation(company)){
                 return false;
             }
 
-        } else if (type == 3 && !isAdminRegistered) {
+        } else if (type == 3 && !isAdminRegistered){
             typeName = "admin";
             isAdminRegistered = true;
-        } else {
+        }else {
             System.out.println("you must choose one of follow options");
             return false;
         }
@@ -135,7 +135,7 @@ public class CommandProcessor {
         return new Menu("logout") {
             @Override
             public void execute() {
-                AccountManager.logout();
+                processLogout();
             }
         };
     }
@@ -160,9 +160,9 @@ public class CommandProcessor {
                     flag += 1;
                 }
             } else if (flag == 3) {
-                if (isAdminRegistered) {
+                if (isAdminRegistered){
                     System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                } else {
+                }else{
                     System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
                 }
                 int type = Menu.scanner.nextInt();
@@ -199,8 +199,7 @@ public class CommandProcessor {
                     info.add(phoneNumber);
                     info.add(company);
                     AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
-                    System.out.println("Registration was successful");
+                            , info.get(3), info.get(4), info.get(5), info.get(6) ,info.get(7));
                     break;
                 }
             }
@@ -208,6 +207,30 @@ public class CommandProcessor {
     }
 
     public static void processLogin() {
+        if (AccountManager.getOnlineAccount() != null) {
+            System.out.println("you are logged in");
+        } else {
+            String username = null, password;
+            int flag = 0;
+            Menu.scanner.nextLine();
+            while (true) {
+                if (flag == 0) {
+                    System.out.println("enter your username: ");
+                    username = Menu.scanner.nextLine();
+                    flag++;
+                    continue;
+                } else {
+                    System.out.println("enter your password: ");
+                    password = Menu.scanner.nextLine();
+                    break;
+                }
+            }
+            if (AccountManager.login(username, password)) {
+                System.out.println("login successful");
+            } else {
+                System.out.println("username/password is incorrect");
+            }
+        }
     }
 
     public static void processEditProfile() {
@@ -255,4 +278,13 @@ public class CommandProcessor {
         }
     }
 
+    public static void processLogout(){
+        if (AccountManager.getOnlineAccount() == null){
+            System.out.println("no body is logged in");
+        } else {
+            System.out.println("logout successful");
+            AccountManager.setOnlineAccount(null);
+            Menu.setIsLogged(false);
+        }
+    }
 }
