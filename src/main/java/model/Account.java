@@ -50,4 +50,15 @@ public abstract class Account {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return
+                "username: " + username + "\n" +
+                "firstName: " + firstName + "\n" +
+                "lastName: " + lastName + "\n" +
+                "email: " + email + "\n" +
+                "phoneNumber: " + phoneNumber + "\n" +
+                "password: " + password;
+    }
 }

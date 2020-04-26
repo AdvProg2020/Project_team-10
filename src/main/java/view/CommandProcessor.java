@@ -280,8 +280,6 @@ public class CommandProcessor {
         }
     }
 
-    public static void processLogout(){
-        if (AccountManager.getOnlineAccount() == null){
     public static void processLogout() {
         if (AccountManager.getOnlineAccount() == null) {
             System.out.println("no body is logged in");
