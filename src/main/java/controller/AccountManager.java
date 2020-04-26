@@ -10,13 +10,43 @@ public class AccountManager {
     private static int lastGoodId;
     private static int lastCommentId;
     private static int lastLogId;
+    private static int lastDiscountId;
+    private static int lastOffId;
 
     public static int getLastRequestId() {
         return lastRequestId;
     }
 
+    public static int getLastDiscountId() {
+        return lastDiscountId;
+    }
+
+    public static int getLastOffId() {
+        return lastOffId;
+    }
+
     public static void increaseLastRequestId() {
         lastRequestId += 1;
+    }
+
+    public static void increaseLastGoodId() {
+        lastGoodId += 1;
+    }
+
+    public static void increaseLastCommentId() {
+        lastCommentId += 1;
+    }
+
+    public static void increaseLastLogId() {
+        lastLogId += 1;
+    }
+
+    public static void increaseLastDiscountId() {
+        lastDiscountId += 1;
+    }
+
+    public static void increaseLastOffId() {
+        lastOffId += 1;
     }
 
     public static int getLastGoodId() {

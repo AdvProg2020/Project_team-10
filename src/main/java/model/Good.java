@@ -32,7 +32,7 @@ public class Good {
         this.description = description;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
