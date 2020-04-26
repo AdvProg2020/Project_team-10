@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import sun.plugin2.message.ShowDocumentMessage;
 import view.menus.Menu;
+import view.menus.UserMenu;
 
 public class AccountManager {
     private static Account onlineAccount;
@@ -38,6 +39,7 @@ public class AccountManager {
                 if (account.getPassword().equals(password)){
                     onlineAccount = Shop.getShop().getRoleByUsername(username);
                     Menu.setIsLogged(true);
+                    UserMenu.setUsername(username);
                     return true;
                 }
             }
@@ -47,6 +49,14 @@ public class AccountManager {
 
     public static void setOnlineAccount(Account onlineAccount) {
         AccountManager.onlineAccount = onlineAccount;
+    }
+
+    public static void showPersonalInfo() {
+
+    }
+
+    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
+
     }
 
 }

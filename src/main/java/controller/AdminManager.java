@@ -8,13 +8,7 @@ import java.util.List;
 public class AdminManager {
 
     //Admin
-    public static void showPersonalInfo() {
 
-    }
-
-    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
-
-    }
 
     public static void showAllAccount() {
 
