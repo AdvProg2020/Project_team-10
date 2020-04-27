@@ -390,10 +390,6 @@ public class CommandProcessor {
                 }
                 AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
                 System.out.println("The discount code was successfully created");
-        for (Account account : Shop.getShop().getAllAccounts()) {
-            if (account.equals(Shop.getShop().getAccountByUsername(username))) {
-                System.out.println(username + " deleted");
-                Shop.getShop().getAllAccounts().remove(account);
                 break;
             }
         }
@@ -502,15 +498,16 @@ public class CommandProcessor {
         }
         return null;
     }
-    }
 
-    public static void printShowPersonalInfo(){
+
+    public static void printShowPersonalInfo() {
         System.out.println(AccountManager.getOnlineAccount());
     }
 
-    public static void printShowAllDiscount(){
-        for (Discount discount : Shop.getShop().getAllDiscount()) {
+    public static void printShowAllDiscount() {
+        for (Discount discount : Shop.getShop().getAllDiscounts()) {
             System.out.println(discount);
         }
     }
 }
+

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Account;
 import model.Buyer;
 import model.Discount;
 import model.Shop;

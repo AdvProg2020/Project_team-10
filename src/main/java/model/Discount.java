@@ -10,9 +10,9 @@ public class Discount {
     private int percent;
     private long maxAmountOfDiscount;
     private int repeatDiscount;
-    private List<Buyer> users;
+    private List<Account> users;
 
-    public Discount(int code, Date startDate, Date endDate, int percent, long maxAmountOfDiscount, int repeatDiscount, List<Buyer> users) {
+    public Discount(int code, Date startDate, Date endDate, int percent, long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
         this.code = code;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -37,14 +37,4 @@ public class Discount {
         return code;
     }
 
-    @Override
-    public String toString() {
-        return
-                "code: " + code + "\n" +
-                "startDate: " + startDate + "\n" +
-                "endDate: " + endDate + "\n" +
-                "percent: " + percent + "\n" +
-                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
-                "repeatDiscount: " + repeatDiscount ;
-    }
 }
