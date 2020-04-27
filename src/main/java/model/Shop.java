@@ -8,6 +8,7 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
+    private List<Good> goodsInCart = new ArrayList<>();
 
     public List<Account> getAllAccounts() {
         return allAccounts;
@@ -69,5 +70,9 @@ public class Shop {
 
     public Off getOffWithId(String id) {
         return null;
+    }
+
+    public List<Good> getGoodsInCart() {
+        return goodsInCart;
     }
 }

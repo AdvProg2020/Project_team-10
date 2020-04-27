@@ -21,4 +21,15 @@ public class Discount {
         this.repeatDiscount = repeatDiscount;
         this.users = users;
     }
+
+    @Override
+    public String toString() {
+        return
+                "code: " + code + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "percent: " + percent + "\n" +
+                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
+                "repeatDiscount: " + repeatDiscount ;
+    }
 }
