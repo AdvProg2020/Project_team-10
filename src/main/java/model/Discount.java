@@ -25,4 +25,15 @@ public class Discount {
     public int getCode() {
         return code;
     }
+
+    @Override
+    public String toString() {
+        return
+                "code: " + code + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "percent: " + percent + "\n" +
+                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
+                "repeatDiscount: " + repeatDiscount ;
+    }
 }

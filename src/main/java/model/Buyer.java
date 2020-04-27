@@ -13,4 +13,8 @@ public class Buyer extends Account {
     public Buyer(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         super(username, firstName, lastName, email, phoneNumber, password);
     }
+
+    public List<Good> getGoods() {
+        return goods;
+    }
 }

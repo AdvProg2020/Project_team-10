@@ -14,10 +14,11 @@ public class Good {
     private String category;
     private List<String> categoryAttribute;
     private String description;
-    private float averageScore;
+    private List<Integer> allRates;
     private List<Comment> comments;
     private List<Buyer> buyers;
     private int visitNumber;
+    private int numberOfChoose;
 
 
     public Good(int id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
@@ -70,5 +71,29 @@ public class Good {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumberOfChoose() {
+        return numberOfChoose;
+    }
+
+    public void setNumberOfChoose(int numberOfChoose) {
+        this.numberOfChoose = numberOfChoose;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public List<Integer> getAllRates() {
+        return allRates;
     }
 }

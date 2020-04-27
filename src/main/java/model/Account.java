@@ -86,4 +86,8 @@ public abstract class Account {
         return credit;
     }
 
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
 }
