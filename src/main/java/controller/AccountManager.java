@@ -10,15 +10,15 @@ public class AccountManager {
     private static int lastGoodId;
     private static int lastCommentId;
     private static int lastLogId;
-    private static int lastDiscountId;
+    private static int lastDiscountCode;
     private static int lastOffId;
 
     public static int getLastRequestId() {
         return lastRequestId;
     }
 
-    public static int getLastDiscountId() {
-        return lastDiscountId;
+    public static int getLastDiscountCode() {
+        return lastDiscountCode;
     }
 
     public static int getLastOffId() {
@@ -42,7 +42,7 @@ public class AccountManager {
     }
 
     public static void increaseLastDiscountId() {
-        lastDiscountId += 1;
+        lastDiscountCode += 1;
     }
 
     public static void increaseLastOffId() {
@@ -102,7 +102,7 @@ public class AccountManager {
         for (Account account : Shop.getShop().getAllAccounts()) {
             if (account.getUsername().equals(username)){
                 if (account.getPassword().equals(password)){
-                    onlineAccount = Shop.getShop().getRoleByUsername(username);
+                    onlineAccount = Shop.getShop().getAccountByUsername(username);
                     Menu.setIsLogged(true);
                     UserMenu.setUsername(username);
                     return true;

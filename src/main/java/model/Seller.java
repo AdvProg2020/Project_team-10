@@ -13,9 +13,9 @@ public class Seller extends Account {
         this.company = company;
     }
 
-    public Good getProductWithId(String id) {
+    public Good getProductWithId(int id) {
         for (Good good : this.getGoods()) {
-            if (good.getId().equals(id)) {
+            if (good.getId() == id) {
                 return good;
             }
         }

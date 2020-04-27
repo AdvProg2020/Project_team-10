@@ -2,15 +2,19 @@ package controller;
 
 import model.Account;
 import model.Buyer;
+import model.Discount;
+import model.Shop;
+import view.CommandProcessor;
 
 import java.util.Date;
 import java.util.List;
 
 public class AdminManager {
 
+    private static int code= 0;
     //Admin
     public static void showPersonalInfo() {
-        System.out.println(AccountManager.getOnlineAccount());
+        CommandProcessor.printShowPersonalInfo();
     }
 
     public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber , String email) {
@@ -30,23 +34,31 @@ public class AdminManager {
     }
 
     public static boolean deleteAccount(String username) {
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            if (allAccount.equals(Shop.getShop().getAccountByUsername(username))) {
+                Shop.getShop().getAllAccounts().remove(allAccount);
+                return true;
+            }
+        }
         return false;
     }
 
-    public static boolean addAdmin(String username) {
-        return false;
-    }
+//    public static boolean addAdmin(String username) {
+//        return false;
+//    }
 
     public static boolean removeProduct(String id) {
         return false;
     }
 
-    public static boolean createDiscount(String code, Date startDate, Date endDate, int percent, long maxAmountOfDiscount, int repeatDiscount, List<Buyer> users) {
-        return false;
+    public static void createDiscount(Date startDate, Date endDate, int percent,
+                                         long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
+        new Discount(code , startDate ,endDate , percent , maxAmountOfDiscount , repeatDiscount , users);
+        AccountManager.increaseLastDiscountId();
     }
 
     public static void showAllDiscount() {
-
+        CommandProcessor.printShowAllDiscount();
     }
 
     public static boolean showDiscount(String code) {

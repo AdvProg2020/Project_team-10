@@ -20,7 +20,7 @@ public class SellerManager {
         System.out.println(((Seller) AccountManager.getOnlineAccount()).getGoods());
     }
 
-    public static boolean showProductForSeller(String id) {
+    public static boolean showProductForSeller(int id) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
             System.out.println(good);
@@ -29,7 +29,7 @@ public class SellerManager {
         return false;
     }
 
-    public static boolean showBuyersOfThisProduct(String id) {
+    public static boolean showBuyersOfThisProduct(int id) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
             System.out.println(good.getBuyers());
@@ -38,7 +38,7 @@ public class SellerManager {
         return false;
     }
 
-    public static boolean editProduct(String id, String name, String company, int number, long price, String category, List<String> categoryAttribute, String description) {
+    public static boolean editProduct(int id, String name, String company, int number, long price, String category, List<String> categoryAttribute, String description) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
             new Request(AccountManager.getOnlineAccount(), AccountManager.getLastRequestId() + 1);
@@ -53,7 +53,7 @@ public class SellerManager {
         AccountManager.increaseLastRequestId();
     }
 
-    public static boolean removeProduct(String id) {
+    public static boolean removeProduct(int id) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
             ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);

@@ -10,12 +10,12 @@ public class ManageAllProductsMenu extends Menu {
         return new LastMenu("remove" , this) {
             @Override
             public void show() {
-                //TODO
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+               super.execute();
             }
         };
     }

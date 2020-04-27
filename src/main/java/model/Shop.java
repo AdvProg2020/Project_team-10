@@ -8,6 +8,11 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
+    private List<Discount> allDiscount = new ArrayList<>();
+
+    public List<Discount> getAllDiscount() {
+        return allDiscount;
+    }
 
     public List<Account> getAllAccounts() {
         return allAccounts;
@@ -34,7 +39,7 @@ public class Shop {
     private Shop() {
     }
 
-    public Account getRoleByUsername(String username) {
+    public Account getAccountByUsername(String username) {
         for (Account account : allAccounts) {
             if (account.getUsername().equals(username)){
                 return account;
@@ -47,7 +52,8 @@ public class Shop {
         return null;
     }
 
-    public Discount getDiscountWithCode(String code) {
+    public Discount getDiscountWithCode(int code) {
+
         return null;
     }
 

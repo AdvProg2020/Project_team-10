@@ -2,12 +2,10 @@ package view;
 
 import controller.AccountManager;
 import controller.AdminManager;
-import model.Account;
-import model.Shop;
+import model.*;
 import view.menus.Menu;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -203,11 +201,11 @@ public class CommandProcessor {
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
                     info.add(company);
-                    if (register){
-                    AccountManager.register(info.get(0), info.get(1), info.get(2)
-                            , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
+                    if (register) {
+                        AccountManager.register(info.get(0), info.get(1), info.get(2)
+                                , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
                         System.out.println(info.get(0) + " was registered successfully");
-                    }else {
+                    } else {
                         AccountManager.register(info.get(0), info.get(1), "admin"
                                 , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
                         System.out.println(info.get(0) + " The new manager was successfully registered");
@@ -307,14 +305,113 @@ public class CommandProcessor {
         System.out.print("Enter the desired username: ");
         Menu.scanner.nextLine();
         String username = Menu.scanner.nextLine();
-        for (Account allAccount : Shop.getShop().getAllAccounts()) {
-            if (allAccount.equals(Shop.getShop().getRoleByUsername(username))) {
-                System.out.println(username + " deleted");
-                Shop.getShop().getAllAccounts().remove(allAccount);
+        if (AdminManager.deleteAccount(username)) {
+            System.out.println(username + " deleted");
+        } else {
+            System.out.println(username + " not exist");
+        }
+    }
+
+    public static void processRemoveProductById() {
+        System.out.println("Enter the desired id: ");
+        Menu.scanner.nextLine();
+        int id = Menu.scanner.nextInt();
+
+    }
+
+    public static void processAddDiscountCode() {
+        String startDate;
+        String endDate;
+        Date startDate1 = null;
+        Date endDate1 = null;
+        int percent = 0;
+        long amount = 0;
+        int repeat = 0;
+        String people;
+        List<Account> allPeople = new ArrayList<>();
+        int flag = 1;
+        Menu.scanner.nextLine();
+        while (true) {
+            if (flag == 1) {
+                System.out.print("Enter the start date[Month/Day/Years Hour:Minutes]: ");
+                startDate = Menu.scanner.nextLine();
+                if (getDateByString(startDate) != null) {
+                    startDate1 = getDateByString(startDate);
+                    flag += 1;
+                } else {
+                    System.out.println("format not corrected");
+                }
+            } else if (flag == 2) {
+                System.out.print("Enter the end date[Month/Day/Years Hour:Minutes]: ");
+                endDate = Menu.scanner.nextLine();
+                if (getDateByString(endDate) != null) {
+                    endDate1 = getDateByString(endDate);
+                    flag += 1;
+                } else {
+                    System.out.println("format not corrected");
+                }
+            } else if (flag == 3) {
+                System.out.print("Enter the discount percentage: ");
+                percent = Menu.scanner.nextInt();
+                if (percent < 100 && percent > 0) {
+                    flag += 1;
+                }
+            } else if (flag == 4) {
+                System.out.print("Enter the maximum discount amount: ");
+                amount = Menu.scanner.nextLong();
+                flag += 1;
+            } else if (flag == 5) {
+                System.out.print("Enter the number of repetitions of the discount code: ");
+                repeat = Menu.scanner.nextInt();
+                flag += 1;
+            } else {
+                System.out.println("Enter the people covered by the discount code: ");
+                Shop shop = Shop.getShop();
+                while (!(people = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
+                    for (Account allAccount : shop.getAllAccounts()) {
+                        if (allAccount.equals(shop.getAccountByUsername(people))) {
+                            allPeople.add(shop.getAccountByUsername(people));
+                        } else {
+                            System.out.println("username not exists");
+                        }
+                    }
+                }
+                AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
+                System.out.println("The discount code was successfully created");
                 break;
             }
         }
     }
 
+    private static Date getDateByString(String dateInput) {
+        Calendar calendar = Calendar.getInstance();
+        String regex = "(\\d\\d)\\/(\\d\\d)\\/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(dateInput);
+        int[] dateSplit = new int[5];
+        if (getMatcher(dateInput, regex).matches()) {
+            while (matcher.find()) {
+                for (int i = 0; i < 5; i++) {
+                    dateSplit[i] = Integer.parseInt(matcher.group(i + 1));
+                }
+            }
+            calendar.set(Calendar.MONTH, dateSplit[0]);
+            calendar.set(Calendar.DATE, dateSplit[1]);
+            calendar.set(Calendar.YEAR, dateSplit[2]);
+            calendar.set(Calendar.HOUR, dateSplit[3]);
+            calendar.set(Calendar.MINUTE, dateSplit[4]);
+            return calendar.getTime();
+        }
+        return null;
+    }
 
+    public static void printShowPersonalInfo(){
+        System.out.println(AccountManager.getOnlineAccount());
+    }
+
+    public static void printShowAllDiscount(){
+        for (Discount discount : Shop.getShop().getAllDiscount()) {
+            System.out.println(discount);
+        }
+    }
 }
