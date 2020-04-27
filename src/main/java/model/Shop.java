@@ -10,7 +10,6 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
-    private List<Good> goodsInCart = new ArrayList<>();
     private List<Category> allCategories = new ArrayList<>();
     private List<Discount> allDiscounts = new ArrayList<>();
 

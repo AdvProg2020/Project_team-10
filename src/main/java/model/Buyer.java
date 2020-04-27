@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Buyer extends Account {
 
-    private HashMap<Discount , Integer> discountAndNumberOfAvailableDiscount;
+    private HashMap<Discount, Integer> discountAndNumberOfAvailableDiscount;
     private List<Good> goods;
     private List<Good> cart;
 
@@ -17,4 +17,18 @@ public class Buyer extends Account {
     public List<Good> getGoods() {
         return goods;
     }
+
+    public List<Good> getCart() {
+        return cart;
+    }
+
+    public Good getGoodInCartById(int id) {
+        for (Good good : this.getCart()) {
+            if (good.getId() == id) {
+                return good;
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,6 +1,10 @@
 package model;
 
+import controller.AccountManager;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Good {
     private int id;
@@ -18,7 +22,7 @@ public class Good {
     private List<Comment> comments;
     private List<Buyer> buyers;
     private int visitNumber;
-    private int numberOfChoose;
+    private Map<Account, Integer> goodsInBuyerCart;
 
 
     public Good(int id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
@@ -31,6 +35,11 @@ public class Good {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
+        this.goodsInBuyerCart = new HashMap<>();
+    }
+
+    public Map<Account, Integer> getGoodsInBuyerCart() {
+        return goodsInBuyerCart;
     }
 
     public int getId() {
@@ -77,14 +86,6 @@ public class Good {
         return name;
     }
 
-    public int getNumberOfChoose() {
-        return numberOfChoose;
-    }
-
-    public void setNumberOfChoose(int numberOfChoose) {
-        this.numberOfChoose = numberOfChoose;
-    }
-
     public int getNumber() {
         return number;
     }
@@ -96,4 +97,7 @@ public class Good {
     public List<Integer> getAllRates() {
         return allRates;
     }
+
+
+
 }
