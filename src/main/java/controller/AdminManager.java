@@ -1,6 +1,5 @@
 package controller;
 
-import model.Account;
 import model.Buyer;
 
 import java.util.Date;
@@ -75,10 +74,6 @@ public class AdminManager {
 
     public static boolean declineRequest(String id) {
         return false;
-    }
-
-    public static void showAllCategories() {
-
     }
 
     public static boolean editCategory(String name, String newName, List<String> newAttribute) {

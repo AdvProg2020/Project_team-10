@@ -19,4 +19,8 @@ public class Off {
         this.endDate = endDate;
         this.discount = discount;
     }
+
+    public int getId() {
+        return id;
+    }
 }

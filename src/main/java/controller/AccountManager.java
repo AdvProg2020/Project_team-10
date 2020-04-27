@@ -13,6 +13,8 @@ public class AccountManager {
     private static int lastDiscountId;
     private static int lastOffId;
 
+    // getters & setters
+
     public static int getLastRequestId() {
         return lastRequestId;
     }
@@ -53,37 +55,26 @@ public class AccountManager {
         return lastGoodId;
     }
 
-    public static void setLastGoodId(int lastGoodId) {
-        AccountManager.lastGoodId = lastGoodId;
-    }
-
     public static int getLastCommentId() {
         return lastCommentId;
-    }
-
-    public static void setLastCommentId(int lastCommentId) {
-        AccountManager.lastCommentId = lastCommentId;
     }
 
     public static int getLastLogId() {
         return lastLogId;
     }
 
-    public static void setLastLogId(int lastLogId) {
-        AccountManager.lastLogId = lastLogId;
-    }
-
     public static Account getOnlineAccount() {
         return onlineAccount;
     }
 
+    public static void setOnlineAccount(Account onlineAccount) {
+        AccountManager.onlineAccount = onlineAccount;
+    }
+
+    // logical methods
+
     public static boolean canRegister(String username) {
-        for (Account account : Shop.getShop().getAllAccounts()) {
-            if (account.getUsername().equals(username)){
-                return false;
-            }
-        }
-        return true;
+        return Shop.getShop().getAccountByUsername(username) == null;
     }
 
     public static void register(String username, String password, String type, String firstName,
@@ -102,7 +93,7 @@ public class AccountManager {
         for (Account account : Shop.getShop().getAllAccounts()) {
             if (account.getUsername().equals(username)){
                 if (account.getPassword().equals(password)){
-                    onlineAccount = Shop.getShop().getRoleByUsername(username);
+                    onlineAccount = Shop.getShop().getAccountByUsername(username);
                     Menu.setIsLogged(true);
                     UserMenu.setUsername(username);
                     return true;
@@ -112,10 +103,6 @@ public class AccountManager {
         return false;
     }
 
-    public static void setOnlineAccount(Account onlineAccount) {
-        AccountManager.onlineAccount = onlineAccount;
-    }
-
     public static void showPersonalInfo() {
 
     }
@@ -123,5 +110,12 @@ public class AccountManager {
     public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
 
     }
+
+    public static void showAllCategories() {
+        for (Category category : Shop.getShop().getAllCategories()) {
+            System.out.println(category);
+        }
+    }
+
 
 }

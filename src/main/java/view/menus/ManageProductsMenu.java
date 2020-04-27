@@ -1,11 +1,14 @@
 package view.menus;
 
+import controller.SellerManager;
+import static view.CommandProcessor.*;
+
 public class ManageProductsMenu extends Menu {
     public ManageProductsMenu(Menu parentMenu) {
         super("manage product", parentMenu);
         subMenus.put(1, getShowAllProducts());
-        subMenus.put(2, getViewProduct());
-        subMenus.put(3, getViewBuyers());
+        subMenus.put(2, getShowProductById());
+        subMenus.put(3, getShowBuyers());
         subMenus.put(4, getEdit());
 
     }
@@ -14,40 +17,45 @@ public class ManageProductsMenu extends Menu {
         return new LastMenu("show all products" , this) {
             @Override
             public void show() {
+                SellerManager.showHisProducts();
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
-    private Menu getViewProduct(){
+    private Menu getShowProductById(){
         return new LastMenu("view a product" , this) {
             @Override
             public void show() {
-                //TODO
+                processShowProductByIdForSeller();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
 
-    private Menu getViewBuyers(){
+    private Menu getShowBuyers(){
         return new LastMenu("view buyers" , this) {
             @Override
             public void show() {
-                //TODO
+                processShowBuyersForSeller();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

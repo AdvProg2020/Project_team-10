@@ -1,12 +1,18 @@
-package model;
+package model.requests;
 
-public class Request {
-    private Account account;
+import model.Account;
+
+public abstract class Request {
+    protected Account account;
     private int id;
     private boolean isAccepted;
 
     public Request(Account account, int id) {
         this.account = account;
         this.id = id;
+    }
+
+    public void accept() {
+
     }
 }

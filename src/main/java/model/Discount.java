@@ -21,4 +21,8 @@ public class Discount {
         this.repeatDiscount = repeatDiscount;
         this.users = users;
     }
+
+    public int getCode() {
+        return code;
+    }
 }
