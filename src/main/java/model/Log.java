@@ -21,4 +21,19 @@ public class Log {
         this.nameOfBuyerOrSeller = name;
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + "\n" +
+                "date: " + date + "\n" +
+                "paidAmount: " + paidAmount + "\n" +
+                "discount: " + discount + "\n" +
+                "goods: " + goods + "\n" +
+                "nameOfBuyerOrSeller: " + nameOfBuyerOrSeller + "\n" +
+                "status: " + status;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

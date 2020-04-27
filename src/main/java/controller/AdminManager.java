@@ -1,6 +1,5 @@
 package controller;
 
-import model.Account;
 import model.Buyer;
 import model.Discount;
 import model.Shop;
@@ -87,10 +86,6 @@ public class AdminManager {
 
     public static boolean declineRequest(String id) {
         return false;
-    }
-
-    public static void showAllCategories() {
-
     }
 
     public static boolean editCategory(String name, String newName, List<String> newAttribute) {

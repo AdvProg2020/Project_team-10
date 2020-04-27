@@ -1,6 +1,8 @@
 package view.menus;
 
+import controller.AccountManager;
 import controller.AdminManager;
+import controller.SellerManager;
 import model.Admin;
 import model.Buyer;
 import model.Seller;
@@ -44,6 +46,10 @@ public class UserMenu extends Menu {
         subMenus.put(20, new OrderMenu(this));
         subMenus.put(21, getBalanceForBuyer());
         subMenus.put(22, getDiscountCodeShow());
+    }
+
+    public static void setUsername(String username) {
+        UserMenu.username = username;
     }
 
     private int completeShow() {
@@ -163,13 +169,11 @@ public class UserMenu extends Menu {
             public void show() {
                 CommandProcessor.processEditProfile();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -210,14 +214,13 @@ public class UserMenu extends Menu {
         return new LastMenu("view company information", this) {
             @Override
             public void show() {
+                SellerManager.showCompanyInfo();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -226,14 +229,13 @@ public class UserMenu extends Menu {
         return new LastMenu("view sales history", this) {
             @Override
             public void show() {
+                SellerManager.showSalesHistory();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -242,14 +244,13 @@ public class UserMenu extends Menu {
         return new LastMenu("add product", this) {
             @Override
             public void show() {
+                processAddProduct();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -274,14 +275,13 @@ public class UserMenu extends Menu {
         return new LastMenu("show category", this) {
             @Override
             public void show() {
+                AccountManager.showAllCategories();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -290,14 +290,13 @@ public class UserMenu extends Menu {
         return new LastMenu("view balance", this) {
             @Override
             public void show() {
+                SellerManager.viewBalance();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -334,7 +333,4 @@ public class UserMenu extends Menu {
         };
     }
 
-    public static void setUsername(String username) {
-        UserMenu.username = username;
-    }
 }

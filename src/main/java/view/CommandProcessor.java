@@ -3,9 +3,12 @@ package view;
 import controller.AccountManager;
 import controller.AdminManager;
 import model.*;
+import controller.SellerManager;
+import model.*;
 import view.menus.Menu;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,21 +45,28 @@ public class CommandProcessor {
 
     public static boolean checkEmailInvalidation(String email) {
         if (getMatcher(email, "\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b").matches()) {
-            return true;
+            if (Shop.getShop().isThereEmail(email)) {
+                System.out.println("email exists");
+                return false;
+            }
         } else {
             System.out.println("invalid email");
             return false;
         }
-
+        return true;
     }
 
     public static boolean checkPhoneNumberInvalidation(String phoneNumber) {
         if (getMatcher(phoneNumber, "09\\d{9}").matches()) {
-            return true;
+            if (Shop.getShop().isTherePhoneNumber(phoneNumber)) {
+                System.out.println("phone number exits");
+                return false;
+            }
         } else {
             System.out.println("invalid phone number");
             return false;
         }
+        return true;
     }
 
     public static boolean checkNameInvalidation(String name) {
@@ -84,10 +94,7 @@ public class CommandProcessor {
             typeName = "seller";
             System.out.print("enter your company name: ");
             company = Menu.scanner.nextLine();
-            if (!checkNameInvalidation(company)) {
-                return false;
-            }
-
+            return checkNameInvalidation(company);
         } else if (type == 3 && !isAdminRegistered) {
             typeName = "admin";
             isAdminRegistered = true;
@@ -128,6 +135,11 @@ public class CommandProcessor {
 
     public static Menu getLogoutMenu() {
         return new Menu("logout") {
+            @Override
+            public void show() {
+
+            }
+
             @Override
             public void execute() {
                 processLogout();
@@ -378,6 +390,92 @@ public class CommandProcessor {
                 }
                 AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
                 System.out.println("The discount code was successfully created");
+        for (Account account : Shop.getShop().getAllAccounts()) {
+            if (account.equals(Shop.getShop().getAccountByUsername(username))) {
+                System.out.println(username + " deleted");
+                Shop.getShop().getAllAccounts().remove(account);
+                break;
+            }
+        }
+    }
+
+    public static void processAddProduct() {
+        String name;
+        String company;
+        int number = 0;
+        long price = 0;
+        String category = null;
+        String description;
+        ArrayList<String> categoryAttributes = new ArrayList<>();
+        int flag = 1;
+        Menu.scanner.nextLine();
+        System.out.print("enter name of the product: ");
+        name = Menu.scanner.nextLine();
+        System.out.print("enter company of the product: ");
+        company = Menu.scanner.nextLine();
+        while (true) {
+            if (flag == 1) {
+                System.out.print("enter number of the product: ");
+                number = Menu.scanner.nextInt();
+                Menu.scanner.nextLine();
+                if (number < 1) {
+                    System.out.println("your number must be larger than 0");
+                } else {
+                    flag += 1;
+                }
+            } else if (flag == 2) {
+                System.out.print("enter price of the product: ");
+                price = Menu.scanner.nextLong();
+                Menu.scanner.nextLine();
+                if (price < 1) {
+                    System.out.println("your price must be larger than 0");
+                } else {
+                    flag += 1;
+                }
+            } else if (flag == 3) {
+                System.out.print("enter category of the product: ");
+                category = Menu.scanner.nextLine();
+                if (Shop.getShop().getCategoryByName(category) == null) {
+                    System.out.println("this category dose not exist");
+                } else {
+                    flag += 1;
+                }
+            } else {
+                for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
+                    System.out.println(attribute + " :");
+                    categoryAttributes.add(Menu.scanner.nextLine());
+                }
+                System.out.println("write any description about your product");
+                description = Menu.scanner.nextLine();
+                SellerManager.addProduct(AccountManager.getLastGoodId() + 1, name, company, number, price, category,
+                        categoryAttributes, description);
+                break;
+            }
+        }
+    }
+
+    public static void processShowProductByIdForSeller() {
+        while (true) {
+            System.out.println("enter your id");
+            int id = Menu.scanner.nextInt();
+            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+            if (good == null) {
+                System.out.println("product with this id doesnt exist");
+            } else {
+                System.out.println(good);
+                break;
+            }
+        }
+    }
+
+    public static void processShowBuyersForSeller() {
+        while (true) {
+            int id = Menu.scanner.nextInt();
+            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+            if (good == null) {
+                System.out.println("product with this id doesnt exist");
+            } else {
+                System.out.println(good.getBuyers());
                 break;
             }
         }
@@ -403,6 +501,7 @@ public class CommandProcessor {
             return calendar.getTime();
         }
         return null;
+    }
     }
 
     public static void printShowPersonalInfo(){

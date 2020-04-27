@@ -11,4 +11,20 @@ public class Category {
         this.name = name;
         this.attributes = attributes;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", attributes=" + attributes +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Seller extends Account {
@@ -8,9 +9,11 @@ public class Seller extends Account {
     private List<Off> offs;
 
 
-    public Seller(String username, String firstName, String lastName, String email, String phoneNumber, String password , String company) {
+    public Seller(String username, String firstName, String lastName, String email, String phoneNumber, String password, String company) {
         super(username, firstName, lastName, email, phoneNumber, password);
         this.company = company;
+        goods = new ArrayList<>();
+        offs = new ArrayList<>();
     }
 
     public Good getProductWithId(int id) {
@@ -22,12 +25,25 @@ public class Seller extends Account {
         return null;
     }
 
+    public Off getOffWithId(int id) {
+        for (Off off : this.getOffs()) {
+            if (off.getId() == id) {
+                return off;
+            }
+        }
+        return null;
+    }
+
     public String getCompany() {
         return company;
     }
 
     public List<Good> getGoods() {
         return goods;
+    }
+
+    public List<Off> getOffs() {
+        return offs;
     }
 
 
