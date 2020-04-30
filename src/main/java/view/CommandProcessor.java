@@ -378,14 +378,14 @@ public class CommandProcessor {
                 flag += 1;
             } else {
                 System.out.println("Enter the people covered by the discount code: ");
+                Menu.scanner.nextLine();
                 Shop shop = Shop.getShop();
                 while (!(people = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
-                    for (Account allAccount : shop.getAllAccounts()) {
-                        if (allAccount.equals(shop.getAccountByUsername(people))) {
-                            allPeople.add(shop.getAccountByUsername(people));
-                        } else {
-                            System.out.println("username not exists");
-                        }
+                    if (shop.getAccountByUsername(people) != null) {
+                        allPeople.add(shop.getAccountByUsername(people));
+                        System.out.println("username added");
+                    } else {
+                        System.out.println("username not exists");
                     }
                 }
                 AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
@@ -479,7 +479,7 @@ public class CommandProcessor {
 
     private static Date getDateByString(String dateInput) {
         Calendar calendar = Calendar.getInstance();
-        String regex = "(\\d\\d)\\/(\\d\\d)\\/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
+        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(dateInput);
         int[] dateSplit = new int[5];
@@ -499,14 +499,33 @@ public class CommandProcessor {
         return null;
     }
 
-
     public static void printShowPersonalInfo() {
         System.out.println(AccountManager.getOnlineAccount());
     }
 
-    public static void printShowAllDiscount() {
-        for (Discount discount : Shop.getShop().getAllDiscounts()) {
-            System.out.println(discount);
+    public static void showDiscount() {
+        System.out.print("enter the discount code: ");
+        Menu.scanner.nextLine();
+        int code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount != null) {
+            System.out.print(discount);
+            for (Account user : discount.getUsers()) {
+                System.out.print("|‌" + user.getUsername() + "|‌");
+            }
+            System.out.println();
+        }else {
+            System.out.println("discount code not exist");
+        }
+    }
+
+    public static void showAllDiscountCode() {
+        for (Discount allDiscount : Shop.getShop().getAllDiscounts()) {
+            System.out.print(allDiscount);
+            for (Account user : allDiscount.getUsers()) {
+                System.out.print("|‌" + user.getUsername() + "|‌");
+            }
+            System.out.println();
         }
     }
 }

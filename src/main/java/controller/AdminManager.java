@@ -1,7 +1,6 @@
 package controller;
 
 import model.Account;
-import model.Buyer;
 import model.Discount;
 import model.Shop;
 import view.CommandProcessor;
@@ -11,7 +10,6 @@ import java.util.List;
 
 public class AdminManager {
 
-    private static int code= 0;
     //Admin
     public static void showPersonalInfo() {
         CommandProcessor.printShowPersonalInfo();
@@ -47,18 +45,20 @@ public class AdminManager {
 //        return false;
 //    }
 
-    public static boolean removeProduct(String id) {
+    public static boolean removeProduct(int id) {
         return false;
     }
 
     public static void createDiscount(Date startDate, Date endDate, int percent,
                                          long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
-        new Discount(code , startDate ,endDate , percent , maxAmountOfDiscount , repeatDiscount , users);
+        Shop.getShop().getAllDiscounts().add(new Discount(AccountManager.getLastDiscountCode() ,
+                startDate ,
+                endDate ,
+                percent ,
+                maxAmountOfDiscount ,
+                repeatDiscount ,
+                users));
         AccountManager.increaseLastDiscountId();
-    }
-
-    public static void showAllDiscount() {
-        CommandProcessor.printShowAllDiscount();
     }
 
     public static boolean showDiscount(String code) {

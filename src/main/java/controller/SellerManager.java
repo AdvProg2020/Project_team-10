@@ -43,7 +43,7 @@ public class SellerManager {
         System.out.println(((Seller) AccountManager.getOnlineAccount()).getGoods());
     }
 
-    public static boolean showProductForSeller(String id) {
+    public static boolean showProductForSeller(int id) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
             //new Request(AccountManager.getOnlineAccount(), AccountManager.getLastRequestId() + 1);

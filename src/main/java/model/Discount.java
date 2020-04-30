@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,17 +25,21 @@ public class Discount {
 
     @Override
     public String toString() {
-        return "code: " + code +"\n"+
-                "startDate: " + startDate +"\n"+
-                "endDate: " + endDate +"\n"+
-                "percent: " + percent +"\n"+
-                "maxAmountOfDiscount: " + maxAmountOfDiscount +"\n"+
-                "repeatDiscount: " + repeatDiscount + "\n"+
-                "users: " + users + "\n";
+        return "code: " + code + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "percent: " + percent + "\n" +
+                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
+                "repeatDiscount: " + repeatDiscount + "\n" +
+                "users: " ;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public List<Account> getUsers() {
+        return users;
     }
 
 }

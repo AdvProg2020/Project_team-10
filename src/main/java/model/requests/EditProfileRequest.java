@@ -1,7 +1,6 @@
 package model.requests;
 
 import model.Account;
-import model.Request;
 
 public class EditProfileRequest extends Request {
     private String firstName;
