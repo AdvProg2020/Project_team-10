@@ -15,38 +15,38 @@ public class UserMenu extends Menu {
 
     private static String username;
 
-    public UserMenu(Menu parentMenu) {
-        super("user menu", parentMenu);
-        //register
-        subMenus.put(1, getRegisterMenu());
-        subMenus.put(2, getLoginMenu());
-        //login
-        subMenus.put(3, getLogoutMenu());
-        subMenus.put(4, getShowProfileMenu());
-        subMenus.put(5, getEditProfileMenu());
-
-        // admin
-        subMenus.put(6, new ManageUsersMenu(this));
-        subMenus.put(7, new ManageAllProductsMenu(this));
-        subMenus.put(8, new DiscountMenu(this));
-        subMenus.put(9, new ManageRequestMenu(this));
-        subMenus.put(10, getCreateDiscountCode());
-        // seller
-        subMenus.put(11, getViewCompanyInfo());
-        subMenus.put(12, getViewSalesHistory());
-        subMenus.put(13, new ManageProductsMenu(this));
-        subMenus.put(14, getAddProduct());
-        subMenus.put(15, getRemoveProduct());
-        subMenus.put(16, getShowCategory());
-        subMenus.put(17, new OffsMenuForSeller(this));
-        subMenus.put(18, getBalanceForSeller());
-        //buyer
-        subMenus.put(19, new CartMenu(this));
-        //subMenus.put(20, new PurchaseMenu(this));
-        subMenus.put(20, new OrderMenu(this));
-        subMenus.put(21, getBalanceForBuyer());
-        subMenus.put(22, getDiscountCodeShow());
-    }
+//    public UserMenu(Menu parentMenu) {
+//        super("user menu", parentMenu);
+//        //register
+//        subMenus.put(1, getRegisterMenu());
+//        subMenus.put(2, getLoginMenu());
+//        //login
+//        subMenus.put(3, getLogoutMenu());
+//        subMenus.put(4, getShowProfileMenu());
+//        subMenus.put(5, getEditProfileMenu());
+//
+//        // admin
+//        subMenus.put(6, new ManageUsersMenu(this));
+//        subMenus.put(7, new ManageAllProductsMenu(this));
+//        subMenus.put(8, new DiscountMenu(this));
+//        subMenus.put(9, new ManageRequestMenu(this));
+//        subMenus.put(10, getCreateDiscountCode());
+//        // seller
+//        subMenus.put(11, getViewCompanyInfo());
+//        subMenus.put(12, getViewSalesHistory());
+//        subMenus.put(13, new ManageProductsMenu(this));
+//        subMenus.put(14, getAddProduct());
+//        subMenus.put(15, getRemoveProduct());
+//        subMenus.put(16, getShowCategory());
+//        subMenus.put(17, new OffsMenuForSeller(this));
+//        subMenus.put(18, getBalanceForSeller());
+//        //buyer
+//        subMenus.put(19, new CartMenu(this));
+//        //subMenus.put(20, new PurchaseMenu(this));
+//        subMenus.put(20, new OrderMenu(this));
+//        subMenus.put(21, getBalanceForBuyer());
+//        subMenus.put(22, getDiscountCodeShow());
+//    }
 
     public static void setUsername(String username) {
         UserMenu.username = username;
@@ -210,35 +210,35 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getViewCompanyInfo() {
-        return new LastMenu("view company information", this) {
-            @Override
-            public void show() {
-                SellerManager.showCompanyInfo();
-                super.show();
-            }
+//    private Menu getViewCompanyInfo() {
+//        return new LastMenu("view company information", this) {
+//            @Override
+//            public void show() {
+//                SellerManager.showCompanyInfo();
+//                super.show();
+//            }
+//
+//            @Override
+//            public void execute() {
+//                super.execute();
+//            }
+//        };
+//    }
 
-            @Override
-            public void execute() {
-                super.execute();
-            }
-        };
-    }
-
-    private Menu getViewSalesHistory() {
-        return new LastMenu("view sales history", this) {
-            @Override
-            public void show() {
-                SellerManager.showSalesHistory();
-                super.show();
-            }
-
-            @Override
-            public void execute() {
-                super.execute();
-            }
-        };
-    }
+//    private Menu getViewSalesHistory() {
+//        return new LastMenu("view sales history", this) {
+//            @Override
+//            public void show() {
+//                SellerManager.showSalesHistory();
+//                super.show();
+//            }
+//
+//            @Override
+//            public void execute() {
+//                super.execute();
+//            }
+//        };
+//    }
 
     private Menu getAddProduct() {
         return new LastMenu("add product", this) {
@@ -286,20 +286,20 @@ public class UserMenu extends Menu {
         };
     }
 
-    private Menu getBalanceForSeller() {
-        return new LastMenu("view balance", this) {
-            @Override
-            public void show() {
-                SellerManager.viewBalance();
-                super.show();
-            }
-
-            @Override
-            public void execute() {
-                super.execute();
-            }
-        };
-    }
+//    private Menu getBalanceForSeller() {
+//        return new LastMenu("view balance", this) {
+//            @Override
+//            public void show() {
+//                SellerManager.viewBalance();
+//                super.show();
+//            }
+//
+//            @Override
+//            public void execute() {
+//                super.execute();
+//            }
+//        };
+//    }
 
     private Menu getBalanceForBuyer() {
         return new LastMenu("view balance", this) {

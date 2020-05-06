@@ -1,5 +1,7 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class OrderMenu extends Menu {
     public OrderMenu(Menu parentMenu) {
         super("order menu", parentMenu);
@@ -12,11 +14,12 @@ public class OrderMenu extends Menu {
         return new LastMenu("show orders", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showAllOrders();
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -25,11 +28,16 @@ public class OrderMenu extends Menu {
         return new LastMenu("show an order", this) {
             @Override
             public void show() {
-                //TODO
+                int id;
+                System.out.println("please enter order id: \n");
+                id = Menu.scanner.nextInt();
+                System.out.println();
+                CommandProcessor.showOrder(id);
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

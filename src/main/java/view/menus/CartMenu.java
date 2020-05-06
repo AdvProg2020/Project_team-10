@@ -1,5 +1,6 @@
 package view.menus;
 
+import view.CommandProcessor;
 import view.Purchase;
 
 public class CartMenu extends Menu {
@@ -18,14 +19,17 @@ public class CartMenu extends Menu {
         return new LastMenu("show products", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showProductsInCart();
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
+
+    //برای show product with id باید چه کنیم دقیقا؟
 
     private Menu getIncrease() {
         return new LastMenu("increase number of a product", this) {

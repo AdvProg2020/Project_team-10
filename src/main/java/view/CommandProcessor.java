@@ -528,5 +528,48 @@ public class CommandProcessor {
             System.out.println();
         }
     }
+
+    public static void showProductsInCart() {
+        for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
+            System.out.println("name: " + good.getName() + " id: " + good.getId()); }
+    }
+    //برای این باید فکر کنیم
+    public static void showProductInCart(int id) {
+        int counter = 0;
+        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+        if (good != null) {
+            System.out.println("name: " + good.getName() + " id: " + good.getId());
+            counter++;
+        }
+        if (counter == 0){
+            System.out.println("product with id : " + id + " is not exist");
+        }
+    }
+
+    public static void showAllOrders() {
+        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
+            System.out.println(log.toString());
+        }
+    }
+
+    public static void showOrder(int id) {
+        int counter = 0;
+        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
+            if (log.getId() == id) {
+                System.out.println(log.toString());
+                counter ++;
+            }
+        }
+        if (counter == 0){
+            System.out.println("order with id : " + id + " is not exist");
+        }
+    }
+    //چرا توی discount menu برای این جیزی نداریم؟؟؟؟
+    public static void showAllDiscountsCode() {
+        for (Discount discount : AccountManager.getOnlineAccount().getDiscounts()) {
+            System.out.println(discount.toString());
+        }
+    }
+
 }
 
