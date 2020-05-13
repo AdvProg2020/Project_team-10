@@ -1,5 +1,6 @@
 package view.menus;
 
+import model.Shop;
 import view.CommandProcessor;
 
 public class DiscountMenu extends Menu {
@@ -12,8 +13,8 @@ public class DiscountMenu extends Menu {
 
     }
 
-    private Menu getShowCode(){
-        return new LastMenu("show all discount code" , this) {
+    private Menu getShowCode() {
+        return new LastMenu("show all discount code", this) {
             @Override
             public void show() {
                 CommandProcessor.showAllDiscountCode();
@@ -27,8 +28,8 @@ public class DiscountMenu extends Menu {
         };
     }
 
-    private Menu getViewDiscountCode(){
-        return new LastMenu("show discount code[code]" , this) {
+    private Menu getViewDiscountCode() {
+        return new LastMenu("show discount code[code]", this) {
             @Override
             public void show() {
                 CommandProcessor.showDiscount();
@@ -42,30 +43,34 @@ public class DiscountMenu extends Menu {
         };
     }
 
-    private Menu getEditDiscountCode(){
-        return new LastMenu("edit discount code" , this) {
+    private Menu getEditDiscountCode() {
+        return new LastMenu("edit discount code", this) {
             @Override
             public void show() {
+                CommandProcessor.processEditDiscountCode();
+                super.show();
                 //TODO
             }
 
             @Override
             public void execute() {
+                super.execute();
                 //TODO
             }
         };
     }
 
-    private Menu getRemoveDiscountCode(){
-        return new LastMenu("remove discount code" , this) {
+    private Menu getRemoveDiscountCode() {
+        return new LastMenu("remove discount code", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.removeDiscountCode();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

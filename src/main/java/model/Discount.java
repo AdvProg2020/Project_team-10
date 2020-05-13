@@ -23,6 +23,30 @@ public class Discount {
         this.users = users;
     }
 
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setPercent(int percent) {
+        this.percent = percent;
+    }
+
+    public void setMaxAmountOfDiscount(long maxAmountOfDiscount) {
+        this.maxAmountOfDiscount = maxAmountOfDiscount;
+    }
+
+    public void setRepeatDiscount(int repeatDiscount) {
+        this.repeatDiscount = repeatDiscount;
+    }
+
+    public void setUsers(List<Account> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
         return "code: " + code + "\n" +

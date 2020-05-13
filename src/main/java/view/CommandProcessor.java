@@ -17,6 +17,11 @@ public class CommandProcessor {
     private static String typeName;
     private static boolean isAdminRegistered;
     private static String company;
+    private static boolean editDiscount;
+
+    public static void setEditDiscount(boolean editDiscount) {
+        CommandProcessor.editDiscount = editDiscount;
+    }
 
     public static Matcher getMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
@@ -331,7 +336,7 @@ public class CommandProcessor {
 
     }
 
-    public static void processAddDiscountCode() {
+    public static void processAddDiscountCode(Discount discount) {
         String startDate;
         String endDate;
         Date startDate1 = null;
@@ -388,11 +393,32 @@ public class CommandProcessor {
                         System.out.println("username not exists");
                     }
                 }
-                AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
-                System.out.println("The discount code was successfully created");
+                if (editDiscount) {
+                    AdminManager.editDiscount(startDate1, endDate1, percent, amount, repeat, allPeople , discount);
+                    System.out.println("discount code edited");
+                    editDiscount = false;
+                } else {
+                    AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
+                    System.out.println("The discount code was successfully created");
+                }
                 break;
             }
         }
+    }
+
+    public static void processEditDiscountCode() {
+        System.out.print("enter the Discount code for edit: ");
+        Menu.scanner.nextLine();
+        int code;
+        code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount == null){
+            System.out.println("discount code not exist");
+        }else {
+            CommandProcessor.setEditDiscount(true);
+            CommandProcessor.processAddDiscountCode(discount);
+        }
+
     }
 
     public static void processAddProduct() {
@@ -514,7 +540,7 @@ public class CommandProcessor {
                 System.out.print("|‌" + user.getUsername() + "|‌");
             }
             System.out.println();
-        }else {
+        } else {
             System.out.println("discount code not exist");
         }
     }
@@ -529,10 +555,26 @@ public class CommandProcessor {
         }
     }
 
+    public static void removeDiscountCode() {
+        System.out.print("enter the discount code for remove: ");
+        Menu.scanner.nextLine();
+        int code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount != null) {
+            Shop.getShop().getAllDiscounts().remove(discount);
+            System.out.println("discount code removed");
+        } else {
+            System.out.println("discount code not exist");
+        }
+
+    }
+
     public static void showProductsInCart() {
         for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
-            System.out.println("name: " + good.getName() + " id: " + good.getId()); }
+            System.out.println("name: " + good.getName() + " id: " + good.getId());
+        }
     }
+
     //برای این باید فکر کنیم
     public static void showProductInCart(int id) {
         int counter = 0;
@@ -541,7 +583,7 @@ public class CommandProcessor {
             System.out.println("name: " + good.getName() + " id: " + good.getId());
             counter++;
         }
-        if (counter == 0){
+        if (counter == 0) {
             System.out.println("product with id : " + id + " is not exist");
         }
     }
@@ -557,13 +599,14 @@ public class CommandProcessor {
         for (Log log : AccountManager.getOnlineAccount().getLogs()) {
             if (log.getId() == id) {
                 System.out.println(log.toString());
-                counter ++;
+                counter++;
             }
         }
-        if (counter == 0){
+        if (counter == 0) {
             System.out.println("order with id : " + id + " is not exist");
         }
     }
+
     //چرا توی discount menu برای این جیزی نداریم؟؟؟؟
     public static void showAllDiscountsCode() {
         for (Discount discount : AccountManager.getOnlineAccount().getDiscounts()) {

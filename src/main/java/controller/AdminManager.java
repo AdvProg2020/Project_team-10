@@ -65,8 +65,14 @@ public class AdminManager {
         return false;
     }
 
-    public static boolean editDiscount(String code) {
-        return false;
+    public static void editDiscount(Date startDate, Date endDate, int percent,
+                                       long maxAmountOfDiscount, int repeatDiscount, List<Account> users , Discount discount) {
+        discount.setStartDate(startDate);
+        discount.setEndDate(endDate);
+        discount.setPercent(percent);
+        discount.setMaxAmountOfDiscount(maxAmountOfDiscount);
+        discount.setRepeatDiscount(repeatDiscount);
+        discount.setUsers(users);
     }
 
     public static boolean removeDiscount(String code) {
