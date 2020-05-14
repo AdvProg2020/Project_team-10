@@ -49,13 +49,11 @@ public class DiscountMenu extends Menu {
             public void show() {
                 CommandProcessor.processEditDiscountCode();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }

@@ -27,4 +27,12 @@ public class Category {
                 ", attributes=" + attributes +
                 '}';
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAttributes(List<String> attributes) {
+        this.attributes = attributes;
+    }
 }

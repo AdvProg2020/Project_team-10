@@ -1,6 +1,7 @@
 package controller;
 
 import model.Account;
+import model.Category;
 import model.Discount;
 import model.Shop;
 import view.CommandProcessor;
@@ -95,12 +96,14 @@ public class AdminManager {
         return false;
     }
 
-    public static boolean editCategory(String name, String newName, List<String> newAttribute) {
-        return false;
+    public static void editCategory(String name, String newName, List<String> newAttribute) {
+        Category category = Shop.getShop().getCategoryByName(name);
+        category.setName(newName);
+        category.setAttributes(newAttribute);
     }
 
-    public static boolean addCategory(String name, List<String> attributes) {
-        return false;
+    public static void addCategory(String name, List<String> attributes) {
+        new Category(name, attributes);
     }
 
     public static boolean removeCategory(String categoryName) {

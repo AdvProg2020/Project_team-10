@@ -4,7 +4,6 @@ import controller.AccountManager;
 import controller.AdminManager;
 import model.*;
 import controller.SellerManager;
-import model.*;
 import view.menus.Menu;
 
 import java.util.*;
@@ -394,7 +393,7 @@ public class CommandProcessor {
                     }
                 }
                 if (editDiscount) {
-                    AdminManager.editDiscount(startDate1, endDate1, percent, amount, repeat, allPeople , discount);
+                    AdminManager.editDiscount(startDate1, endDate1, percent, amount, repeat, allPeople, discount);
                     System.out.println("discount code edited");
                     editDiscount = false;
                 } else {
@@ -412,9 +411,9 @@ public class CommandProcessor {
         int code;
         code = Menu.scanner.nextInt();
         Discount discount = Shop.getShop().getDiscountWithCode(code);
-        if (discount == null){
+        if (discount == null) {
             System.out.println("discount code not exist");
-        }else {
+        } else {
             CommandProcessor.setEditDiscount(true);
             CommandProcessor.processAddDiscountCode(discount);
         }
@@ -612,6 +611,42 @@ public class CommandProcessor {
         for (Discount discount : AccountManager.getOnlineAccount().getDiscounts()) {
             System.out.println(discount.toString());
         }
+    }
+
+    public static void processAddCategory(boolean edit , String lastName) {
+        System.out.print("Enter category name: ");
+        String name = Menu.scanner.nextLine();
+        String attributeString;
+        List<String> attribute = new ArrayList<>();
+        Category category = Shop.getShop().getCategoryByName(name);
+        if (category == null || edit) {
+            System.out.println("Enter the attribute: ");
+            while (!(attributeString = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
+                attribute.add(attributeString);
+                if (edit) {
+                    AdminManager.editCategory(lastName , name , attribute);
+                    edit = false;
+                    System.out.println("category edited");
+                } else {
+                    AdminManager.addCategory(name, attribute);
+                    System.out.println("category added");
+                }
+            }
+        } else {
+            System.out.println("category exist");
+        }
+    }
+
+    public static void processEditCategory() {
+        System.out.println("Enter last category name: ");
+        String lastName =Menu.scanner.nextLine();
+        if (Shop.getShop().getCategoryByName(lastName) != null){
+            processAddCategory(true , lastName);
+        }else {
+            System.out.println("category not exist");
+        }
+
+
     }
 
 }
