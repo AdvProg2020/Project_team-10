@@ -20,6 +20,9 @@ public class EditOffRequest extends Request {
         this.startDate = startDate;
         this.endDate = endDate;
         this.discount = discount;
+        this.requestName = "edit off request";
+        this.acceptMessage = "off with id " + id + " edited";
+        this.declineMessage = "request of edit of off with id " + id + " was declined";
     }
 
     @Override
@@ -28,6 +31,5 @@ public class EditOffRequest extends Request {
         ((Seller) account).getOffWithId(offId).setStartDate(startDate);
         ((Seller) account).getOffWithId(offId).setEndDate(endDate);
         ((Seller) account).getOffWithId(offId).setDiscount(discount);
-        message = "the off edited";
     }
 }

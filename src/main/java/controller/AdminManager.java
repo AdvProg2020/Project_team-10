@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import model.requests.Request;
 import view.CommandProcessor;
 
 import java.util.Date;
@@ -49,24 +50,17 @@ public class AdminManager {
         discount.setUsers(users);
     }
 
-    public static boolean removeDiscount(String code) {
+    public static boolean removeDiscount(int code) {
         return false;
     }
 
-    public static void showAllRequests() {
-
+    public static void acceptRequest(Request request) {
+        request.accept();
+        Shop.getShop().getAllRequests().remove(request);
     }
 
-    public static boolean showRequestDetail(String id) {
-        return false;
-    }
-
-    public static boolean acceptRequest(String id) {
-        return false;
-    }
-
-    public static boolean declineRequest(String id) {
-        return false;
+    public static void declineRequest(Request request) {
+        Shop.getShop().getAllRequests().remove(request);
     }
 
     public static void editCategory(String oldName, String newName, List<String> newAttribute) {

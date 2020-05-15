@@ -21,6 +21,9 @@ public class AddOffRequest extends Request {
         this.startDate = startDate;
         this.endDate = endDate;
         this.discount = discount;
+        this.requestName = "add off request";
+        this.acceptMessage = "off with id " + id + " added";
+        this.declineMessage = "request of add of off with id " + id + " was declined";
     }
 
     @Override
@@ -28,7 +31,5 @@ public class AddOffRequest extends Request {
         Off off = new Off(offId, goods, startDate, endDate, discount);
         Shop.getShop().getAllOffs().add(off);
         ((Seller) account).getOffs().add(off);
-        AccountManager.increaseLastOffId();
-        message = "the off added";
     }
 }
