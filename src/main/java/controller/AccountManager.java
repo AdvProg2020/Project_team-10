@@ -15,6 +15,8 @@ public class AccountManager {
 
     // getters & setters
 
+
+
     public static int getLastRequestId() {
         return lastRequestId;
     }
@@ -103,18 +105,12 @@ public class AccountManager {
         return false;
     }
 
-    public static void showPersonalInfo() {
-
-    }
-
-    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
-
-    }
-
-    public static void showAllCategories() {
-        for (Category category : Shop.getShop().getAllCategories()) {
-            System.out.println(category);
-        }
+    public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber, String email) {
+        AccountManager.getOnlineAccount().setPassword(password);
+        AccountManager.getOnlineAccount().setFirstName(firstName);
+        AccountManager.getOnlineAccount().setLastName(lastName);
+        AccountManager.getOnlineAccount().setPhoneNumber(phoneNumber);
+        AccountManager.getOnlineAccount().setEmail(email);
     }
 
 

@@ -1,6 +1,5 @@
 package view.menus;
 
-import model.Shop;
 import view.CommandProcessor;
 
 public class DiscountMenu extends Menu {
@@ -62,7 +61,7 @@ public class DiscountMenu extends Menu {
         return new LastMenu("remove discount code", this) {
             @Override
             public void show() {
-                CommandProcessor.removeDiscountCode();
+                CommandProcessor.processRemoveDiscountCode();
                 super.show();
             }
 

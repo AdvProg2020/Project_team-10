@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,10 +9,13 @@ public class Buyer extends Account {
     private HashMap<Discount, Integer> discountAndNumberOfAvailableDiscount;
     private List<Good> goods;
     private List<Good> cart;
+    private List<Discount> discounts;
 
 
     public Buyer(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         super(username, firstName, lastName, email, phoneNumber, password);
+        goods = new ArrayList<>();
+        cart = new ArrayList<>();
     }
 
     public List<Good> getGoods() {
@@ -31,4 +35,7 @@ public class Buyer extends Account {
         return null;
     }
 
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
 }

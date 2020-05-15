@@ -1,6 +1,6 @@
 package view.menus;
 
-import view.CommandProcessor;
+import static view.CommandProcessor.*;
 
 public class CategoryMenu extends Menu  {
     public CategoryMenu(Menu parentMenu) {
@@ -15,6 +15,7 @@ public class CategoryMenu extends Menu  {
         return new LastMenu("show all category", this) {
             @Override
             public void show() {
+                showAllCategory();
                 super.show();
             }
 
@@ -29,7 +30,7 @@ public class CategoryMenu extends Menu  {
         return new LastMenu("edit", this) {
             @Override
             public void show() {
-                CommandProcessor.processEditCategory();
+                processEditCategory();
                 super.show();
             }
 
@@ -44,7 +45,7 @@ public class CategoryMenu extends Menu  {
         return new LastMenu("add" , this) {
             @Override
             public void show() {
-                CommandProcessor.processAddCategory(false , null);
+                processAddOrEditCategory(false , null);
                 super.show();
             }
 
