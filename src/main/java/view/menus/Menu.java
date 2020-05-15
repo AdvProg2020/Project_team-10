@@ -63,6 +63,10 @@ public abstract class Menu {
         }
     }
 
+    public Menu getParentMenu() {
+        return parentMenu;
+    }
+
     public void execute() {
         Menu nextMenu = null;
         int selectedMenu = scanner.nextInt();

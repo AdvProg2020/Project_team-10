@@ -4,6 +4,7 @@ import model.Account;
 import model.Admin;
 import model.Seller;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class EditProductRequest extends Request {
@@ -14,11 +15,11 @@ public class EditProductRequest extends Request {
     private int number;
     private long price;
     private String category;
-    private List<String> categoryAttribute;
+    private HashMap<String, String> categoryAttribute;
     private String description;
 
     public EditProductRequest(Account account, int id, int goodId, String name, String company, int number, long price,
-                             String category, List<String> categoryAttribute, String description) {
+                             String category, HashMap categoryAttribute, String description) {
         super(account, id);
         this.goodId = goodId;
         this.name = name;

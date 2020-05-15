@@ -7,10 +7,16 @@ public class Comment {
     private String status;
     private boolean isBought;
 
-    public Comment(Account account, Good good, String text, String status) {
+    public Comment(Account account, Good good, String text) {
         this.account = account;
         this.good = good;
         this.text = text;
-        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "account : " + account.getUsername() + "\n" +
+                "text : " + text + '\n' +
+                "isBought : " + isBought;
     }
 }

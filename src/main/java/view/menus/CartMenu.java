@@ -1,7 +1,13 @@
 package view.menus;
 
+import controller.BuyerManager;
+import model.Buyer;
+import model.Shop;
 import view.CommandProcessor;
 import view.Purchase;
+
+import static view.CommandProcessor.processDecreaseNumberOfProductInCart;
+import static view.CommandProcessor.processIncreaseNumberOfProductInCart;
 
 public class CartMenu extends Menu {
     public CartMenu(Menu parentMenu) {
@@ -29,17 +35,16 @@ public class CartMenu extends Menu {
         };
     }
 
-    //برای show product with id باید چه کنیم دقیقا؟
-
     private Menu getIncrease() {
         return new LastMenu("increase number of a product", this) {
             @Override
             public void show() {
-                //TODO
+                processIncreaseNumberOfProductInCart();
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -48,11 +53,12 @@ public class CartMenu extends Menu {
         return new LastMenu("decrease number of a product", this) {
             @Override
             public void show() {
-                //TODO
+                processDecreaseNumberOfProductInCart();
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -61,11 +67,12 @@ public class CartMenu extends Menu {
         return new LastMenu("show total price", this) {
             @Override
             public void show() {
-                //TODO
+                System.out.println("total price : " + BuyerManager.showTotalPrice());
+                super.show();
             }
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

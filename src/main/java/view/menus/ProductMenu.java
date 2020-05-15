@@ -1,5 +1,7 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class ProductMenu extends Menu {
 
     public ProductMenu(Menu parentMenu) {
@@ -7,6 +9,7 @@ public class ProductMenu extends Menu {
         subMenus.put(1, new DigestMenu(this));
         subMenus.put(2, getAttributes());
         subMenus.put(3, getCompare());
+        subMenus.put(4, new CommentMenu(this));
 
     }
 
@@ -14,13 +17,13 @@ public class ProductMenu extends Menu {
         return new LastMenu("attributes", this) {
             @Override
             public void show() {
+                CommandProcessor.showProductAttribute();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -29,13 +32,13 @@ public class ProductMenu extends Menu {
         return new LastMenu("compare", this) {
             @Override
             public void show() {
+                CommandProcessor.processCompare();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

@@ -1,43 +1,31 @@
 package view.menus;
 
+import controller.GoodsManager;
+import view.CommandProcessor;
+
+import static view.CommandProcessor.showAvailableSort;
+
+
 public class SortMenu extends Menu {
     public SortMenu(Menu parentMenu) {
         super("sort menu", parentMenu);
-        subMenus.put(1, getShowAvailableShort());
-        subMenus.put(2, getSort());
-        subMenus.put(3, getShowCurrentSort());
-        subMenus.put(4, getDisableSort());
+        subMenus.put(1, getSort());
+        subMenus.put(2, getShowCurrentSort());
+        subMenus.put(3, getDisableSort());
 
     }
 
-    private Menu getShowAvailableShort() {
-        return new LastMenu("show available sort", this) {
-            @Override
-            public void show() {
-                super.show();
-                //TODO
-            }
-
-            @Override
-            public void execute() {
-                super.execute();
-                //TODO
-            }
-        };
-    }
 
     private Menu getSort() {
         return new LastMenu("sort", this) {
             @Override
             public void show() {
-                super.show();
-                //TODO
+                showAvailableSort();
             }
 
             @Override
             public void execute() {
-                super.execute();
-                //TODO
+                CommandProcessor.getKindOfSort(this);
             }
         };
     }
@@ -46,14 +34,13 @@ public class SortMenu extends Menu {
         return new LastMenu("current sort", this) {
             @Override
             public void show() {
+                System.out.println("current sort is : " + GoodsManager.getKindOfSort());
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -62,14 +49,13 @@ public class SortMenu extends Menu {
         return new LastMenu("disable sort", this) {
             @Override
             public void show() {
+                GoodsManager.setKindOfSort("visit number");
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }

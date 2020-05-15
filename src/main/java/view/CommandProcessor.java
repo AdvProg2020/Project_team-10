@@ -1,9 +1,8 @@
 package view;
 
-import controller.AccountManager;
-import controller.AdminManager;
+import controller.*;
 import model.*;
-import controller.SellerManager;
+import view.menus.GoodsMenu;
 import view.menus.Menu;
 
 import java.util.*;
@@ -451,7 +450,7 @@ public class CommandProcessor {
         long price = 0;
         String category = null;
         String description;
-        ArrayList<String> categoryAttributes = new ArrayList<>();
+        HashMap<String, String> categoryAttributes = new HashMap<>();
         int flag = 1;
         int id = 0;
         if (!add) {
@@ -499,8 +498,8 @@ public class CommandProcessor {
                 }
             } else {
                 for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
-                    System.out.println(attribute + " :");
-                    categoryAttributes.add(Menu.scanner.nextLine());
+                    System.out.print(attribute + " :");
+                    categoryAttributes.put(attribute , Menu.scanner.nextLine());
                 }
                 System.out.println("write any description about your product");
                 description = Menu.scanner.nextLine();
@@ -712,7 +711,87 @@ public class CommandProcessor {
         }
     }
 
+    public static void processIncreaseNumberOfProductInCart(){
+        System.out.println("enter product id :");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+        if (good == null) {
+            System.out.println("product with id " + id + "does not exist.");
+        } else {
+            BuyerManager.increase(good);
+        }
+    }
+
+    public static void processDecreaseNumberOfProductInCart(){
+        System.out.println("enter product id :");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+        if (good == null) {
+            System.out.println("product with id " + id + "does not exist.");
+        } else {
+            BuyerManager.decrease(good);
+        }
+    }
+
+    public static void showAvailableSort() {
+        System.out.println("available sort :\n1 : time \n2 : score \n3 : visit number\n4 : back");
+    }
+
+    public static void getKindOfSort(Menu currentMenu) {
+        int selectedSort = Integer.parseInt(Menu.scanner.nextLine());
+        if (selectedSort == 1) {
+            GoodsManager.setKindOfSort("time");
+        } else if (selectedSort == 2) {
+            GoodsManager.setKindOfSort("score");
+        } else if (selectedSort == 3) {
+            GoodsManager.setKindOfSort("visit number");
+        } else if (selectedSort == 4) {
+            currentMenu.getParentMenu().show();
+            currentMenu.getParentMenu().execute();
+        } else {
+            System.out.println("you must choose one of following options");
+            currentMenu.show();
+            currentMenu.execute();
+        }
 
 
+    }
+
+    public static void showProductAttribute() {
+        System.out.println(GoodsManager.getCurrentGood());
+    }
+
+    public static void processCompare() {
+        System.out.println("enter product id : ");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Good good = Shop.getShop().getProductWithId(id);
+        if (good == null) {
+            System.out.println("product with id " + id + "does not exist.");
+        } else {
+            System.out.println(GoodsManager.getCurrentGood().getName() + " **** " + good.getName());
+            System.out.println(GoodsManager.getCurrentGood().getPrice() + " **** " + good.getPrice());
+            System.out.println(GoodsManager.getCurrentGood().calculateAverageRate() + " **** " + good.calculateAverageRate());
+            System.out.println(GoodsManager.getCurrentGood().getCategory() + " **** " + good.getCategory());
+            System.out.println(GoodsManager.getCurrentGood().getCompany() + " **** " + good.getCompany());
+            //ToDo
+        }
+
+    }
+
+    public static void showComments() {
+        for (Comment comment : GoodsManager.getCurrentGood().getComments()) {
+            System.out.println(comment);
+        }
+    }
+
+    public static void processAddComment() {
+        System.out.print("title : ");
+        String title = Menu.scanner.nextLine();
+        System.out.println("content : ");
+        String content = Menu.scanner.nextLine();
+        GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood(),
+                "title : " + title + "\n" + "content : " + content));
+
+    }
 }
 

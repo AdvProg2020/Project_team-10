@@ -5,7 +5,8 @@ import model.Good;
 import java.util.List;
 
 public class GoodsManager {
-    private Good currentGood;
+    private static Good currentGood;
+    private static String kindOfSort;
 
     public static void showAvailableFilter(){
 
@@ -23,9 +24,6 @@ public class GoodsManager {
 
     }
 
-    public static void showAvailableSort(){
-
-    }
 
     public static void sort(String sortType){
 
@@ -55,4 +53,15 @@ public class GoodsManager {
 
     public static void showOffs(){}
 
+    public static String getKindOfSort() {
+        return kindOfSort;
+    }
+
+    public static Good getCurrentGood() {
+        return currentGood;
+    }
+
+    public static void setKindOfSort(String kindOfSort) {
+        kindOfSort = kindOfSort;
+    }
 }

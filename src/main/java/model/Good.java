@@ -2,6 +2,7 @@ package model;
 
 import controller.AccountManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class Good {
     private long price;
     private Seller seller;
     private String category;
-    private List<String> categoryAttribute;
+    private Map<String, String> categoryAttribute;
     private String description;
     private List<Integer> allRates;
     private List<Comment> comments;
@@ -24,7 +25,7 @@ public class Good {
     private Map<Account, Integer> goodsInBuyerCart;
 
 
-    public Good(int id, String name, String company, int number, long price, Seller seller, String category, List<String> categoryAttribute, String description) {
+    public Good(int id, String name, String company, int number, long price, Seller seller, String category, HashMap categoryAttribute, String description) {
         this.id = id;
         this.name = name;
         this.company = company;
@@ -35,6 +36,8 @@ public class Good {
         this.categoryAttribute = categoryAttribute;
         this.description = description;
         this.goodsInBuyerCart = new HashMap<>();
+        this.allRates = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     public Map<Account, Integer> getGoodsInBuyerCart() {
@@ -43,6 +46,26 @@ public class Good {
 
     public int getId() {
         return id;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getVisitNumber() {
+        return visitNumber;
     }
 
     public List<Buyer> getBuyers() {
@@ -73,9 +96,6 @@ public class Good {
         this.category = category;
     }
 
-    public void setCategoryAttribute(List<String> categoryAttribute) {
-        this.categoryAttribute = categoryAttribute;
-    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -99,15 +119,29 @@ public class Good {
 
     @Override
     public String toString() {
-        return "Good{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", company='" + company + '\'' +
-                ", number=" + number +
-                ", price=" + price +
-                ", category='" + category + '\'' +
-                ", categoryAttribute=" + categoryAttribute +
-                ", description='" + description + '\'' +
-                '}';
+        return  "id : " + id + "\n" +
+                "name : '" + name + "\n" +
+                "company : '" + company + "\n" +
+                "number : " + number + "\n" +
+                "price : " + price + "\n" +
+                "category : '" + category + "\n" +
+                "categoryAttribute : " + categoryAttribute + "\n" +
+                "description : '" + description;
+    }
+
+    public void setCategoryAttribute(Map<String, String> categoryAttribute) {
+        this.categoryAttribute = categoryAttribute;
+    }
+
+    public Map<String, String> getCategoryAttribute() {
+        return categoryAttribute;
+    }
+
+    public float calculateAverageRate() {
+        float sum = 0;
+        for (Integer rate : allRates) {
+            sum += rate;
+        }
+        return sum / allRates.size();
     }
 }

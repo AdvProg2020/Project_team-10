@@ -3,6 +3,7 @@ package model.requests;
 import controller.AccountManager;
 import model.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class AddProductRequest extends Request {
@@ -13,11 +14,11 @@ public class AddProductRequest extends Request {
     private int number;
     private long price;
     private String category;
-    private List<String> categoryAttribute;
+    private HashMap<String, String> categoryAttribute;
     private String description;
 
     public AddProductRequest(Account account, int id, int goodId, String name, String company, int number, long price,
-                             String category, List<String> categoryAttribute, String description) {
+                             String category, HashMap<String, String> categoryAttribute, String description) {
         super(account, id);
         this.goodId = goodId;
         this.name = name;

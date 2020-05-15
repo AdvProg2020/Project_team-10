@@ -4,9 +4,7 @@ import model.*;
 
 public class BuyerManager {
 
-    //check nulling(good) in command processor
-    public static boolean increase(int id) {
-        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+    public static boolean increase(Good good) {
         if (good.getNumber() > good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount())) {
             int number = good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
             good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount(), number + 1);
@@ -15,8 +13,7 @@ public class BuyerManager {
         return false;
     }
 
-    public static boolean decrease(int id) {
-        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+    public static boolean decrease(Good good) {
         if (good.getNumber() > good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount())) {
             int number = good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
             good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount(), number - 1);

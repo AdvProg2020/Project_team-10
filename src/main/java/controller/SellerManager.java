@@ -4,13 +4,14 @@ import model.*;
 import model.requests.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SellerManager {
 
 
     public static void addProduct(String name, String company, int number, long price, String category,
-                                  List<String> categoryAttribute, String description) {
+                                  HashMap<String, String> categoryAttribute, String description) {
         //TODO
         //((Seller) AccountManager.getOnlineAccount()).getGoods().add(new Good(10, name, company, number, price, ((Seller) AccountManager.getOnlineAccount()), category, categoryAttribute, description));
         Shop.getShop().getAllRequests().add(new AddProductRequest(AccountManager.getOnlineAccount(), AccountManager.getLastRequestId() + 1,
@@ -18,7 +19,7 @@ public class SellerManager {
     }
 
     public static void editProduct(int id, String name, String company, int number, long price, String category,
-                                   List<String> categoryAttribute, String description) {
+                                   HashMap<String, String> categoryAttribute, String description) {
         //TODO
 //        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setName(name);
 //        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setCompany(company);
