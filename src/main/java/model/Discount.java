@@ -1,5 +1,7 @@
 package model;
 
+import controller.AccountManager;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Discount {
         this.maxAmountOfDiscount = maxAmountOfDiscount;
         this.repeatDiscount = repeatDiscount;
         this.users = users;
+        AccountManager.increaseLastDiscountId();
     }
 
     @Override

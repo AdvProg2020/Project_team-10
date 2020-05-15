@@ -4,7 +4,6 @@ import controller.AccountManager;
 import controller.AdminManager;
 import model.*;
 import controller.SellerManager;
-import model.*;
 import view.menus.Menu;
 
 import java.util.*;
@@ -147,6 +146,50 @@ public class CommandProcessor {
         };
     }
 
+    //seller
+
+    public static void showCompanyInfo() {
+        System.out.println(((Seller) AccountManager.getOnlineAccount()).getCompany());
+    }
+
+    public static void showSalesHistory() {
+        System.out.println(AccountManager.getOnlineAccount().getLogs());
+    }
+
+    public static void showHisProducts() {
+        for (Good good : ((Seller) AccountManager.getOnlineAccount()).getGoods()) {
+            System.out.println(good);
+        }
+    }
+
+    public static boolean showBuyersOfThisProduct(int id) {
+        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+        if (good != null) {
+            System.out.println(good.getBuyers());
+            return true;
+        }
+        return false;
+    }
+
+    public static void showAllOffs() {
+        for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
+            System.out.println(off);
+        }
+    }
+
+    public static boolean showOff(int id) {
+        Off off = ((Seller) AccountManager.getOnlineAccount()).getOffWithId(id);
+        if (off != null) {
+            System.out.println(off);
+            return true;
+        }
+        return false;
+    }
+
+    public static void viewBalance() {
+        System.out.println(AccountManager.getOnlineAccount().getCredit());
+    }
+
     public static void processRegister(boolean register) {
         ArrayList<String> info = new ArrayList<>();
         int flag = 1;
@@ -181,9 +224,7 @@ public class CommandProcessor {
                     Menu.scanner.nextLine();
                     if (checkTypeInvalidation(type)) {
                         info.add(typeName);
-                        flag += 1;
                     }
-                } else {
                     flag += 1;
                 }
             } else if (flag == 4) {
@@ -220,7 +261,7 @@ public class CommandProcessor {
                     } else {
                         AccountManager.register(info.get(0), info.get(1), "admin"
                                 , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
-                        System.out.println(info.get(0) + " The new manager was successfully registered");
+                        System.out.println(" The new manager was registered successfully");
                     }
                     break;
                 }
@@ -325,9 +366,18 @@ public class CommandProcessor {
     }
 
     public static void processRemoveProductById() {
-        System.out.println("Enter the desired id: ");
-        Menu.scanner.nextLine();
-        int id = Menu.scanner.nextInt();
+        while (true) {
+            System.out.println("enter your id");
+            int id = Menu.scanner.nextInt();
+            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+            if (good == null) {
+                System.out.println("product with id " + id + " doesnt exist");
+            } else {
+                ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
+                System.out.println("product with id " + id + " removed successfully");
+                break;
+            }
+        }
 
     }
 
@@ -395,7 +445,7 @@ public class CommandProcessor {
         }
     }
 
-    public static void processAddProduct() {
+    public static void processAddOrEditProduct(boolean add) {
         String name;
         String company;
         int number = 0;
@@ -404,6 +454,18 @@ public class CommandProcessor {
         String description;
         ArrayList<String> categoryAttributes = new ArrayList<>();
         int flag = 1;
+        int id = 0;
+        if (!add) {
+            while (true) {
+                System.out.println("enter your id");
+                id = Menu.scanner.nextInt();
+                if (((Seller) AccountManager.getOnlineAccount()).getProductWithId(id) != null) {
+                    break;
+                } else {
+                    System.out.println("product with id " + id + " does not exist");
+                }
+            }
+        }
         Menu.scanner.nextLine();
         System.out.print("enter name of the product: ");
         name = Menu.scanner.nextLine();
@@ -443,8 +505,11 @@ public class CommandProcessor {
                 }
                 System.out.println("write any description about your product");
                 description = Menu.scanner.nextLine();
-                SellerManager.addProduct(AccountManager.getLastGoodId() + 1, name, company, number, price, category,
-                        categoryAttributes, description);
+                if (add) {
+                    SellerManager.addProduct(name, company, number, price, category, categoryAttributes, description);
+                } else {
+                    SellerManager.editProduct(id, name, company, number, price, category, categoryAttributes, description);
+                }
                 break;
             }
         }
@@ -466,6 +531,7 @@ public class CommandProcessor {
 
     public static void processShowBuyersForSeller() {
         while (true) {
+            System.out.println("enter your id");
             int id = Menu.scanner.nextInt();
             Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
             if (good == null) {
@@ -499,7 +565,6 @@ public class CommandProcessor {
         return null;
     }
 
-
     public static void printShowPersonalInfo() {
         System.out.println(AccountManager.getOnlineAccount());
     }
@@ -509,5 +574,12 @@ public class CommandProcessor {
             System.out.println(discount);
         }
     }
+
+    public static void showAllCategories() {
+        for (Category category : Shop.getShop().getAllCategories()) {
+            System.out.println(category);
+        }
+    }
+
 }
 

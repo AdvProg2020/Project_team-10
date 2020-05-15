@@ -14,7 +14,6 @@ public class Good {
     private int number;
     private long price;
     private Seller seller;
-    private boolean isAvailable;
     private String category;
     private List<String> categoryAttribute;
     private String description;
@@ -98,6 +97,17 @@ public class Good {
         return allRates;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Good{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", company='" + company + '\'' +
+                ", number=" + number +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", categoryAttribute=" + categoryAttribute +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

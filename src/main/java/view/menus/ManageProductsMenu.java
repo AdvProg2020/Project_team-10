@@ -1,6 +1,7 @@
 package view.menus;
 
-import controller.SellerManager;
+import view.CommandProcessor;
+
 import static view.CommandProcessor.*;
 
 public class ManageProductsMenu extends Menu {
@@ -17,7 +18,7 @@ public class ManageProductsMenu extends Menu {
         return new LastMenu("show all products" , this) {
             @Override
             public void show() {
-                SellerManager.showHisProducts();
+                CommandProcessor.showHisProducts();
                 super.show();
                 //TODO
             }
@@ -61,15 +62,16 @@ public class ManageProductsMenu extends Menu {
     }
 
     private Menu getEdit(){
-        return new LastMenu("edit" , this) {
+        return new LastMenu("edit product" , this) {
             @Override
             public void show() {
-                //TODO
+                processAddOrEditProduct(false);
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

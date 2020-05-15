@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import model.requests.RegisterOfSellerRequest;
 import view.menus.Menu;
 import view.menus.UserMenu;
 
@@ -18,6 +19,7 @@ public class AccountManager {
     public static int getLastRequestId() {
         return lastRequestId;
     }
+
 
     public static int getLastDiscountCode() {
         return lastDiscountCode;
@@ -82,7 +84,10 @@ public class AccountManager {
         if (type.equals("buyer")) {
             Shop.getShop().getAllAccounts().add(new Buyer(username, firstName, lastName, email, phoneNumber, password));
         } else if (type.equals("seller")) {
-            Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password, company));
+            //TODO
+            //Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password, company));
+            Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
+                    firstName, lastName, email, phoneNumber));
         } else {
             Shop.getShop().getAllAccounts().add(new Admin(username, firstName, lastName, email, phoneNumber, password));
         }
@@ -91,8 +96,8 @@ public class AccountManager {
 
     public static boolean login(String username, String password) {
         for (Account account : Shop.getShop().getAllAccounts()) {
-            if (account.getUsername().equals(username)){
-                if (account.getPassword().equals(password)){
+            if (account.getUsername().equals(username)) {
+                if (account.getPassword().equals(password)) {
                     onlineAccount = Shop.getShop().getAccountByUsername(username);
                     Menu.setIsLogged(true);
                     UserMenu.setUsername(username);
@@ -103,18 +108,8 @@ public class AccountManager {
         return false;
     }
 
-    public static void showPersonalInfo() {
-
-    }
-
     public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
 
-    }
-
-    public static void showAllCategories() {
-        for (Category category : Shop.getShop().getAllCategories()) {
-            System.out.println(category);
-        }
     }
 
 

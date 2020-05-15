@@ -214,7 +214,7 @@ public class UserMenu extends Menu {
         return new LastMenu("view company information", this) {
             @Override
             public void show() {
-                SellerManager.showCompanyInfo();
+                showCompanyInfo();
                 super.show();
             }
 
@@ -229,7 +229,7 @@ public class UserMenu extends Menu {
         return new LastMenu("view sales history", this) {
             @Override
             public void show() {
-                SellerManager.showSalesHistory();
+                showSalesHistory();
                 super.show();
             }
 
@@ -244,7 +244,7 @@ public class UserMenu extends Menu {
         return new LastMenu("add product", this) {
             @Override
             public void show() {
-                processAddProduct();
+                processAddOrEditProduct(true);
                 super.show();
             }
 
@@ -259,14 +259,13 @@ public class UserMenu extends Menu {
         return new LastMenu("remove product", this) {
             @Override
             public void show() {
+                processRemoveProductById();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -275,7 +274,7 @@ public class UserMenu extends Menu {
         return new LastMenu("show category", this) {
             @Override
             public void show() {
-                AccountManager.showAllCategories();
+                showAllCategories();
                 super.show();
             }
 
@@ -290,7 +289,7 @@ public class UserMenu extends Menu {
         return new LastMenu("view balance", this) {
             @Override
             public void show() {
-                SellerManager.viewBalance();
+                viewBalance();
                 super.show();
             }
 

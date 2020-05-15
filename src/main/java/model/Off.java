@@ -11,10 +11,9 @@ public class Off {
     private Date endDate;
     private int discount;
 
-    public Off(int id, List<Good> goods, String status, Date startDate, Date endDate, int discount) {
+    public Off(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
         this.id = id;
         this.goods = goods;
-        this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
         this.discount = discount;
@@ -22,5 +21,21 @@ public class Off {
 
     public int getId() {
         return id;
+    }
+
+    public void setGoods(List<Good> goods) {
+        this.goods = goods;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 }

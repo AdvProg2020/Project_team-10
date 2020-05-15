@@ -1,17 +1,18 @@
 package model;
 
+import model.requests.Request;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import model.requests.*;
 
 public class Shop {
     private List<Account> allAccounts = new ArrayList<>();
-    private List<Request> allRequests = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
     private List<Category> allCategories = new ArrayList<>();
     private List<Discount> allDiscounts = new ArrayList<>();
+    private List<Request> allRequests = new ArrayList<>();
 
     private Shop() {
         allCategories.add(new Category("khar", new ArrayList<>(Arrays.asList("RAM", "CPU"))));
@@ -29,16 +30,16 @@ public class Shop {
         return allAccounts;
     }
 
-    public List<Request> getAllRequests() {
-        return allRequests;
-    }
-
     public List<Off> getAllOffs() {
         return allOffs;
     }
 
     public List<Good> getAllGoods() {
         return allGoods;
+    }
+
+    public List<Request> getAllRequests() {
+        return allRequests;
     }
 
     private static Shop shop = new Shop();
