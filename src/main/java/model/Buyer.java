@@ -16,6 +16,7 @@ public class Buyer extends Account {
         super(username, firstName, lastName, email, phoneNumber, password);
         goods = new ArrayList<>();
         cart = new ArrayList<>();
+        discounts = new ArrayList<>();
     }
 
     public List<Good> getGoods() {

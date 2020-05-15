@@ -458,6 +458,7 @@ public class CommandProcessor {
             while (true) {
                 System.out.println("enter your id");
                 id = Menu.scanner.nextInt();
+                Menu.scanner.nextLine();
                 if (((Seller) AccountManager.getOnlineAccount()).getProductWithId(id) != null) {
                     break;
                 } else {
@@ -465,7 +466,6 @@ public class CommandProcessor {
                 }
             }
         }
-        Menu.scanner.nextLine();
         System.out.print("enter name of the product: ");
         name = Menu.scanner.nextLine();
         System.out.print("enter company of the product: ");
@@ -474,6 +474,7 @@ public class CommandProcessor {
             if (flag == 1) {
                 System.out.print("enter number of the product: ");
                 number = Menu.scanner.nextInt();
+                Menu.scanner.nextLine();
                 if (number < 1) {
                     System.out.println("your number must be larger than 0");
                 } else {
@@ -482,6 +483,7 @@ public class CommandProcessor {
             } else if (flag == 2) {
                 System.out.print("enter price of the product: ");
                 price = Menu.scanner.nextLong();
+                Menu.scanner.nextLine();
                 if (price < 1) {
                     System.out.println("your price must be larger than 0");
                 } else {
@@ -537,6 +539,18 @@ public class CommandProcessor {
                 System.out.println(good.getBuyers());
                 break;
             }
+        }
+    }
+
+    public static void processEditDiscountCode() {
+        System.out.print("enter the Discount code for edit: ");
+        int code;
+        code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount == null) {
+            System.out.println("discount code not exist");
+        } else {
+            processAddDiscountCode(discount , true);
         }
     }
 
@@ -611,7 +625,6 @@ public class CommandProcessor {
         }
     }
 
-    //برای این باید فکر کنیم
     public static void showProductInCart(int id) {
         int counter = 0;
         Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
@@ -684,7 +697,7 @@ public class CommandProcessor {
 
     }
 
-    public static void showAllCategory(){
+    public static void showAllCategories(){
         for (Category category : Shop.getShop().getAllCategories()) {
             System.out.println(category);
         }

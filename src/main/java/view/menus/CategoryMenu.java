@@ -15,7 +15,7 @@ public class CategoryMenu extends Menu  {
         return new LastMenu("show all category", this) {
             @Override
             public void show() {
-                showAllCategory();
+                showAllCategories();
                 super.show();
             }
 

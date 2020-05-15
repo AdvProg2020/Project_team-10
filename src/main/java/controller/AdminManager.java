@@ -1,9 +1,6 @@
 package controller;
 
-import model.Account;
-import model.Category;
-import model.Discount;
-import model.Shop;
+import model.*;
 import view.CommandProcessor;
 
 import java.util.Date;
@@ -34,14 +31,12 @@ public class AdminManager {
 
     public static void createDiscount(Date startDate, Date endDate, int percent,
                                       long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
-        Shop.getShop().getAllDiscounts().add(new Discount(AccountManager.getLastDiscountCode(),
-                startDate,
-                endDate,
-                percent,
-                maxAmountOfDiscount,
-                repeatDiscount,
-                users));
-        AccountManager.increaseLastDiscountId();
+        Discount discount = new Discount(AccountManager.getLastDiscountCode(), startDate, endDate, percent,
+                maxAmountOfDiscount, repeatDiscount, users);
+        Shop.getShop().getAllDiscounts().add(discount);
+        for (Account user : users) {
+            ((Buyer) user).getDiscounts().add(discount);
+        }
     }
 
     public static void editDiscount(Date startDate, Date endDate, int percent,

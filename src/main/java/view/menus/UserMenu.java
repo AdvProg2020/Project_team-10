@@ -272,7 +272,6 @@ public class UserMenu extends Menu {
         return new LastMenu("show category", this) {
             @Override
             public void show() {
-                showAllCategory();
                 showAllCategories();
                 super.show();
             }
