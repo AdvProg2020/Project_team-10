@@ -1,23 +1,42 @@
 package view.menus;
 
+import static view.CommandProcessor.*;
+
 public class ManageRequestMenu extends Menu {
     public ManageRequestMenu(Menu parentMenu) {
         super("manage requests", parentMenu);
-        subMenus.put(1, getDetail());
-        subMenus.put(2, getAccept());
-        subMenus.put(3, getDecline());
+        subMenus.put(1, getShowAllRequests());
+        subMenus.put(2, getDetail());
+        subMenus.put(3, getAccept());
+        subMenus.put(4, getDecline());
     }
 
-    private Menu getDetail() {
-        return new LastMenu("detail", this) {
+    private Menu getShowAllRequests() {
+        return new LastMenu("show all requests", this) {
             @Override
             public void show() {
-                //TODO
+                processShowAllRequests();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
+            }
+        };
+    }
+
+    private Menu getDetail() {
+        return new LastMenu("detail a request", this) {
+            @Override
+            public void show() {
+                processShowRequestDetail();
+                super.show();
+            }
+
+            @Override
+            public void execute() {
+                super.execute();
             }
         };
     }
@@ -26,12 +45,13 @@ public class ManageRequestMenu extends Menu {
         return new LastMenu("accept", this) {
             @Override
             public void show() {
-                //TODO
+                processAcceptRequest();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -40,12 +60,13 @@ public class ManageRequestMenu extends Menu {
         return new LastMenu("decline", this) {
             @Override
             public void show() {
-                //TODO
+                processDeclineRequest();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

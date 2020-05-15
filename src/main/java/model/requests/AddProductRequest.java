@@ -27,6 +27,9 @@ public class AddProductRequest extends Request {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
+        this.requestName = "add product request";
+        this.acceptMessage = "product with id " + id + " added";
+        this.declineMessage = "request of add of product with id " + id + " was declined";
     }
 
     @Override
@@ -34,6 +37,5 @@ public class AddProductRequest extends Request {
         Good good = new Good(goodId, name, company, number, price, ((Seller) account), category, categoryAttribute, description);
         Shop.getShop().getAllGoods().add(good);
         ((Seller) account).getGoods().add(good);
-        message = "the product added";
     }
 }

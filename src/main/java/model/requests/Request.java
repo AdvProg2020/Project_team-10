@@ -6,8 +6,9 @@ import model.Account;
 public abstract class Request {
     protected Account account;
     protected int id;
-    protected String message;
-    protected boolean isAccepted;
+    protected String requestName;
+    protected String acceptMessage;
+    protected String declineMessage;
 
     public Request(Account account, int id) {
         this.account = account;
@@ -16,4 +17,23 @@ public abstract class Request {
     }
 
     public abstract void accept();
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAcceptMessage() {
+        return acceptMessage;
+    }
+
+    public String getDeclineMessage() {
+        return declineMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "username : " + account.getUsername() + "\n" +
+                "id : " + id + "\n" +
+                "name : " + requestName;
+    }
 }

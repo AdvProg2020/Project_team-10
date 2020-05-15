@@ -93,6 +93,15 @@ public class Shop {
         return null;
     }
 
+    public Request getRequestById(int id) {
+        for (Request request : allRequests) {
+            if (request.getId() == id) {
+                return request;
+            }
+        }
+        return null;
+    }
+
     public boolean isThereEmail(String email) {
         for (Account account : allAccounts) {
             if (account.getEmail().equals(email)) {

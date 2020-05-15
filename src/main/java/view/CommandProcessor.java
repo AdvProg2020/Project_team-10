@@ -4,6 +4,7 @@ import controller.AccountManager;
 import controller.AdminManager;
 import model.*;
 import controller.SellerManager;
+import model.requests.Request;
 import view.menus.Menu;
 
 import java.util.*;
@@ -377,7 +378,7 @@ public class CommandProcessor {
 
     }
 
-    public static void processAddDiscountCode(Discount discount ,boolean editDiscount) {
+    public static void processAddDiscountCode(Discount discount, boolean editDiscount) {
         String startDate;
         String endDate;
         Date startDate1 = null;
@@ -515,16 +516,13 @@ public class CommandProcessor {
     }
 
     public static void processShowProductByIdForSeller() {
-        while (true) {
-            System.out.println("enter your id");
-            int id = Menu.scanner.nextInt();
-            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-            if (good == null) {
-                System.out.println("product with this id doesnt exist");
-            } else {
-                System.out.println(good);
-                break;
-            }
+        System.out.println("enter your id");
+        int id = Menu.scanner.nextInt();
+        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+        if (good == null) {
+            System.out.println("product with this id doesnt exist");
+        } else {
+            System.out.println(good);
         }
     }
 
@@ -550,7 +548,7 @@ public class CommandProcessor {
         if (discount == null) {
             System.out.println("discount code not exist");
         } else {
-            processAddDiscountCode(discount , true);
+            processAddDiscountCode(discount, true);
         }
     }
 
@@ -697,21 +695,63 @@ public class CommandProcessor {
 
     }
 
-    public static void showAllCategories(){
+    public static void showAllCategories() {
         for (Category category : Shop.getShop().getAllCategories()) {
             System.out.println(category);
         }
 
     }
 
-    public static void viewAllUsers(){
-        for (Account allAccount : Shop.getShop().getAllAccounts()) {
-            if (allAccount != AccountManager.getOnlineAccount()){
-                System.out.println(allAccount.getUsername());
+    public static void viewAllUsers() {
+        for (Account account : Shop.getShop().getAllAccounts()) {
+            if (account != AccountManager.getOnlineAccount()) {
+                System.out.println(account.getUsername());
             }
         }
     }
 
+    public static void processShowAllRequests() {
+        for (Request request : Shop.getShop().getAllRequests()) {
+            System.out.println(request);
+        }
+    }
+
+    public static void processShowRequestDetail() {
+        System.out.println("enter your id");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Request request = Shop.getShop().getRequestById(id);
+        if (request == null) {
+            System.out.println("request with id " + id + " does not exist");
+        } else {
+            System.out.println(request);
+        }
+    }
+
+    public static void processAcceptRequest() {
+        System.out.println("enter your id");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Request request = Shop.getShop().getRequestById(id);
+        if (request == null) {
+            System.out.println("request with id " + id + " does not exist");
+        } else {
+            System.out.println(request.getAcceptMessage());
+            AdminManager.acceptRequest(request);
+        }
+
+    }
+
+    public static void processDeclineRequest() {
+        System.out.println("enter your id");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Request request = Shop.getShop().getRequestById(id);
+        if (request == null) {
+            System.out.println("request with id " + id + " does not exist");
+        } else {
+            System.out.println(request.getDeclineMessage());
+            AdminManager.declineRequest(request);
+        }
+
+    }
 
 
 }

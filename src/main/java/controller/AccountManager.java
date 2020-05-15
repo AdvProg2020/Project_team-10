@@ -86,7 +86,7 @@ public class AccountManager {
             //TODO
             Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password, company));
             Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
-                    firstName, lastName, email, phoneNumber));
+                    firstName, lastName, email, phoneNumber, company));
         } else {
             Shop.getShop().getAllAccounts().add(new Admin(username, firstName, lastName, email, phoneNumber, password));
         }

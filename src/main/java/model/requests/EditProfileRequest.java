@@ -16,6 +16,9 @@ public class EditProfileRequest extends Request {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.requestName = "edit profile request";
+        this.acceptMessage = "profile of user " + account.getUsername() + " edited";
+        this.declineMessage = "request of edit of user " + account.getUsername() + " was declined";
     }
 
     @Override
@@ -25,6 +28,5 @@ public class EditProfileRequest extends Request {
         account.setEmail(email);
         account.setPhoneNumber(phoneNumber);
         account.setPassword(password);
-        System.out.println("profile of username " + account.getUsername() + " edited");
     }
 }

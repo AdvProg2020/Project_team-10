@@ -28,6 +28,9 @@ public class EditProductRequest extends Request {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
+        this.requestName = "edit product request";
+        this.acceptMessage = "product with id " + id + " edited";
+        this.declineMessage = "request of edit of product with id " + id + " was declined";
     }
 
     @Override
@@ -39,6 +42,5 @@ public class EditProductRequest extends Request {
         ((Seller) account).getProductWithId(goodId).setCategory(category);
         ((Seller) account).getProductWithId(goodId).setCategoryAttribute(categoryAttribute);
         ((Seller) account).getProductWithId(goodId).setDescription(description);
-        message = "the product edited";
     }
 }
