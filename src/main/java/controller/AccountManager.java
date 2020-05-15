@@ -20,7 +20,6 @@ public class AccountManager {
         return lastRequestId;
     }
 
-
     public static int getLastDiscountCode() {
         return lastDiscountCode;
     }
@@ -108,8 +107,12 @@ public class AccountManager {
         return false;
     }
 
-    public static void editPersonalInfo(String password, String firstName, String lastName, String email, String phoneNumber) {
-
+    public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber, String email) {
+        AccountManager.getOnlineAccount().setPassword(password);
+        AccountManager.getOnlineAccount().setFirstName(firstName);
+        AccountManager.getOnlineAccount().setLastName(lastName);
+        AccountManager.getOnlineAccount().setPhoneNumber(phoneNumber);
+        AccountManager.getOnlineAccount().setEmail(email);
     }
 
 

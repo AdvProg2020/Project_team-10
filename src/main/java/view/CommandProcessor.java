@@ -193,7 +193,6 @@ public class CommandProcessor {
     public static void processRegister(boolean register) {
         ArrayList<String> info = new ArrayList<>();
         int flag = 1;
-        Menu.scanner.nextLine();
         while (true) {
             if (flag == 1) {
                 System.out.print("enter your username: ");
@@ -275,7 +274,6 @@ public class CommandProcessor {
         } else {
             String username = null, password = null;
             int flag = 0;
-            Menu.scanner.nextLine();
             while (flag < 2) {
                 if (flag == 0) {
                     System.out.println("enter your username: ");
@@ -302,7 +300,6 @@ public class CommandProcessor {
     public static void processEditProfile() {
         int flag = 1;
         ArrayList<String> info = new ArrayList<>();
-        Menu.scanner.nextLine();
         while (true) {
             if (flag == 1) {
                 System.out.print("enter your new password: ");
@@ -337,7 +334,7 @@ public class CommandProcessor {
                 String phoneNumber = Menu.scanner.nextLine();
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
-                    AdminManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
+                    AccountManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
                     break;
                 }
             }
@@ -356,7 +353,6 @@ public class CommandProcessor {
 
     public static void processDeleteAccountByAdmin() {
         System.out.print("Enter the desired username: ");
-        Menu.scanner.nextLine();
         String username = Menu.scanner.nextLine();
         if (AdminManager.deleteAccount(username)) {
             System.out.println(username + " deleted");
@@ -381,7 +377,7 @@ public class CommandProcessor {
 
     }
 
-    public static void processAddDiscountCode() {
+    public static void processAddDiscountCode(Discount discount ,boolean editDiscount) {
         String startDate;
         String endDate;
         Date startDate1 = null;
@@ -392,7 +388,6 @@ public class CommandProcessor {
         String people;
         List<Account> allPeople = new ArrayList<>();
         int flag = 1;
-        Menu.scanner.nextLine();
         while (true) {
             if (flag == 1) {
                 System.out.print("Enter the start date[Month/Day/Years Hour:Minutes]: ");
@@ -430,16 +425,20 @@ public class CommandProcessor {
                 System.out.println("Enter the people covered by the discount code: ");
                 Shop shop = Shop.getShop();
                 while (!(people = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
-                    for (Account allAccount : shop.getAllAccounts()) {
-                        if (allAccount.equals(shop.getAccountByUsername(people))) {
-                            allPeople.add(shop.getAccountByUsername(people));
-                        } else {
-                            System.out.println("username not exists");
-                        }
+                    if (shop.getAccountByUsername(people) != null) {
+                        allPeople.add(shop.getAccountByUsername(people));
+                        System.out.println("username added");
+                    } else {
+                        System.out.println("username not exists");
                     }
                 }
-                AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
-                System.out.println("The discount code was successfully created");
+                if (editDiscount) {
+                    AdminManager.editDiscount(startDate1, endDate1, percent, amount, repeat, allPeople, discount);
+                    System.out.println("discount code edited");
+                } else {
+                    AdminManager.createDiscount(startDate1, endDate1, percent, amount, repeat, allPeople);
+                    System.out.println("The discount code was successfully created");
+                }
                 break;
             }
         }
@@ -475,7 +474,6 @@ public class CommandProcessor {
             if (flag == 1) {
                 System.out.print("enter number of the product: ");
                 number = Menu.scanner.nextInt();
-                Menu.scanner.nextLine();
                 if (number < 1) {
                     System.out.println("your number must be larger than 0");
                 } else {
@@ -484,7 +482,6 @@ public class CommandProcessor {
             } else if (flag == 2) {
                 System.out.print("enter price of the product: ");
                 price = Menu.scanner.nextLong();
-                Menu.scanner.nextLine();
                 if (price < 1) {
                     System.out.println("your price must be larger than 0");
                 } else {
@@ -545,7 +542,7 @@ public class CommandProcessor {
 
     private static Date getDateByString(String dateInput) {
         Calendar calendar = Calendar.getInstance();
-        String regex = "(\\d\\d)\\/(\\d\\d)\\/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
+        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(dateInput);
         int[] dateSplit = new int[5];
@@ -565,21 +562,144 @@ public class CommandProcessor {
         return null;
     }
 
-    public static void printShowPersonalInfo() {
+    public static void showPersonalInfo() {
         System.out.println(AccountManager.getOnlineAccount());
     }
 
-    public static void printShowAllDiscount() {
-        for (Discount discount : Shop.getShop().getAllDiscounts()) {
+    public static void showDiscount() {
+        System.out.print("enter the discount code: ");
+        int code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount != null) {
+            System.out.print(discount);
+            for (Account user : discount.getUsers()) {
+                System.out.print("|‌" + user.getUsername() + "|‌");
+            }
+            System.out.println();
+        } else {
+            System.out.println("discount code not exist");
+        }
+    }
+
+    public static void showAllDiscountCode() {
+        for (Discount allDiscount : Shop.getShop().getAllDiscounts()) {
+            System.out.print(allDiscount);
+            for (Account user : allDiscount.getUsers()) {
+                System.out.print("|‌" + user.getUsername() + "|‌");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void processRemoveDiscountCode() {
+        System.out.print("enter the discount code for remove: ");
+        int code = Menu.scanner.nextInt();
+        Discount discount = Shop.getShop().getDiscountWithCode(code);
+        if (discount != null) {
+            Shop.getShop().getAllDiscounts().remove(discount);
+            System.out.println("discount code removed");
+        } else {
+            System.out.println("discount code not exist");
+        }
+
+    }
+
+    public static void showProductsInCart() {
+
+        for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
+            System.out.println("name: " + good.getName() + " id: " + good.getId());
+        }
+    }
+
+    //برای این باید فکر کنیم
+    public static void showProductInCart(int id) {
+        int counter = 0;
+        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+        if (good != null) {
+            System.out.println("name: " + good.getName() + " id: " + good.getId());
+            counter++;
+        }
+        if (counter == 0) {
+            System.out.println("product with id : " + id + " is not exist");
+        }
+    }
+
+    public static void showAllOrders() {
+        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
+            System.out.println(log.toString());
+        }
+    }
+
+    public static void showOrder(int id) {
+        int counter = 0;
+        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
+            if (log.getId() == id) {
+                System.out.println(log.toString());
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("order with id : " + id + " is not exist");
+        }
+    }
+
+    public static void showAllDiscountsCodeForBuyer() {
+        for (Discount discount : ((Buyer) AccountManager.getOnlineAccount()).getDiscounts()) {
             System.out.println(discount);
         }
     }
 
-    public static void showAllCategories() {
+    public static void processAddOrEditCategory(boolean edit, String oldName) {
+        System.out.print("Enter category name: ");
+        String newName = Menu.scanner.nextLine();
+        String attributeString;
+        List<String> attribute = new ArrayList<>();
+        Category category = Shop.getShop().getCategoryByName(newName);
+        if (category == null || edit) {
+            System.out.println("Enter the attribute: ");
+            while (!(attributeString = Menu.scanner.nextLine()).trim().equalsIgnoreCase("end")) {
+                attribute.add(attributeString);
+            }
+            if (edit) {
+                AdminManager.editCategory(oldName, newName, attribute);
+                System.out.println("category edited");
+            } else {
+                AdminManager.addCategory(newName, attribute);
+                System.out.println("category added");
+            }
+        } else {
+            System.out.println("category exist");
+        }
+    }
+
+    public static void processEditCategory() {
+        System.out.print("Enter last category name: ");
+        String oldName = Menu.scanner.nextLine();
+        if (Shop.getShop().getCategoryByName(oldName) != null) {
+            processAddOrEditCategory(true, oldName);
+        } else {
+            System.out.println("category not exist");
+        }
+
+
+    }
+
+    public static void showAllCategory(){
         for (Category category : Shop.getShop().getAllCategories()) {
             System.out.println(category);
         }
+
     }
+
+    public static void viewAllUsers(){
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            if (allAccount != AccountManager.getOnlineAccount()){
+                System.out.println(allAccount.getUsername());
+            }
+        }
+    }
+
+
 
 }
 

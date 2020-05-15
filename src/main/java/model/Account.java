@@ -10,7 +10,6 @@ public abstract class Account {
     private String email;
     private String phoneNumber;
     private String password;
-    private List<Discount> discounts;
     private long credit;
     private List<Log> logs;
 
@@ -86,8 +85,4 @@ public abstract class Account {
         return credit;
     }
 
-
-    public List<Discount> getDiscounts() {
-        return discounts;
-    }
 }

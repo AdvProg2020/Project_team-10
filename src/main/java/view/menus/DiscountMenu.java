@@ -1,5 +1,7 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class DiscountMenu extends Menu {
     public DiscountMenu(Menu parentMenu) {
         super("discount menu", parentMenu);
@@ -10,58 +12,62 @@ public class DiscountMenu extends Menu {
 
     }
 
-    private Menu getShowCode(){
-        return new LastMenu("show discount code" , this) {
+    private Menu getShowCode() {
+        return new LastMenu("show all discount code", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showAllDiscountCode();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
 
-    private Menu getViewDiscountCode(){
-        return new LastMenu("view discount code" , this) {
+    private Menu getViewDiscountCode() {
+        return new LastMenu("show discount code[code]", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showDiscount();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
 
-    private Menu getEditDiscountCode(){
-        return new LastMenu("edit discount code" , this) {
+    private Menu getEditDiscountCode() {
+        return new LastMenu("edit discount code", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.processEditDiscountCode();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
 
-    private Menu getRemoveDiscountCode(){
-        return new LastMenu("remove discount code" , this) {
+    private Menu getRemoveDiscountCode() {
+        return new LastMenu("remove discount code", this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.processRemoveDiscountCode();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

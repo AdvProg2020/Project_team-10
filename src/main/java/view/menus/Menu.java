@@ -66,6 +66,7 @@ public abstract class Menu {
     public void execute() {
         Menu nextMenu = null;
         int selectedMenu = scanner.nextInt();
+        Menu.scanner.nextLine();
         if (isLogged) {
             if (selectedMenu == subMenus.size() + 2) {
                 if (this.parentMenu == null) {

@@ -1,27 +1,20 @@
 package view.menus;
 
-import controller.AccountManager;
-import model.Account;
-import model.Shop;
-import view.CommandProcessor;
+import static view.CommandProcessor.*;
 
 public class ManageUsersMenu extends Menu {
     public ManageUsersMenu(Menu parentMenu) {
         super("manage users", parentMenu);
-        subMenus.put(1 ,getView());
-        subMenus.put(2 , getDeleteUser());
-        subMenus.put(3 , getCreateManager());
+        subMenus.put(1, getViewAllUsers());
+        subMenus.put(2, getDeleteUser());
+        subMenus.put(3, getCreateManager());
     }
 
-    private Menu getView(){
-        return new LastMenu("view" , this) {
+    private Menu getViewAllUsers() {
+        return new LastMenu("view all users", this) {
             @Override
             public void show() {
-                for (Account allAccount : Shop.getShop().getAllAccounts()) {
-                    if (allAccount != AccountManager.getOnlineAccount()){
-                        System.out.println(allAccount.getUsername());
-                    }
-                }
+                viewAllUsers();
                 super.show();
             }
 
@@ -32,11 +25,11 @@ public class ManageUsersMenu extends Menu {
         };
     }
 
-    private Menu getDeleteUser(){
-        return new LastMenu("delete user" , this) {
+    private Menu getDeleteUser() {
+        return new LastMenu("delete user", this) {
             @Override
             public void show() {
-                CommandProcessor.processDeleteAccountByAdmin();
+                processDeleteAccountByAdmin();
                 super.show();
             }
 
@@ -47,11 +40,11 @@ public class ManageUsersMenu extends Menu {
         };
     }
 
-    private Menu getCreateManager(){
-        return new LastMenu("create manager" , this) {
+    private Menu getCreateManager() {
+        return new LastMenu("create manager", this) {
             @Override
             public void show() {
-                CommandProcessor.processRegister(false);
+                processRegister(false);
                 super.show();
             }
 

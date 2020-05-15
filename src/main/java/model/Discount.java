@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import controller.AccountManager;
 
 import java.util.Date;
@@ -25,19 +26,47 @@ public class Discount {
         AccountManager.increaseLastDiscountId();
     }
 
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setPercent(int percent) {
+        this.percent = percent;
+    }
+
+    public void setMaxAmountOfDiscount(long maxAmountOfDiscount) {
+        this.maxAmountOfDiscount = maxAmountOfDiscount;
+    }
+
+    public void setRepeatDiscount(int repeatDiscount) {
+        this.repeatDiscount = repeatDiscount;
+    }
+
+    public void setUsers(List<Account> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
-        return "code: " + code +"\n"+
-                "startDate: " + startDate +"\n"+
-                "endDate: " + endDate +"\n"+
-                "percent: " + percent +"\n"+
-                "maxAmountOfDiscount: " + maxAmountOfDiscount +"\n"+
-                "repeatDiscount: " + repeatDiscount + "\n"+
-                "users: " + users + "\n";
+        return "code: " + code + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "percent: " + percent + "\n" +
+                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
+                "repeatDiscount: " + repeatDiscount + "\n" +
+                "users: " ;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public List<Account> getUsers() {
+        return users;
     }
 
 }
