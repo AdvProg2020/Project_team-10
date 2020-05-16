@@ -501,7 +501,7 @@ public class CommandProcessor {
             } else {
                 for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
                     System.out.print(attribute + " :");
-                    categoryAttributes.put(attribute , Menu.scanner.nextLine());
+                    categoryAttributes.put(attribute, Menu.scanner.nextLine());
                 }
                 System.out.println("write any description about your product");
                 description = Menu.scanner.nextLine();
@@ -716,7 +716,7 @@ public class CommandProcessor {
         }
     }
 
-    public static void processIncreaseNumberOfProductInCart(){
+    public static void processIncreaseNumberOfProductInCart() {
         System.out.println("enter product id :");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
@@ -727,7 +727,7 @@ public class CommandProcessor {
         }
     }
 
-    public static void processDecreaseNumberOfProductInCart(){
+    public static void processDecreaseNumberOfProductInCart() {
         System.out.println("enter product id :");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
@@ -737,6 +737,7 @@ public class CommandProcessor {
             BuyerManager.decrease(good);
         }
     }
+
     public static void processShowRequestDetail() {
         System.out.println("enter your id");
         int id = Integer.parseInt(Menu.scanner.nextLine());
@@ -834,5 +835,30 @@ public class CommandProcessor {
                 "title : " + title + "\n" + "content : " + content));
 
     }
+
+    public static void processRemoveCategory() {
+        System.out.print("enter category name: ");
+        String name = Menu.scanner.nextLine();
+        Category category = Shop.getShop().getCategoryByName(name);
+        if (category == null) {
+            System.out.println("category not exist");
+        } else {
+            Shop.getShop().getAllCategories().remove(category);
+            System.out.println("category removed");
+        }
+    }
+
+    public static void processRemoveProduct() {
+        System.out.print("enter product id: ");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Good good = Shop.getShop().getProductWithId(id);
+        if (good == null) {
+            System.out.println("product not exist");
+        } else {
+            Shop.getShop().getAllGoods().remove(good);
+            System.out.println("product removed");
+        }
+    }
 }
+
 
