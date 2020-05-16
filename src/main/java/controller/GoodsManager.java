@@ -1,16 +1,24 @@
 package controller;
 
 import model.Good;
+import model.Shop;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsManager {
     private static Good currentGood;
-    private static String kindOfSort;
+    private static String kindOfSort = "visit number";
+    private static List<Good> filteredList = new ArrayList<>(Shop.getShop().getAllGoods());
 
-    public static void showAvailableFilter(){
-
+    public static List<Good> getFilteredList() {
+        return filteredList;
     }
+
+    public static void setCurrentGood(Good currentGood) {
+        GoodsManager.currentGood = currentGood;
+    }
+
 
     public static void filter(List<String> filterInfo){
 
@@ -62,6 +70,6 @@ public class GoodsManager {
     }
 
     public static void setKindOfSort(String kindOfSort) {
-        kindOfSort = kindOfSort;
+        GoodsManager.kindOfSort = kindOfSort;
     }
 }

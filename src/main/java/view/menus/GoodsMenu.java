@@ -12,7 +12,7 @@ public class GoodsMenu extends Menu {
         subMenus.put(2, new SortMenu(this));
         subMenus.put(3, new FilteringMenu(this));
         subMenus.put(4, getShowProducts());
-        subMenus.put(5, new ProductMenu(this));
+        subMenus.put(5, getProductMenu());
     }
 
     private Menu getViewCategories() {
@@ -34,13 +34,28 @@ public class GoodsMenu extends Menu {
         return new LastMenu("show products", this) {
             @Override
             public void show() {
-
-                //TODO
+                CommandProcessor.showProducts();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
+            }
+        };
+    }
+
+    private Menu getProductMenu() {
+        return new LastMenu("product menu", this) {
+            @Override
+            public void show() {
+                CommandProcessor.enterProductMenu(this.parentMenu);
+                super.show();
+            }
+
+            @Override
+            public void execute() {
+                super.execute();
             }
         };
     }

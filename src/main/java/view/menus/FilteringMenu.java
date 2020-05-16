@@ -1,43 +1,27 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class FilteringMenu extends Menu{
     public FilteringMenu(Menu parentMenu) {
         super("filter menu", parentMenu);
-        subMenus.put(1, showAvailableFilters());
-        subMenus.put(2, filter());
-        subMenus.put(3, currentFilters());
-        subMenus.put(4, disableFilter());
+        subMenus.put(1, filter());
+        subMenus.put(2, currentFilters());
+        subMenus.put(3, disableFilter());
 
     }
 
-    private Menu showAvailableFilters() {
-        return new LastMenu("show available filters", this) {
-            @Override
-            public void show() {
-                super.show();
-                //TODO
-            }
-
-            @Override
-            public void execute() {
-                super.execute();
-                //TODO
-            }
-        };
-    }
 
     private Menu filter() {
         return new LastMenu("filter", this) {
             @Override
             public void show() {
-                super.show();
-                //TODO
+                CommandProcessor.showAvailableFilter();
             }
 
             @Override
             public void execute() {
-                super.execute();
-                //TODO
+                CommandProcessor.getKindOfFilter(this);
             }
         };
     }

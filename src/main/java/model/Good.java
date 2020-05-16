@@ -1,13 +1,11 @@
 package model;
 
 import controller.AccountManager;
+import controller.GoodsManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Good {
+public class Good implements Comparable<Good>{
     private int id;
     private String status;
     private String name;
@@ -23,6 +21,7 @@ public class Good {
     private List<Buyer> buyers;
     private int visitNumber;
     private Map<Account, Integer> goodsInBuyerCart;
+    private Date date;
 
 
     public Good(int id, String name, String company, int number, long price, Seller seller, String category, HashMap categoryAttribute, String description) {
@@ -38,6 +37,7 @@ public class Good {
         this.goodsInBuyerCart = new HashMap<>();
         this.allRates = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.date = new Date();
     }
 
     public Map<Account, Integer> getGoodsInBuyerCart() {
@@ -119,14 +119,15 @@ public class Good {
 
     @Override
     public String toString() {
-        return  "id : " + id + "\n" +
-                "name : '" + name + "\n" +
-                "company : '" + company + "\n" +
-                "number : " + number + "\n" +
-                "price : " + price + "\n" +
-                "category : '" + category + "\n" +
-                "categoryAttribute : " + categoryAttribute + "\n" +
-                "description : '" + description;
+        return  "id: " + id + "\n" +
+                "name: " + name + "\n" +
+                "company: " + company + "\n" +
+                "number: " + number + "\n" +
+                "price: " + price + "\n" +
+                "category: " + category + "\n" +
+                "categoryAttribute: " + categoryAttribute + "\n" +
+                "description: " + description + "\n" +
+                 "visit number: " + visitNumber + "\n--------------------------------------------------";
     }
 
     public void setCategoryAttribute(Map<String, String> categoryAttribute) {
@@ -143,5 +144,24 @@ public class Good {
             sum += rate;
         }
         return sum / allRates.size();
+    }
+
+
+    @Override
+    public int compareTo(Good good) {
+        switch (GoodsManager.getKindOfSort()) {
+            case "time":
+                return this.date.compareTo(good.date);
+            case "score":
+                return (int) (good.calculateAverageRate() - this.calculateAverageRate());
+            case "visit number":
+                return good.visitNumber - this.visitNumber;
+            default:
+                return (int) (good.price - this.price);
+        }
+    }
+
+    public void increaseVisitNumber() {
+        this.visitNumber += 1;
     }
 }
