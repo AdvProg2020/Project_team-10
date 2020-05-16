@@ -60,6 +60,7 @@ public class CategoryMenu extends Menu  {
         return new LastMenu("remove" , this) {
             @Override
             public void show() {
+                processRemoveCategory();
                 super.show();
             }
 

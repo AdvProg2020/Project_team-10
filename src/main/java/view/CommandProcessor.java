@@ -800,6 +800,8 @@ public class CommandProcessor {
             currentMenu.show();
             currentMenu.execute();
         }
+
+
     }
 
     public static void showProductAttribute() {
@@ -837,6 +839,30 @@ public class CommandProcessor {
         GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood(),
                 "title : " + title + "\n" + "content : " + content));
 
+    }
+
+    public static void processRemoveCategory() {
+        System.out.print("enter category name: ");
+        String name = Menu.scanner.nextLine();
+        Category category = Shop.getShop().getCategoryByName(name);
+        if (category == null) {
+            System.out.println("category not exist");
+        } else {
+            Shop.getShop().getAllCategories().remove(category);
+            System.out.println("category removed");
+        }
+    }
+
+    public static void processRemoveProduct() {
+        System.out.print("enter product id: ");
+        int id = Integer.parseInt(Menu.scanner.nextLine());
+        Good good = Shop.getShop().getProductWithId(id);
+        if (good == null) {
+            System.out.println("product not exist");
+        } else {
+            Shop.getShop().getAllGoods().remove(good);
+            System.out.println("product removed");
+        }
     }
 
     public static void showProducts() {

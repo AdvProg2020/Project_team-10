@@ -1,5 +1,9 @@
 package view.menus;
 
+import view.CommandProcessor;
+
+import static view.CommandProcessor.processRemoveProduct;
+
 public class ManageAllProductsMenu extends Menu {
     public ManageAllProductsMenu(Menu parentMenu) {
         super("manage all products", parentMenu);
@@ -10,6 +14,7 @@ public class ManageAllProductsMenu extends Menu {
         return new LastMenu("remove" , this) {
             @Override
             public void show() {
+                processRemoveProduct();
                 super.show();
             }
 
