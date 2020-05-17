@@ -22,8 +22,8 @@ public class Category {
 
     @Override
     public String toString() {
-        return "name= " + name + "   " +
-                "attributes= " + attributes;
+        return name + "  " +
+                "attributes: ";
     }
 
     public void setName(String name) {

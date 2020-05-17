@@ -26,10 +26,6 @@ public class AdminManager {
 //        return false;
 //    }
 
-    public static boolean removeProduct(int id) {
-        return false;
-    }
-
     public static void createDiscount(Date startDate, Date endDate, int percent,
                                       long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
         Discount discount = new Discount(AccountManager.getLastDiscountCode(), startDate, endDate, percent,
@@ -48,10 +44,6 @@ public class AdminManager {
         discount.setMaxAmountOfDiscount(maxAmountOfDiscount);
         discount.setRepeatDiscount(repeatDiscount);
         discount.setUsers(users);
-    }
-
-    public static boolean removeDiscount(int code) {
-        return false;
     }
 
     public static void acceptRequest(Request request) {
@@ -73,8 +65,5 @@ public class AdminManager {
         Shop.getShop().getAllCategories().add(new Category(name, attributes));
     }
 
-    public static boolean removeCategory(String categoryName) {
-        return false;
-    }
 
 }

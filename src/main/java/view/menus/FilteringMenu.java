@@ -47,13 +47,11 @@ public class FilteringMenu extends Menu{
             @Override
             public void show() {
                 CommandProcessor.showAvailableFilters();
-                super.show();
             }
 
             @Override
             public void execute() {
                 CommandProcessor.disableFilter(this);
-                super.execute();
             }
         };
     }

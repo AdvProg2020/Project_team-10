@@ -4,6 +4,7 @@ import model.Good;
 import model.Shop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +12,9 @@ public class GoodsManager {
     private static Good currentGood;
     private static String kindOfSort = "visit number";
     private static List<Good> filteredList = new ArrayList<>(Shop.getShop().getAllGoods());
-    private static Map<String, String> kindOfFilter;
+    private static Map<String, String> kindOfFilter = new HashMap<>();
 
-    public static Map<String, String> getKindOfFilter() {
+       public static Map<String, String> getKindOfFilter() {
         return kindOfFilter;
     }
 

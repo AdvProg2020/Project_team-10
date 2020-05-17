@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 import model.*;
-import view.menus.GoodsMenu;
 import controller.SellerManager;
 import model.requests.Request;
 import view.menus.Menu;
@@ -699,7 +698,11 @@ public class CommandProcessor {
 
     public static void showAllCategories() {
         for (Category category : Shop.getShop().getAllCategories()) {
-            System.out.println(category);
+            System.out.print(category);
+            for (String attribute : category.getAttributes()) {
+                System.out.print("|" + attribute + "| ");
+            }
+            System.out.println();
         }
 
     }
@@ -809,18 +812,29 @@ public class CommandProcessor {
     }
 
     public static void processCompare() {
-        System.out.println("enter product id : ");
+        System.out.print("enter product id : ");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = Shop.getShop().getProductWithId(id);
+        Good currentGood = GoodsManager.getCurrentGood();
+
         if (good == null) {
             System.out.println("product with id " + id + "does not exist.");
         } else {
-            System.out.println(GoodsManager.getCurrentGood().getName() + " **** " + good.getName());
-            System.out.println(GoodsManager.getCurrentGood().getPrice() + " **** " + good.getPrice());
-            System.out.println(GoodsManager.getCurrentGood().calculateAverageRate() + " **** " + good.calculateAverageRate());
-            System.out.println(GoodsManager.getCurrentGood().getCategory() + " **** " + good.getCategory());
-            System.out.println(GoodsManager.getCurrentGood().getCompany() + " **** " + good.getCompany());
-            //ToDo
+            if (good.getCategory().equals(currentGood.getCategory())) {
+                System.out.println("name: " + currentGood.getName() + " || " + good.getName());
+                System.out.println("price: " + currentGood.getPrice() + " || " + good.getPrice());
+                System.out.println("score: " + currentGood.calculateAverageRate() + " || " + good.calculateAverageRate());
+                System.out.println("company: " + currentGood.getCompany() + " || " + good.getCompany());
+                System.out.println("description: " + currentGood.getDescription() + " || " + good.getDescription());
+                System.out.println("category: " + currentGood.getCategory() + " || " + good.getCategory());
+                System.out.println("attribute:");
+                for (String attribute : currentGood.getCategoryAttribute().keySet()) {
+                    System.out.println(attribute + ": " + currentGood.getCategoryAttribute().get(attribute)
+                            + " || " + good.getCategoryAttribute().get(attribute));
+                }
+            } else {
+                System.out.println("You have to choose the same category of goods");
+            }
         }
 
     }
@@ -888,12 +902,12 @@ public class CommandProcessor {
     }
 
     public static void showAvailableFilters() {
-        System.out.println("available filter :\n1: category \n2: product name \n3: company\n4: price\n5: back");
+        System.out.println("available filter\n1: category \n2: product name \n3: company\n4: price\n5: available goods\n6: back");
     }
 
     public static void getKindOfFilter(Menu currentMenu) {
         int selectedFilter = Integer.parseInt(Menu.scanner.nextLine());
-        if (selectedFilter > 0 && selectedFilter < 6) {
+        if (selectedFilter > 0 && selectedFilter < 7) {
             if (selectedFilter == 1) {
                 categoryFilter();
             } else if (selectedFilter == 2) {
@@ -902,6 +916,8 @@ public class CommandProcessor {
                 companyFilter();
             } else if (selectedFilter == 4) {
                 priceFilter();
+            } else if (selectedFilter == 5) {
+                availableGoodsFilter();
             }
             currentMenu.getParentMenu().show();
             currentMenu.getParentMenu().execute();
@@ -911,6 +927,17 @@ public class CommandProcessor {
             currentMenu.execute();
         }
 
+    }
+
+    public static void availableGoodsFilter() {
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (Good good : GoodsManager.getFilteredList()) {
+            if (good.getNumber() <= 0) {
+                shouldBeRemoved.add(good);
+            }
+        }
+        GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("available goods", "available goods");
     }
 
     public static void categoryFilter() {
@@ -936,7 +963,7 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("company" , company);
+        GoodsManager.getKindOfFilter().put("company", company);
     }
 
     public static void productNameFilter() {
@@ -949,7 +976,7 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("product name" , productName);
+        GoodsManager.getKindOfFilter().put("name", productName);
     }
 
     public static void priceFilter() {
@@ -958,13 +985,13 @@ public class CommandProcessor {
         int minimum = Integer.parseInt(Menu.scanner.nextLine());
         System.out.print("enter maximum of price: ");
         int maximum = Integer.parseInt(Menu.scanner.nextLine());
+        GoodsManager.getKindOfFilter().put("price", minimum + " to " + maximum);
         for (Good good : GoodsManager.getFilteredList()) {
-            if (good.getPrice() > maximum ||  good.getPrice() < minimum) {
+            if (good.getPrice() > maximum || good.getPrice() < minimum) {
                 shouldBeRemoved.add(good);
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("price", minimum + " to " + maximum);
     }
 
     public static void showCurrentFilters() {
@@ -975,16 +1002,19 @@ public class CommandProcessor {
 
     public static void disableFilter(Menu currentMenu) {
         int selectedFilter = Integer.parseInt(Menu.scanner.nextLine());
-        if (selectedFilter > 0 && selectedFilter < 6) {
+        if (selectedFilter > 0 && selectedFilter < 7) {
             if (selectedFilter == 1) {
-
+                disableOneFilter("category");
             } else if (selectedFilter == 2) {
-                productNameFilter();
+                disableOneFilter("name");
             } else if (selectedFilter == 3) {
-                companyFilter();
+                disableOneFilter("company");
             } else if (selectedFilter == 4) {
-                priceFilter();
+                disableOneFilter("price");
+            } else if (selectedFilter == 5) {
+                disableOneFilter("available goods");
             }
+            processDisableFilter();
             currentMenu.getParentMenu().show();
             currentMenu.getParentMenu().execute();
         } else {
@@ -1000,6 +1030,68 @@ public class CommandProcessor {
             if (key.equals(filter)) {
                 GoodsManager.getKindOfFilter().remove(key);
                 break;
+            }
+        }
+        GoodsManager.getFilteredList().clear();
+        GoodsManager.getFilteredList().addAll(Shop.getShop().getAllGoods());
+    }
+
+    private static void processDisableFilter() {
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (String type : GoodsManager.getKindOfFilter().keySet()) {
+            switch (type) {
+                case "category": {
+                    String valueOfMap = GoodsManager.getKindOfFilter().get("category");
+                    for (Good good : GoodsManager.getFilteredList()) {
+                        if (!valueOfMap.equals(good.getCategory())) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                    GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+                    break;
+                }
+                case "company": {
+                    String valueOfMap = GoodsManager.getKindOfFilter().get("company");
+                    for (Good good : GoodsManager.getFilteredList()) {
+                        if (!valueOfMap.equals(good.getCompany())) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                    GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+                    break;
+                }
+                case "name": {
+                    String valueOfMap = GoodsManager.getKindOfFilter().get("name");
+                    for (Good good : GoodsManager.getFilteredList()) {
+                        if (!valueOfMap.equals(good.getName())) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                    GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+                    break;
+                }
+                case "price": {
+                    String valueOfMap = GoodsManager.getKindOfFilter().get("price");
+                    String[] m = valueOfMap.split(" to ");
+                    int minimum = Integer.parseInt(m[0]);
+                    int maximum = Integer.parseInt(m[1]);
+                    for (Good good : GoodsManager.getFilteredList()) {
+                        if (good.getPrice() > maximum || good.getPrice() < minimum) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                    GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+                    break;
+                }
+                case "available goods": {
+                    for (Good good : GoodsManager.getFilteredList()) {
+                        if (good.getNumber() <= 0) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                    GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+                    break;
+                }
             }
         }
 

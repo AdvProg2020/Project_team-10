@@ -56,6 +56,8 @@ public class Good implements Comparable<Good>{
         return category;
     }
 
+
+
     public List<Comment> getComments() {
         return comments;
     }

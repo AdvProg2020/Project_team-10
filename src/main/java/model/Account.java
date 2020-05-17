@@ -20,6 +20,7 @@ public abstract class Account {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.logs = new ArrayList<>();
     }
 
     @Override
