@@ -1,6 +1,7 @@
 package controller;
 
 import model.Good;
+import model.Off;
 import model.Shop;
 
 import java.util.ArrayList;
@@ -11,15 +12,12 @@ import java.util.Map;
 public class GoodsManager {
     private static Good currentGood;
     private static String kindOfSort = "visit number";
-    private static List<Good> filteredList = new ArrayList<>(Shop.getShop().getAllGoods());
+    private static List<Good> filteredGoods = new ArrayList<>(Shop.getShop().getAllGoods());
+    private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
     private static Map<String, String> kindOfFilter = new HashMap<>();
 
        public static Map<String, String> getKindOfFilter() {
         return kindOfFilter;
-    }
-
-    public static List<Good> getFilteredList() {
-        return filteredList;
     }
 
     public static void setCurrentGood(Good currentGood) {
@@ -78,5 +76,29 @@ public class GoodsManager {
 
     public static void setKindOfSort(String kindOfSort) {
         GoodsManager.kindOfSort = kindOfSort;
+    }
+
+    public static void setFilteredGoodsInOffs(List<Good> filteredGoodsInOffs) {
+        GoodsManager.filteredGoodsInOffs = filteredGoodsInOffs;
+    }
+
+    public static List<Good> getFilteredGoodsInOffs() {
+        return filteredGoodsInOffs;
+    }
+
+    public static void setFilteredGoods(List<Good> filteredGoods) {
+        GoodsManager.filteredGoods = filteredGoods;
+    }
+
+    public static List<Good> getFilteredGoods() {
+        return filteredGoods;
+    }
+
+    private static List getGoodsInOffs() {
+           List<Good> goodsInOffs = new ArrayList<>();
+        for (Off off : Shop.getShop().getAllOffs()) {
+            goodsInOffs.addAll(off.getGoods());
+        }
+        return goodsInOffs;
     }
 }

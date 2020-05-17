@@ -22,6 +22,7 @@ public class Good implements Comparable<Good>{
     private int visitNumber;
     private Map<Account, Integer> goodsInBuyerCart;
     private Date date;
+    private Off off;
 
 
     public Good(int id, String name, String company, int number, long price, Seller seller, String category, HashMap categoryAttribute, String description) {
@@ -132,6 +133,13 @@ public class Good implements Comparable<Good>{
                  "visit number: " + visitNumber + "\n--------------------------------------------------";
     }
 
+    public String digestToString() {
+        return  "id: " + id + "\n" +
+                "name: " + name + "\n" +
+                "price: " + price + "\n" +
+                "category: " + category + "\n--------------------------------------------------";
+
+    }
     public void setCategoryAttribute(Map<String, String> categoryAttribute) {
         this.categoryAttribute = categoryAttribute;
     }
@@ -165,5 +173,13 @@ public class Good implements Comparable<Good>{
 
     public void increaseVisitNumber() {
         this.visitNumber += 1;
+    }
+
+    public Off getOff() {
+        return off;
+    }
+
+    public void setOff(Off off) {
+        this.off = off;
     }
 }

@@ -1,5 +1,7 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class OffsMenuForSeller extends Menu {
     public OffsMenuForSeller( Menu parentMenu) {
         super("offs menu", parentMenu);
@@ -14,12 +16,13 @@ public class OffsMenuForSeller extends Menu {
         return new LastMenu("show offs" , this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showAllOffsForSeller();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -28,12 +31,13 @@ public class OffsMenuForSeller extends Menu {
         return new LastMenu("view an off" , this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.showAnOff();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -42,12 +46,13 @@ public class OffsMenuForSeller extends Menu {
         return new LastMenu("edit" , this) {
             @Override
             public void show() {
-                //TODO
+                CommandProcessor.processEditOff();
+                super.show();
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }
@@ -56,13 +61,13 @@ public class OffsMenuForSeller extends Menu {
         return new LastMenu("add off" , this) {
             @Override
             public void show() {
+                CommandProcessor.processAddOrEditOff(false, -2);
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
-                //TODO
+                super.execute();
             }
         };
     }

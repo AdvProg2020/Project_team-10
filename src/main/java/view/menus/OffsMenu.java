@@ -1,5 +1,7 @@
 package view.menus;
 
+import view.CommandProcessor;
+
 public class OffsMenu extends Menu {
 
     public OffsMenu(Menu parentMenu) {
@@ -14,6 +16,7 @@ public class OffsMenu extends Menu {
         return new LastMenu("show offs", this) {
             @Override
             public void show() {
+                CommandProcessor.showProductsInOffsMenu();
                 super.show();
             }
 

@@ -44,25 +44,14 @@ public class SellerManager {
         return false;
     }
 
-    public static boolean editOff(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
-        Off off = ((Seller) AccountManager.getOnlineAccount()).getOffWithId(id);
-        if (off != null) {
+    public static void editOff(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
             Shop.getShop().getAllRequests().add(new EditOffRequest(AccountManager.getOnlineAccount(),
                     AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, discount));
-            return true;
-        }
-        return false;
     }
 
-    public static boolean addOff(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
-        Off off = ((Seller) AccountManager.getOnlineAccount()).getOffWithId(id);
-        if (off != null) {
+    public static void addOff(List<Good> goods, Date startDate, Date endDate, int discount) {
             Shop.getShop().getAllRequests().add(new AddOffRequest(AccountManager.getOnlineAccount(),
-                    AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, discount));
-            return true;
-        }
-        return false;
-
+                    AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, discount));
     }
 
 

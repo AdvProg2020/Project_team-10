@@ -34,7 +34,7 @@ public class GoodsMenu extends Menu {
         return new LastMenu("show products", this) {
             @Override
             public void show() {
-                CommandProcessor.showProducts();
+                CommandProcessor.showProductsInGoodsMenu();
                 super.show();
             }
 

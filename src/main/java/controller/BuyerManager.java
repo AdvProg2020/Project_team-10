@@ -14,12 +14,14 @@ public class BuyerManager {
     }
 
     public static boolean decrease(Good good) {
-        if (good.getNumber() > good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount())) {
             int number = good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
             good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount(), number - 1);
+            if (number == 1) {
+                good.getGoodsInBuyerCart().remove(AccountManager.getOnlineAccount());
+                ((Buyer) AccountManager.getOnlineAccount()).getCart().remove(good);
+                return false;
+            }
             return true;
-        }
-        return false;
     }
 
     public static long showTotalPrice() {

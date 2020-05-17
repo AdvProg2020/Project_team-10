@@ -22,7 +22,12 @@ public class FilteringMenu extends Menu{
 
             @Override
             public void execute() {
-                CommandProcessor.getKindOfFilter(this);
+                if (this.getParentMenu().getName().equals("goods menu")) {
+                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoods());
+                } else {
+                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoodsInOffs());
+                }
+
             }
         };
     }
@@ -51,8 +56,11 @@ public class FilteringMenu extends Menu{
 
             @Override
             public void execute() {
-                CommandProcessor.disableFilter(this);
-            }
+                if (this.getParentMenu().getName().equals("goods menu")) {
+                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoods());
+                } else {
+                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoodsInOffs());
+                }            }
         };
     }
 }

@@ -38,4 +38,22 @@ public class Off {
     public void setDiscount(int discount) {
         this.discount = discount;
     }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public List<Good> getGoods() {
+        return goods;
+    }
+
+    @Override
+    public String toString() {
+        return "id:" + id + "\n" +
+                "goods: " + goods + "\n" +
+                "status: '" + status + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "discount: " + discount;
+    }
 }
