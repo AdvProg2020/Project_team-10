@@ -1,5 +1,6 @@
 package view.menus;
 
+import controller.GoodsManager;
 import view.CommandProcessor;
 
 public class FilteringMenu extends Menu{
@@ -16,7 +17,7 @@ public class FilteringMenu extends Menu{
         return new LastMenu("filter", this) {
             @Override
             public void show() {
-                CommandProcessor.showAvailableFilter();
+                CommandProcessor.showAvailableFilters();
             }
 
             @Override
@@ -30,14 +31,13 @@ public class FilteringMenu extends Menu{
         return new LastMenu("current filters", this) {
             @Override
             public void show() {
+                CommandProcessor.showCurrentFilters();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
                 super.execute();
-                //TODO
             }
         };
     }
@@ -46,14 +46,14 @@ public class FilteringMenu extends Menu{
         return new LastMenu("disable filter", this) {
             @Override
             public void show() {
+                CommandProcessor.showAvailableFilters();
                 super.show();
-                //TODO
             }
 
             @Override
             public void execute() {
+                CommandProcessor.disableFilter(this);
                 super.execute();
-                //TODO
             }
         };
     }

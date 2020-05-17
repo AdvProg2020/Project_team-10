@@ -5,11 +5,17 @@ import model.Shop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GoodsManager {
     private static Good currentGood;
     private static String kindOfSort = "visit number";
     private static List<Good> filteredList = new ArrayList<>(Shop.getShop().getAllGoods());
+    private static Map<String, String> kindOfFilter;
+
+    public static Map<String, String> getKindOfFilter() {
+        return kindOfFilter;
+    }
 
     public static List<Good> getFilteredList() {
         return filteredList;

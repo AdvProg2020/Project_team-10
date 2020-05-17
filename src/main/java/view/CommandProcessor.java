@@ -887,7 +887,7 @@ public class CommandProcessor {
         }
     }
 
-    public static void showAvailableFilter() {
+    public static void showAvailableFilters() {
         System.out.println("available filter :\n1: category \n2: product name \n3: company\n4: price\n5: back");
     }
 
@@ -923,6 +923,7 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("category", category);
     }
 
     public static void companyFilter() {
@@ -935,6 +936,7 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("company" , company);
     }
 
     public static void productNameFilter() {
@@ -947,6 +949,7 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("product name" , productName);
     }
 
     public static void priceFilter() {
@@ -961,6 +964,46 @@ public class CommandProcessor {
             }
         }
         GoodsManager.getFilteredList().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("price", minimum + " to " + maximum);
+    }
+
+    public static void showCurrentFilters() {
+        for (String key : GoodsManager.getKindOfFilter().keySet()) {
+            System.out.println(key + ": " + GoodsManager.getKindOfFilter().get(key));
+        }
+    }
+
+    public static void disableFilter(Menu currentMenu) {
+        int selectedFilter = Integer.parseInt(Menu.scanner.nextLine());
+        if (selectedFilter > 0 && selectedFilter < 6) {
+            if (selectedFilter == 1) {
+
+            } else if (selectedFilter == 2) {
+                productNameFilter();
+            } else if (selectedFilter == 3) {
+                companyFilter();
+            } else if (selectedFilter == 4) {
+                priceFilter();
+            }
+            currentMenu.getParentMenu().show();
+            currentMenu.getParentMenu().execute();
+        } else {
+            System.out.println("you must choose one of following options");
+            currentMenu.show();
+            currentMenu.execute();
+        }
+
+    }
+
+    private static void disableOneFilter(String filter) {
+        for (String key : GoodsManager.getKindOfFilter().keySet()) {
+            if (key.equals(filter)) {
+                GoodsManager.getKindOfFilter().remove(key);
+                break;
+            }
+        }
+
+
     }
 
 }
