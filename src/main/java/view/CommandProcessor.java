@@ -460,8 +460,7 @@ public class CommandProcessor {
         while (true) {
             if (flag == 1) {
                 System.out.print("enter number of the product: ");
-                number = Menu.scanner.nextInt();
-                Menu.scanner.nextLine();
+                number = Integer.parseInt(Menu.scanner.nextLine());
                 if (number < 1) {
                     System.out.println("your number must be larger than 0");
                 } else {
@@ -551,7 +550,7 @@ public class CommandProcessor {
                 }
             }
             calendar.set(Calendar.MONTH, dateSplit[0]);
-            calendar.set(Calendar.DATE, dateSplit[1]);
+            calendar.set(Calendar.DAY_OF_MONTH, dateSplit[1]);
             calendar.set(Calendar.YEAR, dateSplit[2]);
             calendar.set(Calendar.HOUR, dateSplit[3]);
             calendar.set(Calendar.MINUTE, dateSplit[4]);
@@ -1200,5 +1199,11 @@ public class CommandProcessor {
         }
     }
 
+    public static void processIncreaseCredit() {
+        System.out.println("enter the amount of credit charge: ");
+        long credit = Integer.parseInt(Menu.scanner.nextLine());
+        (AccountManager.getOnlineAccount()).increaseCredit(credit);
+        System.out.println("Your credit has increased by " + credit + " units");
+    }
 }
 

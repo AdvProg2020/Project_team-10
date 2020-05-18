@@ -30,6 +30,10 @@ public class Discount {
         return repeatDiscount;
     }
 
+    public long getMaxAmountOfDiscount() {
+        return maxAmountOfDiscount;
+    }
+
     public int getPercent() {
         return percent;
     }

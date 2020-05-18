@@ -1,5 +1,6 @@
 package view.menus;
 
+import controller.AccountManager;
 import model.Admin;
 import model.Buyer;
 import model.Seller;
@@ -28,7 +29,7 @@ public class UserMenu extends Menu {
         subMenus.put(8, new DiscountMenu(this));
         subMenus.put(9, new ManageRequestMenu(this));
         subMenus.put(10, getCreateDiscountCode());
-        subMenus.put(11 , new CategoryMenu(this));
+        subMenus.put(11, new CategoryMenu(this));
         // seller
         subMenus.put(12, getViewCompanyInfo());
         subMenus.put(13, getViewSalesHistory());
@@ -43,6 +44,7 @@ public class UserMenu extends Menu {
         subMenus.put(21, new OrderMenu(this));
         subMenus.put(22, getBalanceForBuyer());
         subMenus.put(23, getShowDiscountCodesForBuyer());
+        subMenus.put(24, getShowCredit());
     }
 
     public static void setUsername(String username) {
@@ -52,11 +54,11 @@ public class UserMenu extends Menu {
     private int completeShow() {
         if (Shop.getShop().getAccountByUsername(username) instanceof Buyer) {
             for (Integer subNumber : subMenus.keySet()) {
-                if (subNumber > 19 && subNumber < 24) {
+                if (subNumber > 19 && subNumber < 25) {
                     System.out.println(subNumber - 17 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            return 8;
+            return 9;
         } else if (Shop.getShop().getAccountByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 11 && subNumber < 20) {
@@ -107,18 +109,18 @@ public class UserMenu extends Menu {
             } else if (selectedMenu == 2) {
                 nextMenu = subMenus.get(5);
             } else if ((selectedMenu == 12 && Shop.getShop().getAccountByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 8 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 9 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
                     (selectedMenu == 10 && Shop.getShop().getAccountByUsername(username) instanceof Admin)) {
                 nextMenu = this.parentMenu;
             } else if ((selectedMenu == 11 && Shop.getShop().getAccountByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 7 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 8 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
                     (selectedMenu == 9 && Shop.getShop().getAccountByUsername(username) instanceof Admin)) {
                 getLogoutMenu().show();
                 getLogoutMenu().execute();
                 nextMenu = this;
             } else {
                 if (Shop.getShop().getAccountByUsername(username) instanceof Buyer) {
-                    if (selectedMenu > 8 || selectedMenu < 1) {
+                    if (selectedMenu > 9 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {
@@ -194,7 +196,7 @@ public class UserMenu extends Menu {
         return new LastMenu("create discount code", this) {
             @Override
             public void show() {
-                CommandProcessor.processAddDiscountCode(null , false);
+                CommandProcessor.processAddDiscountCode(null, false);
                 super.show();
                 //TODO
             }
@@ -318,6 +320,21 @@ public class UserMenu extends Menu {
             @Override
             public void show() {
                 showAllDiscountsCodeForBuyer();
+                super.show();
+            }
+
+            @Override
+            public void execute() {
+                super.execute();
+            }
+        };
+    }
+
+    private Menu getShowCredit() {
+        return new LastMenu("credit", this) {
+            @Override
+            public void show() {
+                System.out.println("credit: " + AccountManager.getOnlineAccount().getCredit());
                 super.show();
             }
 

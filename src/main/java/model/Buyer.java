@@ -17,6 +17,7 @@ public class Buyer extends Account {
         goods = new ArrayList<>();
         cart = new ArrayList<>();
         discounts = new ArrayList<>();
+        this.discountAndNumberOfAvailableDiscount = new HashMap<>();
     }
 
 

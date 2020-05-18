@@ -68,7 +68,7 @@ public class Purchase {
                 processGiveDiscountCode();
                 break;
             } else if (selected == 2) {
-                payment(BuyerManager.getTotalPrice());
+                payment(BuyerManager.getTotalPrice(), null);
                 break;
             } else {
                 System.out.println("you must choose one of following options");
@@ -92,44 +92,60 @@ public class Purchase {
             giveDiscountCode();
         } else {
             System.out.println("Discount code applied");
-            payment(getFinalTotalPrice(discount));
+            payment(getFinalTotalPrice(discount), discount);
         }
     }
 
-    public static long getFinalTotalPrice(Discount discount) {
-        return BuyerManager.getTotalPrice() * ((100 - discount.getPercent()) / 100);
+    public static double getFinalTotalPrice(Discount discount) {
+        if (BuyerManager.getTotalPrice() * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
+            return (BuyerManager.getTotalPrice() - discount.getMaxAmountOfDiscount());
+        } else {
+            return BuyerManager.getTotalPrice() * ((100.0 - discount.getPercent()) / 100.0);
+        }
     }
 
-    public static void payment(long finalPrice) {
+    public static void payment(double finalPrice, Discount discount) {
         System.out.println("Payment page");
         System.out.println("total price: " + BuyerManager.getTotalPrice());
-        System.out.println("payable amount: " + finalPrice);
-        System.out.println("1: confirm\n2: back");
+        System.out.println("payable amount: " + ((long) finalPrice));
+        System.out.println("1: confirm\n2: increase credit\n3: back");
         int selected = Integer.parseInt(Menu.scanner.nextLine());
         if (selected == 1) {
             if (canPay(finalPrice)) {
-                pay(finalPrice);
+                pay(finalPrice, discount);
             } else {
                 System.out.println("your credit is not enough");
             }
-        } else if (selected !=2){
+        } else if (selected == 2) {
+            CommandProcessor.processIncreaseCredit();
+            payment(finalPrice, discount);
+        } else if (selected != 3) {
             System.out.println("you must choose one of following options");
-            payment(finalPrice);
+            payment(finalPrice, discount);
         }
     }
 
-    private static boolean canPay(long finalPrice) {
+    private static boolean canPay(double finalPrice) {
         return finalPrice <= (AccountManager.getOnlineAccount()).getCredit();
     }
 
-    private static void pay(long finalPrice) {
+    private static void pay(double finalPrice, Discount currentDiscount) {
         Buyer onlineAccount = ((Buyer) AccountManager.getOnlineAccount());
         onlineAccount.subtractCredit(finalPrice);
         for (Good good : onlineAccount.getCart()) {
             good.subtractNumber();
             good.getBuyers().add(onlineAccount);
         }
-
+        for (Discount discount : onlineAccount.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+            if (discount == currentDiscount) {
+                int number = onlineAccount.getDiscountAndNumberOfAvailableDiscount().get(discount);
+                onlineAccount.getDiscountAndNumberOfAvailableDiscount().put(discount, number - 1);
+                if (number == 1) {
+                    onlineAccount.getDiscountAndNumberOfAvailableDiscount().remove(discount);
+                }
+            }
+        }
+        System.out.println("The purchase was successful");
     }
 
     private static void checkUsernameInvalidation() {

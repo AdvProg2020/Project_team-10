@@ -39,6 +39,7 @@ public class Good implements Comparable<Good> {
         this.goodsInBuyerCart = new HashMap<>();
         this.allRates = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.buyers = new ArrayList<>();
         this.date = new Date();
         AccountManager.increaseLastGoodId();
     }

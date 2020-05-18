@@ -34,7 +34,11 @@ public abstract class Account {
                 "password: " + password;
     }
 
-    public void subtractCredit(long price) {
+    public void increaseCredit(long creditPrice){
+        this.credit += creditPrice ;
+    }
+
+    public void subtractCredit(double price) {
         this.credit -= price;
     }
 
