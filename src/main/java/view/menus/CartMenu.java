@@ -1,8 +1,10 @@
 package view.menus;
 
+import controller.AccountManager;
 import controller.BuyerManager;
+import model.Account;
+import model.Admin;
 import model.Buyer;
-import model.Shop;
 import view.CommandProcessor;
 import view.Purchase;
 
@@ -13,7 +15,7 @@ public class CartMenu extends Menu {
     public CartMenu(Menu parentMenu) {
         super("cart menu", parentMenu);
         subMenus.put(1, getShowProducts());
-        subMenus.put(2, new ProductMenu(this));
+        subMenus.put(2, getProductMenu());
         subMenus.put(3, getIncrease());
         subMenus.put(4, getDecrease());
         subMenus.put(5, getShowTotalPrice());
@@ -28,6 +30,7 @@ public class CartMenu extends Menu {
                 CommandProcessor.showProductsInCart();
                 super.show();
             }
+
             @Override
             public void execute() {
                 super.execute();
@@ -42,6 +45,7 @@ public class CartMenu extends Menu {
                 processIncreaseNumberOfProductInCart();
                 super.show();
             }
+
             @Override
             public void execute() {
                 super.execute();
@@ -56,6 +60,7 @@ public class CartMenu extends Menu {
                 processDecreaseNumberOfProductInCart();
                 super.show();
             }
+
             @Override
             public void execute() {
                 super.execute();
@@ -67,9 +72,10 @@ public class CartMenu extends Menu {
         return new LastMenu("show total price", this) {
             @Override
             public void show() {
-                System.out.println("total price : " + BuyerManager.showTotalPrice());
+                System.out.println("total price : " + BuyerManager.getTotalPrice());
                 super.show();
             }
+
             @Override
             public void execute() {
                 super.execute();
@@ -82,13 +88,33 @@ public class CartMenu extends Menu {
             @Override
             public void show() {
             }
+
             @Override
             public void execute() {
-                Purchase.giveReceiverInformation();
-                Purchase.giveDiscountCode();
-                Purchase.payment();
+                if (((Buyer) AccountManager.getOnlineAccount()).getCart().size() == 0) {
+                    System.err.println("your cart is empty");
+                } else {
+                    Purchase.setCartMenu(this.parentMenu);
+                    Purchase.giveReceiverInformation();
+                    Purchase.giveDiscountCode();
+                }
                 this.parentMenu.show();
                 this.parentMenu.execute();
+            }
+        };
+    }
+
+    private Menu getProductMenu() {
+        return new LastMenu("product menu", this) {
+            @Override
+            public void show() {
+                CommandProcessor.enterProductMenu(this.parentMenu);
+                super.show();
+            }
+
+            @Override
+            public void execute() {
+                super.execute();
             }
         };
     }

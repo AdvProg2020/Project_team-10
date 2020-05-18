@@ -1,5 +1,7 @@
 package view.menus;
 
+import controller.AccountManager;
+import controller.GoodsManager;
 import view.CommandProcessor;
 
 public class ProductMenu extends Menu {
@@ -11,6 +13,12 @@ public class ProductMenu extends Menu {
         subMenus.put(3, getCompare());
         subMenus.put(4, new CommentMenu(this));
 
+    }
+
+    @Override
+    public void show() {
+        System.out.println("name: " + GoodsManager.getCurrentGood().getName());
+        super.show();
     }
 
     private Menu getAttributes() {

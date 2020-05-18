@@ -31,5 +31,8 @@ public class AddOffRequest extends Request {
         Off off = new Off(offId, goods, startDate, endDate, discount);
         Shop.getShop().getAllOffs().add(off);
         ((Seller) account).getOffs().add(off);
+        for (Good good : goods) {
+            good.setOff(off);
+        }
     }
 }

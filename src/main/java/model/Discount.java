@@ -26,6 +26,14 @@ public class Discount {
         AccountManager.increaseLastDiscountId();
     }
 
+    public int getRepeatDiscount() {
+        return repeatDiscount;
+    }
+
+    public int getPercent() {
+        return percent;
+    }
+
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -69,4 +77,11 @@ public class Discount {
         return users;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
 }

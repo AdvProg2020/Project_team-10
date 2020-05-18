@@ -15,7 +15,6 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
 
     private Shop() {
-        allCategories.add(new Category("khar", new ArrayList<>(Arrays.asList("RAM", "CPU"))));
     }
 
     public List<Discount> getAllDiscounts() {

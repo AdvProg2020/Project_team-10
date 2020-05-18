@@ -30,6 +30,6 @@ public class EditOffRequest extends Request {
         ((Seller) account).getOffWithId(offId).setGoods(goods);
         ((Seller) account).getOffWithId(offId).setStartDate(startDate);
         ((Seller) account).getOffWithId(offId).setEndDate(endDate);
-        ((Seller) account).getOffWithId(offId).setDiscount(discount);
+        ((Seller) account).getOffWithId(offId).setPercent(discount);
     }
 }

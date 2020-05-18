@@ -61,4 +61,5 @@ public class GoodsMenu extends Menu {
     }
 
 
+
 }

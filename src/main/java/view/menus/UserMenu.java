@@ -30,20 +30,19 @@ public class UserMenu extends Menu {
         subMenus.put(10, getCreateDiscountCode());
         subMenus.put(11 , new CategoryMenu(this));
         // seller
-//        subMenus.put(12, getViewCompanyInfo());
-//        subMenus.put(13, getViewSalesHistory());
+        subMenus.put(12, getViewCompanyInfo());
+        subMenus.put(13, getViewSalesHistory());
         subMenus.put(14, new ManageProductsMenu(this));
         subMenus.put(15, getAddProduct());
         subMenus.put(16, getRemoveProduct());
         subMenus.put(17, getShowCategory());
         subMenus.put(18, new OffsMenuForSeller(this));
-//        subMenus.put(19, getBalanceForSeller());
+        subMenus.put(19, getBalanceForSeller());
         //buyer
         subMenus.put(20, new CartMenu(this));
-//        subMenus.put(21, new PurchaseMenu(this)); گزینه اضافه شود
-        subMenus.put(22, new OrderMenu(this));
-        subMenus.put(23, getBalanceForBuyer());
-        subMenus.put(24, getShowDiscountCodesForBuyer());
+        subMenus.put(21, new OrderMenu(this));
+        subMenus.put(22, getBalanceForBuyer());
+        subMenus.put(23, getShowDiscountCodesForBuyer());
     }
 
     public static void setUsername(String username) {
@@ -53,11 +52,11 @@ public class UserMenu extends Menu {
     private int completeShow() {
         if (Shop.getShop().getAccountByUsername(username) instanceof Buyer) {
             for (Integer subNumber : subMenus.keySet()) {
-                if (subNumber > 19 && subNumber < 25) {
+                if (subNumber > 19 && subNumber < 24) {
                     System.out.println(subNumber - 17 + ": " + subMenus.get(subNumber).getName());
                 }
             }
-            return 9;
+            return 8;
         } else if (Shop.getShop().getAccountByUsername(username) instanceof Seller) {
             for (Integer subNumber : subMenus.keySet()) {
                 if (subNumber > 11 && subNumber < 20) {
@@ -108,18 +107,18 @@ public class UserMenu extends Menu {
             } else if (selectedMenu == 2) {
                 nextMenu = subMenus.get(5);
             } else if ((selectedMenu == 12 && Shop.getShop().getAccountByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 9 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 8 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
                     (selectedMenu == 10 && Shop.getShop().getAccountByUsername(username) instanceof Admin)) {
                 nextMenu = this.parentMenu;
             } else if ((selectedMenu == 11 && Shop.getShop().getAccountByUsername(username) instanceof Seller) ||
-                    (selectedMenu == 8 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
+                    (selectedMenu == 7 && Shop.getShop().getAccountByUsername(username) instanceof Buyer) ||
                     (selectedMenu == 9 && Shop.getShop().getAccountByUsername(username) instanceof Admin)) {
                 getLogoutMenu().show();
                 getLogoutMenu().execute();
                 nextMenu = this;
             } else {
                 if (Shop.getShop().getAccountByUsername(username) instanceof Buyer) {
-                    if (selectedMenu > 9 || selectedMenu < 1) {
+                    if (selectedMenu > 8 || selectedMenu < 1) {
                         System.out.println("you must choose one of following options");
                         nextMenu = this;
                     } else {

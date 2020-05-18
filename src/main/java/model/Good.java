@@ -5,7 +5,7 @@ import controller.GoodsManager;
 
 import java.util.*;
 
-public class Good implements Comparable<Good>{
+public class Good implements Comparable<Good> {
     private int id;
     private String status;
     private String name;
@@ -25,7 +25,8 @@ public class Good implements Comparable<Good>{
     private Off off;
 
 
-    public Good(int id, String name, String company, int number, long price, Seller seller, String category, HashMap categoryAttribute, String description) {
+    public Good(int id, String name, String company, int number, long price, Seller seller, String category
+            , HashMap categoryAttribute, String description) {
         this.id = id;
         this.name = name;
         this.company = company;
@@ -39,6 +40,12 @@ public class Good implements Comparable<Good>{
         this.allRates = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
+        AccountManager.increaseLastGoodId();
+    }
+
+    public void subtractNumber() {
+        int numberOfGoodInCart = getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
+        this.number -= numberOfGoodInCart;
     }
 
     public Map<Account, Integer> getGoodsInBuyerCart() {
@@ -56,7 +63,6 @@ public class Good implements Comparable<Good>{
     public String getCategory() {
         return category;
     }
-
 
 
     public List<Comment> getComments() {
@@ -122,7 +128,7 @@ public class Good implements Comparable<Good>{
 
     @Override
     public String toString() {
-        return  "id: " + id + "\n" +
+        return "id: " + id + "\n" +
                 "name: " + name + "\n" +
                 "company: " + company + "\n" +
                 "number: " + number + "\n" +
@@ -130,16 +136,33 @@ public class Good implements Comparable<Good>{
                 "category: " + category + "\n" +
                 "categoryAttribute: " + categoryAttribute + "\n" +
                 "description: " + description + "\n" +
-                 "visit number: " + visitNumber + "\n--------------------------------------------------";
+                "visit number: " + visitNumber + "\n--------------------------------------------------";
     }
 
     public String digestToString() {
-        return  "id: " + id + "\n" +
+        return  "price: " + price + "\n" +
+                "category: " + category + "\n" +
+                "description: " + description + "\n" +
+                "seller: " + seller.getUsername() + "\n" +
+                "average rate: " + this.calculateAverageRate() + "\n" +
+                "discount: " + this.getAmountOfDiscount() +
+                "\n--------------------------------------------------";
+    }
+
+    private long getAmountOfDiscount(){
+        if (this.off != null){
+            return off.getPercent() * (this.price /100);
+        }
+        return 0;
+    }
+
+    public String goodMenuToString() {
+        return "id: " + id + "\n" +
                 "name: " + name + "\n" +
                 "price: " + price + "\n" +
                 "category: " + category + "\n--------------------------------------------------";
-
     }
+
     public void setCategoryAttribute(Map<String, String> categoryAttribute) {
         this.categoryAttribute = categoryAttribute;
     }
@@ -151,6 +174,7 @@ public class Good implements Comparable<Good>{
     public float calculateAverageRate() {
         float sum = 0;
         for (Integer rate : allRates) {
+            //TODO allRate.size=0
             sum += rate;
         }
         return sum / allRates.size();

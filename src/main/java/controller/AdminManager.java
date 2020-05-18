@@ -33,6 +33,7 @@ public class AdminManager {
         Shop.getShop().getAllDiscounts().add(discount);
         for (Account user : users) {
             ((Buyer) user).getDiscounts().add(discount);
+            ((Buyer) user).getDiscountAndNumberOfAvailableDiscount().put(discount , discount.getRepeatDiscount());
         }
     }
 

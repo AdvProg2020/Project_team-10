@@ -19,6 +19,12 @@ public class Buyer extends Account {
         discounts = new ArrayList<>();
     }
 
+
+
+    public HashMap<Discount, Integer> getDiscountAndNumberOfAvailableDiscount() {
+        return discountAndNumberOfAvailableDiscount;
+    }
+
     public List<Good> getGoods() {
         return goods;
     }
@@ -38,5 +44,14 @@ public class Buyer extends Account {
 
     public List<Discount> getDiscounts() {
         return discounts;
+    }
+
+    public Discount getDiscountByCode(int code){
+        for (Discount discount : this.discounts) {
+            if (discount.getCode() == code){
+                return discount;
+            }
+        }
+        return null;
     }
 }

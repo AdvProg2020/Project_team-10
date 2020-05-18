@@ -486,7 +486,7 @@ public class CommandProcessor {
                 }
             } else {
                 for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
-                    System.out.print(attribute + " :");
+                    System.out.print(attribute + ": ");
                     categoryAttributes.put(attribute, Menu.scanner.nextLine());
                 }
                 System.out.println("write any description about your product");
@@ -603,9 +603,10 @@ public class CommandProcessor {
     }
 
     public static void showProductsInCart() {
-
-        for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
-            System.out.println("name: " + good.getName() + " id: " + good.getId());
+        Buyer currentBuyer = (Buyer) AccountManager.getOnlineAccount();
+        for (Good good : currentBuyer.getCart()) {
+            System.out.print(good.goodMenuToString());
+            System.out.println("number of this product in your cart: " + good.getGoodsInBuyerCart().get(currentBuyer));
         }
     }
 
@@ -619,6 +620,7 @@ public class CommandProcessor {
         if (counter == 0) {
             System.out.println("product with id : " + id + " is not exist");
         }
+        //TODO
     }
 
     public static void showAllOrders() {
@@ -707,13 +709,13 @@ public class CommandProcessor {
     }
 
     public static void processIncreaseNumberOfProductInCart() {
-        System.out.println("enter product id :");
+        System.out.print("enter product id: ");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
         if (good == null) {
-            System.out.println("product with id " + id + "does not exist.");
+            System.out.println("product with id " + id + " does not exist.");
         } else {
-            if (!BuyerManager.increase(good)) {
+            if (!BuyerManager.canIncrease(good)) {
                 System.out.println("There are no more of these products available");
             } else {
                 System.out.println("the good was increased");
@@ -722,13 +724,13 @@ public class CommandProcessor {
     }
 
     public static void processDecreaseNumberOfProductInCart() {
-        System.out.println("enter product id :");
+        System.out.print("enter product id: ");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
         if (good == null) {
-            System.out.println("product with id " + id + "does not exist.");
+            System.out.println("product with id " + id + " does not exist.");
         } else {
-            if (!BuyerManager.decrease(good)) {
+            if (!BuyerManager.canDecrease(good)) {
                 System.out.println("The good was removed from the shopping cart");
             } else {
                 System.out.println("the good was decreased");
@@ -875,18 +877,18 @@ public class CommandProcessor {
     public static void showProductsInGoodsMenu() {
         Collections.sort(GoodsManager.getFilteredGoods());
         for (Good good : GoodsManager.getFilteredGoods()) {
-            System.out.println(good);
+            System.out.println(good.goodMenuToString());
         }
     }
 
-    public static void enterProductMenu(Menu goodsMenu) {
+    public static void enterProductMenu(Menu parentMenu) {
         System.out.print("enter product id: ");
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Good good = Shop.getShop().getProductWithId(id);
         if (good == null) {
             System.out.println("product with id " + id + " does not exist.");
         } else {
-            ProductMenu productMenu = new ProductMenu(goodsMenu);
+            ProductMenu productMenu = new ProductMenu(parentMenu);
             GoodsManager.setCurrentGood(good);
             good.increaseVisitNumber();
             productMenu.show();
@@ -1094,7 +1096,7 @@ public class CommandProcessor {
     public static void showProductsInOffsMenu() {
         for (Good good : GoodsManager.getFilteredGoodsInOffs()) {
             System.out.println("id: " + good.getId() + "\n" + "name: " + good.getName() + "\n" + "price: "
-                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - good.getOff().getDiscount()) / 100)
+                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - good.getOff().getPercent()) / 100)
                     + "-----------------------------------------");
         }
     }
@@ -1179,6 +1181,22 @@ public class CommandProcessor {
     public static void showAllOffsForSeller() {
         for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
             System.out.println(off);
+        }
+    }
+
+    public static void processAddToCart() {
+        Good currentGood = GoodsManager.getCurrentGood();
+        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+        if (currentBuyer.getGoodInCartById(currentGood.getId()) == null) {
+            if (currentGood.getNumber() > 0) {
+                currentBuyer.getCart().add(currentGood);
+                currentGood.getGoodsInBuyerCart().put(currentBuyer, 1);
+                System.out.println("the product added");
+            } else {
+                System.out.println("this product is not available");
+            }
+        } else {
+            System.out.println("this product has already been added");
         }
     }
 

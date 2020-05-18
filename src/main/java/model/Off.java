@@ -9,14 +9,14 @@ public class Off {
     private String status;
     private Date startDate;
     private Date endDate;
-    private int discount;
+    private int percent;
 
-    public Off(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
+    public Off(int id, List<Good> goods, Date startDate, Date endDate, int percent) {
         this.id = id;
         this.goods = goods;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.discount = discount;
+        this.percent = percent;
     }
 
     public int getId() {
@@ -35,12 +35,12 @@ public class Off {
         this.endDate = endDate;
     }
 
-    public void setDiscount(int discount) {
-        this.discount = discount;
+    public void setPercent(int percent) {
+        this.percent = percent;
     }
 
-    public int getDiscount() {
-        return discount;
+    public int getPercent() {
+        return percent;
     }
 
     public List<Good> getGoods() {
@@ -54,6 +54,6 @@ public class Off {
                 "status: '" + status + "\n" +
                 "startDate: " + startDate + "\n" +
                 "endDate: " + endDate + "\n" +
-                "discount: " + discount;
+                "discount: " + percent;
     }
 }

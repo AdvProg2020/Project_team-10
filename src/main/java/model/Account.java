@@ -34,6 +34,10 @@ public abstract class Account {
                 "password: " + password;
     }
 
+    public void subtractCredit(long price) {
+        this.credit -= price;
+    }
+
     public String getFirstName() {
         return firstName;
     }
