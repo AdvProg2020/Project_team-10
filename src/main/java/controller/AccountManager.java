@@ -10,7 +10,8 @@ public class AccountManager {
     private static int lastRequestId;
     private static int lastGoodId;
     private static int lastCommentId;
-    private static int lastLogId;
+    private static int lastBuyerLogId;
+    private static int lastSellerLogId;
     private static int lastDiscountCode;
     private static int lastOffId;
 
@@ -40,16 +41,20 @@ public class AccountManager {
         lastCommentId += 1;
     }
 
-    public static void increaseLastLogId() {
-        lastLogId += 1;
-    }
-
     public static void increaseLastDiscountId() {
         lastDiscountCode += 1;
     }
 
     public static void increaseLastOffId() {
         lastOffId += 1;
+    }
+
+    public static void increaseLastBuyerLogId() {
+        lastBuyerLogId += 1;
+    }
+
+    public static void increaseLastSellerLogId() {
+        lastSellerLogId += 1;
     }
 
     public static int getLastGoodId() {
@@ -60,8 +65,12 @@ public class AccountManager {
         return lastCommentId;
     }
 
-    public static int getLastLogId() {
-        return lastLogId;
+    public static int getLastBuyerLogId() {
+        return lastBuyerLogId;
+    }
+
+    public static int getLastSellerLogId() {
+        return lastSellerLogId;
     }
 
     public static Account getOnlineAccount() {

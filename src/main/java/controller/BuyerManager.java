@@ -2,6 +2,8 @@ package controller;
 
 import model.*;
 
+import java.util.List;
+
 public class BuyerManager {
 
     public static boolean canIncrease(Good good) {
@@ -30,6 +32,21 @@ public class BuyerManager {
             amount += good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount()) * good.getPrice();
         }
         return amount;
+    }
+
+    public static long getPriceAfterApplyOff(List<Good> goods) {
+        long totalPrice = 0;
+        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+        for (Good good : goods) {
+            int numberOfGoodInCart = good.getGoodsInBuyerCart().get(currentBuyer);
+            if (good.getOff() != null) {
+                totalPrice += (good.getPrice() * ((100 - good.getOff().getPercent()) / 100.0)
+                        * numberOfGoodInCart);
+            } else {
+                totalPrice += (good.getPrice() * numberOfGoodInCart);
+            }
+        }
+        return totalPrice;
     }
 
     public static void purchase() {

@@ -11,7 +11,6 @@ public abstract class Account {
     private String phoneNumber;
     private String password;
     private long credit;
-    private List<Log> logs;
 
     public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         this.username = username;
@@ -20,7 +19,6 @@ public abstract class Account {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.logs = new ArrayList<>();
     }
 
     @Override
@@ -84,10 +82,6 @@ public abstract class Account {
 
     public String getUsername() {
         return username;
-    }
-
-    public List<Log> getLogs() {
-        return logs;
     }
 
     public long getCredit() {

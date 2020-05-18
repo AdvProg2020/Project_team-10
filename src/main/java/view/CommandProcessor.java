@@ -150,11 +150,13 @@ public class CommandProcessor {
     //seller
 
     public static void showCompanyInfo() {
-        System.out.println(((Seller) AccountManager.getOnlineAccount()).getCompany());
+        System.out.println("company: " + ((Seller) AccountManager.getOnlineAccount()).getCompany());
     }
 
     public static void showSalesHistory() {
-        System.out.println(AccountManager.getOnlineAccount().getLogs());
+        for (SellerLog sellerLog : ((Seller) AccountManager.getOnlineAccount()).getSellerLogs()) {
+            System.out.println(sellerLog);
+        }
     }
 
     public static void showHisProducts() {
@@ -396,17 +398,17 @@ public class CommandProcessor {
                 }
             } else if (flag == 3) {
                 System.out.print("Enter the discount percentage: ");
-                percent = Menu.scanner.nextInt();
+                percent = Integer.parseInt(Menu.scanner.nextLine());
                 if (percent < 100 && percent > 0) {
                     flag += 1;
                 }
             } else if (flag == 4) {
                 System.out.print("Enter the maximum discount amount: ");
-                amount = Menu.scanner.nextLong();
+                amount = Long.parseLong(Menu.scanner.nextLine());
                 flag += 1;
             } else if (flag == 5) {
                 System.out.print("Enter the number of repetitions of the discount code: ");
-                repeat = Menu.scanner.nextInt();
+                repeat = Integer.parseInt(Menu.scanner.nextLine());
                 flag += 1;
             } else {
                 System.out.println("Enter the people covered by the discount code: ");
@@ -563,9 +565,9 @@ public class CommandProcessor {
         System.out.println(AccountManager.getOnlineAccount());
     }
 
-    public static void showDiscount() {
+    public static void showDiscountForAdmin() {
         System.out.print("enter the discount code: ");
-        int code = Menu.scanner.nextInt();
+        int code = Integer.parseInt(Menu.scanner.nextLine());
         Discount discount = Shop.getShop().getDiscountWithCode(code);
         if (discount != null) {
             System.out.print(discount);
@@ -574,17 +576,17 @@ public class CommandProcessor {
             }
             System.out.println();
         } else {
-            System.out.println("discount code not exist");
+            System.out.println("discount code does not exist");
         }
     }
 
-    public static void showAllDiscountCode() {
+    public static void showAllDiscountCodesForAdmin() {
         for (Discount allDiscount : Shop.getShop().getAllDiscounts()) {
             System.out.print(allDiscount);
             for (Account user : allDiscount.getUsers()) {
                 System.out.print("|‌" + user.getUsername() + "|‌");
             }
-            System.out.println();
+            System.out.println("------------------------------------");
         }
     }
 
@@ -623,27 +625,23 @@ public class CommandProcessor {
     }
 
     public static void showAllOrders() {
-        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
-            System.out.println(log.toString());
+        for (BuyerLog buyerLog : ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogs()) {
+            System.out.println(buyerLog);
         }
     }
 
     public static void showOrder(int id) {
-        int counter = 0;
-        for (Log log : AccountManager.getOnlineAccount().getLogs()) {
-            if (log.getId() == id) {
-                System.out.println(log.toString());
-                counter++;
-            }
-        }
-        if (counter == 0) {
+        BuyerLog buyerLog = ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogWithId(id);
+        if (buyerLog == null) {
             System.out.println("order with id : " + id + " is not exist");
+        } else {
+            System.out.println(buyerLog);
         }
     }
 
     public static void showAllDiscountsCodeForBuyer() {
         for (Discount discount : ((Buyer) AccountManager.getOnlineAccount()).getDiscounts()) {
-            System.out.println(discount);
+            System.out.println(discount.toStringForBuyer());
         }
     }
 
@@ -654,7 +652,7 @@ public class CommandProcessor {
         List<String> attribute = new ArrayList<>();
         Category category = Shop.getShop().getCategoryByName(newName);
         if (category == null || edit) {
-            System.out.println("Enter the attribute: ");
+            System.out.println("Enter the attributes (enter \"end\" to complete this step): ");
             while (!(attributeString = Menu.scanner.nextLine()).trim().equalsIgnoreCase("end")) {
                 attribute.add(attributeString);
             }
@@ -854,7 +852,7 @@ public class CommandProcessor {
         String name = Menu.scanner.nextLine();
         Category category = Shop.getShop().getCategoryByName(name);
         if (category == null) {
-            System.out.println("category not exist");
+            System.out.println("category does not exist");
         } else {
             Shop.getShop().getAllCategories().remove(category);
             System.out.println("category removed");
@@ -1095,7 +1093,7 @@ public class CommandProcessor {
     public static void showProductsInOffsMenu() {
         for (Good good : GoodsManager.getFilteredGoodsInOffs()) {
             System.out.println("id: " + good.getId() + "\n" + "name: " + good.getName() + "\n" + "price: "
-                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - good.getOff().getPercent()) / 100)
+                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - good.getOff().getPercent()) / 100.0)
                     + "-----------------------------------------");
         }
     }
@@ -1111,13 +1109,13 @@ public class CommandProcessor {
         int flag = 1;
         while (true) {
             if (flag == 1) {
-                System.out.println("enter your id(Write the end to enter): ");
+                System.out.println("enter products id(enter  \"end\" to complete this step): ");
                 while (!(id = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
                     if (Shop.getShop().getProductWithId(Integer.parseInt(id)) != null) {
                         goods.add(Shop.getShop().getProductWithId(Integer.parseInt(id)));
-                        System.out.println("good added");
+                        System.out.println("product added");
                     } else {
-                        System.out.println("the good does not exist");
+                        System.out.println("the product does not exist");
                     }
                 }
                 flag++;
@@ -1150,8 +1148,10 @@ public class CommandProcessor {
             }
         }
         if (edit) {
+            System.out.println("the edit off request sent");
             SellerManager.editOff(offId, goods, startDate1, endDate1, discount);
         } else {
+            System.out.println("the add off request sent");
             SellerManager.addOff(goods, startDate1, endDate1, discount);
         }
     }
@@ -1171,7 +1171,7 @@ public class CommandProcessor {
         int id = Integer.parseInt(Menu.scanner.nextLine());
         Off off = Shop.getShop().getOffWithId(id);
         if (off == null) {
-            System.out.println("the off is not exist");
+            System.out.println("the off does not exist");
         } else {
             System.out.println(off);
         }

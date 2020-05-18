@@ -16,7 +16,7 @@ public class DiscountMenu extends Menu {
         return new LastMenu("show all discount code", this) {
             @Override
             public void show() {
-                CommandProcessor.showAllDiscountCode();
+                CommandProcessor.showAllDiscountCodesForAdmin();
                 super.show();
             }
 
@@ -31,7 +31,7 @@ public class DiscountMenu extends Menu {
         return new LastMenu("show discount code[code]", this) {
             @Override
             public void show() {
-                CommandProcessor.showDiscount();
+                CommandProcessor.showDiscountForAdmin();
                 super.show();
             }
 

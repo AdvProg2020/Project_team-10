@@ -7,6 +7,7 @@ public class Seller extends Account {
     private String company;
     private List<Good> goods;
     private List<Off> offs;
+    private List<SellerLog> sellerLogs;
 
 
     public Seller(String username, String firstName, String lastName, String email, String phoneNumber, String password, String company) {
@@ -14,6 +15,7 @@ public class Seller extends Account {
         this.company = company;
         goods = new ArrayList<>();
         offs = new ArrayList<>();
+        this.sellerLogs = new ArrayList<>();
     }
 
     public Good getProductWithId(int id) {
@@ -46,5 +48,7 @@ public class Seller extends Account {
         return offs;
     }
 
-
+    public List<SellerLog> getSellerLogs() {
+        return sellerLogs;
+    }
 }

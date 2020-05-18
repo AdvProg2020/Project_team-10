@@ -10,6 +10,7 @@ public class Buyer extends Account {
     private List<Good> goods;
     private List<Good> cart;
     private List<Discount> discounts;
+    private List<BuyerLog> buyerLogs;
 
 
     public Buyer(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
@@ -18,6 +19,7 @@ public class Buyer extends Account {
         cart = new ArrayList<>();
         discounts = new ArrayList<>();
         this.discountAndNumberOfAvailableDiscount = new HashMap<>();
+        this.buyerLogs = new ArrayList<>();
     }
 
 
@@ -47,6 +49,10 @@ public class Buyer extends Account {
         return discounts;
     }
 
+    public List<BuyerLog> getBuyerLogs() {
+        return buyerLogs;
+    }
+
     public Discount getDiscountByCode(int code){
         for (Discount discount : this.discounts) {
             if (discount.getCode() == code){
@@ -55,4 +61,14 @@ public class Buyer extends Account {
         }
         return null;
     }
+
+    public BuyerLog getBuyerLogWithId(int id) {
+        for (BuyerLog buyerLog : this.getBuyerLogs()) {
+            if (buyerLog.getId() == id) {
+                return buyerLog;
+            }
+        }
+        return null;
+    }
+
 }

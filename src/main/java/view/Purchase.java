@@ -5,9 +5,7 @@ import controller.BuyerManager;
 import model.*;
 import view.menus.Menu;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static view.CommandProcessor.*;
 
@@ -68,7 +66,7 @@ public class Purchase {
                 processGiveDiscountCode();
                 break;
             } else if (selected == 2) {
-                payment(BuyerManager.getTotalPrice(), null);
+                payment(BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()), null);
                 break;
             } else {
                 System.out.println("you must choose one of following options");
@@ -97,16 +95,16 @@ public class Purchase {
     }
 
     public static double getFinalTotalPrice(Discount discount) {
-        if (BuyerManager.getTotalPrice() * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
-            return (BuyerManager.getTotalPrice() - discount.getMaxAmountOfDiscount());
+        if (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
+            return (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - discount.getMaxAmountOfDiscount());
         } else {
-            return BuyerManager.getTotalPrice() * ((100.0 - discount.getPercent()) / 100.0);
+            return BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * ((100.0 - discount.getPercent()) / 100.0);
         }
     }
 
     public static void payment(double finalPrice, Discount discount) {
         System.out.println("Payment page");
-        System.out.println("total price: " + BuyerManager.getTotalPrice());
+        System.out.println("total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
         System.out.println("payable amount: " + ((long) finalPrice));
         System.out.println("1: confirm\n2: increase credit\n3: back");
         int selected = Integer.parseInt(Menu.scanner.nextLine());
@@ -130,24 +128,49 @@ public class Purchase {
     }
 
     private static void pay(double finalPrice, Discount currentDiscount) {
-        Buyer onlineAccount = ((Buyer) AccountManager.getOnlineAccount());
-        onlineAccount.subtractCredit(finalPrice);
-        for (Good good : onlineAccount.getCart()) {
+        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+        currentBuyer.subtractCredit(finalPrice);
+        Set<Seller> sellers = new HashSet<>();
+        for (Good good : currentBuyer.getCart()) {
             good.subtractNumber();
-            good.getBuyers().add(onlineAccount);
+            good.getBuyers().add(currentBuyer);
+            sellers.add(good.getSeller());
         }
-        for (Discount discount : onlineAccount.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+        for (Discount discount : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
             if (discount == currentDiscount) {
-                int number = onlineAccount.getDiscountAndNumberOfAvailableDiscount().get(discount);
-                onlineAccount.getDiscountAndNumberOfAvailableDiscount().put(discount, number - 1);
+                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount);
+                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discount, number - 1);
                 if (number == 1) {
-                    onlineAccount.getDiscountAndNumberOfAvailableDiscount().remove(discount);
+                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discount);
                 }
             }
         }
+        makeLogs(sellers, finalPrice);
+        currentBuyer.getCart().clear();
         System.out.println("The purchase was successful");
     }
 
-    private static void checkUsernameInvalidation() {
+    private static void makeLogs(Set<Seller> sellers, double finalPrice) {
+        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+        Map<Seller, List<Good>> sellersToHisGoods = new HashMap<>();
+        for (Seller seller : sellers) {
+            ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
+            for (Good good : currentBuyer.getCart()) {
+                if (good.getSeller().equals(seller)) {
+                    goodsOfOneSeller.add(good);
+                }
+            }
+            sellersToHisGoods.put(seller, goodsOfOneSeller);
+            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(goodsOfOneSeller));
+            seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
+                    BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(currentBuyer.getCart()), sellersToHisGoods.get(seller),
+                    currentBuyer.getUsername(), "received"));
+        }
+        currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
+                ((long) (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - finalPrice)), sellersToHisGoods, "paid"));
+
+
+
     }
+
 }

@@ -32,7 +32,7 @@ public class OrderMenu extends Menu {
                 System.out.println("please enter order id: \n");
                 id = Menu.scanner.nextInt();
                 System.out.println();
-                CommandProcessor.showOrder(id);
+//                CommandProcessor.showOrder(id);
                 super.show();
             }
             @Override

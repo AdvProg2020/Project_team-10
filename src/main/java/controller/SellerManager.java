@@ -44,14 +44,22 @@ public class SellerManager {
         return false;
     }
 
-    public static void editOff(int id, List<Good> goods, Date startDate, Date endDate, int discount) {
+    public static void editOff(int id, List<Good> goods, Date startDate, Date endDate, int percent) {
             Shop.getShop().getAllRequests().add(new EditOffRequest(AccountManager.getOnlineAccount(),
-                    AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, discount));
+                    AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, percent));
     }
 
-    public static void addOff(List<Good> goods, Date startDate, Date endDate, int discount) {
-            Shop.getShop().getAllRequests().add(new AddOffRequest(AccountManager.getOnlineAccount(),
-                    AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, discount));
+    public static void addOff(List<Good> goods, Date startDate, Date endDate, int percent) {
+        //todo
+        Off off = new Off(AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent);
+        Shop.getShop().getAllOffs().add(off);
+        ((Seller) AccountManager.getOnlineAccount()).getOffs().add(off);
+        for (Good good : goods) {
+            good.setOff(off);
+        }
+        //todo
+        Shop.getShop().getAllRequests().add(new AddOffRequest(AccountManager.getOnlineAccount(),
+                    AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent));
     }
 
 

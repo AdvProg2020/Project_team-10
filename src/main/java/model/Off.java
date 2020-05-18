@@ -50,10 +50,19 @@ public class Off {
     @Override
     public String toString() {
         return "id:" + id + "\n" +
-                "goods: " + goods + "\n" +
+                "goods: " + goodsToString() + "\n" +
                 "status: '" + status + "\n" +
                 "startDate: " + startDate + "\n" +
                 "endDate: " + endDate + "\n" +
                 "discount: " + percent;
     }
+
+    private String goodsToString() {
+        StringBuilder goodString = new StringBuilder("| ");
+        for (Good good : this.goods) {
+            goodString.append("id: ").append(good.getId()).append(" , ").append("name: ").append(good.getName()).append(" | ");
+        }
+        return goodString.toString();
+    }
+
 }

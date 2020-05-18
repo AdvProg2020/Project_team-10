@@ -270,7 +270,7 @@ public class UserMenu extends Menu {
     }
 
     private Menu getShowCategory() {
-        return new LastMenu("show category", this) {
+        return new LastMenu("show categories", this) {
             @Override
             public void show() {
                 showAllCategories();

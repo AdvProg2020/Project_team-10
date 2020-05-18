@@ -123,6 +123,10 @@ public class Good implements Comparable<Good> {
         return price;
     }
 
+    public Seller getSeller() {
+        return seller;
+    }
+
     public List<Integer> getAllRates() {
         return allRates;
     }

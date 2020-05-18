@@ -73,6 +73,15 @@ public class Discount {
                 "users: " ;
     }
 
+    public String toStringForBuyer() {
+        return "code: " + code + "\n" +
+                "startDate: " + startDate + "\n" +
+                "endDate: " + endDate + "\n" +
+                "percent: " + percent + "\n" +
+                "maxAmountOfDiscount: " + maxAmountOfDiscount + "\n" +
+                "repeatDiscount: " + repeatDiscount + "\n-----------------------------------";
+    }
+
     public int getCode() {
         return code;
     }
