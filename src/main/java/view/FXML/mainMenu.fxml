@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.FXMLController.MainMenu"
+            stylesheets="@../css/mainMenu.css">
+
+    <Rectangle height="165" width="1560" styleClass="header" fill="#ffff"/>
+
+    <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
+        <tooltip>
+            <Tooltip text="Close"/>
+        </tooltip>
+    </Button>
+
+    <Button layoutX="1483" layoutY="10" mnemonicParsing="false" styleClass="buttonMinimize" onMouseClicked="#minimize">
+        <tooltip>
+            <Tooltip text="Minimize"/>
+        </tooltip>
+    </Button>
+
+    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#exit">
+
+    </Button>
+
+<!--    <Rectangle layoutY="100" layoutX="1442" height="50" width="5" fill="#f4f4f4"/>-->
+
+    <Button layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#exit">
+
+    </Button>
+
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"/>
+
+</AnchorPane>
+

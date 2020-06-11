@@ -1,0 +1,71 @@
+
+#pane{
+    -fx-background-color: #f5f5f5;
+}
+
+.buttonLogin {
+    /*-fx-graphic: url("../image/exit.png");*/
+    -fx-background-color: none;
+}
+
+.buttonExit {
+    -fx-background-image: url("../image/exit.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonExit:hover {
+    -fx-background-image: url("../image/exithover.png");
+}
+
+.buttonMinimize {
+    -fx-background-image: url("../image/minimize.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonMinimize:hover{
+    -fx-background-image: url("../image/minimizehover.png");
+}
+
+.logo {
+    -fx-image: url("../image/logo.png");
+
+}
+
+.logo:hover {
+    -fx-image: url("../image/logohover.png");
+
+}
+
+.header {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 0)
+}
+
+.buttonAccount {
+    -fx-background-image: url("../image/loginAccount.png");
+    -fx-background-color: none;
+    -fx-background-size: 89px 40px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 89px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonAccount:hover{
+    -fx-background-image: url("../image/accounthover.png");
+}
+
+.buttonCart{
+    -fx-background-image: url("../image/cart.png");
+    -fx-background-color: none;
+    -fx-background-size: 48px 40px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 48px;
+    -fx-background-repeat: no-repeat;
+}
