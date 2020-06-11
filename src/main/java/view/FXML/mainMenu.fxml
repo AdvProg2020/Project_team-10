@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane xmlns="http://javafx.com/javafx"
+<AnchorPane fx:id="test" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu"
             stylesheets="@../css/mainMenu.css">
@@ -28,13 +28,13 @@
         </tooltip>
     </Button>
 
-    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#exit">
+    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 
-<!--    <Rectangle layoutY="100" layoutX="1442" height="50" width="5" fill="#f4f4f4"/>-->
+<!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
 
-    <Button layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#exit">
+    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" >
 
     </Button>
 

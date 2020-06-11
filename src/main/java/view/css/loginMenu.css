@@ -1,0 +1,12 @@
+.btnExit{
+    -fx-background-image: url("../image/exitpopup.png");
+    -fx-background-color: none;
+    -fx-background-size: 15px 15px;
+    -fx-pref-height: 15px;
+    -fx-pref-width: 15px;
+    -fx-background-repeat: no-repeat;
+}
+
+.btnExit:hover{
+
+}

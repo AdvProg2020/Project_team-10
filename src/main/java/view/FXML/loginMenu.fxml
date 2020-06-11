@@ -6,22 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx"
+<AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="view.FXMLController.MainMenu"
-            prefHeight="400.0" prefWidth="600.0" alignment="CENTER_LEFT" spacing="100">
-    <VBox>
-        <Button text="dlhsdkvnsd"/>
-        <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>
-        <Button text="dlhsdkvnsd"/>
-        <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>
-        <Button text="dlhsdkvnsd"/>
-        <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>    <Button text="dlhsdkvnsd"/>
-    </VBox>
+            fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/loginMenu.css">
 
 
 
 
-
-
-</HBox>
+</AnchorPane>
