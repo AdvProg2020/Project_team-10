@@ -10,6 +10,8 @@ import view.menus.Menu;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import static view.FXML.FXML.goodPageURL;
 import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
@@ -24,7 +26,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        URL url = Paths.get(mainMenuURL).toUri().toURL();
+        URL url = Paths.get(goodPageURL).toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         stage.initStyle(StageStyle.UNDECORATED);
