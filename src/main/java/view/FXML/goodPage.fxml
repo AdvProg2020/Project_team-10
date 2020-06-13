@@ -42,7 +42,7 @@
 
     <Rectangle fx:id="goodPicture" width="500" height="500" layoutX="50" layoutY="230" styleClass="goodPage"/>
 
-    <Label fx:id="isAvailable" prefWidth="200" prefHeight="200" layoutX="620" layoutY="250" text="Available!" styleClass="availableLabel">
+    <Label fx:id="isAvailable" prefWidth="200" prefHeight="200" layoutX="620" layoutY="270" text="Available!" styleClass="availableLabel">
 
     </Label>
     <Label fx:id="productName" prefWidth="600" prefHeight="200" layoutX="620" layoutY="320" text="product name" styleClass="productNameLabel">
