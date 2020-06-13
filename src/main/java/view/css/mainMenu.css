@@ -73,3 +73,10 @@
 .buttonCart:hover{
     -fx-background-image: url("../image/carthover.png");
 }
+
+.hbox{
+    -fx-background-color: #ffff;
+}
+.hbox:hover{
+    -fx-background-color: blue;
+}

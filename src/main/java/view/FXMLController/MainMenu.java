@@ -6,11 +6,17 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
+
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,13 +32,16 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ResourceBundle;
 
 import static view.FXML.FXML.*;
 
-public class MainMenu {
+public class MainMenu implements Initializable {
     public Button btnLogin;
     public AnchorPane test;
     public Button btnExitPopup;
+    public FlowPane flowPane;
+    public ScrollPane scrollPane;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -117,5 +126,43 @@ public class MainMenu {
 
     public void exitPopup(MouseEvent mouseEvent) {
 
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+
+
+
+    }
+
+    public void mouse(MouseEvent mouseEvent) throws URISyntaxException {
+        for (int i = 0; i < 70; i++) {
+            HBox hBox = new HBox();
+            hBox.setPrefWidth(200);
+            hBox.setPrefHeight(250);
+            Image image = new Image(getClass().getResourceAsStream("../image/logo.png"));
+            ImageView imageView = new ImageView(image);
+
+            Label label = new Label("salam");
+            hBox.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    hBox.setStyle("-fx-background-color: #ffff;" + " -fx-effect:  dropshadow(three-pass-box ,rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);");
+
+                }
+            });
+            hBox.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    hBox.setStyle("-fx-background-color: none");
+                }
+            });
+            hBox.getChildren().addAll(label);
+            flowPane.getChildren().add(hBox);
+        }
+        scrollPane.setContent(flowPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 }
