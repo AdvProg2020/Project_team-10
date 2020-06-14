@@ -73,3 +73,26 @@
 .buttonCart:hover{
     -fx-background-image: url("../image/carthover.png");
 }
+
+.hbox{
+    -fx-background-color: #ffff;
+}
+.hbox:hover{
+    -fx-background-color: blue;
+}
+
+.buttonSort{
+    -fx-background-color: none;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 12pt;
+    -fx-background-radius: 10;
+}
+.buttonSort:hover{
+    -fx-background-color: #f1f1f1;
+    -fx-text-fill: #131313;
+    -fx-cursor: hand;
+}
+.buttonSort:focused{
+    -fx-background-color: #1089ff;
+    -fx-text-fill: #ffffff;
+}

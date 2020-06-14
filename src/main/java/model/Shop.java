@@ -4,6 +4,7 @@ import model.requests.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Shop {
@@ -15,6 +16,43 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
 
     private Shop() {
+        ArrayList arrayList = new ArrayList();
+        HashMap hashMap = new HashMap();
+        hashMap.put("speed" , 100);
+        arrayList.add("speed");
+        allCategories.add(new Category("car" ,arrayList ));
+        allGoods.add(new Good(1 , "cari" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "cara" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "carb" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "carc" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "cari" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "cara" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "carb" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "carc" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "cari" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "cara" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "carb" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "carc" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "cari" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "cara" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "carb" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "carc" , "bmw"
+                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
     }
 
     public List<Discount> getAllDiscounts() {

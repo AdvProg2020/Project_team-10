@@ -7,14 +7,20 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane fx:id="test" xmlns="http://javafx.com/javafx"
+<AnchorPane  fx:id="test" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu"
             stylesheets="@../css/mainMenu.css">
 
-    <Rectangle height="165" width="1560" styleClass="header" fill="#ffff"/>
+    <ScrollPane fx:id="scrollPane" layoutY="190" layoutX="30">
+        <FlowPane styleClass="flowPane" prefHeight="650" prefWidth="1200" fx:id="flowPane">
+
+        </FlowPane>
+
+    </ScrollPane>
+
+    <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
 
     <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
         <tooltip>
@@ -27,14 +33,14 @@
             <Tooltip text="Minimize"/>
         </tooltip>
     </Button>
-
-    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+<!--    layoutX="1350" layoutY="105"-->
+    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 
 <!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
 
-    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" >
+    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#mouse" >
 
     </Button>
 

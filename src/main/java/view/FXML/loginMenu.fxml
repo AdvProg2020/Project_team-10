@@ -6,9 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<AnchorPane fx:id="login" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/loginMenu.css">
+            fx:controller="view.FXMLController.Login" stylesheets="@../css/loginMenu.css">
+
 
 
 
