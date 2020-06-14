@@ -9,6 +9,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -27,10 +28,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Good;
 import model.Shop;
+import sun.tools.jar.Main;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,6 +39,8 @@ import java.util.ResourceBundle;
 import static view.FXML.FXML.*;
 
 public class MainMenu implements Initializable {
+    public static double x;
+    public static int y;
     public Button btnLogin;
     public AnchorPane test;
     public Button btnExitPopup;
@@ -66,11 +67,13 @@ public class MainMenu implements Initializable {
         fadeTransition.play();
     }
 
+    final AnchorPane anchorPane = new AnchorPane();
+
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
         final Stage popupWindow = new Stage();
         popupWindow.initModality(Modality.APPLICATION_MODAL);
         final AnchorPane layout;
-        final AnchorPane anchorPane = new AnchorPane();
+
         URL url = Paths.get(loginURL).toUri().toURL();
         layout = FXMLLoader.load(url);
         final Scene scene1 = new Scene(layout);
@@ -97,7 +100,6 @@ public class MainMenu implements Initializable {
 
         button.setOnAction(e -> fadeOutPopup(popupWindow, fade));
 
-
         layout.setLayoutX(500);
         layout.setLayoutY(150);
         layout.getChildren().add(anchorPane);
@@ -109,29 +111,25 @@ public class MainMenu implements Initializable {
         dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
         layout.setEffect(dropShadow);
 
-
-
         popupWindow.setScene(scene1);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-
-        anchorPane.getChildren().addAll(button , usernameField() , passwordField() ,login() ,newUserLabel() , signUpLink());
+        anchorPane.getChildren().addAll(button, usernameField(), passwordField(), login(), newUserLabel(), signUpLink());
         popupWindow.showAndWait();
-
 
     }
 
-    public Button login(){
+    public Button login() {
         Button button = new Button();
         button.setText("Sign In");
-        button.setPrefSize(290 , 55);
+        button.setPrefSize(290, 55);
         button.setLayoutX(100);
         button.setLayoutY(330);
         button.getStyleClass().add("login");
         return button;
     }
 
-    public TextField usernameField(){
+    public TextField usernameField() {
         TextField textField = new TextField();
         textField.setPromptText("Username");
         textField.setLayoutX(100);
@@ -143,7 +141,7 @@ public class MainMenu implements Initializable {
         return textField;
     }
 
-    public Label newUserLabel(){
+    public Label newUserLabel() {
         Label label = new Label("Are you a new user?");
         label.setLayoutY(400);
         label.setLayoutX(130);
@@ -152,15 +150,22 @@ public class MainMenu implements Initializable {
         return label;
     }
 
-    public Hyperlink signUpLink(){
-    Hyperlink hyperlink = new Hyperlink("Sign Up");
-    hyperlink.setLayoutX(286);
-    hyperlink.setLayoutY(396);
-    hyperlink.getStyleClass().add("hyperLink");
-    return hyperlink;
+    public Hyperlink signUpLink() {
+        Hyperlink hyperlink = new Hyperlink("Sign Up");
+        hyperlink.setLayoutX(286);
+        hyperlink.setLayoutY(396);
+        hyperlink.getStyleClass().add("hyperLink");
+        hyperlink.setOnMouseClicked(e -> anchorPane.getChildren().clear());
+        return hyperlink;
     }
 
-    public PasswordField passwordField(){
+    public void signUp() {
+
+    }
+
+//    public void popupForShign
+
+    public PasswordField passwordField() {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
         passwordField.setLayoutX(100);
@@ -183,11 +188,19 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Label sort = new Label("sorted by");
-        sort.setStyle("-fx-graphic: url('../image/sorticon.png');" + "-fx-font-size: 25px");
-        scrollPane.setContent(sort);
+        HBox hBox = new HBox();
+        ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
+        imageSort.setFitWidth(25);
+        imageSort.setFitHeight(25);
+        Label sort = new Label("Sort by:");
+        sort.setStyle("-fx-font-size: 15px;" + "-fx-text-fill: black;" + "-fx-font-family: sans-serif;");
 
-
+        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time"), buttonForSort("Score"),
+                buttonForSort("Price(Descending)"), buttonForSort("The most visited"));
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setPadding(new Insets(10, 850, 10, 15));
+        hBox.setSpacing(10);
+        flowPane.getChildren().add(hBox);
         for (Good good : Shop.getShop().getAllGoods()) {
             VBox vBox = new VBox();
             vBox.setPrefWidth(297);
@@ -227,6 +240,12 @@ public class MainMenu implements Initializable {
 
         scrollPane.setContent(flowPane);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    public Button buttonForSort(String input) {
+        Button button = new Button(input);
+        button.getStyleClass().add("buttonSort");
+        return button;
     }
 
     public void mouse(MouseEvent mouseEvent) throws URISyntaxException {
