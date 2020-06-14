@@ -1,12 +1,77 @@
-.btnExit{
+.btnExit {
     -fx-background-image: url("../image/exitpopup.png");
     -fx-background-color: none;
-    -fx-background-size: 15px 15px;
-    -fx-pref-height: 15px;
-    -fx-pref-width: 15px;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
     -fx-background-repeat: no-repeat;
 }
 
-.btnExit:hover{
+.btnExit:hover {
+    -fx-background-image: url("../image/exitpopupHover.png");
+}
 
+.username {
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10;
+    -fx-padding: 0 10 0 43;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/username.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 16pt;
+
+}
+
+.username:focused {
+
+}
+
+.password-field {
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-padding: 0 10 0 43;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/padlock.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 16pt;
+}
+
+.password-field:focused {
+
+}
+
+.login {
+    -fx-background-color: white;
+    -fx-text-fill: #1089ff;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+}
+
+.login:hover {
+    -fx-effect: dropshadow(three-pass-box , #292929, 5 , 0.1 , 0 , 0 );
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 13pt;
+}
+
+.hyperlink {
+    -fx-text-fill: #ffec7a;
+    -fx-font-size: 13pt;
+    -fx-font-weight: bold;
 }
