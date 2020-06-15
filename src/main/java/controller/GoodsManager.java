@@ -12,7 +12,7 @@ import java.util.Map;
 public class GoodsManager {
     private static Good currentGood;
     private static String kindOfSort = "visit number";
-    private static List<Good> filteredGoods = new ArrayList<>();
+    private static List<Good> filteredGoods = new ArrayList<>(Shop.getShop().getAllGoods());
     private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
     private static Map<String, String> kindOfFilter = new HashMap<>();
 

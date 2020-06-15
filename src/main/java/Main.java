@@ -15,10 +15,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
 import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         FileHandler.updateDatabase();
         launch(args);
 //        Scanner scanner = new Scanner(System.in);

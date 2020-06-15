@@ -182,6 +182,9 @@ public class Good implements Comparable<Good> {
             //TODO allRate.size=0
             sum += rate;
         }
+        if (allRates.size() == 0) {
+            return 0;
+        }
         return sum / allRates.size();
     }
 

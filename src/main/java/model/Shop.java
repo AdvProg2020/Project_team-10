@@ -25,38 +25,38 @@ public class Shop {
         hashMap.put("speed" , 100);
         arrayList.add("speed");
         allCategories.add(new Category("car" ,arrayList ));
-        allGoods.add(new Good(1 , "cari" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(2 , "cara" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(3 , "carb" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(4 , "carc" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(1 , "cari" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(2 , "cara" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(3 , "carb" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(4 , "carc" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(1 , "cari" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(2 , "cara" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(3 , "carb" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(4 , "carc" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(1 , "cari" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(2 , "cara" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(3 , "carb" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
-        allGoods.add(new Good(4 , "carc" , "bmw"
-                , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "dddd" , "bmw"
+                , 2 , 4 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "hhhh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "bbbb" , "bmw"
+                , 2 , 2 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "cccc" , "bmw"
+                , 2 , 3 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "iiii" , "bmw"
+                , 2 , 9 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "eeee" , "bmw"
+                , 2 , 5 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "ffff" , "bmw"
+                , 2 , 6 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "kkkk" , "bmw"
+                , 2 , 11 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "gggg" , "bmw"
+                , 2 , 7 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "aaaa" , "bmw"
+                , 2 , 1 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "jjjj" , "bmw"
+                , 2 , 10 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "llll" , "bmw"
+                , 2 , 12 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(1 , "mmmm" , "bmw"
+                , 2 , 13 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(2 , "nnnn" , "bmw"
+                , 2 , 14 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(3 , "oooo" , "bmw"
+                , 2 , 15 , null , "car" , hashMap , "dhsvjshv"));
+        allGoods.add(new Good(4 , "pppp" , "bmw"
+                , 2 , 16 , null , "car" , hashMap , "dhsvjshv"));
     }
 
     public List<Comment> getAllComments() {

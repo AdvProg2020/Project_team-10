@@ -92,7 +92,11 @@
     -fx-text-fill: #131313;
     -fx-cursor: hand;
 }
-.buttonSort:focused{
+.buttonSort-select{
+    -fx-background-color: #1089ff;
+    -fx-text-fill: #ffffff;
+}
+.buttonSort-select:hover {
     -fx-background-color: #1089ff;
     -fx-text-fill: #ffffff;
 }

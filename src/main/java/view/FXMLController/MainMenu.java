@@ -1,6 +1,7 @@
 package view.FXMLController;
 
 import controller.AccountManager;
+import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -30,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 import static view.FXML.FXML.*;
@@ -48,7 +51,8 @@ public class MainMenu implements Initializable {
     public Label error;
     public AnchorPane layout;
     public Stage popupWindow;
-
+    private static File selectedFile;
+    public Button selectedButton = new Button();
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -113,7 +117,7 @@ public class MainMenu implements Initializable {
         popupWindow.setScene(scene1);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        anchorPane.getChildren().addAll(exitButton(), usernameField(), passwordField(),onlineShop,  loginButton(),
+        anchorPane.getChildren().addAll(exitButton(), usernameField(), passwordField(), onlineShop, loginButton(),
                 newUserLabel(), signUpLink(), error);
         popupWindow.showAndWait();
 
@@ -210,7 +214,6 @@ public class MainMenu implements Initializable {
     }
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         HBox hBox = new HBox();
@@ -220,13 +223,16 @@ public class MainMenu implements Initializable {
         Label sort = new Label("Sort by:");
         sort.setStyle("-fx-font-size: 15px;" + "-fx-text-fill: black;" + "-fx-font-family: sans-serif;");
 
-        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time"), buttonForSort("Score"),
-                buttonForSort("Price(Descending)"), buttonForSort("The most visited"));
+        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources), buttonForSort("Score", location, resources),
+                buttonForSort("Price(Descending)", location, resources), buttonForSort("The most visited", location, resources));
+        if (selectedButton != null) {
+            selectedButton.getStyleClass().add("buttonSort-select");
+        }
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(10, 580, 10, 15));
         hBox.setSpacing(10);
         flowPane.getChildren().add(hBox);
-        for (Good good : Shop.getShop().getAllGoods()) {
+        for (Good good : GoodsManager.getFilteredGoods()) {
             VBox vBox = new VBox();
             vBox.setPrefWidth(297);
             vBox.setPrefHeight(350);
@@ -267,20 +273,60 @@ public class MainMenu implements Initializable {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
-    public Button buttonForSort(String input) {
+    public Button buttonForSort(String input, URL location, ResourceBundle resources) {
         Button button = new Button(input);
         button.getStyleClass().add("buttonSort");
+        if (input.equals("Time")) {
+            button.setOnMouseClicked(event -> {
+                selectedButton = button;
+                GoodsManager.setKindOfSort("time");
+                sort(location, resources);
+            });
+            if (selectedButton.getText().equals("Time")) {
+                button.getStyleClass().add("buttonSort-select");
+            }
+        } else if (input.equals("Score")) {
+            button.setOnMouseClicked(event -> {
+                selectedButton = button;
+                GoodsManager.setKindOfSort("score");
+                sort(location, resources);
+            });
+            if (selectedButton.getText().equals("Score")) {
+                button.getStyleClass().add("buttonSort-select");
+            }
+        } else if (input.startsWith("Price")) {
+            button.setOnMouseClicked(event -> {
+                selectedButton = button;
+                GoodsManager.setKindOfSort("price");
+                sort(location, resources);
+            });
+            if (selectedButton.getText().startsWith("Price")) {
+                button.getStyleClass().add("buttonSort-select");
+            }
+        } else {
+            button.setOnMouseClicked(event -> {
+                selectedButton = button;
+                GoodsManager.setKindOfSort("visit number");
+                sort(location, resources);
+            });
+            if (selectedButton.getText().startsWith("The")) {
+                button.getStyleClass().add("buttonSort-select");
+            }
+        }
         return button;
     }
 
-
-    private static File selectedFile;
+    public void sort(URL location, ResourceBundle resources) {
+        Collections.sort(GoodsManager.getFilteredGoods());
+        flowPane.getChildren().clear();
+        initialize(location, resources);
+    }
 
     public void signUp() {
         anchorPane.getChildren().clear();
         imageViewForSignUp();
-        anchorPane.getChildren().addAll(exitButton() , textFieldForSignUp("First name" , 40 , 140),
-                textFieldForSignUp("Last name" , 40 , 190), usernameFieldForSignUp());
+        anchorPane.getChildren().addAll(exitButton(), textFieldForSignUp("First name", 40, 140),
+                textFieldForSignUp("Last name", 40, 190), usernameFieldForSignUp());
     }
 
     public void imageViewForSignUp() {
@@ -301,7 +347,7 @@ public class MainMenu implements Initializable {
         button.setLayoutX(320);
         button.setLayoutY(210);
         button.setPrefWidth(100);
-        button.setStyle("-fx-background-color: white;" + " -fx-background-radius: 10;"+"-fx-fill: black;"+"-fx-font-family: sans-serif;");
+        button.setStyle("-fx-background-color: white;" + " -fx-background-radius: 10;" + "-fx-fill: black;" + "-fx-font-family: sans-serif;");
         anchorPane.getChildren().addAll(button, rectangle);
         button.setOnAction(e -> {
             selectedFile = fileChooser.showOpenDialog(stage);
@@ -311,9 +357,9 @@ public class MainMenu implements Initializable {
             imageView.setFitWidth(100);
             imageView.setLayoutX(320);
             imageView.setLayoutY(80);
-            imageView.setStyle("-fx-background-radius: 10;" + "-fx-border-width: 2px;"+"-fx-border-radius: 10;"
+            imageView.setStyle("-fx-background-radius: 10;" + "-fx-border-width: 2px;" + "-fx-border-radius: 10;"
                     + "-fx-border-color: white;" + "-fx-border-image-width: 2px;" + "-fx-background-color: white;"
-            + "-fx-fill: white;" + "-fx-fill-height: white");
+                    + "-fx-fill: white;" + "-fx-fill-height: white");
             imageView.autosize();
             anchorPane.getChildren().addAll(imageView);
         });
@@ -321,7 +367,7 @@ public class MainMenu implements Initializable {
 
     }
 
-    public TextField textFieldForSignUp(String prompt , int x , int y){
+    public TextField textFieldForSignUp(String prompt, int x, int y) {
         TextField textField = new TextField();
         textField.setPromptText(prompt);
         textField.setLayoutX(x);
@@ -332,7 +378,7 @@ public class MainMenu implements Initializable {
         return textField;
     }
 
-    public TextField usernameFieldForSignUp(){
+    public TextField usernameFieldForSignUp() {
         TextField textField = new TextField();
         textField.setPromptText("username");
         textField.setLayoutX(40);
@@ -344,7 +390,7 @@ public class MainMenu implements Initializable {
     }
 
 
-    public PasswordField passwordFieldForSignUp(){
+    public PasswordField passwordFieldForSignUp() {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
         passwordField.setLayoutX(40);

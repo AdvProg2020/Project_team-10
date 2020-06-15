@@ -797,8 +797,6 @@ public class CommandProcessor {
             currentMenu.show();
             currentMenu.execute();
         }
-
-
     }
 
     public static void showProductAttribute() {
