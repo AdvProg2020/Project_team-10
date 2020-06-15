@@ -19,13 +19,13 @@ import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
     public static void main(String[] args){
-//        launch(args);
         FileHandler.updateDatabase();
-        Scanner scanner = new Scanner(System.in);
-        MainMenu mainMenu = new MainMenu();
-        Menu.setScanner(scanner);
-        mainMenu.show();
-        mainMenu.execute();
+        launch(args);
+//        Scanner scanner = new Scanner(System.in);
+//        MainMenu mainMenu = new MainMenu();
+//        Menu.setScanner(scanner);
+//        mainMenu.show();
+//        mainMenu.execute();
     }
 
     @Override

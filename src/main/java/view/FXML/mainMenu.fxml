@@ -8,13 +8,13 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane  fx:id="test" xmlns="http://javafx.com/javafx"
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu"
             stylesheets="@../css/mainMenu.css">
 
     <ScrollPane fx:id="scrollPane" layoutY="190" layoutX="30">
-        <FlowPane styleClass="flowPane" prefHeight="650" prefWidth="1200" fx:id="flowPane">
+        <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
         </FlowPane>
 
@@ -34,7 +34,7 @@
         </tooltip>
     </Button>
 <!--    layoutX="1350" layoutY="105"-->
-    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+    <Button layoutX="1150" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 
