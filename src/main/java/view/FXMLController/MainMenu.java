@@ -39,7 +39,6 @@ public class MainMenu implements Initializable {
     public static int y;
     public Button btnLogin;
     public AnchorPane mainPane;
-    public Button btnExitPopup;
     public FlowPane flowPane;
     public ScrollPane scrollPane;
     public Rectangle header;
@@ -49,8 +48,6 @@ public class MainMenu implements Initializable {
     public Label error;
     public AnchorPane layout;
     public Stage popupWindow;
-
-
 
 
 
@@ -97,19 +94,10 @@ public class MainMenu implements Initializable {
         anchorPane.setPrefWidth(480);
         anchorPane.setPrefHeight(600);
 
-        Button exitButton = new Button();
-        exitButton.getStyleClass().add("btnExit");
-        exitButton.setLayoutY(30);
-        exitButton.setLayoutX(435);
-
 
         //fade
         fade(10, 0.5);
 
-        exitButton.setOnAction(event -> {
-            popupWindow.close();
-            fade(0.5, 10);
-        });
         anchorPane.setPrefHeight(550);
 
         layout.setLayoutX(500);
@@ -119,23 +107,31 @@ public class MainMenu implements Initializable {
         dropShadow.setRadius(1500.0);
         dropShadow.setHeight(1500);
         dropShadow.setWidth(1500);
-
         dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
         layout.setEffect(dropShadow);
 
         popupWindow.setScene(scene1);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        anchorPane.getChildren().addAll(exitButton, usernameField(), passwordField(), loginButton(), newUserLabel(), signUpLink(), error);
-        anchorPane.getChildren().addAll(exit(popupWindow), onlineShop, usernameField(), passwordField(),
-                loginButton(), newUserLabel(), signUpLink());
+        anchorPane.getChildren().addAll(exitButton(), usernameField(), passwordField(),onlineShop,  loginButton(),
+                newUserLabel(), signUpLink(), error);
         popupWindow.showAndWait();
-
-
 
     }
 
-    public Button loginButton() {
+    private Button exitButton() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExit");
+        exitButton.setLayoutY(30);
+        exitButton.setLayoutX(435);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
+    }
+
+    private Button loginButton() {
         Button button = new Button();
         button.setText("Sign In");
         button.setPrefSize(290, 55);
@@ -149,6 +145,52 @@ public class MainMenu implements Initializable {
             }
         });
         return button;
+    }
+
+    private TextField usernameField() {
+        usernameField.setPromptText("Username");
+        usernameField.setLayoutX(100);
+        usernameField.setLayoutY(230);
+        usernameField.setPrefHeight(50);
+        usernameField.setPrefWidth(290);
+        usernameField.getStyleClass().add("username");
+        return usernameField;
+    }
+
+    private PasswordField passwordField() {
+        passwordField.setPromptText("Password");
+        passwordField.setLayoutX(100);
+        passwordField.setLayoutY(295);
+        passwordField.setPrefHeight(50);
+        passwordField.setPrefWidth(290);
+        passwordField.getStyleClass().add("password-field");
+        return passwordField;
+    }
+
+    private Label newUserLabel() {
+        Label label = new Label("Are you a new user?");
+        label.setLayoutY(432);
+        label.setLayoutX(130);
+        label.getStyleClass().add("label");
+        return label;
+    }
+
+    private Hyperlink signUpLink() {
+        Hyperlink hyperlink = new Hyperlink("Sign Up");
+        hyperlink.setLayoutX(286);
+        hyperlink.setLayoutY(428);
+        hyperlink.getStyleClass().add("hyperLink");
+        hyperlink.setOnMouseClicked(e -> signUp());
+        return hyperlink;
+    }
+
+    public void fade(double fromValue, double toValue) {
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(600));
+        fade.setFromValue(fromValue);
+        fade.setToValue(toValue);
+        fade.setNode(mainPane);
+        fade.play();
     }
 
     private void processLogin() {
@@ -167,52 +209,6 @@ public class MainMenu implements Initializable {
         }
     }
 
-    public TextField usernameField() {
-        usernameField.setPromptText("Username");
-        usernameField.setLayoutX(100);
-        usernameField.setLayoutY(230);
-        usernameField.setPrefHeight(50);
-        usernameField.setPrefWidth(290);
-        usernameField.getStyleClass().add("username");
-        return usernameField;
-    }
-
-    public Label newUserLabel() {
-        Label label = new Label("Are you a new user?");
-        label.setLayoutY(432);
-        label.setLayoutX(130);
-        label.getStyleClass().add("label");
-        return label;
-    }
-
-    public Hyperlink signUpLink() {
-        Hyperlink hyperlink = new Hyperlink("Sign Up");
-        hyperlink.setLayoutX(286);
-        hyperlink.setLayoutY(428);
-        hyperlink.getStyleClass().add("hyperLink");
-        hyperlink.setOnMouseClicked(e -> signUp());
-        return hyperlink;
-    }
-
-
-    public PasswordField passwordField() {
-        passwordField.setPromptText("Password");
-        passwordField.setLayoutX(100);
-        passwordField.setLayoutY(295);
-        passwordField.setPrefHeight(50);
-        passwordField.setPrefWidth(290);
-        passwordField.getStyleClass().add("password-field");
-        return passwordField;
-    }
-
-    public void fade(double fromValue, double toValue) {
-        FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(600));
-        fade.setFromValue(fromValue);
-        fade.setToValue(toValue);
-        fade.setNode(mainPane);
-        fade.play();
-    }
 
 
     @Override
@@ -281,13 +277,10 @@ public class MainMenu implements Initializable {
     private static File selectedFile;
 
     public void signUp() {
-        anchorPaneForLogin.getChildren().clear();
+        anchorPane.getChildren().clear();
         imageViewForSignUp();
-        anchorPaneForLogin.getChildren().addAll(exit(stage) ,
-                textFieldForSignUp("First name" , 40 , 140),
-                textFieldForSignUp("Last name" , 40 , 190),
-                usernameFieldForSignUp());
-
+        anchorPane.getChildren().addAll(exitButton() , textFieldForSignUp("First name" , 40 , 140),
+                textFieldForSignUp("Last name" , 40 , 190), usernameFieldForSignUp());
     }
 
     public void imageViewForSignUp() {
@@ -309,7 +302,7 @@ public class MainMenu implements Initializable {
         button.setLayoutY(210);
         button.setPrefWidth(100);
         button.setStyle("-fx-background-color: white;" + " -fx-background-radius: 10;"+"-fx-fill: black;"+"-fx-font-family: sans-serif;");
-        anchorPaneForLogin.getChildren().addAll(button, rectangle);
+        anchorPane.getChildren().addAll(button, rectangle);
         button.setOnAction(e -> {
             selectedFile = fileChooser.showOpenDialog(stage);
             System.out.println(selectedFile);
@@ -322,7 +315,7 @@ public class MainMenu implements Initializable {
                     + "-fx-border-color: white;" + "-fx-border-image-width: 2px;" + "-fx-background-color: white;"
             + "-fx-fill: white;" + "-fx-fill-height: white");
             imageView.autosize();
-            anchorPaneForLogin.getChildren().addAll(imageView);
+            anchorPane.getChildren().addAll(imageView);
         });
 
 
