@@ -52,7 +52,7 @@
 
 }
 
-.text-fieldForSignUp{
+.text-fieldForSignUp {
     -fx-background-color: none;
     -fx-border-color: white;
     -fx-border-width: 2px;
@@ -63,37 +63,6 @@
     -fx-font-size: 14pt;
 }
 
-.usernameSignUp{
-    -fx-background-color: none;
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-    -fx-border-radius: 10;
-    -fx-prompt-text-fill: #64a7ff;
-    -fx-text-fill: white;
-    -fx-padding: 0 10 0 43;
-    -fx-background-image: url('../image/username.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-position: left center;
-    -fx-font-family: "sans-serif";
-    -fx-font-size: 14pt;
-}
-
-.password-fieldSignUp{
-    -fx-background-color: none;
-    -fx-border-color: white;
-    -fx-border-width: 3px;
-    -fx-border-radius: 10;
-    -fx-prompt-text-fill: #64a7ff;
-    -fx-padding: 0 8 0 34;
-    -fx-text-fill: white;
-    -fx-background-image: url('../image/padlock.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-position: left center;
-    -fx-font-family: "sans-serif";
-    -fx-font-size: 14pt;
-}
 
 .login {
     -fx-background-color: white;
@@ -105,7 +74,7 @@
 }
 
 .login:hover {
-    -fx-effect: dropshadow(three-pass-box , #292929, 5 , 0.1 , 0 , 0 );
+    -fx-effect: dropshadow(three-pass-box, #292929, 5, 0.1, 0, 0);
 }
 
 .label {
@@ -119,9 +88,134 @@
     -fx-font-weight: bold;
 }
 
-.labelForLoginTitle{
+.labelForLoginTitle {
     -fx-text-fill: #ffffff;
     -fx-font-size: 25pt;
     -fx-font-family: sans-serif;
     -fx-font-weight: bold;
 }
+
+.imageView {
+    -fx-background-radius: 10;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-border-color: white;
+    -fx-border-image-width: 2px;
+    -fx-background-color: white;
+    -fx-fill: white;
+    -fx-fill-height: white
+}
+
+.selectPhoto{
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-fill: black;
+    -fx-font-family: sans-serif;
+    -fx-font-weight: bold;
+}
+
+.selectPhoto:hover{
+    -fx-background-color: #e0e0e0;
+}
+
+.emailField{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-padding: 0 8 0 38;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/email.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.usernameSignUp {
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-padding: 0 10 0 38;
+    -fx-background-image: url('../image/username.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.password-fieldSignUp {
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-padding: 0 8 0 38;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/padlock.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.numberFieldForSignUp{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-padding: 0 8 0 38;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/Mobile-Phone-icon.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.typeField{
+    -fx-background-color: white;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 9pt;
+    -fx-text-fill: #1089ff;
+    -fx-font-weight: bold;
+}
+
+.typeField:focused{
+    -fx-background-color: #004788;
+    -fx-text-fill: #ffff;
+}
+
+.typeField:hover{
+    -fx-background-color: #e1e1e1;
+}
+
+.signUp{
+    -fx-background-color: white;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 16pt;
+    -fx-font-scale: contain;
+    -fx-text-fill: #1089ff;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: white;
+    -fx-font-weight: bold;
+}
+
+.signUp:hover{
+    -fx-background-color: none;
+    -fx-border-width: 3px;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+
