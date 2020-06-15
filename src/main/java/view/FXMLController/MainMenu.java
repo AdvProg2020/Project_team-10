@@ -326,9 +326,6 @@ public class MainMenu implements Initializable {
     public void signUp() {
         anchorPane.getChildren().clear();
         imageViewForSignUp();
-        anchorPane.getChildren().addAll(exitButton(), textFieldForSignUp("First name", 40, 140),
-                textFieldForSignUp("Last name", 40, 190), usernameFieldForSignUp());
-
 
         isBuyer = true;
         TextField textField = new TextField();
