@@ -52,6 +52,49 @@
 
 }
 
+.text-fieldForSignUp{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.usernameSignUp{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-padding: 0 10 0 43;
+    -fx-background-image: url('../image/username.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
+.password-fieldSignUp{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-padding: 0 8 0 34;
+    -fx-text-fill: white;
+    -fx-background-image: url('../image/padlock.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
+
 .login {
     -fx-background-color: white;
     -fx-text-fill: #1089ff;
@@ -71,7 +114,14 @@
 }
 
 .hyperlink {
-    -fx-text-fill: #ffec7a;
+    -fx-text-fill: #ffde00;
     -fx-font-size: 13pt;
+    -fx-font-weight: bold;
+}
+
+.labelForLoginTitle{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 25pt;
+    -fx-font-family: sans-serif;
     -fx-font-weight: bold;
 }
