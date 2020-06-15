@@ -40,7 +40,7 @@
 
 <!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
 
-    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#mouse" >
+    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#cartMenu" >
 
     </Button>
 

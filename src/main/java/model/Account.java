@@ -11,6 +11,7 @@ public abstract class Account {
     private String phoneNumber;
     private String password;
     private long credit;
+    private String imagePath;
 
     public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
         this.username = username;
