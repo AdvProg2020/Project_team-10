@@ -1,3 +1,30 @@
+.goodPage{
+    -fx-fill: #0084ff;
+}
+
+.availableLabel{
+    -fx-font-size: 25;
+    -fx-text-fill: rgb(171, 170, 179);
+}
+.productNameLabel{
+    -fx-font-size: 40;
+    -fx-text-fill: black;
+}
+.priceLabel{
+    -fx-font-size: 40;
+    -fx-text-fill: #0084ff;
+}
+
+.addToCartButton {
+    -fx-background-color: #0084ff;
+    -fx-text-fill: white;
+    -fx-font-size: 30;
+}
+
+.increaseButton{
+    -fx-background-color: white;
+
+}
 
 #pane{
     -fx-background-color: #f5f5f5;
@@ -74,25 +101,3 @@
     -fx-background-image: url("../image/carthover.png");
 }
 
-.hbox{
-    -fx-background-color: #ffff;
-}
-.hbox:hover{
-    -fx-background-color: blue;
-}
-
-.buttonSort{
-    -fx-background-color: none;
-    -fx-font-family: sans-serif;
-    -fx-font-size: 12pt;
-    -fx-background-radius: 10;
-}
-.buttonSort:hover{
-    -fx-background-color: #f1f1f1;
-    -fx-text-fill: #131313;
-    -fx-cursor: hand;
-}
-.buttonSort:focused{
-    -fx-background-color: #1089ff;
-    -fx-text-fill: #ffffff;
-}
