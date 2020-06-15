@@ -1,6 +1,7 @@
 package model;
 
 import controller.AccountManager;
+import controller.FileHandler;
 import controller.GoodsManager;
 
 import java.util.*;
@@ -12,34 +13,33 @@ public class Good implements Comparable<Good> {
     private String company;
     private int number;
     private long price;
-    private Seller seller;
+    private String sellerUsername;
     private String category;
     private Map<String, String> categoryAttribute;
     private String description;
     private List<Integer> allRates;
     private List<Comment> comments;
-    private List<Buyer> buyers;
+    private List<String> buyersUsername;
     private int visitNumber;
     private Map<Account, Integer> goodsInBuyerCart;
     private Date date;
-    private Off off;
+    private int offId;
 
 
-    public Good(int id, String name, String company, int number, long price, Seller seller, String category
+    public Good(int id, String name, String company, int number, long price, String sellerUsername, String category
             , HashMap categoryAttribute, String description) {
         this.id = id;
         this.name = name;
         this.company = company;
         this.number = number;
         this.price = price;
-        this.seller = seller;
+        this.sellerUsername = sellerUsername;
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
         this.goodsInBuyerCart = new HashMap<>();
         this.allRates = new ArrayList<>();
         this.comments = new ArrayList<>();
-        this.buyers = new ArrayList<>();
         this.date = new Date();
         AccountManager.increaseLastGoodId();
     }
@@ -78,8 +78,8 @@ public class Good implements Comparable<Good> {
         return visitNumber;
     }
 
-    public List<Buyer> getBuyers() {
-        return buyers;
+    public List<String> getBuyersUsername() {
+        return buyersUsername;
     }
 
     public void setName(String name) {
@@ -98,8 +98,8 @@ public class Good implements Comparable<Good> {
         this.price = price;
     }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
+    public void setSeller(String sellerUsername) {
+        this.sellerUsername = sellerUsername;
     }
 
     public void setCategory(String category) {
@@ -123,8 +123,8 @@ public class Good implements Comparable<Good> {
         return price;
     }
 
-    public Seller getSeller() {
-        return seller;
+    public String getSellerUsername() {
+        return sellerUsername;
     }
 
     public List<Integer> getAllRates() {
@@ -148,15 +148,15 @@ public class Good implements Comparable<Good> {
         return  "price: " + price + "\n" +
                 "category: " + category + "\n" +
                 "description: " + description + "\n" +
-                "seller: " + seller.getUsername() + "\n" +
+                "seller: " + sellerUsername + "\n" +
                 "average rate: " + this.calculateAverageRate() + "\n" +
                 "discount: " + this.getAmountOfDiscount() +
                 "\n--------------------------------------------------";
     }
 
     private long getAmountOfDiscount(){
-        if (this.off != null){
-            return off.getPercent() * (this.price /100);
+        if (this.offId != 0){
+            return Shop.getShop().getOffWithId(offId).getPercent() * (this.price /100);
         }
         return 0;
     }
@@ -204,11 +204,11 @@ public class Good implements Comparable<Good> {
         this.visitNumber += 1;
     }
 
-    public Off getOff() {
-        return off;
+    public int getOffId() {
+        return offId;
     }
 
-    public void setOff(Off off) {
-        this.off = off;
+    public void setOffId(int offId) {
+        this.offId = offId;
     }
 }

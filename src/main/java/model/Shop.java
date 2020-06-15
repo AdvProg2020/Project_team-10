@@ -9,11 +9,15 @@ import java.util.List;
 
 public class Shop {
     private List<Account> allAccounts = new ArrayList<>();
+    private List<Seller> allSellers = new ArrayList<>();
+    private List<Buyer> allBuyers = new ArrayList<>();
+    private List<Admin> allAdmins = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
     private List<Category> allCategories = new ArrayList<>();
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
+    private List<Comment> allComments = new ArrayList<>();
 
     private Shop() {
         ArrayList arrayList = new ArrayList();
@@ -55,6 +59,10 @@ public class Shop {
                 , 2 , 20000 , null , "car" , hashMap , "dhsvjshv"));
     }
 
+    public List<Comment> getAllComments() {
+        return allComments;
+    }
+
     public List<Discount> getAllDiscounts() {
         return allDiscounts;
     }
@@ -65,6 +73,18 @@ public class Shop {
 
     public List<Account> getAllAccounts() {
         return allAccounts;
+    }
+
+    public List<Seller> getAllSellers() {
+        return allSellers;
+    }
+
+    public List<Admin> getAllAdmins() {
+        return allAdmins;
+    }
+
+    public List<Buyer> getAllBuyers() {
+        return allBuyers;
     }
 
     public List<Off> getAllOffs() {

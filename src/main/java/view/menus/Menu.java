@@ -1,5 +1,7 @@
 package view.menus;
 
+import controller.FileHandler;
+
 import static view.CommandProcessor.*;
 
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public abstract class Menu {
         if (isLogged) {
             if (selectedMenu == subMenus.size() + 2) {
                 if (this.parentMenu == null) {
+                    FileHandler.write();
                     System.exit(1);
                 } else {
                     nextMenu = this.parentMenu;
@@ -92,6 +95,8 @@ public abstract class Menu {
         } else {
             if (selectedMenu == subMenus.size() + 3) {
                 if (this.parentMenu == null) {
+                    FileHandler.write();
+                    System.out.println("ok");
                     System.exit(1);
                 } else {
                     nextMenu = this.parentMenu;

@@ -2,14 +2,14 @@ package model;
 
 public class Comment {
     private Account account;
-    private Good good;
+    private int goodId;
     private String text;
     private String status;
     private boolean isBought;
 
-    public Comment(Account account, Good good, String text) {
+    public Comment(Account account, int goodId, String text) {
         this.account = account;
-        this.good = good;
+        this.goodId = goodId;
         this.text = text;
     }
 

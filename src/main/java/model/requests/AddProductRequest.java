@@ -35,7 +35,7 @@ public class AddProductRequest extends Request {
 
     @Override
     public void accept() {
-        Good good = new Good(goodId, name, company, number, price, ((Seller) account), category, categoryAttribute, description);
+        Good good = new Good(goodId, name, company, number, price, account.getUsername(), category, categoryAttribute, description);
         Shop.getShop().getAllGoods().add(good);
         ((Seller) account).getGoods().add(good);
     }

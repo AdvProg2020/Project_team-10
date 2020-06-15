@@ -39,8 +39,8 @@ public class BuyerManager {
         Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
         for (Good good : goods) {
             int numberOfGoodInCart = good.getGoodsInBuyerCart().get(currentBuyer);
-            if (good.getOff() != null) {
-                totalPrice += (good.getPrice() * ((100 - good.getOff().getPercent()) / 100.0)
+            if (good.getOffId() != 0) {
+                totalPrice += (good.getPrice() * ((100 - Shop.getShop().getOffWithId(good.getOffId()).getPercent()) / 100.0)
                         * numberOfGoodInCart);
             } else {
                 totalPrice += (good.getPrice() * numberOfGoodInCart);

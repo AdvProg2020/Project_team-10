@@ -1,0 +1,103 @@
+.goodPage{
+    -fx-fill: #0084ff;
+}
+
+.availableLabel{
+    -fx-font-size: 25;
+    -fx-text-fill: rgb(171, 170, 179);
+}
+.productNameLabel{
+    -fx-font-size: 40;
+    -fx-text-fill: black;
+}
+.priceLabel{
+    -fx-font-size: 40;
+    -fx-text-fill: #0084ff;
+}
+
+.addToCartButton {
+    -fx-background-color: #0084ff;
+    -fx-text-fill: white;
+    -fx-font-size: 30;
+}
+
+.increaseButton{
+    -fx-background-color: white;
+
+}
+
+#pane{
+    -fx-background-color: #f5f5f5;
+}
+
+.buttonLogin {
+    /*-fx-graphic: url("../image/exit.png");*/
+    -fx-background-color: none;
+}
+
+.buttonExit {
+    -fx-background-image: url("../image/exit.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonExit:hover {
+    -fx-background-image: url("../image/exithover.png");
+}
+
+.buttonMinimize {
+    -fx-background-image: url("../image/minimize.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonMinimize:hover{
+    -fx-background-image: url("../image/minimizehover.png");
+}
+
+.logo {
+    -fx-image: url("../image/logo.png");
+
+}
+
+.logo:hover {
+    -fx-image: url("../image/logohover.png");
+
+}
+
+.header {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 0)
+}
+
+.buttonAccount {
+    -fx-background-image: url("../image/accountLogin.png");
+    -fx-background-color: none;
+    -fx-background-size: 89px 40px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 89px;
+    -fx-background-repeat: no-repeat;
+}
+
+.buttonAccount:hover{
+    -fx-background-image: url("../image/accounthover.png");
+}
+
+.buttonCart{
+    -fx-background-image: url("../image/cart.png");
+    -fx-background-color: none;
+    -fx-background-size: 48px 40px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 48px;
+    -fx-background-repeat: no-repeat;
+
+}
+.buttonCart:hover{
+    -fx-background-image: url("../image/carthover.png");
+}
+

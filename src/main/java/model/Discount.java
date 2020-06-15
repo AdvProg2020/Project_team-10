@@ -13,16 +13,16 @@ public class Discount {
     private int percent;
     private long maxAmountOfDiscount;
     private int repeatDiscount;
-    private List<Account> users;
+    private List<String> userNames;
 
-    public Discount(int code, Date startDate, Date endDate, int percent, long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
+    public Discount(int code, Date startDate, Date endDate, int percent, long maxAmountOfDiscount, int repeatDiscount, List<String> userNames) {
         this.code = code;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percent = percent;
         this.maxAmountOfDiscount = maxAmountOfDiscount;
         this.repeatDiscount = repeatDiscount;
-        this.users = users;
+        this.userNames = userNames;
         AccountManager.increaseLastDiscountId();
     }
 
@@ -58,8 +58,8 @@ public class Discount {
         this.repeatDiscount = repeatDiscount;
     }
 
-    public void setUsers(List<Account> users) {
-        this.users = users;
+    public void setUserNames(List<String> userNames) {
+        this.userNames = userNames;
     }
 
     @Override
@@ -86,8 +86,8 @@ public class Discount {
         return code;
     }
 
-    public List<Account> getUsers() {
-        return users;
+    public List<String> getUserNames() {
+        return userNames;
     }
 
     public Date getStartDate() {

@@ -1,24 +1,31 @@
+import controller.AccountManager;
+import controller.FileHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Seller;
+import model.Shop;
+import view.menus.MainMenu;
+import view.menus.Menu;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
-
-
-    public static void main(String[] args) throws IOException {
-        launch(args);
-//        Scanner scanner = new Scanner(System.in);
-//        MainMenu mainMenu = new MainMenu();
-//        Menu.setScanner(scanner);
-//        mainMenu.show();
-//        mainMenu.execute();
+    public static void main(String[] args){
+//        launch(args);
+        FileHandler.updateDatabase();
+        Scanner scanner = new Scanner(System.in);
+        MainMenu mainMenu = new MainMenu();
+        Menu.setScanner(scanner);
+        mainMenu.show();
+        mainMenu.execute();
     }
 
     @Override
