@@ -1,9 +1,15 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import model.*;
 import model.requests.RegisterOfSellerRequest;
 import view.menus.Menu;
 import view.menus.UserMenu;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class AccountManager {
     private static Account onlineAccount;
@@ -16,6 +22,35 @@ public class AccountManager {
     private static int lastOffId;
 
     // getters & setters
+
+
+    public static void setLastRequestId(int lastRequestId) {
+        AccountManager.lastRequestId = lastRequestId;
+    }
+
+    public static void setLastGoodId(int lastGoodId) {
+        AccountManager.lastGoodId = lastGoodId;
+    }
+
+    public static void setLastCommentId(int lastCommentId) {
+        AccountManager.lastCommentId = lastCommentId;
+    }
+
+    public static void setLastBuyerLogId(int lastBuyerLogId) {
+        AccountManager.lastBuyerLogId = lastBuyerLogId;
+    }
+
+    public static void setLastSellerLogId(int lastSellerLogId) {
+        AccountManager.lastSellerLogId = lastSellerLogId;
+    }
+
+    public static void setLastDiscountCode(int lastDiscountCode) {
+        AccountManager.lastDiscountCode = lastDiscountCode;
+    }
+
+    public static void setLastOffId(int lastOffId) {
+        AccountManager.lastOffId = lastOffId;
+    }
 
     public static int getLastRequestId() {
         return lastRequestId;
@@ -90,16 +125,21 @@ public class AccountManager {
     public static void register(String username, String password, String type, String firstName,
                                 String lastName, String email, String phoneNumber, String company) {
         if (type.equals("buyer")) {
-            Shop.getShop().getAllAccounts().add(new Buyer(username, firstName, lastName, email, phoneNumber, password));
+            Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password);
+            Shop.getShop().getAllAccounts().add(buyer);
+            Shop.getShop().getAllBuyers().add(buyer);
         } else if (type.equals("seller")) {
             //TODO
-            Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password, company));
+            Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company);
+            Shop.getShop().getAllAccounts().add(seller);
+            Shop.getShop().getAllSellers().add(seller);
             Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
                     firstName, lastName, email, phoneNumber, company));
         } else {
-            Shop.getShop().getAllAccounts().add(new Admin(username, firstName, lastName, email, phoneNumber, password));
+            Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password);
+            Shop.getShop().getAllAccounts().add(admin);
+            Shop.getShop().getAllAdmins().add(admin);
         }
-
     }
 
     public static boolean login(String username, String password) {

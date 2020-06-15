@@ -169,7 +169,7 @@ public class CommandProcessor {
     public static boolean showBuyersOfThisProduct(int id) {
         Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
         if (good != null) {
-            System.out.println(good.getBuyers());
+            System.out.println(good.getBuyersUsername());
             return true;
         }
         return false;
@@ -212,7 +212,9 @@ public class CommandProcessor {
                     Menu.scanner.nextLine();
                     if (checkTypeInvalidation(type)) {
                         info.add(typeName);
+                        flag += 1;
                     }
+                } else {
                     flag += 1;
                 }
             } else if (flag == 4) {
@@ -358,7 +360,7 @@ public class CommandProcessor {
             if (good == null) {
                 System.out.println("product with id " + id + " doesnt exist");
             } else {
-                ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
+                SellerManager.removeProduct(good);
                 System.out.println("product with id " + id + " removed successfully");
                 break;
             }
@@ -375,7 +377,7 @@ public class CommandProcessor {
         long amount = 0;
         int repeat = 0;
         String people;
-        List<Account> allPeople = new ArrayList<>();
+        List<String> allPeople = new ArrayList<>();
         int flag = 1;
         while (true) {
             if (flag == 1) {
@@ -415,7 +417,7 @@ public class CommandProcessor {
                 Shop shop = Shop.getShop();
                 while (!(people = Menu.scanner.nextLine()).equalsIgnoreCase("end")) {
                     if (shop.getAccountByUsername(people) != null) {
-                        allPeople.add(shop.getAccountByUsername(people));
+                        allPeople.add(people);
                         System.out.println("username added");
                     } else {
                         System.out.println("username not exists");
@@ -521,7 +523,7 @@ public class CommandProcessor {
             if (good == null) {
                 System.out.println("product with this id doesnt exist");
             } else {
-                System.out.println(good.getBuyers());
+                System.out.println(good.getBuyersUsername());
                 break;
             }
         }
@@ -571,8 +573,8 @@ public class CommandProcessor {
         Discount discount = Shop.getShop().getDiscountWithCode(code);
         if (discount != null) {
             System.out.print(discount);
-            for (Account user : discount.getUsers()) {
-                System.out.print("|‌" + user.getUsername() + "|‌");
+            for (String username : discount.getUserNames()) {
+                System.out.print("|‌" + username + "|‌");
             }
             System.out.println();
         } else {
@@ -583,8 +585,8 @@ public class CommandProcessor {
     public static void showAllDiscountCodesForAdmin() {
         for (Discount allDiscount : Shop.getShop().getAllDiscounts()) {
             System.out.print(allDiscount);
-            for (Account user : allDiscount.getUsers()) {
-                System.out.print("|‌" + user.getUsername() + "|‌");
+            for (String username : allDiscount.getUserNames()) {
+                System.out.print("|‌" + username + "|‌");
             }
             System.out.println("------------------------------------");
         }
@@ -842,7 +844,7 @@ public class CommandProcessor {
         String title = Menu.scanner.nextLine();
         System.out.println("content : ");
         String content = Menu.scanner.nextLine();
-        GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood(),
+        GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood().getId(),
                 "title : " + title + "\n" + "content : " + content));
 
     }
@@ -854,22 +856,22 @@ public class CommandProcessor {
         if (category == null) {
             System.out.println("category does not exist");
         } else {
-            Shop.getShop().getAllCategories().remove(category);
+
             System.out.println("category removed");
         }
     }
 
-    public static void processRemoveProduct() {
-        System.out.print("enter product id: ");
-        int id = Integer.parseInt(Menu.scanner.nextLine());
-        Good good = Shop.getShop().getProductWithId(id);
-        if (good == null) {
-            System.out.println("product not exist");
-        } else {
-            Shop.getShop().getAllGoods().remove(good);
-            System.out.println("product removed");
-        }
-    }
+//    public static void processRemoveProduct() {
+//        System.out.print("enter product id: ");
+//        int id = Integer.parseInt(Menu.scanner.nextLine());
+//        Good good = Shop.getShop().getProductWithId(id);
+//        if (good == null) {
+//            System.out.println("product not exist");
+//        } else {
+//            SellerManager.removeProduct(good);
+//            System.out.println("product removed");
+//        }
+//    }
 
     public static void showProductsInGoodsMenu() {
         Collections.sort(GoodsManager.getFilteredGoods());
@@ -1093,7 +1095,7 @@ public class CommandProcessor {
     public static void showProductsInOffsMenu() {
         for (Good good : GoodsManager.getFilteredGoodsInOffs()) {
             System.out.println("id: " + good.getId() + "\n" + "name: " + good.getName() + "\n" + "price: "
-                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - good.getOff().getPercent()) / 100.0)
+                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - Shop.getShop().getOffWithId(good.getOffId()).getPercent()) / 100.0)
                     + "-----------------------------------------");
         }
     }

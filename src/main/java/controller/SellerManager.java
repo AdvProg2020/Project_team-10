@@ -13,9 +13,10 @@ public class SellerManager {
     public static void addProduct(String name, String company, int number, long price, String category,
                                   HashMap<String, String> categoryAttribute, String description) {
         //TODO
-        Good good = new Good(AccountManager.getLastGoodId(), name, company, number, price, ((Seller) AccountManager.getOnlineAccount()), category, categoryAttribute, description);
+        Good good = new Good(AccountManager.getLastGoodId() + 1, name, company, number, price, AccountManager.getOnlineAccount().getUsername(), category, categoryAttribute, description);
         ((Seller) AccountManager.getOnlineAccount()).getGoods().add(good);
         Shop.getShop().getAllGoods().add(good);
+        Shop.getShop().getCategoryByName(category).getGoods().add(good);
         Shop.getShop().getAllRequests().add(new AddProductRequest(AccountManager.getOnlineAccount(), AccountManager.getLastRequestId() + 1,
                 AccountManager.getLastGoodId() + 1, name, company, number, price, category, categoryAttribute, description));
     }
@@ -35,18 +36,15 @@ public class SellerManager {
                 AccountManager.getLastRequestId() + 1, id, name, company, number, price, category, categoryAttribute, description));
     }
 
-    public static boolean removeProduct(int id) {
-        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-        if (good != null) {
-            ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
-            return true;
-        }
-        return false;
+    public static void removeProduct(Good good) {
+        ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
+        Shop.getShop().getAllGoods().remove(good);
+        Shop.getShop().getCategoryByName(good.getCategory()).getGoods().remove(good);
     }
 
     public static void editOff(int id, List<Good> goods, Date startDate, Date endDate, int percent) {
-            Shop.getShop().getAllRequests().add(new EditOffRequest(AccountManager.getOnlineAccount(),
-                    AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, percent));
+        Shop.getShop().getAllRequests().add(new EditOffRequest(AccountManager.getOnlineAccount(),
+                AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, percent));
     }
 
     public static void addOff(List<Good> goods, Date startDate, Date endDate, int percent) {
@@ -55,11 +53,11 @@ public class SellerManager {
         Shop.getShop().getAllOffs().add(off);
         ((Seller) AccountManager.getOnlineAccount()).getOffs().add(off);
         for (Good good : goods) {
-            good.setOff(off);
+            good.setOffId(off.getId());
         }
         //todo
         Shop.getShop().getAllRequests().add(new AddOffRequest(AccountManager.getOnlineAccount(),
-                    AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent));
+                AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent));
     }
 
 

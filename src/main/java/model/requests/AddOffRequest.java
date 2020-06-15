@@ -32,7 +32,7 @@ public class AddOffRequest extends Request {
         Shop.getShop().getAllOffs().add(off);
         ((Seller) account).getOffs().add(off);
         for (Good good : goods) {
-            good.setOff(off);
+            good.setOffId(offId);
         }
     }
 }

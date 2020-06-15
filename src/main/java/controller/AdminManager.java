@@ -3,7 +3,9 @@ package controller;
 import model.*;
 import model.requests.Request;
 import view.CommandProcessor;
+import view.menus.Menu;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,38 +15,37 @@ public class AdminManager {
 
 
     public static boolean deleteAccount(String username) {
-        for (Account allAccount : Shop.getShop().getAllAccounts()) {
-            if (allAccount.equals(Shop.getShop().getAccountByUsername(username))) {
-                Shop.getShop().getAllAccounts().remove(allAccount);
+        for (Account account : Shop.getShop().getAllAccounts()) {
+            if (account.getUsername().equals(username)) {
+                Shop.getShop().getAllAdmins().remove(account);
+                Shop.getShop().getAllBuyers().remove(account);
+                Shop.getShop().getAllSellers().remove(account);
+                Shop.getShop().getAllAccounts().remove(account);
                 return true;
             }
         }
         return false;
     }
 
-//    public static boolean addAdmin(String username) {
-//        return false;
-//    }
-
     public static void createDiscount(Date startDate, Date endDate, int percent,
-                                      long maxAmountOfDiscount, int repeatDiscount, List<Account> users) {
+                                      long maxAmountOfDiscount, int repeatDiscount, List<String> userNames) {
         Discount discount = new Discount(AccountManager.getLastDiscountCode(), startDate, endDate, percent,
-                maxAmountOfDiscount, repeatDiscount, users);
+                maxAmountOfDiscount, repeatDiscount, userNames);
         Shop.getShop().getAllDiscounts().add(discount);
-        for (Account user : users) {
-            ((Buyer) user).getDiscounts().add(discount);
-            ((Buyer) user).getDiscountAndNumberOfAvailableDiscount().put(discount , discount.getRepeatDiscount());
+        for (String username : userNames) {
+            ((Buyer) Shop.getShop().getAccountByUsername(username)).getDiscounts().add(discount);
+            ((Buyer) Shop.getShop().getAccountByUsername(username)).getDiscountAndNumberOfAvailableDiscount().put(discount, discount.getRepeatDiscount());
         }
     }
 
     public static void editDiscount(Date startDate, Date endDate, int percent,
-                                    long maxAmountOfDiscount, int repeatDiscount, List<Account> users, Discount discount) {
+                                    long maxAmountOfDiscount, int repeatDiscount, List<String> userNames, Discount discount) {
         discount.setStartDate(startDate);
         discount.setEndDate(endDate);
         discount.setPercent(percent);
         discount.setMaxAmountOfDiscount(maxAmountOfDiscount);
         discount.setRepeatDiscount(repeatDiscount);
-        discount.setUsers(users);
+        discount.setUserNames(userNames);
     }
 
     public static void acceptRequest(Request request) {
@@ -56,14 +57,33 @@ public class AdminManager {
         Shop.getShop().getAllRequests().remove(request);
     }
 
-    public static void editCategory(String oldName, String newName, List<String> newAttribute) {
+    public static void editCategory(String oldName, String newName, List<String> newAttributes) {
         Category category = Shop.getShop().getCategoryByName(oldName);
+        ArrayList<String> differencesOfTwoLists = new ArrayList<>(newAttributes);
+        differencesOfTwoLists.removeAll(category.getAttributes());
+        ArrayList<String> shouldBeRemoved = new ArrayList<>(category.getAttributes());
+        shouldBeRemoved.removeAll(newAttributes);
         category.setName(newName);
-        category.setAttributes(newAttribute);
+        category.setAttributes(newAttributes);
+        for (Good good : category.getGoods()) {
+            good.setCategory(newName);
+            for (String differencesOfTwoList : differencesOfTwoLists) {
+                good.getCategoryAttribute().put(differencesOfTwoList, "");
+            }
+            for (String attribute : shouldBeRemoved) {
+                good.getCategoryAttribute().remove(attribute);
+            }
+        }
     }
 
     public static void addCategory(String name, List<String> attributes) {
         Shop.getShop().getAllCategories().add(new Category(name, attributes));
+    }
+
+    public static void removeCategory(String name) {
+        Category category = Shop.getShop().getCategoryByName(name);
+        Shop.getShop().getAllCategories().remove(category);
+        Shop.getShop().getAllGoods().removeAll(category.getGoods());
     }
 
 

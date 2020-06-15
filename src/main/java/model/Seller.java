@@ -9,7 +9,6 @@ public class Seller extends Account {
     private List<Off> offs;
     private List<SellerLog> sellerLogs;
 
-
     public Seller(String username, String firstName, String lastName, String email, String phoneNumber, String password, String company) {
         super(username, firstName, lastName, email, phoneNumber, password);
         this.company = company;

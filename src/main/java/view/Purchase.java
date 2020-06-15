@@ -133,8 +133,8 @@ public class Purchase {
         Set<Seller> sellers = new HashSet<>();
         for (Good good : currentBuyer.getCart()) {
             good.subtractNumber();
-            good.getBuyers().add(currentBuyer);
-            sellers.add(good.getSeller());
+            good.getBuyersUsername().add(currentBuyer.getUsername());
+            sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
         for (Discount discount : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
             if (discount == currentDiscount) {
@@ -156,7 +156,7 @@ public class Purchase {
         for (Seller seller : sellers) {
             ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
             for (Good good : currentBuyer.getCart()) {
-                if (good.getSeller().equals(seller)) {
+                if (good.getSellerUsername().equals(seller.getUsername())) {
                     goodsOfOneSeller.add(good);
                 }
             }

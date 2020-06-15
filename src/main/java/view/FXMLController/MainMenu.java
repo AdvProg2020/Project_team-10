@@ -141,8 +141,8 @@ public class MainMenu implements Initializable {
             HBox hBox = new HBox();
             hBox.setPrefWidth(200);
             hBox.setPrefHeight(250);
-            Image image = new Image(getClass().getResourceAsStream("../image/logo.png"));
-            ImageView imageView = new ImageView(image);
+//            Image image = new Image(getClass().getResourceAsStream("../image/logo.png"));
+//            ImageView imageView = new ImageView(image);
 
             Label label = new Label("salam");
             hBox.setOnMouseEntered(new EventHandler<MouseEvent>() {
