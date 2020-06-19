@@ -26,14 +26,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Good;
-import model.Shop;
+import view.CommandProcessor;
 import view.NumberField;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
@@ -49,13 +48,14 @@ public class MainMenu implements Initializable {
     public Rectangle header;
     public AnchorPane anchorPane;
     public TextField usernameField;
-    public PasswordField passwordField;
+    public PasswordField passwordFieldForSignIn;
     public Label error;
     public AnchorPane layout;
     public Stage popupWindow;
     private static File selectedFile;
     public Button selectedButton = new Button("The most visited");
     private boolean isBuyer;
+
 
     public void exit(MouseEvent mouseEvent) {
 //        FileHandler.write();
@@ -76,11 +76,10 @@ public class MainMenu implements Initializable {
         fadeTransition.play();
     }
 
-
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
         anchorPane = new AnchorPane();
         usernameField = new TextField();
-        passwordField = new PasswordField();
+        passwordFieldForSignIn = new PasswordField();
         error = new Label();
         popupWindow = new Stage();
         popupWindow.initModality(Modality.APPLICATION_MODAL);
@@ -164,13 +163,13 @@ public class MainMenu implements Initializable {
     }
 
     private PasswordField passwordField() {
-        passwordField.setPromptText("Password");
-        passwordField.setLayoutX(100);
-        passwordField.setLayoutY(295);
-        passwordField.setPrefHeight(50);
-        passwordField.setPrefWidth(290);
-        passwordField.getStyleClass().add("password-field");
-        return passwordField;
+        passwordFieldForSignIn.setPromptText("Password");
+        passwordFieldForSignIn.setLayoutX(100);
+        passwordFieldForSignIn.setLayoutY(295);
+        passwordFieldForSignIn.setPrefHeight(50);
+        passwordFieldForSignIn.setPrefWidth(290);
+        passwordFieldForSignIn.getStyleClass().add("password-field");
+        return passwordFieldForSignIn;
     }
 
     private Label newUserLabel() {
@@ -201,19 +200,62 @@ public class MainMenu implements Initializable {
 
     private void processLogin() {
         String username = usernameField.getText();
-        String password = passwordField.getText();
+        String password = passwordFieldForSignIn.getText();
         System.out.println(username);
         System.out.println(password);
         if (AccountManager.login(username, password)) {
-            System.out.println("ok");
             popupWindow.close();
             fade(0.5, 10);
         } else {
             error.setText("username/password is incorrect");
-            error.setLayoutX(150);
-            error.setLayoutY(500);
+            error.setLayoutX(120);
+            error.setLayoutY(470);
+            error.setTextFill(Color.RED);
         }
     }
+
+     public void processRegister() {
+         String firstName1 = firstName.getText();
+         String lastName1 = lastName.getText();
+         String username = usernameFieldForSignUp.getText();
+         String password = passwordFieldForSignUp.getText();
+         String email1 = email.getText();
+         String phoneNumber1 = phoneNumber.getText();
+         String type;
+         String company1 = company.getText();
+         String imagePath = selectedFile.getAbsolutePath();
+         if (isBuyer) {
+             type = "buyer";
+         } else {
+             type = "seller";
+         }
+         System.out.println(imagePath);
+         if (CommandProcessor.checkPasswordInvalidation(password)) {
+             if (CommandProcessor.checkEmailInvalidation(email1)) {
+                 if (AccountManager.canRegister(username)) {
+                     AccountManager.register(username, password, type, firstName1, lastName1, email1, phoneNumber1, company1);
+                     popupWindow.close();
+                     fade(0.5, 10);
+                 } else {
+                     error.setText("customer exist with this username");
+                     error.setLayoutX(100);
+                     error.setLayoutY(500);
+                     error.setTextFill(Color.DARKRED);
+                 }
+             } else {
+                 error.setText("invalid email");
+                 error.setLayoutX(100);
+                 error.setLayoutY(500);
+                 error.setTextFill(Color.DARKRED);
+             }
+         } else {
+             error.setText("invalid password");
+             error.setLayoutX(100);
+             error.setLayoutY(500);
+             error.setTextFill(Color.DARKRED);
+         }
+     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -312,20 +354,22 @@ public class MainMenu implements Initializable {
         initialize(location, resources);
     }
 
+    private TextField company;
+
     public void signUp() {
         anchorPane.getChildren().clear();
         imageViewForSignUp();
 
         isBuyer = true;
-        TextField textField = new TextField();
-        textField.setPromptText("Company");
-        textField.setLayoutX(110);
-        textField.setLayoutY(445);
-        textField.setPrefWidth(200);
-        textField.setPrefHeight(50);
-        textField.setVisible(false);
-        textField.getStyleClass().add("text-fieldForSignUp");
-        anchorPane.getChildren().add(textField);
+        company = new TextField();
+        company.setPromptText("Company");
+        company.setLayoutX(110);
+        company.setLayoutY(445);
+        company.setPrefWidth(200);
+        company.setPrefHeight(50);
+        company.setVisible(false);
+        company.getStyleClass().add("text-fieldForSignUp");
+        anchorPane.getChildren().add(company);
 
         Button sellerType = typeOfSignUp("Seller", 445);
         sellerType.getStyleClass().add("typeField");
@@ -333,7 +377,7 @@ public class MainMenu implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 isBuyer = false;
-                textField.setVisible(true);
+                company.setVisible(true);
             }
         });
 
@@ -344,7 +388,7 @@ public class MainMenu implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 isBuyer = true;
-                textField.setVisible(false);
+                company.setVisible(false);
             }
         });
 
@@ -355,12 +399,28 @@ public class MainMenu implements Initializable {
         signUp.setPrefWidth(120);
         signUp.getStyleClass().add("signUp");
         signUp.setOnMouseClicked(e -> System.out.println(isBuyer));
+        firstName = textFieldForSignUp("First name", 40, 140);
+        lastName = textFieldForSignUp("Last name", 40, 190);
 
-        anchorPane.getChildren().addAll(exitButton(), textFieldForSignUp("First name", 40, 140),
-                textFieldForSignUp("Last name", 40, 190), usernameFieldForSignUp(),
-                passwordFieldForSignUp(), emailFieldForSignUp(), phoneNumberFiledForSignUp(),
-                sellerType, buyerType, signUp);
+        anchorPane.getChildren().addAll(exitButton(), firstName,
+                lastName, usernameForSignUp(),
+                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(),
+                sellerType, buyerType, signUp, error);
+
+        signUp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                processRegister();
+            }
+        });
     }
+
+    private TextField firstName;
+    private TextField lastName;
+    private TextField usernameFieldForSignUp;
+    private PasswordField passwordFieldForSignUp;
+    private TextField email;
+    private NumberField phoneNumber;
 
     public Button typeOfSignUp(String text, int y) {
         Button type = new Button(text);
@@ -425,31 +485,31 @@ public class MainMenu implements Initializable {
         return textField;
     }
 
-    public TextField usernameFieldForSignUp() {
-        TextField username = new TextField();
-        username.setPromptText("Username");
-        username.setLayoutX(40);
-        username.setLayoutY(240);
-        username.setPrefHeight(40);
-        username.setPrefWidth(400);
-        username.getStyleClass().add("usernameSignUp");
-        return username;
+    public TextField usernameForSignUp() {
+        usernameFieldForSignUp = new TextField();
+        usernameFieldForSignUp.setPromptText("Username");
+        usernameFieldForSignUp.setLayoutX(40);
+        usernameFieldForSignUp.setLayoutY(240);
+        usernameFieldForSignUp.setPrefHeight(40);
+        usernameFieldForSignUp.setPrefWidth(400);
+        usernameFieldForSignUp.getStyleClass().add("usernameSignUp");
+        return usernameFieldForSignUp;
     }
 
 
-    public PasswordField passwordFieldForSignUp() {
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Password");
-        passwordField.setLayoutX(40);
-        passwordField.setLayoutY(290);
-        passwordField.setPrefHeight(40);
-        passwordField.setPrefWidth(400);
-        passwordField.getStyleClass().add("password-fieldSignUp");
-        return passwordField;
+    public PasswordField passwordFieldSignUp() {
+        passwordFieldForSignUp = new PasswordField();
+        passwordFieldForSignUp.setPromptText("Password");
+        passwordFieldForSignUp.setLayoutX(40);
+        passwordFieldForSignUp.setLayoutY(290);
+        passwordFieldForSignUp.setPrefHeight(40);
+        passwordFieldForSignUp.setPrefWidth(400);
+        passwordFieldForSignUp.getStyleClass().add("password-fieldSignUp");
+        return passwordFieldForSignUp;
     }
 
-    public TextField emailFieldForSignUp() {
-        TextField email = new TextField();
+    public TextField emailFieldSignUp() {
+        email = new TextField();
         email.setPromptText("Email");
         email.setLayoutX(40);
         email.setLayoutY(340);
@@ -459,8 +519,8 @@ public class MainMenu implements Initializable {
         return email;
     }
 
-    public NumberField phoneNumberFiledForSignUp() {
-        NumberField phoneNumber = new NumberField();
+    public NumberField phoneNumberFiledSignUp() {
+        phoneNumber = new NumberField();
         phoneNumber.setPromptText("Phone number");
         phoneNumber.setLayoutX(40);
         phoneNumber.setLayoutY(390);
