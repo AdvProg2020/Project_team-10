@@ -12,9 +12,10 @@ public class RegisterOfSellerRequest extends Request {
     private String email;
     private String phoneNumber;
     private String company;
+    private String imagePath;
 
     public RegisterOfSellerRequest(int id, String username, String password, String firstName,
-                                   String lastName, String email, String phoneNumber, String company) {
+                                   String lastName, String email, String phoneNumber, String company, String imagePath) {
         super(null, id);
         this.username = username;
         this.password = password;
@@ -23,6 +24,7 @@ public class RegisterOfSellerRequest extends Request {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.company = company;
+        this.imagePath = imagePath;
         this.requestName = "registration of a seller request";
         this.acceptMessage = "user " + username + " was registered as a seller";
         this.declineMessage = "request of registration of user " + username + " as a seller was declined";
@@ -30,7 +32,8 @@ public class RegisterOfSellerRequest extends Request {
 
     @Override
     public void accept() {
-        Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password, company));
+        Shop.getShop().getAllAccounts().add(new Seller(username, firstName, lastName, email, phoneNumber, password
+                , company, imagePath));
     }
 
     @Override

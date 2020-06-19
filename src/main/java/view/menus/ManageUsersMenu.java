@@ -44,7 +44,7 @@ public class ManageUsersMenu extends Menu {
         return new LastMenu("create manager", this) {
             @Override
             public void show() {
-                processRegister(false);
+//                processRegister(false);
                 super.show();
             }
 

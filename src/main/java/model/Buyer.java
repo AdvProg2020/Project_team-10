@@ -13,15 +13,15 @@ public class Buyer extends Account {
     private List<BuyerLog> buyerLogs;
 
 
-    public Buyer(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
-        super(username, firstName, lastName, email, phoneNumber, password);
+    public Buyer(String username, String firstName, String lastName, String email, String phoneNumber
+            , String password, String imagePath) {
+        super(username, firstName, lastName, email, phoneNumber, password, imagePath);
         goods = new ArrayList<>();
         cart = new ArrayList<>();
         discounts = new ArrayList<>();
         this.discountAndNumberOfAvailableDiscount = new HashMap<>();
         this.buyerLogs = new ArrayList<>();
     }
-
 
 
     public HashMap<Discount, Integer> getDiscountAndNumberOfAvailableDiscount() {
@@ -53,9 +53,9 @@ public class Buyer extends Account {
         return buyerLogs;
     }
 
-    public Discount getDiscountByCode(int code){
+    public Discount getDiscountByCode(int code) {
         for (Discount discount : this.discounts) {
-            if (discount.getCode() == code){
+            if (discount.getCode() == code) {
                 return discount;
             }
         }

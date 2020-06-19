@@ -5,7 +5,6 @@ import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -39,8 +38,6 @@ import java.util.ResourceBundle;
 import static view.FXML.FXML.*;
 
 public class MainMenu implements Initializable {
-    public static double x;
-    public static int y;
     public Button btnLogin;
     public AnchorPane mainPane;
     public FlowPane flowPane;
@@ -54,7 +51,15 @@ public class MainMenu implements Initializable {
     public Stage popupWindow;
     private static File selectedFile;
     public Button selectedButton = new Button("The most visited");
-    private boolean isBuyer;
+    private boolean isSeller;
+    private TextField firstNameText;
+    private TextField lastNameText;
+    private TextField usernameFieldForSignUp;
+    private PasswordField passwordFieldForSignUp;
+    private TextField emailText;
+    private NumberField phoneNumberText;
+    private TextField companyText;
+    private Button signUp;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -100,10 +105,7 @@ public class MainMenu implements Initializable {
         anchorPane.setPrefWidth(480);
         anchorPane.setPrefHeight(580);
 
-
-        //fade
         fade(10, 0.5);
-
 
         layout.setLayoutX(500);
         layout.setLayoutY(150);
@@ -143,12 +145,7 @@ public class MainMenu implements Initializable {
         button.setLayoutX(100);
         button.setLayoutY(370);
         button.getStyleClass().add("login");
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                processLogin();
-            }
-        });
+        button.setOnMouseClicked(event -> processLogin());
         return button;
     }
 
@@ -201,8 +198,6 @@ public class MainMenu implements Initializable {
     private void processLogin() {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
-        System.out.println(username);
-        System.out.println(password);
         if (AccountManager.login(username, password)) {
             popupWindow.close();
             fade(0.5, 10);
@@ -214,48 +209,55 @@ public class MainMenu implements Initializable {
         }
     }
 
-     public void processRegister() {
-         String firstName1 = firstName.getText();
-         String lastName1 = lastName.getText();
-         String username = usernameFieldForSignUp.getText();
-         String password = passwordFieldForSignUp.getText();
-         String email1 = email.getText();
-         String phoneNumber1 = phoneNumber.getText();
-         String type;
-         String company1 = company.getText();
-         String imagePath = selectedFile.getAbsolutePath();
-         if (isBuyer) {
-             type = "buyer";
-         } else {
-             type = "seller";
-         }
-         System.out.println(imagePath);
-         if (CommandProcessor.checkPasswordInvalidation(password)) {
-             if (CommandProcessor.checkEmailInvalidation(email1)) {
-                 if (AccountManager.canRegister(username)) {
-                     AccountManager.register(username, password, type, firstName1, lastName1, email1, phoneNumber1, company1);
-                     popupWindow.close();
-                     fade(0.5, 10);
-                 } else {
-                     error.setText("customer exist with this username");
-                     error.setLayoutX(100);
-                     error.setLayoutY(500);
-                     error.setTextFill(Color.DARKRED);
-                 }
-             } else {
-                 error.setText("invalid email");
-                 error.setLayoutX(100);
-                 error.setLayoutY(500);
-                 error.setTextFill(Color.DARKRED);
-             }
-         } else {
-             error.setText("invalid password");
-             error.setLayoutX(100);
-             error.setLayoutY(500);
-             error.setTextFill(Color.DARKRED);
-         }
-     }
+    public void processRegister() {
+        System.out.println(isSeller);
+        String firstName = firstNameText.getText();
+        String lastName = lastNameText.getText();
+        String username = usernameFieldForSignUp.getText();
+        String password = passwordFieldForSignUp.getText();
+        String email = emailText.getText();
+        String phoneNumber = phoneNumberText.getText();
+        String type;
+        String company = companyText.getText();
+        if (isSeller) {
+            type = "seller";
+        } else {
+            type = "buyer";
+        }
+        if (selectedFile != null) {
+            String imagePath = selectedFile.getAbsolutePath();
+            if (username.length() > 0) {
+                if (CommandProcessor.checkPasswordInvalidation(password)) {
+                    if (CommandProcessor.checkEmailInvalidation(email)) {
+                        if (AccountManager.canRegister(username)) {
+                            AccountManager.register(username, password, type, firstName, lastName, email, phoneNumber
+                                    , company, imagePath);
+                            popupWindow.close();
+                            fade(0.5, 10);
+                        } else {
+                            printErrorForRegister("a user exists with this username");
+                        }
+                    } else {
+                        printErrorForRegister("invalid email");
+                    }
+                } else {
+                    printErrorForRegister("invalid password");
+                }
 
+            } else {
+                printErrorForRegister("username cannot be empty");
+            }
+        } else {
+            printErrorForRegister("you should select a photo");
+        }
+    }
+
+    private void printErrorForRegister(String text) {
+        error.setText(text);
+        error.setLayoutX(100);
+        error.setLayoutY(500);
+        error.setTextFill(Color.DARKRED);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -354,73 +356,53 @@ public class MainMenu implements Initializable {
         initialize(location, resources);
     }
 
-    private TextField company;
-
     public void signUp() {
         anchorPane.getChildren().clear();
         imageViewForSignUp();
 
-        isBuyer = true;
-        company = new TextField();
-        company.setPromptText("Company");
-        company.setLayoutX(110);
-        company.setLayoutY(445);
-        company.setPrefWidth(200);
-        company.setPrefHeight(50);
-        company.setVisible(false);
-        company.getStyleClass().add("text-fieldForSignUp");
-        anchorPane.getChildren().add(company);
+        companyText = new TextField();
+        companyText.setPromptText("Company");
+        companyText.setLayoutX(110);
+        companyText.setLayoutY(445);
+        companyText.setPrefWidth(200);
+        companyText.setPrefHeight(50);
+        companyText.setVisible(false);
+        companyText.getStyleClass().add("text-fieldForSignUp");
+        anchorPane.getChildren().add(companyText);
 
         Button sellerType = typeOfSignUp("Seller", 445);
         sellerType.getStyleClass().add("typeField");
-        sellerType.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                isBuyer = false;
-                company.setVisible(true);
-            }
+        sellerType.setOnMouseClicked(event -> {
+            signUp.setDisable(false);
+            isSeller = true;
+            companyText.setVisible(true);
         });
 
         Button buyerType = typeOfSignUp("Buyer", 470);
 
         buyerType.getStyleClass().add("typeField");
-        buyerType.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                isBuyer = true;
-                company.setVisible(false);
-            }
+        buyerType.setOnMouseClicked(event -> {
+            signUp.setDisable(false);
+            isSeller = false;
+            companyText.setVisible(false);
         });
-
-        Button signUp = new Button("Sign Up");
+        signUp = new Button("Sign Up");
         signUp.setLayoutY(445);
         signUp.setLayoutX(320);
         signUp.setPrefHeight(40);
         signUp.setPrefWidth(120);
+        signUp.setDisable(true);
         signUp.getStyleClass().add("signUp");
-        signUp.setOnMouseClicked(e -> System.out.println(isBuyer));
-        firstName = textFieldForSignUp("First name", 40, 140);
-        lastName = textFieldForSignUp("Last name", 40, 190);
+        firstNameText = textFieldForSignUp("First name", 40, 140);
+        lastNameText = textFieldForSignUp("Last name", 40, 190);
 
-        anchorPane.getChildren().addAll(exitButton(), firstName,
-                lastName, usernameForSignUp(),
+        anchorPane.getChildren().addAll(exitButton(), firstNameText,
+                lastNameText, usernameForSignUp(),
                 passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(),
                 sellerType, buyerType, signUp, error);
 
-        signUp.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                processRegister();
-            }
-        });
+        signUp.setOnMouseClicked(event -> processRegister());
     }
-
-    private TextField firstName;
-    private TextField lastName;
-    private TextField usernameFieldForSignUp;
-    private PasswordField passwordFieldForSignUp;
-    private TextField email;
-    private NumberField phoneNumber;
 
     public Button typeOfSignUp(String text, int y) {
         Button type = new Button(text);
@@ -460,7 +442,6 @@ public class MainMenu implements Initializable {
         anchorPane.getChildren().addAll(titleOFSignUp, button, rectangle);
         button.setOnAction(e -> {
             selectedFile = fileChooser.showOpenDialog(stage);
-            System.out.println(selectedFile);
             ImageView imageView = new ImageView(new Image("file:" + selectedFile));
             imageView.setFitHeight(120);
             imageView.setFitWidth(100);
@@ -468,7 +449,7 @@ public class MainMenu implements Initializable {
             imageView.setLayoutY(80);
             imageView.getStyleClass().add("imageView");
             imageView.autosize();
-            anchorPane.getChildren().addAll(imageView);
+            anchorPane.getChildren().add(imageView);
         });
 
 
@@ -496,7 +477,6 @@ public class MainMenu implements Initializable {
         return usernameFieldForSignUp;
     }
 
-
     public PasswordField passwordFieldSignUp() {
         passwordFieldForSignUp = new PasswordField();
         passwordFieldForSignUp.setPromptText("Password");
@@ -509,25 +489,25 @@ public class MainMenu implements Initializable {
     }
 
     public TextField emailFieldSignUp() {
-        email = new TextField();
-        email.setPromptText("Email");
-        email.setLayoutX(40);
-        email.setLayoutY(340);
-        email.setPrefHeight(40);
-        email.setPrefWidth(400);
-        email.getStyleClass().add("emailField");
-        return email;
+        emailText = new TextField();
+        emailText.setPromptText("Email");
+        emailText.setLayoutX(40);
+        emailText.setLayoutY(340);
+        emailText.setPrefHeight(40);
+        emailText.setPrefWidth(400);
+        emailText.getStyleClass().add("emailField");
+        return emailText;
     }
 
     public NumberField phoneNumberFiledSignUp() {
-        phoneNumber = new NumberField();
-        phoneNumber.setPromptText("Phone number");
-        phoneNumber.setLayoutX(40);
-        phoneNumber.setLayoutY(390);
-        phoneNumber.setPrefHeight(40);
-        phoneNumber.setPrefWidth(400);
-        phoneNumber.getStyleClass().add("numberFieldForSignUp");
-        return phoneNumber;
+        phoneNumberText = new NumberField();
+        phoneNumberText.setPromptText("Phone number");
+        phoneNumberText.setLayoutX(40);
+        phoneNumberText.setLayoutY(390);
+        phoneNumberText.setPrefHeight(40);
+        phoneNumberText.setPrefWidth(400);
+        phoneNumberText.getStyleClass().add("numberFieldForSignUp");
+        return phoneNumberText;
 
     }
 

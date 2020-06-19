@@ -32,7 +32,7 @@
         </tooltip>
     </Button>
 <!--    layoutX="1350" layoutY="105"-->
-    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+    <Button layoutX="1150" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 

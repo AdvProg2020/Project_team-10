@@ -213,9 +213,11 @@
 }
 
 .signUp:hover{
-    -fx-background-color: none;
-    -fx-border-width: 3px;
-    -fx-border-color: white;
-    -fx-text-fill: white;
+    /*-fx-background-color: none;*/
+    /*-fx-border-width: 3px;*/
+    /*-fx-border-color: white;*/
+    /*-fx-text-fill: white;*/
+    -fx-effect: dropshadow(three-pass-box, #292929, 5, 0.1, 0, 0);
+
 }
 

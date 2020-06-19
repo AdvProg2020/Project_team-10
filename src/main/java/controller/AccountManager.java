@@ -123,20 +123,20 @@ public class AccountManager {
     }
 
     public static void register(String username, String password, String type, String firstName,
-                                String lastName, String email, String phoneNumber, String company) {
+                                String lastName, String email, String phoneNumber, String company, String imagePath) {
         if (type.equals("buyer")) {
-            Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password);
+            Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password, imagePath);
             Shop.getShop().getAllAccounts().add(buyer);
             Shop.getShop().getAllBuyers().add(buyer);
         } else if (type.equals("seller")) {
             //TODO
-            Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company);
+            Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company, imagePath);
             Shop.getShop().getAllAccounts().add(seller);
             Shop.getShop().getAllSellers().add(seller);
             Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
-                    firstName, lastName, email, phoneNumber, company));
+                    firstName, lastName, email, phoneNumber, company, imagePath));
         } else {
-            Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password);
+            Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);
             Shop.getShop().getAllAccounts().add(admin);
             Shop.getShop().getAllAdmins().add(admin);
         }

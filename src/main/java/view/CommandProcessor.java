@@ -114,7 +114,7 @@ public class CommandProcessor {
 
             @Override
             public void execute() {
-                CommandProcessor.processRegister(true);
+//                CommandProcessor.processRegister(true);
             }
         };
     }
@@ -179,85 +179,85 @@ public class CommandProcessor {
         System.out.println(AccountManager.getOnlineAccount().getCredit());
     }
 
-    public static void processRegister(boolean register) {
-        ArrayList<String> info = new ArrayList<>();
-        int flag = 1;
-        while (true) {
-            if (flag == 1) {
-                System.out.print("enter your username: ");
-                String username = Menu.scanner.nextLine();
-                if (checkUsernameInvalidation(username)) {
-                    if (AccountManager.canRegister(username)) {
-                        info.add(username);
-                        flag += 1;
-                    } else {
-                        System.out.println("username exists");
-                    }
-                }
-            } else if (flag == 2) {
-                System.out.print("enter your password: ");
-                String password = Menu.scanner.nextLine();
-                if (checkPasswordInvalidation(password)) {
-                    info.add(password);
-                    flag += 1;
-                }
-            } else if (flag == 3) {
-                if (register) {
-                    if (isAdminRegistered) {
-                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                    } else {
-                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
-                    }
-                    int type = Menu.scanner.nextInt();
-                    Menu.scanner.nextLine();
-                    if (checkTypeInvalidation(type)) {
-                        info.add(typeName);
-                        flag += 1;
-                    }
-                } else {
-                    flag += 1;
-                }
-            } else if (flag == 4) {
-                System.out.print("enter your first name: ");
-                String firstName = Menu.scanner.nextLine();
-                if (checkNameInvalidation(firstName)) {
-                    info.add(firstName);
-                    flag += 1;
-                }
-            } else if (flag == 5) {
-                System.out.print("enter your last name: ");
-                String lastName = Menu.scanner.nextLine();
-                if (checkNameInvalidation(lastName)) {
-                    info.add(lastName);
-                    flag += 1;
-                }
-            } else if (flag == 6) {
-                System.out.print("enter your email: ");
-                String email = Menu.scanner.nextLine();
-                if (checkEmailInvalidation(email)) {
-                    info.add(email);
-                    flag += 1;
-                }
-            } else {
-                System.out.print("enter your phone number: ");
-                String phoneNumber = Menu.scanner.nextLine();
-                if (checkPhoneNumberInvalidation(phoneNumber)) {
-                    info.add(phoneNumber);
-                    info.add(company);
-                    if (register) {
-                        AccountManager.register(info.get(0), info.get(1), info.get(2)
-                                , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
-                        System.out.println(info.get(0) + " was registered successfully");
-                    } else {
-                        AccountManager.register(info.get(0), info.get(1), "admin"
-                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
-                        System.out.println(" The new manager was registered successfully");
-                    }
-                    break;
-                }
-            }
-        }
-    }
+//    public static void processRegister(boolean register) {
+//        ArrayList<String> info = new ArrayList<>();
+//        int flag = 1;
+//        while (true) {
+//            if (flag == 1) {
+//                System.out.print("enter your username: ");
+//                String username = Menu.scanner.nextLine();
+//                if (checkUsernameInvalidation(username)) {
+//                    if (AccountManager.canRegister(username)) {
+//                        info.add(username);
+//                        flag += 1;
+//                    } else {
+//                        System.out.println("username exists");
+//                    }
+//                }
+//            } else if (flag == 2) {
+//                System.out.print("enter your password: ");
+//                String password = Menu.scanner.nextLine();
+//                if (checkPasswordInvalidation(password)) {
+//                    info.add(password);
+//                    flag += 1;
+//                }
+//            } else if (flag == 3) {
+//                if (register) {
+//                    if (isAdminRegistered) {
+//                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
+//                    } else {
+//                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
+//                    }
+//                    int type = Menu.scanner.nextInt();
+//                    Menu.scanner.nextLine();
+//                    if (checkTypeInvalidation(type)) {
+//                        info.add(typeName);
+//                        flag += 1;
+//                    }
+//                } else {
+//                    flag += 1;
+//                }
+//            } else if (flag == 4) {
+//                System.out.print("enter your first name: ");
+//                String firstName = Menu.scanner.nextLine();
+//                if (checkNameInvalidation(firstName)) {
+//                    info.add(firstName);
+//                    flag += 1;
+//                }
+//            } else if (flag == 5) {
+//                System.out.print("enter your last name: ");
+//                String lastName = Menu.scanner.nextLine();
+//                if (checkNameInvalidation(lastName)) {
+//                    info.add(lastName);
+//                    flag += 1;
+//                }
+//            } else if (flag == 6) {
+//                System.out.print("enter your email: ");
+//                String email = Menu.scanner.nextLine();
+//                if (checkEmailInvalidation(email)) {
+//                    info.add(email);
+//                    flag += 1;
+//                }
+//            } else {
+//                System.out.print("enter your phone number: ");
+//                String phoneNumber = Menu.scanner.nextLine();
+//                if (checkPhoneNumberInvalidation(phoneNumber)) {
+//                    info.add(phoneNumber);
+//                    info.add(company);
+//                    if (register) {
+//                        AccountManager.register(info.get(0), info.get(1), info.get(2)
+//                                , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7));
+//                        System.out.println(info.get(0) + " was registered successfully");
+//                    } else {
+//                        AccountManager.register(info.get(0), info.get(1), "admin"
+//                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6));
+//                        System.out.println(" The new manager was registered successfully");
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     public static void processLogin() {
         if (AccountManager.getOnlineAccount() != null) {
