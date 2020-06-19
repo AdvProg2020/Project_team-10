@@ -91,6 +91,7 @@ public abstract class Account {
         return credit;
     }
 
-
-
+    public String getImagePath() {
+        return imagePath;
+    }
 }

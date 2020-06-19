@@ -5,6 +5,7 @@ import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -18,13 +19,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import model.Account;
 import model.Good;
+import model.Shop;
 import view.CommandProcessor;
 import view.NumberField;
 
@@ -35,6 +40,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
+import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.*;
 
 public class MainMenu implements Initializable {
@@ -51,6 +57,7 @@ public class MainMenu implements Initializable {
     public Stage popupWindow;
     private static File selectedFile;
     public Button selectedButton = new Button("The most visited");
+    public FlowPane popupUser;
     private boolean isSeller;
     private TextField firstNameText;
     private TextField lastNameText;
@@ -60,6 +67,7 @@ public class MainMenu implements Initializable {
     private NumberField phoneNumberText;
     private TextField companyText;
     private Button signUp;
+    private Button user;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -114,7 +122,7 @@ public class MainMenu implements Initializable {
         dropShadow.setRadius(1500.0);
         dropShadow.setHeight(1500);
         dropShadow.setWidth(1500);
-        dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
         layout.setEffect(dropShadow);
 
         popupWindow.setScene(scene1);
@@ -195,11 +203,76 @@ public class MainMenu implements Initializable {
         fade.play();
     }
 
+    private void handleUserBtn() {
+        btnLogin.setVisible(false);
+
+        user = new Button();
+        user.setLayoutX(1380);
+        user.setLayoutY(110);
+        user.getStyleClass().add("userButton");
+
+        HBox hBox = new HBox();
+        Circle circle = new Circle(20);
+        ImagePattern pattern = new ImagePattern(new Image("file:" + AccountManager.getOnlineAccount().getImagePath()));
+        circle.setFill(pattern);
+        circle.setStrokeWidth(1.5);
+        circle.setStroke(Color.rgb(16 , 137, 255));
+
+        hBox.setPadding(new Insets(0 , 0 , 5 , 9));
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setSpacing(5);
+        hBox.setPrefWidth(170);
+
+
+        Rectangle rectangle = new Rectangle(120 , 1);
+        rectangle.getStyleClass().add("shape");
+        Rectangle rectangle2 = new Rectangle(120 , 1);
+        rectangle2.getStyleClass().add("shape");
+
+        popupUser.setAlignment(Pos.CENTER);
+
+        Label username = new Label("Hi "+AccountManager.getOnlineAccount().getUsername());
+        username.getStyleClass().add("labelUsername");
+
+        hBox.getChildren().addAll(circle , username);
+
+        Button accountPage = new Button("Account");
+        accountPage.setPrefWidth(170);
+        accountPage.setPrefHeight(40);
+        accountPage.getStyleClass().add("accountPageBtn");
+        accountPage.setAlignment(Pos.BASELINE_LEFT);
+
+        Button logout = new Button("Log out");
+        logout.getStyleClass().add("logoutBtn");
+        logout.setPrefHeight(40);
+        logout.setPrefWidth(170);
+        logout.setAlignment(Pos.BASELINE_LEFT);
+
+//        logout.setPrefWidth();
+        popupUser.getChildren().addAll(hBox, rectangle2, accountPage, rectangle , logout);
+
+        user.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (popupUser.isVisible()) {
+                    popupUser.setVisible(false);
+                } else {
+                    popupUser.setVisible(true);
+                }
+
+            }
+        });
+//        user.setVisible(true);
+        mainPane.getChildren().add(user);
+
+    }
+
     private void processLogin() {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
         if (AccountManager.login(username, password)) {
             popupWindow.close();
+            handleUserBtn();
             fade(0.5, 10);
         } else {
             error.setText("username/password is incorrect");
