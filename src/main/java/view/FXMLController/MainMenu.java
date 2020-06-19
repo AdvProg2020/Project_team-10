@@ -1,6 +1,7 @@
 package view.FXMLController;
 
 import controller.AccountManager;
+import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -53,9 +54,11 @@ public class MainMenu implements Initializable {
     public AnchorPane layout;
     public Stage popupWindow;
     private static File selectedFile;
-    public Button selectedButton = new Button();
+    public Button selectedButton = new Button("The most visited");
+    private boolean isBuyer;
 
     public void exit(MouseEvent mouseEvent) {
+//        FileHandler.write();
         Platform.exit();
     }
 
@@ -212,7 +215,6 @@ public class MainMenu implements Initializable {
         }
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         HBox hBox = new HBox();
@@ -224,13 +226,11 @@ public class MainMenu implements Initializable {
 
         hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources), buttonForSort("Score", location, resources),
                 buttonForSort("Price(Descending)", location, resources), buttonForSort("The most visited", location, resources));
-        if (selectedButton != null) {
-            selectedButton.getStyleClass().add("buttonSort-select");
-        }
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(10, 580, 10, 15));
         hBox.setSpacing(10);
         flowPane.getChildren().add(hBox);
+        Collections.sort(GoodsManager.getFilteredGoods());
         for (Good good : GoodsManager.getFilteredGoods()) {
             VBox vBox = new VBox();
             vBox.setPrefWidth(297);
@@ -246,21 +246,13 @@ public class MainMenu implements Initializable {
             Label visit = new Label(good.getVisitNumber() + "");
             name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
-            vBox.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    vBox.setStyle("-fx-background-color: #ffffff;" +
-                            " -fx-effect:  dropshadow(three-pass-box ,rgba(19,19,19,0.07), 30,0.0015, 0.0, 0.0);"
-                            + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
-                    fadeEffect(vBox);
-                }
+            vBox.setOnMouseEntered(event -> {
+                vBox.setStyle("-fx-background-color: #ffffff;" +
+                        " -fx-effect:  dropshadow(three-pass-box ,rgba(19,19,19,0.07), 30,0.0015, 0.0, 0.0);"
+                        + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
+                fadeEffect(vBox);
             });
-            vBox.setOnMouseExited(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    vBox.setStyle("-fx-background-color: none;" + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
-                }
-            });
+            vBox.setOnMouseExited(event -> vBox.setStyle("-fx-background-color: none;" + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;"));
             vBox.setAlignment(Pos.CENTER);
             vBox.getChildren().addAll(imageView, name, price, visit);
             flowPane.getChildren().add(vBox);
@@ -316,12 +308,9 @@ public class MainMenu implements Initializable {
     }
 
     public void sort(URL location, ResourceBundle resources) {
-        Collections.sort(GoodsManager.getFilteredGoods());
         flowPane.getChildren().clear();
         initialize(location, resources);
     }
-
-    private boolean isBuyer;
 
     public void signUp() {
         anchorPane.getChildren().clear();
@@ -338,7 +327,7 @@ public class MainMenu implements Initializable {
         textField.getStyleClass().add("text-fieldForSignUp");
         anchorPane.getChildren().add(textField);
 
-        Button sellerType = typeOfSignUp("Seller" , 445);
+        Button sellerType = typeOfSignUp("Seller", 445);
         sellerType.getStyleClass().add("typeField");
         sellerType.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -348,7 +337,7 @@ public class MainMenu implements Initializable {
             }
         });
 
-        Button buyerType = typeOfSignUp("Buyer" , 470);
+        Button buyerType = typeOfSignUp("Buyer", 470);
 
         buyerType.getStyleClass().add("typeField");
         buyerType.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -373,7 +362,7 @@ public class MainMenu implements Initializable {
                 sellerType, buyerType, signUp);
     }
 
-    public Button typeOfSignUp(String text , int y){
+    public Button typeOfSignUp(String text, int y) {
         Button type = new Button(text);
         type.setLayoutX(40);
         type.setLayoutY(y);

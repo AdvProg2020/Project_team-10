@@ -44,6 +44,14 @@ public class Good implements Comparable<Good> {
         AccountManager.increaseLastGoodId();
     }
 
+    //todo
+
+
+    public Good setVisitNumber(int visitNumber) {
+        this.visitNumber = visitNumber;
+        return this;
+    }
+
     public void subtractNumber() {
         int numberOfGoodInCart = getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
         this.number -= numberOfGoodInCart;
@@ -179,7 +187,6 @@ public class Good implements Comparable<Good> {
     public float calculateAverageRate() {
         float sum = 0;
         for (Integer rate : allRates) {
-            //TODO allRate.size=0
             sum += rate;
         }
         if (allRates.size() == 0) {
