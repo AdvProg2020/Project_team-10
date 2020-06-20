@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GoodsManager {
-    private static Good currentGood;
+    private static Good currentGood = new Good(10, "name", "company", 5, 1000, null, "car",
+            null, "asd", "C:/Users/hossein/Desktop//chess/3d-chess-game-pieces-design-illustration-isolated-white-background_216222-7.jpg");
     private static String kindOfSort = "visit number";
     private static List<Good> filteredGoods = new ArrayList<>(Shop.getShop().getAllGoods());
     private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());

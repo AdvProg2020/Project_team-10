@@ -495,7 +495,7 @@ public class CommandProcessor {
                 System.out.println("write any description about your product");
                 description = Menu.scanner.nextLine();
                 if (add) {
-                    SellerManager.addProduct(name, company, number, price, category, categoryAttributes, description);
+//                    SellerManager.addProduct(name, company, number, price, category, categoryAttributes, description);
                 } else {
                     SellerManager.editProduct(id, name, company, number, price, category, categoryAttributes, description);
                 }

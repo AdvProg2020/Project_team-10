@@ -20,7 +20,7 @@
 
     <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
 
-    <Button layoutX="1207" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
+    <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
         <tooltip>
             <Tooltip text="Close"/>
         </tooltip>
@@ -32,7 +32,7 @@
         </tooltip>
     </Button>
 <!--    layoutX="1350" layoutY="105"-->
-    <Button layoutX="1150" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 

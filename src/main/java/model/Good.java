@@ -24,10 +24,11 @@ public class Good implements Comparable<Good> {
     private Map<Account, Integer> goodsInBuyerCart;
     private Date date;
     private int offId;
+    private String imagePath;
 
 
     public Good(int id, String name, String company, int number, long price, String sellerUsername, String category
-            , HashMap categoryAttribute, String description) {
+            , HashMap categoryAttribute, String description, String imagePath) {
         this.id = id;
         this.name = name;
         this.company = company;
@@ -37,11 +38,28 @@ public class Good implements Comparable<Good> {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
+        this.imagePath = imagePath;
         this.goodsInBuyerCart = new HashMap<>();
         this.allRates = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
         AccountManager.increaseLastGoodId();
+    }
+
+    public Good(int id, String name, String company, int number, long price, String sellerUsername, String category, Map<String, String> categoryAttribute, String description) {
+        this.id = id;
+        this.name = name;
+        this.company = company;
+        this.number = number;
+        this.price = price;
+        this.sellerUsername = sellerUsername;
+        this.category = category;
+        this.categoryAttribute = categoryAttribute;
+        this.description = description;
+        this.allRates = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.date = new Date();
+
     }
 
     //todo
@@ -73,6 +91,9 @@ public class Good implements Comparable<Good> {
         return category;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 
     public List<Comment> getComments() {
         return comments;

@@ -4,12 +4,17 @@ import controller.AccountManager;
 import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -26,6 +31,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Good;
 import view.CommandProcessor;
+import view.FXML.FXML;
 import view.NumberField;
 
 import java.io.File;
@@ -210,7 +216,6 @@ public class MainMenu implements Initializable {
     }
 
     public void processRegister() {
-        System.out.println(isSeller);
         String firstName = firstNameText.getText();
         String lastName = lastNameText.getText();
         String username = usernameFieldForSignUp.getText();
@@ -226,6 +231,7 @@ public class MainMenu implements Initializable {
         }
         if (selectedFile != null) {
             String imagePath = selectedFile.getAbsolutePath();
+            System.out.println(imagePath);
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
@@ -511,7 +517,8 @@ public class MainMenu implements Initializable {
 
     }
 
-    public void cartMenu(MouseEvent mouseEvent) {
-
+    public void cartMenu(MouseEvent mouseEvent) throws IOException {
+        FXML.switchScene(goodPageURL, mouseEvent);
+        
     }
 }

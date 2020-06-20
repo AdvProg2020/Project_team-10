@@ -1,16 +1,18 @@
-.goodPage{
+.goodPage {
     -fx-fill: #0084ff;
 }
 
-.availableLabel{
+.availableLabel {
     -fx-font-size: 25;
     -fx-text-fill: rgb(171, 170, 179);
 }
-.productNameLabel{
+
+.productNameLabel {
     -fx-font-size: 40;
     -fx-text-fill: black;
 }
-.priceLabel{
+
+.priceLabel {
     -fx-font-size: 40;
     -fx-text-fill: #0084ff;
 }
@@ -21,12 +23,12 @@
     -fx-font-size: 30;
 }
 
-.increaseButton{
+.increaseButton {
     -fx-background-color: white;
 
 }
 
-#pane{
+#pane {
     -fx-background-color: #f5f5f5;
 }
 
@@ -57,7 +59,7 @@
     -fx-background-repeat: no-repeat;
 }
 
-.buttonMinimize:hover{
+.buttonMinimize:hover {
     -fx-background-image: url("../image/minimizehover.png");
 }
 
@@ -72,7 +74,7 @@
 }
 
 .header {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 0)
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0)
 }
 
 .buttonAccount {
@@ -84,11 +86,11 @@
     -fx-background-repeat: no-repeat;
 }
 
-.buttonAccount:hover{
+.buttonAccount:hover {
     -fx-background-image: url("../image/accounthover.png");
 }
 
-.buttonCart{
+.buttonCart {
     -fx-background-image: url("../image/cart.png");
     -fx-background-color: none;
     -fx-background-size: 48px 40px;
@@ -97,7 +99,8 @@
     -fx-background-repeat: no-repeat;
 
 }
-.buttonCart:hover{
+
+.buttonCart:hover {
     -fx-background-image: url("../image/carthover.png");
 }
 

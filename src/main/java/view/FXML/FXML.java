@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -22,10 +24,10 @@ public class FXML {
     public static String loginURL = "./src/main/java/view/FXML/loginMenu.fxml";
     public static String goodPageURL = "./src/main/java/view/FXML/goodPage.fxml";
 
-    public static void switchScene(String urlText, Node button) throws IOException {
+    public static void switchScene(String urlText, MouseEvent mouseEvent) throws IOException {
         Stage stage;
         Parent root;
-        stage = (Stage) button.getScene().getWindow();
+        stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
         URL url = Paths.get(urlText).toUri().toURL();
         root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
@@ -39,5 +41,6 @@ public class FXML {
         );
         fadeIn.play();
     }
+
 
 }
