@@ -8,8 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -29,7 +31,6 @@ public class FXML {
         URL url = Paths.get(urlText).toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
-//        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
         DoubleProperty opacity = root.opacityProperty();

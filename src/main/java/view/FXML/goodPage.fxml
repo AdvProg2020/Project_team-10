@@ -53,7 +53,7 @@
         </tooltip>
     </Button>
 
-    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+    <Button fx:id="btnLogin" layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" >
 
     </Button>
 
@@ -65,4 +65,7 @@
 
     <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#mainMenu"/>
 
+    <FlowPane fx:id="popupUser" alignment="CENTER_LEFT" hgap="5" styleClass="popupUser" layoutX="1280" layoutY="145" prefWidth="170" prefHeight="145" visible="false">
+
+    </FlowPane>
 </AnchorPane>

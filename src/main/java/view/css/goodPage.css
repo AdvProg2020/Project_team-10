@@ -5,22 +5,30 @@
 .availableLabel {
     -fx-font-size: 25;
     -fx-text-fill: rgb(171, 170, 179);
+    -fx-pref-width: 200;
+    -fx-pref-height: 200;
 }
 
 .productNameLabel {
     -fx-font-size: 40;
     -fx-text-fill: black;
+    -fx-pref-width: 200;
+    -fx-pref-height: 200;
 }
 
 .priceLabel {
     -fx-font-size: 40;
     -fx-text-fill: #0084ff;
+    -fx-pref-width: 200;
+    -fx-pref-height: 200;
 }
 
 .addToCartButton {
     -fx-background-color: #0084ff;
     -fx-text-fill: white;
     -fx-font-size: 30;
+    -fx-pref-width: 300;
+    -fx-pref-height: 70;
 }
 
 .addToCartButton:hover {
@@ -125,4 +133,5 @@
 
 .tabs {
     -fx-pref-width: 200;
+
 }

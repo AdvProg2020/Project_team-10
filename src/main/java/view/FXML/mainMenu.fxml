@@ -11,7 +11,7 @@
 <AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/mainMenu.css">
 
-    <ScrollPane fx:id="scrollPane" layoutY="190" layoutX="30">
+    <ScrollPane fx:id="mainMenuScrollPane" layoutY="190" layoutX="30">
 
         <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
@@ -48,7 +48,7 @@
 
     </FlowPane>
 
-    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"/>
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#mainMenu"/>
 
 </AnchorPane>
 

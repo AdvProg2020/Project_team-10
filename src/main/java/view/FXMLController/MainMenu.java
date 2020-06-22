@@ -4,18 +4,13 @@ import controller.AccountManager;
 import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -32,11 +27,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Account;
+import model.Comment;
 import model.Good;
-import model.Shop;
 import view.CommandProcessor;
-import view.FXML.FXML;
 import view.NumberField;
 
 import java.io.File;
@@ -49,17 +42,17 @@ import java.util.ResourceBundle;
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.*;
 
-public class MainMenu implements Initializable{
+public class MainMenu implements Initializable {
     public Button btnLogin;
     public AnchorPane mainPane;
     public FlowPane flowPane;
-    public ScrollPane scrollPane;
+    public ScrollPane mainMenuScrollPane = new ScrollPane();
+    public ScrollPane goodPageScrollPane;
     public Rectangle header;
     public AnchorPane anchorPane;
     public TextField usernameField;
     public PasswordField passwordFieldForSignIn;
     public Label error;
-    public AnchorPane layout;
     public Stage popupWindow;
     private static File selectedFile;
     public Button selectedButton = new Button("The most visited");
@@ -74,6 +67,8 @@ public class MainMenu implements Initializable{
     private TextField companyText;
     private Button signUp;
     private Button user;
+    private URL location;
+    private ResourceBundle resources;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -104,7 +99,7 @@ public class MainMenu implements Initializable{
         popupWindow.initModality(Modality.APPLICATION_MODAL);
 
         URL url = Paths.get(loginURL).toUri().toURL();
-        layout = FXMLLoader.load(url);
+        AnchorPane layout = FXMLLoader.load(url);
         Scene scene1 = new Scene(layout);
         popupWindow.setMaximized(true);
 
@@ -253,6 +248,12 @@ public class MainMenu implements Initializable{
         logout.setPrefHeight(40);
         logout.setPrefWidth(170);
         logout.setAlignment(Pos.BASELINE_LEFT);
+        logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                logout();
+            }
+        });
 
 //        logout.setPrefWidth();
         popupUser.getChildren().addAll(hBox, rectangle2, accountPage, rectangle, logout);
@@ -268,6 +269,14 @@ public class MainMenu implements Initializable{
 //        user.setVisible(true);
         mainPane.getChildren().add(user);
 
+    }
+
+    private void logout() {
+        AccountManager.setOnlineAccount(null);
+        user.setVisible(false);
+        popupUser.getChildren().clear();
+        popupUser.setVisible(false);
+        btnLogin.setVisible(true);
     }
 
     private void processLogin() {
@@ -337,6 +346,8 @@ public class MainMenu implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.location = location;
+        this.resources = resources;
         HBox hBox = new HBox();
         ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
         imageSort.setFitWidth(25);
@@ -372,13 +383,10 @@ public class MainMenu implements Initializable{
                 fadeEffect(vBox);
             });
             vBox.setOnMouseExited(event -> vBox.setStyle("-fx-background-color: none;" + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;"));
-            vBox.setOnMouseClicked(event -> {
+            logoImage.setOnMouseClicked(event -> {
                 GoodsManager.setCurrentGood(good);
-                try {
-                    switchScene(goodPageURL, vBox);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                good.setVisitNumber(good.getVisitNumber() + 1);
+                goodPage();
             });
             vBox.setAlignment(Pos.CENTER);
             vBox.getChildren().addAll(logoImage, name, price, visit);
@@ -386,8 +394,8 @@ public class MainMenu implements Initializable{
         }
 
         flowPane.setStyle("-fx-background-color: white;");
-
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        mainPane.getChildren().add(mainMenuScrollPane);
     }
 
     public Button buttonForSort(String input, URL location, ResourceBundle resources) {
@@ -595,5 +603,113 @@ public class MainMenu implements Initializable{
 
     public void cartMenu(MouseEvent mouseEvent) {
 
+    }
+
+    private void goodPage() {
+        mainPane.getChildren().remove(mainMenuScrollPane);
+        Good currentGood = GoodsManager.getCurrentGood();
+        AnchorPane innerPane = new AnchorPane();
+
+        goodPageScrollPane = new ScrollPane(innerPane);
+        goodPageScrollPane.setLayoutY(164);
+        goodPageScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+        ImageView goodImage = new ImageView(new Image("file:" + currentGood.getImagePath()));
+
+        Label isAvailable = new Label();
+        isAvailable.getStyleClass().add("availableLabel");
+        isAvailable.setLayoutX(700);
+        isAvailable.setLayoutY(140);
+
+        Label productName = new Label();
+        productName.getStyleClass().add("productNameLabel");
+        productName.setLayoutX(700);
+        productName.setLayoutY(190);
+
+        Label productPrice = new Label();
+        productPrice.getStyleClass().add("priceLabel");
+        productPrice.setLayoutX(700);
+        productPrice.setLayoutY(250);
+
+        Button addToCart = new Button("Add To Cart");
+        addToCart.getStyleClass().add("addToCartButton");
+        addToCart.setLayoutX(700);
+        addToCart.setLayoutY(430);
+
+        innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart);
+        goodImage.setFitWidth(500);
+        goodImage.setFitHeight(500);
+        goodImage.setLayoutX(50);
+        goodImage.setLayoutY(100);
+        if (currentGood.getNumber() > 0) {
+            isAvailable.setText("Available");
+        } else {
+            isAvailable.setText("Not available");
+            addToCart.setDisable(true);
+        }
+        productName.setText(currentGood.getName());
+        productPrice.setText("" + currentGood.getPrice());
+        mainPane.getStylesheets().add("file:/D:/java/Project_team-10/src/main/java/view/css/goodPage.css");
+        tabPane(innerPane);
+        mainPane.getChildren().add(goodPageScrollPane);
+        innerPane.setPrefSize(1520, 699);
+    }
+
+    private void tabPane(AnchorPane innerPane) {
+        TabPane tabPane = new TabPane();
+        Tab productFieldsTab = new Tab("productFields", productFields(innerPane));
+        productFieldsTab.setClosable(false);
+        productFieldsTab.getStyleClass().add("tabs");
+        Tab commentsTab = new Tab("comments", comments(innerPane));
+        commentsTab.setClosable(false);
+        commentsTab.getStyleClass().add("tabs");
+        tabPane.getTabs().addAll(productFieldsTab, commentsTab);
+        tabPane.setLayoutX(50);
+        tabPane.setLayoutY(600);
+        innerPane.getChildren().add(tabPane);
+    }
+
+    private VBox productFields(AnchorPane innerPane) {
+        Good currentGood = GoodsManager.getCurrentGood();
+        VBox productFields = new VBox();
+        Label seller = new Label("seller: " + currentGood.getSellerUsername());
+        Label company = new Label("company: " + currentGood.getCompany());
+        Label category = new Label("category: " + currentGood.getCategory());
+        VBox categoryAttributes = new VBox();
+        for (String attribute : currentGood.getCategoryAttribute().keySet()) {
+            Label categoryAttribute = new Label(attribute + ": " + currentGood.getCategoryAttribute().get(attribute));
+            categoryAttributes.getChildren().add(categoryAttribute);
+        }
+        Label description = new Label("description: " + currentGood.getDescription());
+        productFields.getChildren().addAll(seller, company, category, categoryAttributes, description);
+        productFields.getStyleClass().add("productFields");
+        productFields.setLayoutX(100);
+        productFields.setLayoutY(650);
+//        innerPane.getChildren().add(productFields);
+        return productFields;
+    }
+
+    private VBox comments(AnchorPane innerPane) {
+        Good currentGood = GoodsManager.getCurrentGood();
+        VBox comments = new VBox();
+        for (Comment comment : currentGood.getComments()) {
+            Label commentLabel = new Label(comment.toString());
+            comments.getChildren().add(commentLabel);
+        }
+        comments.getStyleClass().add("productFields");
+        comments.setLayoutX(100);
+        comments.setLayoutY(950);
+//        innerPane.getChildren().add(comments);
+        return comments;
+    }
+
+
+    public void mainMenu(MouseEvent mouseEvent) {
+        if (!mainPane.getChildren().contains(mainMenuScrollPane)) {
+            mainPane.getChildren().remove(goodPageScrollPane);
+            initialize(location, resources);
+            mainPane.getChildren().add(mainMenuScrollPane);
+        }
     }
 }

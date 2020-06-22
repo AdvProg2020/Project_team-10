@@ -1,15 +1,16 @@
 package view.FXMLController;
 
+import controller.AccountManager;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -23,6 +24,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,13 +34,12 @@ import javafx.util.Duration;
 import model.Comment;
 import model.Good;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
+import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.*;
 
 public class GoodPage implements Initializable{
@@ -48,7 +50,11 @@ public class GoodPage implements Initializable{
     public Label productName;
     public Label productPrice;
     public Button addToCart;
+    public Button btnLogin;
+    public FlowPane popupUser;
     private Good currentGood = GoodsManager.getCurrentGood();
+    private Button user;
+
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -68,14 +74,9 @@ public class GoodPage implements Initializable{
         fadeIn.play();
     }
 
-    public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new MainMenu().popupLogin(mouseEvent);
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
         ImageView goodImage = new ImageView(new Image("file:" + currentGood.getImagePath()));
         goodImage.setFitWidth(500);
         goodImage.setFitHeight(500);
@@ -90,8 +91,8 @@ public class GoodPage implements Initializable{
         }
         productName.setText(currentGood.getName());
         productPrice.setText("" + currentGood.getPrice());
+        mainPane.getStylesheets().add("file:/D:/java/Project_team-10/src/main/java/view/css/mainMenu.css");
         tabPane();
-//        increaseAndDecrease();
     }
 
     private void tabPane() {
@@ -172,6 +173,16 @@ public class GoodPage implements Initializable{
 
     public void mainMenu(MouseEvent mouseEvent) throws IOException {
         switchScene(mainMenuURL, mouseEvent.getPickResult().getIntersectedNode());
+//        Stage stage = ((Stage) ((ImageView) mouseEvent.getSource()).getScene().getWindow());
+//        stage.setScene(new Scene(MainMenu.mainMenuPane));
+//        stage.show();
     }
+
+
+
+
+
+
+
 }
 
