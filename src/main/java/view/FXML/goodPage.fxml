@@ -9,8 +9,35 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Rectangle?>
+
 <AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.GoodPage" stylesheets="@../css/goodPage.css">
+
+
+
+
+    <ScrollPane fx:id="scrollPane" layoutY="164">
+
+        <AnchorPane fx:id="innerPane" prefHeight="699" prefWidth="1534" >
+
+<!--            <Rectangle fx:id="goodPicture" width="500" height="500" layoutX="50" layoutY="100" styleClass="goodPage"/>-->
+
+            <Label fx:id="isAvailable" prefWidth="200" prefHeight="200" layoutX="700" layoutY="140" styleClass="availableLabel">
+            </Label>
+
+            <Label fx:id="productName" prefWidth="600" prefHeight="200" layoutX="700" layoutY="190" styleClass="productNameLabel">
+            </Label>
+
+            <Label fx:id="productPrice" prefWidth="200" prefHeight="200" layoutX="700" layoutY="250" styleClass="priceLabel">
+            </Label>
+
+            <Button fx:id="addToCart" prefWidth="300" prefHeight="70" layoutX="700" layoutY="430" styleClass="addToCartButton" text="Add To Cart">
+            </Button>
+
+
+        </AnchorPane>
+
+    </ScrollPane>
 
     <Rectangle height="165" width="1560" styleClass="header" fill="#ffff"/>
 
@@ -26,7 +53,7 @@
         </tooltip>
     </Button>
 
-    <Button layoutX="1150" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+    <Button layoutX="1350" layoutY="105" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
 
     </Button>
 
@@ -36,34 +63,6 @@
 
     </Button>
 
-    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"/>
-
-    <ScrollPane fx:id="scrollPane" layoutY="175" layoutX="10">
-
-        <AnchorPane fx:id="innerPane" prefHeight="540" prefWidth="1250" >
-
-            <Rectangle fx:id="goodPicture" width="500" height="500" layoutX="50" layoutY="230" styleClass="goodPage"/>
-
-            <Label fx:id="isAvailable" prefWidth="200" prefHeight="200" layoutX="620" layoutY="270" text="Available!" styleClass="availableLabel">
-
-            </Label>
-            <Label fx:id="productName" prefWidth="600" prefHeight="200" layoutX="620" layoutY="320" text="product name" styleClass="productNameLabel">
-
-            </Label>
-            <Label fx:id="productPrice" prefWidth="200" prefHeight="200" layoutX="620" layoutY="380" text="price" styleClass="priceLabel">
-
-            </Label>
-            <Button fx:id="addToCart" prefWidth="300" prefHeight="70" layoutX="850" layoutY="570" styleClass="addToCartButton" text="Add To Cart">
-
-            </Button>
-            <Button fx:id="increase" prefWidth="200" prefHeight="70" layoutX="620" layoutY="570" styleClass="increaseButton" text="">
-
-            </Button>
-
-        </AnchorPane>
-
-    </ScrollPane>
-
-
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#mainMenu"/>
 
 </AnchorPane>

@@ -15,8 +15,7 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "account: " + account.getUsername() + "\n" +
-                "text: " + text + '\n' +
+        return text + '\n' +
                 "isBought: " + isBought;
     }
 }

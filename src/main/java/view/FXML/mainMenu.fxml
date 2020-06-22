@@ -12,6 +12,7 @@
             fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/mainMenu.css">
 
     <ScrollPane fx:id="scrollPane" layoutY="190" layoutX="30">
+
         <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
         </FlowPane>

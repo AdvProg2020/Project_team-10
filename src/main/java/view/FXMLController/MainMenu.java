@@ -49,7 +49,7 @@ import java.util.ResourceBundle;
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.*;
 
-public class MainMenu implements Initializable {
+public class MainMenu implements Initializable{
     public Button btnLogin;
     public AnchorPane mainPane;
     public FlowPane flowPane;
@@ -77,7 +77,7 @@ public class MainMenu implements Initializable {
 
 
     public void exit(MouseEvent mouseEvent) {
-//        FileHandler.write();
+        FileHandler.write();
         Platform.exit();
     }
 
@@ -222,25 +222,25 @@ public class MainMenu implements Initializable {
         ImagePattern pattern = new ImagePattern(new Image("file:" + AccountManager.getOnlineAccount().getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(1.5);
-        circle.setStroke(Color.rgb(16 , 137, 255));
+        circle.setStroke(Color.rgb(16, 137, 255));
 
-        hBox.setPadding(new Insets(0 , 0 , 5 , 9));
+        hBox.setPadding(new Insets(0, 0, 5, 9));
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setSpacing(5);
         hBox.setPrefWidth(170);
 
 
-        Rectangle rectangle = new Rectangle(120 , 1);
+        Rectangle rectangle = new Rectangle(120, 1);
         rectangle.getStyleClass().add("shape");
-        Rectangle rectangle2 = new Rectangle(120 , 1);
+        Rectangle rectangle2 = new Rectangle(120, 1);
         rectangle2.getStyleClass().add("shape");
 
         popupUser.setAlignment(Pos.CENTER);
 
-        Label username = new Label("Hi "+AccountManager.getOnlineAccount().getUsername());
+        Label username = new Label("Hi " + AccountManager.getOnlineAccount().getUsername());
         username.getStyleClass().add("labelUsername");
 
-        hBox.getChildren().addAll(circle , username);
+        hBox.getChildren().addAll(circle, username);
 
         Button accountPage = new Button("Account");
         accountPage.setPrefWidth(170);
@@ -255,18 +255,15 @@ public class MainMenu implements Initializable {
         logout.setAlignment(Pos.BASELINE_LEFT);
 
 //        logout.setPrefWidth();
-        popupUser.getChildren().addAll(hBox, rectangle2, accountPage, rectangle , logout);
+        popupUser.getChildren().addAll(hBox, rectangle2, accountPage, rectangle, logout);
 
-        user.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (popupUser.isVisible()) {
-                    popupUser.setVisible(false);
-                } else {
-                    popupUser.setVisible(true);
-                }
-
+        user.setOnMouseClicked(event -> {
+            if (popupUser.isVisible()) {
+                popupUser.setVisible(false);
+            } else {
+                popupUser.setVisible(true);
             }
+
         });
 //        user.setVisible(true);
         mainPane.getChildren().add(user);
@@ -304,6 +301,7 @@ public class MainMenu implements Initializable {
         }
         if (selectedFile != null) {
             String imagePath = selectedFile.getAbsolutePath();
+            System.out.println(imagePath);
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
@@ -359,10 +357,9 @@ public class MainMenu implements Initializable {
             vBox.setPrefHeight(350);
             vBox.setStyle("-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
 
-            ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
-            imageView.setFitHeight(190);
-            imageView.setFitWidth(190);
-
+            ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+            logoImage.setFitHeight(190);
+            logoImage.setFitWidth(190);
             Label name = new Label(good.getName());
             Label price = new Label(good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
@@ -375,14 +372,21 @@ public class MainMenu implements Initializable {
                 fadeEffect(vBox);
             });
             vBox.setOnMouseExited(event -> vBox.setStyle("-fx-background-color: none;" + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;"));
+            vBox.setOnMouseClicked(event -> {
+                GoodsManager.setCurrentGood(good);
+                try {
+                    switchScene(goodPageURL, vBox);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(imageView, name, price, visit);
+            vBox.getChildren().addAll(logoImage, name, price, visit);
             flowPane.getChildren().add(vBox);
         }
 
         flowPane.setStyle("-fx-background-color: white;");
 
-        scrollPane.setContent(flowPane);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 

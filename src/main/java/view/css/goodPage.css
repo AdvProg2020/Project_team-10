@@ -23,6 +23,11 @@
     -fx-font-size: 30;
 }
 
+.addToCartButton:hover {
+    -fx-background-color: #379dfd;
+    -fx-border-color: darkblue;
+}
+
 .increaseButton {
     -fx-background-color: white;
 
@@ -104,3 +109,20 @@
     -fx-background-image: url("../image/carthover.png");
 }
 
+.productFields {
+    -fx-font-size: 40;
+    -fx-text-fill: black;
+}
+
+.increaseOrDecrease {
+    -fx-font-size: 20;
+}
+
+.tab-pane {
+    -fx-pref-width: 1200;
+    -fx-font-size: 20;
+}
+
+.tabs {
+    -fx-pref-width: 200;
+}

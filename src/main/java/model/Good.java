@@ -1,7 +1,6 @@
 package model;
 
 import controller.AccountManager;
-import controller.FileHandler;
 import controller.GoodsManager;
 
 import java.util.*;
@@ -17,7 +16,7 @@ public class Good implements Comparable<Good> {
     private String category;
     private Map<String, String> categoryAttribute;
     private String description;
-    private List<Integer> allRates;
+    private List<Integer> allScores;
     private List<Comment> comments;
     private List<String> buyersUsername;
     private int visitNumber;
@@ -40,12 +39,13 @@ public class Good implements Comparable<Good> {
         this.description = description;
         this.imagePath = imagePath;
         this.goodsInBuyerCart = new HashMap<>();
-        this.allRates = new ArrayList<>();
+        this.allScores = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
         AccountManager.increaseLastGoodId();
     }
 
+    //todo
     public Good(int id, String name, String company, int number, long price, String sellerUsername, String category, Map<String, String> categoryAttribute, String description) {
         this.id = id;
         this.name = name;
@@ -56,17 +56,15 @@ public class Good implements Comparable<Good> {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
-        this.allRates = new ArrayList<>();
+        this.allScores = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
 
     }
 
-    //todo
-
-
     public Good setVisitNumber(int visitNumber) {
         this.visitNumber = visitNumber;
+        //todo
         return this;
     }
 
@@ -156,8 +154,8 @@ public class Good implements Comparable<Good> {
         return sellerUsername;
     }
 
-    public List<Integer> getAllRates() {
-        return allRates;
+    public List<Integer> getAllScores() {
+        return allScores;
     }
 
     @Override
@@ -207,13 +205,13 @@ public class Good implements Comparable<Good> {
 
     public float calculateAverageRate() {
         float sum = 0;
-        for (Integer rate : allRates) {
+        for (Integer rate : allScores) {
             sum += rate;
         }
-        if (allRates.size() == 0) {
+        if (allScores.size() == 0) {
             return 0;
         }
-        return sum / allRates.size();
+        return sum / allScores.size();
     }
 
 

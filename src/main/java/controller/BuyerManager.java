@@ -56,7 +56,7 @@ public class BuyerManager {
         Buyer buyer = (Buyer) AccountManager.getOnlineAccount();
         for (Good good : buyer.getGoods()) {
             if (good.getId() == id) {
-                good.getAllRates().add(rate);
+                good.getAllScores().add(rate);
                 return true;
             }
         }
