@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -39,16 +36,18 @@
 
 <!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
 
-    <Button  layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#cartMenu" >
+    <Button fx:id="cartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#cartMenu" >
 
     </Button>
 
 <!--    <AnchorPane fx:id="popupUser" styleClass="popupUser" layoutX="1310" layoutY="145" width="120" height="130" visible="false"/>-->
-    <FlowPane fx:id="popupUser" alignment="CENTER_LEFT" hgap="5" styleClass="popupUser" layoutX="1280" layoutY="145" prefWidth="170" prefHeight="145" visible="false">
 
-    </FlowPane>
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#backToMainMenu"/>
 
-    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#mainMenu"/>
+<!--    <FlowPane fx:id="popupUser" alignment="CENTER_LEFT" hgap="5" styleClass="popupUser" layoutX="1280" layoutY="145" prefWidth="170" prefHeight="145" visible="false">-->
+
+<!--    </FlowPane>-->
+
 
 </AnchorPane>
 
