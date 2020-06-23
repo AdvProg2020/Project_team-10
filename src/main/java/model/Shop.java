@@ -20,6 +20,11 @@ public class Shop {
     private List<Comment> allComments = new ArrayList<>();
 
     private Shop() {
+
+        allAccounts.add(new Admin("javads" , "jjjj" , "sakbn" ,
+                "sakcnakcsakd@gamil.com" , "091221273738" , "javad1379" ,
+                "src/main/java/view/image/usersamad.jpg"));
+
 //        ArrayList<String> arrayList = new ArrayList<>();
 //        HashMap<String, String> hashMap = new HashMap<>();
 //        hashMap.put("asds" , "200 km/h");

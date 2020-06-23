@@ -17,6 +17,7 @@ public class GoodMenu {
 
     public GoodMenu(AnchorPane mainPane) {
         this.mainPane = mainPane;
+
     }
 
     public void changePane() {
@@ -64,11 +65,12 @@ public class GoodMenu {
             addToCart.setDisable(true);
         }
         productName.setText(currentGood.getName());
-        productPrice.setText("" + currentGood.getPrice());
-        mainPane.getStylesheets().add("file:/D:/java/Project_team-10/src/main/java/view/css/goodPage.css");
+        productPrice.setText("$" + currentGood.getPrice());
+        mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
         mainPane.getChildren().add(goodPageScrollPane);
         innerPane.setPrefSize(1520, 699);
+        Login.currentPane = goodPageScrollPane;
 
     }
 

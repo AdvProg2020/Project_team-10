@@ -127,6 +127,7 @@
 }
 
 .labelUsername {
+    -fx-text-fill: #1089ff;
     -fx-font-family: "sans-serif";
     -fx-font-size: 12pt;
 }
@@ -157,10 +158,26 @@
     -fx-background-radius: none;
 }
 
-.imageViewForUsername{
+.imageViewForUsername {
 
 }
 
-.shape{
-    -fx-fill:#efefef ;
+.imageViewInMain:hover {
+    -fx-cursor: hand;
+}
+
+.shape {
+    -fx-fill: #efefef;
+}
+
+.vBoxInMainMenu {
+    -fx-border-width: 1px;
+    -fx-border-color: #e2e2e2;
+}
+
+.vBoxInMainMenu:hover {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(19, 19, 19, 0.07), 30, 0.0015, 0.0, 0.0);
+    -fx-border-width: 1px;
+    -fx-border-color: #e2e2e2;
 }

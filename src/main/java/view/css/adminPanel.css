@@ -1,0 +1,15 @@
+.button{
+    -fx-background-color: none;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 14pt;
+
+}
+.button:hover{
+    -fx-text-fill: red;
+}
+
+.labelUsername{
+    -fx-text-fill: #1089ff;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 12pt;
+}

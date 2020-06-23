@@ -66,7 +66,7 @@ public class MainMenu implements Initializable {
         imageSort.setFitWidth(25);
         imageSort.setFitHeight(25);
         Label sort = new Label("Sort by:");
-        sort.setStyle("-fx-font-size: 15px;" + "-fx-text-fill: black;" + "-fx-font-family: sans-serif;");
+        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
 
         hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources), buttonForSort("Score", location, resources),
                 buttonForSort("Price(Descending)", location, resources), buttonForSort("The most visited", location, resources));
@@ -79,23 +79,16 @@ public class MainMenu implements Initializable {
             VBox vBox = new VBox();
             vBox.setPrefWidth(297);
             vBox.setPrefHeight(350);
-            vBox.setStyle("-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
-
+            vBox.getStyleClass().add("vBoxInMainMenu");
             ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
             logoImage.setFitHeight(190);
             logoImage.setFitWidth(190);
             Label name = new Label(good.getName());
-            Label price = new Label(good.getPrice() + "");
+            Label price = new Label("$" +good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
             name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
-            vBox.setOnMouseEntered(event -> {
-                vBox.setStyle("-fx-background-color: #ffffff;" +
-                        " -fx-effect:  dropshadow(three-pass-box ,rgba(19,19,19,0.07), 30,0.0015, 0.0, 0.0);"
-                        + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
-                fadeEffect(vBox);
-            });
-            vBox.setOnMouseExited(event -> vBox.setStyle("-fx-background-color: none;" + "-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;"));
+            vBox.setOnMouseEntered(event -> fadeEffect(vBox));
             logoImage.setOnMouseClicked(event -> {
                 GoodsManager.setCurrentGood(good);
                 mainPane.getChildren().remove(mainMenuScrollPane);
@@ -108,6 +101,7 @@ public class MainMenu implements Initializable {
 
         flowPane.setStyle("-fx-background-color: white;");
         mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        Login.currentPane = mainMenuScrollPane;
     }
 
     public Button buttonForSort(String input, URL location, ResourceBundle resources) {

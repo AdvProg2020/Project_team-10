@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -23,7 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Account;
+import model.Admin;
 import model.Buyer;
 import view.CommandProcessor;
 import view.NumberField;
@@ -36,7 +37,7 @@ import static view.FXML.FXML.loginURL;
 
 public class Login{
     private AnchorPane mainPane;
-    private AnchorPane anchorPane;
+    private AnchorPane loginPane;
     private TextField usernameField;
     private PasswordField passwordFieldForSignIn;
     private Label error;
@@ -55,6 +56,7 @@ public class Login{
     private Button user;
     private Button btnLogin;
     private Button cartMenu;
+    public static ScrollPane currentPane;
 
 
     public Login(AnchorPane mainPane, Button btnLogin, Button cartMenu) {
@@ -64,7 +66,7 @@ public class Login{
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        anchorPane = new AnchorPane();
+        loginPane = new AnchorPane();
         usernameField = new TextField();
         passwordFieldForSignIn = new PasswordField();
         error = new Label();
@@ -76,22 +78,21 @@ public class Login{
         Scene scene1 = new Scene(layout);
         popupWindow.setMaximized(true);
 
-        Label onlineShop = new Label("Sign in to\n" +
-                "OnlineShop");
+        Label onlineShop = new Label("Sign in to\n" + "OnlineShop");
         onlineShop.getStyleClass().add("labelForLoginTitle");
         onlineShop.setLayoutX(100);
         onlineShop.setLayoutY(100);
 
         layout.setStyle("-fx-background-color: none;");
-        anchorPane.setStyle("-fx-background-color: #1089ff;" + "-fx-background-radius: 30px;");
-        anchorPane.setPrefWidth(480);
-        anchorPane.setPrefHeight(580);
+        loginPane.setStyle("-fx-background-color: #1089ff;" + "-fx-background-radius: 30px;");
+        loginPane.setPrefWidth(480);
+        loginPane.setPrefHeight(580);
 
         fade(10, 0.5);
 
         layout.setLayoutX(500);
         layout.setLayoutY(150);
-        layout.getChildren().add(anchorPane);
+        layout.getChildren().add(loginPane);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(1500.0);
         dropShadow.setHeight(1500);
@@ -102,7 +103,7 @@ public class Login{
         popupWindow.setScene(scene1);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        anchorPane.getChildren().addAll(exitButton(), usernameField(), passwordField(), onlineShop, loginButton(),
+        loginPane.getChildren().addAll(exitButton(), usernameField(), passwordField(), onlineShop, loginButton(),
                 newUserLabel(), signUpLink(), error);
         popupWindow.showAndWait();
 
@@ -170,7 +171,7 @@ public class Login{
 
     private void signUp() {
         error.setText("");
-        anchorPane.getChildren().clear();
+        loginPane.getChildren().clear();
         imageViewForSignUp();
 
         companyText = new TextField();
@@ -181,7 +182,7 @@ public class Login{
         companyText.setPrefHeight(50);
         companyText.setVisible(false);
         companyText.getStyleClass().add("text-fieldForSignUp");
-        anchorPane.getChildren().add(companyText);
+        loginPane.getChildren().add(companyText);
 
         Button sellerType = typeOfSignUp("Seller", 445);
         sellerType.getStyleClass().add("typeField");
@@ -209,7 +210,7 @@ public class Login{
         firstNameText = textFieldForSignUp("First name", 40, 140);
         lastNameText = textFieldForSignUp("Last name", 40, 190);
 
-        anchorPane.getChildren().addAll(exitButton(), firstNameText,
+        loginPane.getChildren().addAll(exitButton(), firstNameText,
                 lastNameText, usernameForSignUp(),
                 passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(),
                 sellerType, buyerType, signUp, error);
@@ -252,7 +253,7 @@ public class Login{
         button.setPrefWidth(100);
         button.getStyleClass().add("selectPhoto");
 
-        anchorPane.getChildren().addAll(titleOFSignUp, button, rectangle);
+        loginPane.getChildren().addAll(titleOFSignUp, button, rectangle);
         button.setOnAction(e -> {
             selectedFile = fileChooser.showOpenDialog(stage);
             ImageView imageView = new ImageView(new Image("file:" + selectedFile));
@@ -262,7 +263,7 @@ public class Login{
             imageView.setLayoutY(80);
             imageView.getStyleClass().add("imageView");
             imageView.autosize();
-            anchorPane.getChildren().add(imageView);
+            loginPane.getChildren().add(imageView);
         });
 
 
@@ -390,7 +391,7 @@ public class Login{
         error.setText(text);
         error.setLayoutX(100);
         error.setLayoutY(500);
-        error.setTextFill(Color.DARKRED);
+        error.setTextFill(Color.RED);
     }
 
     private void handleUserBtn() {
@@ -439,6 +440,7 @@ public class Login{
         accountPage.setPrefHeight(40);
         accountPage.getStyleClass().add("accountPageBtn");
         accountPage.setAlignment(Pos.BASELINE_LEFT);
+        accountPage.setOnMouseClicked(e-> createAccountPanel());
 
         Button logout = new Button("Log out");
         logout.getStyleClass().add("logoutBtn");
@@ -459,6 +461,18 @@ public class Login{
         });
         mainPane.getChildren().add(user);
 
+    }
+
+    private void createAccountPanel() {
+        mainPane.getChildren().remove(popupUser);
+        mainPane.getChildren().remove(currentPane);
+        if (AccountManager.getOnlineAccount() instanceof Admin) {
+            new AdminPanel(mainPane).changePane();
+        } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
+
+        } else {
+
+        }
     }
 
     private void logout() {

@@ -8,7 +8,7 @@
 <AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/mainMenu.css">
 
-    <ScrollPane fx:id="mainMenuScrollPane" layoutY="190" layoutX="30">
+    <ScrollPane pannable="true" fx:id="mainMenuScrollPane" layoutY="190" layoutX="30">
 
         <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
