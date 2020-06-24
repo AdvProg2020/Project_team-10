@@ -28,6 +28,7 @@ public class AdminPanel {
     public AdminPanel(AnchorPane mainPane) {
         this.mainPane = mainPane;
         handelButtonOnMouseClick();
+        selectedButton.setGraphic(new ImageView(new Image("file:src/main/java/view/image/AdminPanel/userAdminHover.png")));
     }
 
     public void changePane() {
@@ -109,18 +110,12 @@ public class AdminPanel {
         button.getStyleClass().add("button");
         button.setGraphic(imageView);
         button.setAlignment(Pos.CENTER_LEFT);
-//        button.setOnMouseEntered(e -> button.setGraphic(imageViewHover));
-//        button.setOnMouseExited(e -> button.setGraphic(imageView));
 
         button.setOnMouseClicked(e -> {
+            selectedButton.setGraphic(imageView);
+            selectedButton = button;
             button.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
-            selectedButton = button;
-        });
-        button.setOnMouseExited(event -> {
-            if (selectedButton != button) {
-                button.setGraphic(imageView);
-            }
         });
 //        button.setOnMouseEntered(event -> {
 //            if ()
@@ -131,6 +126,7 @@ public class AdminPanel {
     private ScrollPane adminPaneScroll = new ScrollPane();
 
     private void handelButtonOnMouseClick() {
+
         mainPane.getChildren().remove(adminPaneScroll);
         adminPaneScroll.setPrefSize(1150, 620);
         adminPaneScroll.getStyleClass().add("scroll-bar");
@@ -138,6 +134,7 @@ public class AdminPanel {
         adminPaneScroll.setLayoutY(200);
         Account account = AccountManager.getOnlineAccount();
         if (selectedButton.getText().equals("Profile")) {
+
             FlowPane flowPane = new FlowPane();
             flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
             flowPane.setPrefWidth(1200);
@@ -149,43 +146,45 @@ public class AdminPanel {
                     createItemOfProfile("Phone number:", account.getPhoneNumber()),
                     createItemOfProfile("Email:", account.getEmail()));
             adminPaneScroll.setContent(flowPane);
-
             mainPane.getChildren().add(adminPaneScroll);
             adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         } else if (selectedButton.getText().equals("Manage users")) {
-            FlowPane flowPane = new FlowPane();
-            flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-            flowPane.setPrefWidth(1150);
-            flowPane.setPrefHeight(620);
-            flowPane.setPadding(new Insets(50, 0, 10, 70));
-            flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
-            for (Account allAccount : Shop.getShop().getAllAccounts()) {
-                HBox hBox = new HBox(100);
-                hBox.setAlignment(Pos.CENTER_LEFT);
-                hBox.setPadding(new Insets(0, 12, 0, 12));
-                hBox.getStyleClass().add("hbox");
-                hBox.setPrefHeight(60);
-                Label label = new Label(allAccount.getUsername());
-                label.setPrefWidth(150);
-                label.getStyleClass().add("labelUsernameInProfile");
-                Label label1 = new Label("  " + allAccount.getEmail());
-                Rectangle rectangle = new Rectangle(2, 60);
-                rectangle.setStyle("-fx-fill: #d5d5d5");
-                label1.setGraphic(rectangle);
-                label1.setPrefWidth(600);
-                label1.getStyleClass().add("labelUsernameInProfile");
-                ImageView imageView = new ImageView();
-                imageView.getStyleClass().add("imageView");
-                imageView.setFitWidth(31);
-                imageView.setFitHeight(25);
-                hBox.getChildren().addAll(label, label1, imageView);
-                flowPane.getChildren().add(hBox);
-            }
-            adminPaneScroll.setContent(flowPane);
+            adminPaneScroll.setContent(handelManageUsers());
             mainPane.getChildren().add(adminPaneScroll);
-
         }
         adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private FlowPane handelManageUsers() {
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(50, 0, 10, 70));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            HBox hBox = new HBox(100);
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.getStyleClass().add("hbox");
+            hBox.setPrefHeight(60);
+            Label label = new Label(allAccount.getUsername());
+            label.setPrefWidth(150);
+            label.getStyleClass().add("labelUsernameInProfile");
+            Label label1 = new Label("  " + allAccount.getEmail());
+            Rectangle rectangle = new Rectangle(2, 60);
+            rectangle.setStyle("-fx-fill: #d5d5d5");
+            label1.setGraphic(rectangle);
+            label1.setPrefWidth(600);
+            label1.getStyleClass().add("labelUsernameInProfile");
+            ImageView imageView = new ImageView();
+            imageView.getStyleClass().add("imageView");
+            imageView.setFitWidth(31);
+            imageView.setFitHeight(25);
+            hBox.getChildren().addAll(label, label1, imageView);
+            flowPane.getChildren().add(hBox);
+        }
+        return flowPane;
     }
 
     private VBox createItemOfProfile(String text, String account) {
