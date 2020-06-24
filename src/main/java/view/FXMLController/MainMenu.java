@@ -98,7 +98,7 @@ public class MainMenu implements Initializable {
             vBox.getChildren().addAll(logoImage, name, price, visit);
             flowPane.getChildren().add(vBox);
         }
-
+        mainMenuScrollPane.getStyleClass().add("scroll-bar");
         flowPane.setStyle("-fx-background-color: white;");
         mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         Login.currentPane = mainMenuScrollPane;

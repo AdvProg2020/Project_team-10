@@ -6,7 +6,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
@@ -15,20 +17,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import model.Account;
+import model.Shop;
 
 public class AdminPanel {
     public AnchorPane mainPane;
     public AnchorPane adminPane;
+    private Button selectedButton = new Button("Profile");
 
     public AdminPanel(AnchorPane mainPane) {
         this.mainPane = mainPane;
+        handelButtonOnMouseClick();
     }
 
     public void changePane() {
         adminPane = new AnchorPane();
         adminPane.setLayoutY(200);
         adminPane.setLayoutX(30);
-        adminPane.setPrefSize(250, 500);
+        adminPane.setPrefSize(250, 520);
 
 
         HBox hBox = new HBox();
@@ -68,14 +74,17 @@ public class AdminPanel {
         vBox.setSpacing(10);
         vBox.setAlignment(Pos.TOP_LEFT);
 
-        Rectangle rectangle = new Rectangle(240, 2);
-        rectangle.setFill(Color.rgb(225, 225, 225));
-        vBox.getChildren().addAll(hBox, rectangle, createButton("Profile", "src/main/java/view/image/AdminPanel/userAdmin"),
-                createButton("Mange users", "src/main/java/view/image/AdminPanel/users"),
+        Rectangle rectangleTop = new Rectangle(240, 2);
+        rectangleTop.setFill(Color.rgb(225, 225, 225));
+        Rectangle rectangleDown = new Rectangle(240, 2);
+        rectangleDown.setFill(Color.rgb(225, 225, 225));
+        vBox.getChildren().addAll(hBox, rectangleTop, createButton("Profile", "src/main/java/view/image/AdminPanel/userAdmin"),
+                createButton("Manage users", "src/main/java/view/image/AdminPanel/users"),
                 createButton("Manage products", "src/main/java/view/image/AdminPanel/product"),
                 createButton("Manage requests", "src/main/java/view/image/AdminPanel/request"),
                 createButton("Discounts", "src/main/java/view/image/AdminPanel/discount"),
                 createButton("Category", "src/main/java/view/image/AdminPanel/category"),
+                rectangleDown,
                 createButton("Log out", "src/main/java/view/image/AdminPanel/logout"));
         vBox.setStyle("-fx-background-color: none;");
         vBox.setPadding(new Insets(10, 10, 10, 8));
@@ -88,9 +97,9 @@ public class AdminPanel {
         adminPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
     }
 
-    public Button createButton(String text, String image) {
-        ImageView imageView = new ImageView(new Image("file:" + image + ".png"));
-        ImageView imageViewHover = new ImageView(new Image("file:" + image + "Hover.png"));
+    public Button createButton(String text, String style) {
+        ImageView imageView = new ImageView(new Image("file:" + style + ".png"));
+        ImageView imageViewHover = new ImageView(new Image("file:" + style + "Hover.png"));
         imageViewHover.setFitWidth(30);
         imageViewHover.setFitHeight(30);
         imageView.setFitHeight(30);
@@ -100,10 +109,96 @@ public class AdminPanel {
         button.getStyleClass().add("button");
         button.setGraphic(imageView);
         button.setAlignment(Pos.CENTER_LEFT);
-        button.setOnMouseEntered(e -> button.setGraphic(imageViewHover));
-        button.setOnMouseExited(e -> button.setGraphic(imageView));
+//        button.setOnMouseEntered(e -> button.setGraphic(imageViewHover));
+//        button.setOnMouseExited(e -> button.setGraphic(imageView));
+
+        button.setOnMouseClicked(e -> {
+            button.setGraphic(imageViewHover);
+            handelButtonOnMouseClick();
+            selectedButton = button;
+        });
+        button.setOnMouseExited(event -> {
+            if (selectedButton != button) {
+                button.setGraphic(imageView);
+            }
+        });
+//        button.setOnMouseEntered(event -> {
+//            if ()
+//        });
         return button;
     }
 
+    private ScrollPane adminPaneScroll = new ScrollPane();
+
+    private void handelButtonOnMouseClick() {
+        mainPane.getChildren().remove(adminPaneScroll);
+        adminPaneScroll.setPrefSize(1150, 620);
+        adminPaneScroll.getStyleClass().add("scroll-bar");
+        adminPaneScroll.setLayoutX(330);
+        adminPaneScroll.setLayoutY(200);
+        Account account = AccountManager.getOnlineAccount();
+        if (selectedButton.getText().equals("Profile")) {
+            FlowPane flowPane = new FlowPane();
+            flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+            flowPane.setPrefWidth(1200);
+            flowPane.setPrefHeight(420);
+            flowPane.setPadding(new Insets(50, 0, 10, 70));
+            flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+            flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
+                    createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
+                    createItemOfProfile("Phone number:", account.getPhoneNumber()),
+                    createItemOfProfile("Email:", account.getEmail()));
+            adminPaneScroll.setContent(flowPane);
+
+            mainPane.getChildren().add(adminPaneScroll);
+            adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        } else if (selectedButton.getText().equals("Manage users")) {
+            FlowPane flowPane = new FlowPane();
+            flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+            flowPane.setPrefWidth(1150);
+            flowPane.setPrefHeight(620);
+            flowPane.setPadding(new Insets(50, 0, 10, 70));
+            flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+            for (Account allAccount : Shop.getShop().getAllAccounts()) {
+                HBox hBox = new HBox(100);
+                hBox.setAlignment(Pos.CENTER_LEFT);
+                hBox.setPadding(new Insets(0, 12, 0, 12));
+                hBox.getStyleClass().add("hbox");
+                hBox.setPrefHeight(60);
+                Label label = new Label(allAccount.getUsername());
+                label.setPrefWidth(150);
+                label.getStyleClass().add("labelUsernameInProfile");
+                Label label1 = new Label("  " + allAccount.getEmail());
+                Rectangle rectangle = new Rectangle(2, 60);
+                rectangle.setStyle("-fx-fill: #d5d5d5");
+                label1.setGraphic(rectangle);
+                label1.setPrefWidth(600);
+                label1.getStyleClass().add("labelUsernameInProfile");
+                ImageView imageView = new ImageView();
+                imageView.getStyleClass().add("imageView");
+                imageView.setFitWidth(31);
+                imageView.setFitHeight(25);
+                hBox.getChildren().addAll(label, label1, imageView);
+                flowPane.getChildren().add(hBox);
+            }
+            adminPaneScroll.setContent(flowPane);
+            mainPane.getChildren().add(adminPaneScroll);
+
+        }
+        adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private VBox createItemOfProfile(String text, String account) {
+        VBox vBox = new VBox(2);
+        vBox.setPrefSize(500, 80);
+        vBox.setPadding(new Insets(10, 10, 0, 10));
+        vBox.setStyle("-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
+        Label label = new Label(text);
+        label.getStyleClass().add("labelUser");
+        Label labelUsername = new Label(account);
+        labelUsername.getStyleClass().add("labelUsernameInProfile");
+        vBox.getChildren().addAll(label, labelUsername);
+        return vBox;
+    }
 
 }
