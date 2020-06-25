@@ -1,5 +1,6 @@
 package view.FXMLController;
 
+import controller.AccountManager;
 import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
@@ -16,6 +17,9 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Admin;
+import model.Buyer;
+import model.BuyerLog;
 import model.Good;
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +33,7 @@ public class MainMenu implements Initializable {
     public ScrollPane mainMenuScrollPane = new ScrollPane();
     public Rectangle header;
     public Button selectedButton = new Button("The most visited");
-    public Button cartMenu;
+    public Button btnCartMenu;
     private URL location;
     private ResourceBundle resources;
 
@@ -54,7 +58,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, cartMenu).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnCartMenu).popupLogin(mouseEvent);
     }
 
     @Override
@@ -62,6 +66,9 @@ public class MainMenu implements Initializable {
         this.location = location;
         this.resources = resources;
         HBox hBox = new HBox();
+        if (AccountManager.getOnlineAccount() instanceof Buyer) {
+            btnCartMenu.setVisible(true);
+        }
         ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
         imageSort.setFitWidth(25);
         imageSort.setFitHeight(25);
@@ -153,7 +160,8 @@ public class MainMenu implements Initializable {
     }
 
     public void cartMenu(MouseEvent mouseEvent) {
-
+        mainPane.getChildren().remove(mainMenuScrollPane);
+        new CartMenu(mainPane, btnCartMenu).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {

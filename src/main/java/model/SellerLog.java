@@ -1,5 +1,7 @@
 package model;
 
+import controller.AccountManager;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class SellerLog {
         this.goods = goods;
         this.usernameOfBuyer = usernameOfBuyer;
         this.status = status;
+        AccountManager.increaseLastSellerLogId();
     }
 
     public int getId() {

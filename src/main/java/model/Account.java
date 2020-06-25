@@ -24,6 +24,7 @@ public abstract class Account {
         this.imagePath = imagePath;
     }
 
+
     @Override
     public String toString() {
         return

@@ -2,12 +2,17 @@ package view.FXMLController;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import controller.AccountManager;
 import controller.GoodsManager;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import model.Admin;
+import model.Buyer;
 import model.Comment;
 import model.Good;
 
@@ -29,7 +34,7 @@ public class GoodMenu {
         goodPageScrollPane = new ScrollPane(innerPane);
         goodPageScrollPane.setLayoutY(164);
         goodPageScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         ImageView goodImage = new ImageView(new Image("file:" + currentGood.getImagePath()));
 
@@ -52,6 +57,13 @@ public class GoodMenu {
         addToCart.getStyleClass().add("addToCartButton");
         addToCart.setLayoutX(700);
         addToCart.setLayoutY(430);
+        addToCart.setOnMouseClicked(event -> {
+            ((Buyer) AccountManager.getOnlineAccount()).getCart().add(currentGood);
+            currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
+        });
+        if (!(AccountManager.getOnlineAccount() instanceof Buyer) || ((Buyer) AccountManager.getOnlineAccount()).getCart().contains(currentGood)) {
+            addToCart.setDisable(true);
+        }
 
         innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart);
         goodImage.setFitWidth(500);
@@ -69,7 +81,7 @@ public class GoodMenu {
         mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
         mainPane.getChildren().add(goodPageScrollPane);
-        innerPane.setPrefSize(1520, 699);
+        innerPane.setPrefSize(1534, 699);
         Login.currentPane = goodPageScrollPane;
 
     }

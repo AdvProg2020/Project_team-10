@@ -1189,7 +1189,7 @@ public class CommandProcessor {
         if (currentBuyer.getGoodInCartById(currentGood.getId()) == null) {
             if (currentGood.getNumber() > 0) {
                 currentBuyer.getCart().add(currentGood);
-                currentGood.getGoodsInBuyerCart().put(currentBuyer, 1);
+                currentGood.getGoodsInBuyerCart().put(currentBuyer.getUsername(), 1);
                 System.out.println("the product added");
             } else {
                 System.out.println("this product is not available");

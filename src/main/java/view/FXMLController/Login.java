@@ -14,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -55,14 +54,14 @@ public class Login{
     private FlowPane popupUser;
     private Button user;
     private Button btnLogin;
-    private Button cartMenu;
+    private Button btnCartMenu;
     public static ScrollPane currentPane;
 
 
-    public Login(AnchorPane mainPane, Button btnLogin, Button cartMenu) {
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu) {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
-        this.cartMenu = cartMenu;
+        this.btnCartMenu = btnCartMenu;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -332,9 +331,9 @@ public class Login{
             popupWindow.close();
             handleUserBtn();
             if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
-                cartMenu.setVisible(false);
+                btnCartMenu.setVisible(false);
             } else {
-                cartMenu.setVisible(true);
+                btnCartMenu.setVisible(true);
             }
             fade(0.5, 10);
         } else {
@@ -394,7 +393,7 @@ public class Login{
         error.setTextFill(Color.RED);
     }
 
-    private void handleUserBtn() {
+    public void handleUserBtn() {
 
         popupUser = new FlowPane();
         popupUser.setAlignment(Pos.CENTER_LEFT);
@@ -481,7 +480,7 @@ public class Login{
         popupUser.getChildren().clear();
         popupUser.setVisible(false);
         btnLogin.setVisible(true);
-        cartMenu.setVisible(true);
+        btnCartMenu.setVisible(true);
     }
 
     private void fade(double fromValue, double toValue) {

@@ -1,0 +1,106 @@
+.label {
+    -fx-font-size: 25;
+    -fx-text-fill: black;
+
+}
+
+.goodImage {
+
+}
+
+.button {
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-font-family: sans-serif;
+    -fx-background-color: red;
+}
+
+.text-field {
+    -fx-font-size: 20;
+}
+
+.purchase {
+    -fx-pref-width: 350;
+    -fx-pref-height: 50;
+}
+
+.btnExit {
+    -fx-background-image: url("../image/exitpopup.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.btnExit:hover {
+    -fx-background-image: url("../image/exitpopupHover.png");
+}
+
+.labelForPaymentTitle {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 25pt;
+    -fx-font-family: sans-serif;
+    -fx-font-weight: bold;
+}
+
+.confirm {
+    -fx-background-color: white;
+    -fx-text-fill: #1089ff;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+}
+
+.confirm:hover {
+    -fx-effect: dropshadow(three-pass-box, #292929, 5, 0.1, 0, 0);
+}
+
+
+.paymentFields {
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10;
+    -fx-padding: 0 10 0 43;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 16pt;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+}
+
+.username {
+    -fx-background-image: url('../image/username.png');
+}
+
+.phoneNumber {
+    -fx-background-image: url('../image/Mobile-Phone-icon.png');
+}
+
+.address {
+    -fx-background-image: url('../image/address.png');
+}
+
+.zipCode {
+    -fx-background-image: url('../image/zipCode.png');
+}
+
+.discountCode {
+    -fx-background-image: url('../image/discountCode.png');
+}
+
+.totalPrice {
+    -fx-font-size: 25;
+    -fx-text-fill: black;
+    -fx-pref-width: 310;
+}
+
+.error {
+    -fx-text-fill: red;
+    -fx-font-size: 25;
+    -fx-pref-width: 310;
+}

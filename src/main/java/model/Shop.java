@@ -21,10 +21,10 @@ public class Shop {
 
     private Shop() {
 
-        allAccounts.add(new Admin("javads" , "jjjj" , "sakbn" ,
-                "sakcnakcsakd@gamil.com" , "091221273738" , "javad1379" ,
-                "src/main/java/view/image/usersamad.jpg"));
-
+//        allAccounts.add(new Admin("javads" , "jjjj" , "sakbn" ,
+//                "sakcnakcsakd@gamil.com" , "091221273738" , "javad1379" ,
+//                "src/main/java/view/image/usersamad.jpg"));
+//
 //        ArrayList<String> arrayList = new ArrayList<>();
 //        HashMap<String, String> hashMap = new HashMap<>();
 //        hashMap.put("asds" , "200 km/h");
@@ -61,11 +61,11 @@ public class Shop {
 //        allGoods.add(new Good(1 , "mmmm" , "bmw"
 //                , 2 , 13 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
 //        allGoods.add(new Good(2 , "nnnn" , "bmw"
-//                , 2 , 14 , null , "car" , hashMap , "dhsvjshv"));
+//                , 2 , 1800 , "seller" , "car" , hashMap , "dhsvjshv", "C:/Users/hossein/Desktop/optima.jpg"));
 //        allGoods.add(new Good(3 , "oooo" , "bmw"
-//                , 2 , 15 , null , "car" , hashMap , "dhsvjshv"));
-//        allGoods.add(new Good(20 , "optima" , "kia"
-//                , 5 , 400000000 , "seller" , "car" , hashMap , "dhsvjshvgg dfg d fdfgdfgdfg dfgdfg",
+//                , 2 , 1500 , "seller" , "car" , hashMap , "dhsvjshv", "C:/Users/hossein/Desktop/optima.jpg"));
+//        allGoods.add(new Good(7 , "optima" , "kia"
+//                , 5 , 2000 , "seller" , "car" , hashMap , "dhsvjshvgg dfg d fdfgdfgdfg dfgdfg",
 //                "C:/Users/hossein/Desktop/optima.jpg").setVisitNumber(19));
     }
 

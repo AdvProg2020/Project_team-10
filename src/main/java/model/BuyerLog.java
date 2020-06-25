@@ -10,10 +10,10 @@ public class BuyerLog {
     private Date date;
     private long paidAmount;
     private long discount;
-    private Map<Seller, List<Good>> sellersToHisGoods;
+    private Map<String, List<Good>> sellersToHisGoods;
     private String status;
 
-    public BuyerLog(int id, Date date, long paidAmount, long discount, Map<Seller, List<Good>> sellersToHisGoods, String status) {
+    public BuyerLog(int id, Date date, long paidAmount, long discount, Map<String, List<Good>> sellersToHisGoods, String status) {
         this.id = id;
         this.date = date;
         this.paidAmount = paidAmount;
@@ -39,9 +39,9 @@ public class BuyerLog {
 
     private String mapToString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Seller seller : sellersToHisGoods.keySet()) {
-            stringBuilder.append("seller: ").append(seller.getUsername());
-            for (Good good : sellersToHisGoods.get(seller)) {
+        for (String sellerUsername : sellersToHisGoods.keySet()) {
+            stringBuilder.append("seller: ").append(sellerUsername);
+            for (Good good : sellersToHisGoods.get(sellerUsername)) {
                 stringBuilder.append(" | ").append(good.goodMenuToString());
             }
             stringBuilder.append("\n");
