@@ -80,16 +80,25 @@
 
 .labelUsernameInProfile{
     -fx-font-family: "Franklin Gothic Medium Cond";
-    -fx-font-size: 30;
+    -fx-font-size: 20;
     -fx-text-fill: #868686;
 }
 
-.imageView{
+.binImage{
     -fx-image: url("../image/AdminPanel/recybin.png");
 }
 
-.imageView:hover{
+.binImage:hover{
     -fx-image: url("../image/AdminPanel/recybinHover.png");
+    -fx-cursor: hand;
+}
+
+.editImage{
+    -fx-image: url("../image/edit.png");
+}
+
+.editImage:hover{
+    -fx-image: url("../image/editHover.png");
     -fx-cursor: hand;
 }
 
@@ -123,4 +132,10 @@
 .imageViewRecy:hover{
     -fx-image: url("../image/recyHover.png");
     -fx-cursor: hand;
+}
+
+.labelForDiscount{
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 20;
+    -fx-text-fill: #868686;
 }
