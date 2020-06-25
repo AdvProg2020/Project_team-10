@@ -5,6 +5,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -56,8 +57,7 @@ public class Login{
     private Button user;
     private Button btnLogin;
     private Button cartMenu;
-    public static ScrollPane currentPane;
-
+    public static Node currentPane;
 
     public Login(AnchorPane mainPane, Button btnLogin, Button cartMenu) {
         this.mainPane = mainPane;

@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 public class MainMenu implements Initializable {
     public Button btnLogin;
     public AnchorPane mainPane;
+    public AnchorPane mainPaneClone;
     public FlowPane flowPane;
     public ScrollPane mainMenuScrollPane = new ScrollPane();
     public Rectangle header;
@@ -101,7 +102,7 @@ public class MainMenu implements Initializable {
         mainMenuScrollPane.getStyleClass().add("scroll-bar");
         flowPane.setStyle("-fx-background-color: white;");
         mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        Login.currentPane = mainMenuScrollPane;
+        Login.currentPane = mainPaneClone;
     }
 
     public Button buttonForSort(String input, URL location, ResourceBundle resources) {

@@ -14,10 +14,10 @@ import model.Good;
 public class GoodMenu {
     public AnchorPane mainPane;
     public ScrollPane goodPageScrollPane;
+//    public AnchorPane mainPaneClone = new AnchorPane();
 
-    public GoodMenu(AnchorPane mainPane) {
+    public GoodMenu(AnchorPane mainPane ) {
         this.mainPane = mainPane;
-
     }
 
     public void changePane() {

@@ -93,6 +93,14 @@
     -fx-cursor: hand;
 }
 
+.imageViewPlus{
+    -fx-image: url("../image/plus.png");
+}
+ .imageViewPlus:hover{
+     -fx-image: url("../image/plusHover.png");
+     -fx-cursor: hand;
+ }
+
 .hbox{
 -fx-border-width: 1px;
 -fx-border-color: #e2e2e2;
@@ -100,4 +108,19 @@
 
 .hbox:hover{
     -fx-background-color: #f1f1f1;
+}
+
+.hboxTitle{
+    -fx-border-width: 1px;
+    -fx-border-color: #e2e2e2;
+    -fx-background-color: #eaeaea;
+}
+
+.imageViewRecy{
+    -fx-image: url("../image/recy.png");
+}
+
+.imageViewRecy:hover{
+    -fx-image: url("../image/recyHover.png");
+    -fx-cursor: hand;
 }
