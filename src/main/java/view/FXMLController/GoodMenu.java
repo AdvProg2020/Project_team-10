@@ -8,10 +8,12 @@ import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -20,9 +22,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import model.Admin;
+import model.Buyer;
 import model.Comment;
 import model.Good;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.nio.file.Paths;
 
@@ -37,7 +40,7 @@ public class GoodMenu {
     TextField title;
     TextArea content;
 
-    public GoodMenu(AnchorPane mainPane) {
+    public GoodMenu(AnchorPane mainPane ) {
         this.mainPane = mainPane;
 
     }
@@ -51,7 +54,7 @@ public class GoodMenu {
         goodPageScrollPane = new ScrollPane(innerPane);
         goodPageScrollPane.setLayoutY(164);
         goodPageScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         ImageView goodImage = new ImageView(new Image("file:" + currentGood.getImagePath()));
 
@@ -74,6 +77,13 @@ public class GoodMenu {
         addToCart.getStyleClass().add("addToCartButton");
         addToCart.setLayoutX(700);
         addToCart.setLayoutY(430);
+        addToCart.setOnMouseClicked(event -> {
+            ((Buyer) AccountManager.getOnlineAccount()).getCart().add(currentGood);
+            currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
+        });
+        if (!(AccountManager.getOnlineAccount() instanceof Buyer) || ((Buyer) AccountManager.getOnlineAccount()).getCart().contains(currentGood)) {
+            addToCart.setDisable(true);
+        }
 
         innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart);
         goodImage.setFitWidth(500);
@@ -91,7 +101,7 @@ public class GoodMenu {
         mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
         mainPane.getChildren().add(goodPageScrollPane);
-        innerPane.setPrefSize(1520, 699);
+        innerPane.setPrefSize(1534, 699);
         Login.currentPane = goodPageScrollPane;
 
     }

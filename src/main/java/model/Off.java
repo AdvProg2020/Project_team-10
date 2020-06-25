@@ -1,5 +1,7 @@
 package model;
 
+import controller.AccountManager;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class Off {
         this.startDate = startDate;
         this.endDate = endDate;
         this.percent = percent;
+        AccountManager.increaseLastOffId();
     }
 
     public int getId() {

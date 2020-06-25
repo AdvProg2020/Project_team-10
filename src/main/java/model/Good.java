@@ -20,7 +20,7 @@ public class Good implements Comparable<Good> {
     private List<Comment> comments;
     private List<String> buyersUsername;
     private int visitNumber;
-    private Map<Account, Integer> goodsInBuyerCart;
+    private Map<String, Integer> goodsInBuyerCart;
     private Date date;
     private int offId;
     private String imagePath;
@@ -42,6 +42,7 @@ public class Good implements Comparable<Good> {
         this.allScores = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
+        this.buyersUsername = new ArrayList<>();
         AccountManager.increaseLastGoodId();
     }
 
@@ -56,9 +57,12 @@ public class Good implements Comparable<Good> {
         this.category = category;
         this.categoryAttribute = categoryAttribute;
         this.description = description;
+        this.goodsInBuyerCart = new HashMap<>();
         this.allScores = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.date = new Date();
+        this.buyersUsername = new ArrayList<>();
+        AccountManager.increaseLastGoodId();
 
     }
 
@@ -69,11 +73,11 @@ public class Good implements Comparable<Good> {
     }
 
     public void subtractNumber() {
-        int numberOfGoodInCart = getGoodsInBuyerCart().get(AccountManager.getOnlineAccount());
+        int numberOfGoodInCart = getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername());
         this.number -= numberOfGoodInCart;
     }
 
-    public Map<Account, Integer> getGoodsInBuyerCart() {
+    public Map<String, Integer> getGoodsInBuyerCart() {
         return goodsInBuyerCart;
     }
 

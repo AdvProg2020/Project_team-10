@@ -252,3 +252,22 @@
 .scroll-bar:vertical:focused {
     -fx-background-color: transparent;
 }
+
+.vboxForFilter{
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #e3e3e3;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.jfx-toggle-button {
+    -jfx-toggle-color: #0084ff;
+    -jfx-untoggle-color: #FAFAFA;
+    -jfx-toggle-line-color: #79bdfc;
+    -jfx-untoggle-line-color: #999999;
+    -jfx-size: 10px;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 12pt;
+    -jfx-disable-visual-focus: false;
+}

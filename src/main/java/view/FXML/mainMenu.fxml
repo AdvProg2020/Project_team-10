@@ -5,18 +5,38 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.shape.Rectangle?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/mainMenu.css">
 
-    <ScrollPane pannable="true" fx:id="mainMenuScrollPane" layoutY="190" layoutX="30">
+    <AnchorPane fx:id="mainMenu" layoutY="165">
 
-        <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
+        <ScrollPane pannable="true" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">
 
-        </FlowPane>
+            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
-    </ScrollPane>
+            </FlowPane>
+
+        </ScrollPane>
+
+        <VBox layoutY="25" layoutX="1250" prefWidth="260" prefHeight="55" styleClass="vboxForFilter"
+              alignment="CENTER_LEFT">
+            <JFXToggleButton text="Only offs" styleClass="jfx-toggle-button"/>
+        </VBox>
+        <VBox layoutY="95" layoutX="1250" prefWidth="260" prefHeight="55" styleClass="vboxForFilter"
+              alignment="CENTER_LEFT">
+            <JFXToggleButton text="Only available goods" styleClass="jfx-toggle-button"/>
+        </VBox>
+
+        <VBox layoutY="165" layoutX="1250" prefWidth="260" prefHeight="510" styleClass="vboxForFilter"
+              alignment="CENTER_LEFT">
+
+        </VBox>
+
+    </AnchorPane>
 
     <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
+
 
     <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
         <tooltip>
@@ -29,24 +49,28 @@
             <Tooltip text="Minimize"/>
         </tooltip>
     </Button>
-<!--    layoutX="1350" layoutY="105"-->
-    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount" onMouseClicked="#popupLogin">
+
+
+    <!--    layoutX="1350" layoutY="105"-->
+    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount"
+            onMouseClicked="#popupLogin">
 
     </Button>
 
-<!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
+    <!--    <Rectangle layoutY="105" layoutX="1442" height="40" width="2" fill="#1089ff"/>-->
 
-    <Button fx:id="cartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#cartMenu" >
+    <Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart" onMouseClicked="#cartMenu" >
 
     </Button>
 
-<!--    <AnchorPane fx:id="popupUser" styleClass="popupUser" layoutX="1310" layoutY="145" width="120" height="130" visible="false"/>-->
+    <!--    <AnchorPane fx:id="popupUser" styleClass="popupUser" layoutX="1310" layoutY="145" width="120" height="130" visible="false"/>-->
 
-    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo" onMouseClicked="#backToMainMenu"/>
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"
+               onMouseClicked="#backToMainMenu"/>
 
-<!--    <FlowPane fx:id="popupUser" alignment="CENTER_LEFT" hgap="5" styleClass="popupUser" layoutX="1280" layoutY="145" prefWidth="170" prefHeight="145" visible="false">-->
+    <!--    <FlowPane fx:id="popupUser" alignment="CENTER_LEFT" hgap="5" styleClass="popupUser" layoutX="1280" layoutY="145" prefWidth="170" prefHeight="145" visible="false">-->
 
-<!--    </FlowPane>-->
+    <!--    </FlowPane>-->
 
 
 </AnchorPane>

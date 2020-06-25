@@ -30,9 +30,9 @@ public class FileHandler {
 
     public static void updateDatabase() {
         try {
-            readAllAccounts();
             readAllCategories();
             readAllProducts();
+            readAllAccounts();
             readAllDiscounts();
             readAllOffs();
             readAllComments();
@@ -43,7 +43,8 @@ public class FileHandler {
             readLastDiscountCodeId();
             readLastOffId();
             readLastRequestId();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -264,7 +265,7 @@ public class FileHandler {
         bufferedReader.close();
         fileReader.close();
 
-        GoodsManager.getFilteredGoods().addAll(allProducts);
+        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
 
     }
 

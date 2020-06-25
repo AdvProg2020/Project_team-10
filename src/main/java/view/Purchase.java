@@ -123,11 +123,11 @@ public class Purchase {
         }
     }
 
-    private static boolean canPay(double finalPrice) {
+    public static boolean canPay(double finalPrice) {
         return finalPrice <= (AccountManager.getOnlineAccount()).getCredit();
     }
 
-    private static void pay(double finalPrice, Discount currentDiscount) {
+    public static void pay(double finalPrice, Discount currentDiscount) {
         Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
         currentBuyer.subtractCredit(finalPrice);
         Set<Seller> sellers = new HashSet<>();
@@ -147,12 +147,11 @@ public class Purchase {
         }
         makeLogs(sellers, finalPrice);
         currentBuyer.getCart().clear();
-        System.out.println("The purchase was successful");
     }
 
     private static void makeLogs(Set<Seller> sellers, double finalPrice) {
         Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
-        Map<Seller, List<Good>> sellersToHisGoods = new HashMap<>();
+        Map<String, List<Good>> sellersToHisGoods = new HashMap<>();
         for (Seller seller : sellers) {
             ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
             for (Good good : currentBuyer.getCart()) {
@@ -160,7 +159,7 @@ public class Purchase {
                     goodsOfOneSeller.add(good);
                 }
             }
-            sellersToHisGoods.put(seller, goodsOfOneSeller);
+            sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
             seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(goodsOfOneSeller));
             seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
                     BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(currentBuyer.getCart()), sellersToHisGoods.get(seller),
@@ -168,8 +167,6 @@ public class Purchase {
         }
         currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
                 ((long) (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - finalPrice)), sellersToHisGoods, "paid"));
-
-
 
     }
 

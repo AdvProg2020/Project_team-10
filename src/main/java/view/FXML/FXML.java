@@ -25,6 +25,8 @@ public class FXML {
     public static String mainMenuURL = "./src/main/java/view/FXML/mainMenu.fxml";
     public static String loginURL = "./src/main/java/view/FXML/loginMenu.fxml";
     public static String goodPageURL = "./src/main/java/view/FXML/goodPage.fxml";
+    public static String paymentURL = "./src/main/java/view/FXML/payment.fxml";
+    public static String adminPopupURL = "./src/main/java/view/FXML/adminPopup.fxml";
 
     public static void switchScene(String urlText, Node button) throws IOException {
         Stage stage = ((Stage) button.getScene().getWindow());

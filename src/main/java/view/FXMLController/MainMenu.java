@@ -1,5 +1,6 @@
 package view.FXMLController;
 
+import controller.AccountManager;
 import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
@@ -16,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Buyer;
 import model.Good;
 import java.io.IOException;
 import java.net.URL;
@@ -25,13 +27,15 @@ import java.util.ResourceBundle;
 public class MainMenu implements Initializable {
     public Button btnLogin;
     public AnchorPane mainPane;
+    public AnchorPane mainMenu;
     public FlowPane flowPane;
     public ScrollPane mainMenuScrollPane = new ScrollPane();
     public Rectangle header;
     public Button selectedButton = new Button("The most visited");
-    public Button cartMenu;
-    private URL location;
-    private ResourceBundle resources;
+    public Button btnCartMenu;
+    public URL location;
+    public ResourceBundle resources;
+    public MainMenu main;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -54,14 +58,18 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, cartMenu).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(mouseEvent);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        flowPane.getChildren().clear();
         this.location = location;
         this.resources = resources;
         HBox hBox = new HBox();
+        if (AccountManager.getOnlineAccount() instanceof Buyer) {
+            btnCartMenu.setVisible(true);
+        }
         ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
         imageSort.setFitWidth(25);
         imageSort.setFitHeight(25);
@@ -91,7 +99,7 @@ public class MainMenu implements Initializable {
             vBox.setOnMouseEntered(event -> fadeEffect(vBox));
             logoImage.setOnMouseClicked(event -> {
                 GoodsManager.setCurrentGood(good);
-                mainPane.getChildren().remove(mainMenuScrollPane);
+                mainPane.getChildren().remove(mainMenu);
                 new GoodMenu(mainPane).changePane();
             });
             vBox.setAlignment(Pos.CENTER);
@@ -101,7 +109,8 @@ public class MainMenu implements Initializable {
         mainMenuScrollPane.getStyleClass().add("scroll-bar");
         flowPane.setStyle("-fx-background-color: white;");
         mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        Login.currentPane = mainMenuScrollPane;
+        Login.currentPane = mainMenu;
+        main = this;
     }
 
     public Button buttonForSort(String input, URL location, ResourceBundle resources) {
@@ -153,15 +162,16 @@ public class MainMenu implements Initializable {
     }
 
     public void cartMenu(MouseEvent mouseEvent) {
-
+        mainPane.getChildren().remove(mainMenuScrollPane);
+        new CartMenu(mainPane, btnCartMenu).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
-        if (!mainPane.getChildren().contains(mainMenuScrollPane)) {
-            mainPane.getChildren().removeIf(child -> child instanceof ScrollPane);
-            flowPane.getChildren().clear();
+        if (!mainPane.getChildren().contains(mainMenu)) {
+            mainPane.getChildren().remove(Login.currentPane);
             initialize(location, resources);
-            mainPane.getChildren().add(mainMenuScrollPane);
+            mainPane.getChildren().add(mainMenu);
         }
     }
+
 }

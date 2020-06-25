@@ -5,6 +5,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -55,14 +56,17 @@ public class Login{
     private FlowPane popupUser;
     private Button user;
     private Button btnLogin;
-    private Button cartMenu;
-    public static ScrollPane currentPane;
+    private Button btnCartMenu;
+    public static Node currentPane;
+    private AnchorPane mainMenu;
+    private MainMenu main;
 
-
-    public Login(AnchorPane mainPane, Button btnLogin, Button cartMenu) {
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main) {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
-        this.cartMenu = cartMenu;
+        this.btnCartMenu = btnCartMenu;
+        this.mainMenu = mainMenu;
+        this.main = main;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -332,9 +336,9 @@ public class Login{
             popupWindow.close();
             handleUserBtn();
             if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
-                cartMenu.setVisible(false);
+                btnCartMenu.setVisible(false);
             } else {
-                cartMenu.setVisible(true);
+                btnCartMenu.setVisible(true);
             }
             fade(0.5, 10);
         } else {
@@ -394,7 +398,7 @@ public class Login{
         error.setTextFill(Color.RED);
     }
 
-    private void handleUserBtn() {
+    public void handleUserBtn() {
 
         popupUser = new FlowPane();
         popupUser.setAlignment(Pos.CENTER_LEFT);
@@ -467,7 +471,7 @@ public class Login{
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (AccountManager.getOnlineAccount() instanceof Admin) {
-            new AdminPanel(mainPane).changePane();
+            new AdminPanel(mainPane, main, mainMenu).changePane();
         } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
 
         } else {
@@ -481,7 +485,7 @@ public class Login{
         popupUser.getChildren().clear();
         popupUser.setVisible(false);
         btnLogin.setVisible(true);
-        cartMenu.setVisible(true);
+        btnCartMenu.setVisible(true);
     }
 
     private void fade(double fromValue, double toValue) {

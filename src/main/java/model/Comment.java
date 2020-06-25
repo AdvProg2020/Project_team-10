@@ -1,5 +1,7 @@
 package model;
 
+import controller.AccountManager;
+
 public class Comment {
     private Account account;
     private int goodId;
@@ -11,6 +13,7 @@ public class Comment {
         this.account = account;
         this.goodId = goodId;
         this.text = text;
+        AccountManager.increaseLastCommentId();
     }
 
     @Override
