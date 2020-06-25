@@ -5,6 +5,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -14,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -55,13 +57,16 @@ public class Login{
     private Button user;
     private Button btnLogin;
     private Button btnCartMenu;
-    public static ScrollPane currentPane;
+    public static Node currentPane;
+    private AnchorPane mainMenu;
+    private MainMenu main;
 
-
-    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu) {
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main) {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
         this.btnCartMenu = btnCartMenu;
+        this.mainMenu = mainMenu;
+        this.main = main;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -466,7 +471,7 @@ public class Login{
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (AccountManager.getOnlineAccount() instanceof Admin) {
-            new AdminPanel(mainPane).changePane();
+            new AdminPanel(mainPane, main, mainMenu).changePane();
         } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
 
         } else {

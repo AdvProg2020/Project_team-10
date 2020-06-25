@@ -21,21 +21,21 @@ public class Shop {
 
     private Shop() {
 
-//        allAccounts.add(new Admin("javads" , "jjjj" , "sakbn" ,
-//                "sakcnakcsakd@gamil.com" , "091221273738" , "javad1379" ,
-//                "src/main/java/view/image/usersamad.jpg"));
-//
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        HashMap<String, String> hashMap = new HashMap<>();
-//        hashMap.put("asds" , "200 km/h");
-//        hashMap.put("spd" , "200 km/h");
-//        hashMap.put("speed" , "300 km/h");
-//        arrayList.add("speed");
-//        arrayList.add("asds");
-//        arrayList.add("speaffed");
-//        allCategories.add(new Category("car" ,arrayList ));
-//        allGoods.add(new Good(4 , "dddd" , "bmw"
-//                , 2 , 4 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(5));
+        allAccounts.add(new Admin("javads" , "jjjj" , "sakbn" ,
+                "sakcnakcsakd@gamil.com" , "091221273738" , "javad1379" ,
+                "src/main/java/view/image/usersamad.jpg"));
+
+        ArrayList<String> arrayList = new ArrayList<>();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("asds" , "200 km/h");
+        hashMap.put("spd" , "200 km/h");
+        hashMap.put("speed" , "300 km/h");
+        arrayList.add("speed");
+        arrayList.add("asds");
+        arrayList.add("speaffed");
+        allCategories.add(new Category("car" ,arrayList ));
+        allGoods.add(new Good(4 , "dddd" , "bmw"
+                , 2 , 4 , null , "car" , hashMap , "dhsvjshv" ,"src/main/java/view/image/usersamad.jpg").setVisitNumber(5));
 //        allGoods.add(new Good(4 , "hhhh" , "bmw"
 //                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
 //        allGoods.add(new Good(2 , "bbbb" , "bmw"
