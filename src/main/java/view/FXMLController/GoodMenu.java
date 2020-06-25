@@ -42,7 +42,6 @@ public class GoodMenu {
 
     public GoodMenu(AnchorPane mainPane ) {
         this.mainPane = mainPane;
-
     }
 
     public void changePane() {
