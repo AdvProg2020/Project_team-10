@@ -131,7 +131,6 @@ public class FileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private static void writeLastProductId() {

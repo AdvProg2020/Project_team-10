@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import controller.AccountManager;
 
 import java.util.Date;

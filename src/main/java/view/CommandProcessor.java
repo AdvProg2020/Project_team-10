@@ -342,15 +342,15 @@ public class CommandProcessor {
         }
     }
 
-    public static void processDeleteAccountByAdmin() {
-        System.out.print("Enter the desired username: ");
-        String username = Menu.scanner.nextLine();
-        if (AdminManager.deleteAccount(username)) {
-            System.out.println(username + " deleted");
-        } else {
-            System.out.println(username + " not exist");
-        }
-    }
+//    public static void processDeleteAccountByAdmin() {
+//        System.out.print("Enter the desired username: ");
+//        String username = Menu.scanner.nextLine();
+//        if (AdminManager.deleteAccount(username)) {
+//            System.out.println(username + " deleted");
+//        } else {
+//            System.out.println(username + " not exist");
+//        }
+//    }
 
     public static void processRemoveProductById() {
         while (true) {
