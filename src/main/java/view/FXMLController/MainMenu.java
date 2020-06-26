@@ -74,11 +74,7 @@ public class MainMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        for (Category category : Shop.getShop().getAllCategories()) {
-            JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
-            vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
-            categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
-        }
+        updateAllFilter();
 
         flowPane.getChildren().clear();
         this.location = location;
@@ -129,6 +125,19 @@ public class MainMenu implements Initializable {
         mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         Login.currentPane = mainMenu;
         main = this;
+    }
+
+    private void updateAllFilter() {
+        for (Category category : Shop.getShop().getAllCategories()) {
+            JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
+            vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
+            categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
+        }
+        for (String company : Shop.getShop().allCompanies()) {
+            JFXCheckBox companyFiltered = new JFXCheckBox(company);
+            vBoxForAddCompanyFilter.getChildren().add(companyFiltered);
+            companyFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
+        }
     }
 
     public Button buttonForSort(String input, URL location, ResourceBundle resources) {

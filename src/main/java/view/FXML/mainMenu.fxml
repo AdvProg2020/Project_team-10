@@ -62,13 +62,11 @@
               style="-fx-padding: 10 10 10 10;">
 
             <Label text="Price" styleClass="filterText" style="-fx-padding: 0 0 8 0;"/>
-            <Rectangle height="1" width="240" fill="#404040" />
+            <Rectangle height="1" width="240" fill="#404040"/>
             <VBox spacing="10" style="-fx-padding: 10 0 0 0;">
                 <JFXTextField promptText="Start price" styleClass="filterTextPrice"/>
                 <JFXTextField promptText="End price" styleClass="filterTextPrice"/>
             </VBox>
-
-
         </VBox>
 
     </AnchorPane>
