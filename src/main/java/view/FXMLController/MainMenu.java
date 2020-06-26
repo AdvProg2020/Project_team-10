@@ -89,8 +89,10 @@ public class MainMenu implements Initializable {
         Label sort = new Label("Sort by:");
 //        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
 
-        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources), buttonForSort("Score", location, resources),
-                buttonForSort("Price(Descending)", location, resources), buttonForSort("The most visited", location, resources));
+        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources),
+                buttonForSort("Score", location, resources),
+                buttonForSort("Price(Descending)", location, resources),
+                buttonForSort("The most visited", location, resources));
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(10, 580, 10, 15));
         hBox.setSpacing(10);
@@ -117,7 +119,7 @@ public class MainMenu implements Initializable {
                 new GoodMenu(mainPane).changePane();
             });
             vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price, visit);
+            vBox.getChildren().addAll(logoImage, name, price,covertScoreToStar((int) good.calculateAverageRate()) , visit);
             flowPane.getChildren().add(vBox);
         }
         mainMenuScrollPane.getStyleClass().add("scroll-bar");
@@ -265,6 +267,43 @@ public class MainMenu implements Initializable {
             }
         }
         GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+    }
+
+    private HBox covertScoreToStar(int score) {
+        ImageView star = new ImageView(new Image("file:src/main/java/view/image/5starblock.png"));
+        star.setFitHeight(21);
+        star.setFitWidth(100);
+        ImageView star1 = new ImageView(new Image("file:src/main/java/view/image/1star.png"));
+        star1.setFitHeight(21);
+        star1.setFitWidth(100);
+        ImageView star2 = new ImageView(new Image("file:src/main/java/view/image/2star.png"));
+        star2.setFitHeight(21);
+        star2.setFitWidth(100);
+        ImageView star3 = new ImageView(new Image("file:src/main/java/view/image/3star.png"));
+        star3.setFitHeight(21);
+        star3.setFitWidth(100);
+        ImageView star4 = new ImageView(new Image("file:src/main/java/view/image/4star.png"));
+        star4.setFitHeight(21);
+        star4.setFitWidth(100);
+        ImageView star5 = new ImageView(new Image("file:src/main/java/view/image/5star.png"));
+        star5.setFitHeight(21);
+        star5.setFitWidth(100);
+        HBox box = new HBox();
+        box.setAlignment(Pos.CENTER);
+        if (score == 0) {
+            box.getChildren().add(star);
+        } else if (score == 1) {
+            box.getChildren().add(star1);
+        } else if (score == 2) {
+            box.getChildren().add(star2);
+        } else if (score == 3) {
+            box.getChildren().add(star3);
+        } else if (score == 4) {
+            box.getChildren().add(star4);
+        }  else if (score == 5) {
+            box.getChildren().add(star5);
+        }
+        return box;
     }
 
 }
