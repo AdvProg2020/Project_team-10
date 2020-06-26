@@ -25,8 +25,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import model.Account;
 import model.Admin;
 import model.Buyer;
+import model.Good;
 import view.CommandProcessor;
 import view.NumberField;
 import java.io.File;
@@ -332,6 +334,7 @@ public class Login{
     private void processLogin() {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
+        Buyer temp = ((Buyer) AccountManager.getOnlineAccount());
         if (AccountManager.login(username, password)) {
             popupWindow.close();
             handleUserBtn();
@@ -339,6 +342,12 @@ public class Login{
                 btnCartMenu.setVisible(false);
             } else {
                 btnCartMenu.setVisible(true);
+                ((Buyer) AccountManager.getOnlineAccount()).getCart().addAll(temp.getCart());
+                for (Good good : temp.getCart()) {
+                    int number = good.getGoodsInBuyerCart().get("temp");
+                    good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), number);
+                    good.getGoodsInBuyerCart().remove("temp");
+                }
             }
             fade(0.5, 10);
         } else {
@@ -471,16 +480,16 @@ public class Login{
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (AccountManager.getOnlineAccount() instanceof Admin) {
-            new AdminPanel(mainPane, main, mainMenu).changePane();
+            new AdminPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
 
         } else {
-
+            new SellerPanel(mainPane,main, mainMenu, user, btnLogin).changePane();
         }
     }
 
     private void logout() {
-        AccountManager.setOnlineAccount(null);
+        AccountManager.setOnlineAccount(new Buyer("temp"));
         user.setVisible(false);
         popupUser.getChildren().clear();
         popupUser.setVisible(false);

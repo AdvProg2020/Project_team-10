@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Account;
+import model.Buyer;
 import model.Good;
 import model.Shop;
 import view.CommandProcessor;
@@ -56,14 +57,19 @@ public class AdminPanel {
     private Label error;
     private Stage popupWindow;
     private static File selectedFile;
-    private ScrollPane adminPaneScroll = new ScrollPane();
+    private ScrollPane adminScrollPane = new ScrollPane();
     private MainMenu main;
     private AnchorPane mainMenu;
+    private Button user;
+    private Button btnLogin;
 
-    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu) {
+
+    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
+        this.btnLogin = btnLogin;
+        this.user = user;
         adminPane = new AnchorPane();
         optionsPane = new AnchorPane();
         handelButtonOnMouseClick();
@@ -74,7 +80,6 @@ public class AdminPanel {
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
         optionsPane.setPrefSize(250, 520);
-
 
         HBox hBox = new HBox();
         Circle circle = new Circle(40);
@@ -192,24 +197,20 @@ public class AdminPanel {
         }
 
         button.setOnMouseClicked(e -> {
-//            selectedButton.setGraphic(imageView);
             selectedButton = button;
             button.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
         });
-//        button.setOnMouseEntered(event -> {
-//            if ()
-//        });
         return button;
     }
 
     private void handelButtonOnMouseClick() {
 
-        adminPane.getChildren().remove(adminPaneScroll);
-        adminPaneScroll.setPrefSize(1150, 620);
-        adminPaneScroll.getStyleClass().add("scroll-bar");
-        adminPaneScroll.setLayoutX(330);
-        adminPaneScroll.setLayoutY(35);
+        adminPane.getChildren().remove(adminScrollPane);
+        adminScrollPane.setPrefSize(1150, 620);
+        adminScrollPane.getStyleClass().add("scroll-bar");
+        adminScrollPane.setLayoutX(330);
+        adminScrollPane.setLayoutY(35);
         Account account = AccountManager.getOnlineAccount();
 
         if (selectedButton.getText().equals("Profile")) {
@@ -223,19 +224,22 @@ public class AdminPanel {
                     createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
                     createItemOfProfile("Phone number:", account.getPhoneNumber()),
                     createItemOfProfile("Email:", account.getEmail()));
-            adminPaneScroll.setContent(flowPane);
-            adminPane.getChildren().add(adminPaneScroll);
-            adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            adminScrollPane.setContent(flowPane);
+            adminPane.getChildren().add(adminScrollPane);
+            adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         } else if (selectedButton.getText().equals("Manage users")) {
-            adminPaneScroll.setContent(handelManageUsers());
-            adminPane.getChildren().add(adminPaneScroll);
+            adminScrollPane.setContent(handelManageUsers());
+            adminPane.getChildren().add(adminScrollPane);
         } else if (selectedButton.getText().equals("Manage products")) {
-            adminPaneScroll.setContent(handelManageProduct());
-            adminPane.getChildren().add(adminPaneScroll);
+            adminScrollPane.setContent(handelManageProduct());
+            adminPane.getChildren().add(adminScrollPane);
         } else if (selectedButton.getText().equals("Log out")) {
+            AccountManager.setOnlineAccount(new Buyer("temp"));
+            user.setVisible(false);
+            btnLogin.setVisible(true);
             backToMainMenu();
         }
-        adminPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
     private FlowPane handelManageProduct() {
@@ -243,7 +247,6 @@ public class AdminPanel {
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
         flowPane.setPrefHeight(620);
-//        flowPane.setPadding(new Insets(50, 0, 10, 70));
         flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
 
         for (Good good : GoodsManager.getFilteredGoods()) {
@@ -348,7 +351,7 @@ public class AdminPanel {
                         if (AccountManager.canRegister(username)) {
                             AccountManager.register(username, password, "admin", firstName, lastName, email, phoneNumber
                                     , " ", imagePath);
-                            adminPaneScroll.setContent(handelManageUsers());
+                            adminScrollPane.setContent(handelManageUsers());
                             popupWindow.close();
                             fade(0.5, 10);
                         } else {

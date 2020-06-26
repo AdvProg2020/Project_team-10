@@ -4,14 +4,11 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import controller.AccountManager;
 import controller.GoodsManager;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import model.Admin;
 import model.Buyer;
 import model.Comment;
 import model.Good;
@@ -26,8 +23,9 @@ public class GoodMenu {
 
     public void changePane() {
         Good currentGood = GoodsManager.getCurrentGood();
+//        System.out.println(currentGood.getVisitNumber());
         currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
-
+//        System.out.println(currentGood.getVisitNumber());
         AnchorPane innerPane = new AnchorPane();
 
         goodPageScrollPane = new ScrollPane(innerPane);

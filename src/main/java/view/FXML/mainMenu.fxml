@@ -21,11 +21,12 @@
 
         <VBox layoutY="25" layoutX="1250" prefWidth="260" prefHeight="55" styleClass="vboxForFilter"
               alignment="CENTER_LEFT">
-            <JFXToggleButton text="Only offs" styleClass="jfx-toggle-button"/>
+            <JFXToggleButton fx:id="offFilterButton" text="Only offs" styleClass="jfx-toggle-button" onMouseClicked="#filterByOff"/>
         </VBox>
+
         <VBox layoutY="95" layoutX="1250" prefWidth="260" prefHeight="55" styleClass="vboxForFilter"
               alignment="CENTER_LEFT">
-            <JFXToggleButton text="Only available goods" styleClass="jfx-toggle-button"/>
+            <JFXToggleButton fx:id="availableFilterButton" text="Only available goods" styleClass="jfx-toggle-button" onMouseClicked="#filterByAvailability"/>
         </VBox>
 
         <VBox layoutY="165" layoutX="1250" prefWidth="260" prefHeight="510" styleClass="vboxForFilter"
