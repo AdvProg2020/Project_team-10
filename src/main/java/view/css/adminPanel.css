@@ -80,16 +80,25 @@
 
 .labelUsernameInProfile{
     -fx-font-family: "Franklin Gothic Medium Cond";
-    -fx-font-size: 30;
+    -fx-font-size: 20;
     -fx-text-fill: #868686;
 }
 
-.imageView{
+.binImage{
     -fx-image: url("../image/AdminPanel/recybin.png");
 }
 
-.imageView:hover{
+.binImage:hover{
     -fx-image: url("../image/AdminPanel/recybinHover.png");
+    -fx-cursor: hand;
+}
+
+.editImage{
+    -fx-image: url("../image/edit.png");
+}
+
+.editImage:hover{
+    -fx-image: url("../image/editHover.png");
     -fx-cursor: hand;
 }
 
@@ -123,4 +132,53 @@
 .imageViewRecy:hover{
     -fx-image: url("../image/recyHover.png");
     -fx-cursor: hand;
+}
+
+.labelForDiscount{
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 20;
+    -fx-text-fill: #868686;
+}
+
+.picker{
+    -fx-text-fill: white;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 12pt;
+}
+
+.scroll-barInDiscount .increment-arrow,
+.scroll-barInDiscount .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.15em 0.0;
+}
+
+.scroll-barInDiscount:vertical .increment-arrow,
+.scroll-barInDiscount:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.15em;
+}
+
+.scroll-barInDiscount:horizontal .thumb,
+.scroll-barInDiscount:vertical .thumb {
+    -fx-background-color : #dddddd;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-barInDiscount:horizontal .thumb:hover,
+.scroll-barInDiscount:vertical .thumb:hover {
+    -fx-background-color : #9e9e9e;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-barInDiscount{
+    -fx-background-color: transparent;
+    -fx-background-radius: 2em;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-barInDiscount:vertical:focused {
+    -fx-background-color: transparent;
 }

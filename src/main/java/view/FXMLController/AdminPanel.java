@@ -1,6 +1,7 @@
 package view.FXMLController;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import controller.AccountManager;
@@ -9,6 +10,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -24,10 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Account;
-import model.Buyer;
-import model.Good;
-import model.Shop;
+import model.*;
 import view.CommandProcessor;
 import view.NumberField;
 
@@ -143,7 +142,7 @@ public class AdminPanel {
         mainPane.getChildren().add(adminPane);
     }
 
-    public void popupSigUp() throws IOException {
+    public void popupSigUp(String input) throws IOException {
         loginPane = new AnchorPane();
         error = new Label();
         popupWindow = new Stage();
@@ -174,7 +173,14 @@ public class AdminPanel {
         popupWindow.setScene(scene1);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        signUp();
+
+        if (input.equals("signUp")) {
+            signUpAdmin();
+        } else if (input.equals("discount")) {
+            addDiscount();
+        } else if (input.equals("category")) {
+
+        }
         popupWindow.showAndWait();
 
     }
@@ -197,6 +203,8 @@ public class AdminPanel {
         }
 
         button.setOnMouseClicked(e -> {
+//            selectedButton.setGraphic(imageView);
+
             selectedButton = button;
             button.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
@@ -211,6 +219,12 @@ public class AdminPanel {
         adminScrollPane.getStyleClass().add("scroll-bar");
         adminScrollPane.setLayoutX(330);
         adminScrollPane.setLayoutY(35);
+        adminPane.getChildren().remove(adminScrollPane);
+        adminScrollPane.setPrefSize(1150, 620);
+        adminScrollPane.getStyleClass().add("scroll-bar");
+        adminScrollPane.setLayoutX(330);
+        adminScrollPane.setLayoutY(35);
+//        adminPaneScroll.;
         Account account = AccountManager.getOnlineAccount();
 
         if (selectedButton.getText().equals("Profile")) {
@@ -233,6 +247,14 @@ public class AdminPanel {
         } else if (selectedButton.getText().equals("Manage products")) {
             adminScrollPane.setContent(handelManageProduct());
             adminPane.getChildren().add(adminScrollPane);
+            adminScrollPane.setContent(handelManageProduct());
+            adminPane.getChildren().add(adminScrollPane);
+        } else if (selectedButton.getText().equals("Discounts")) {
+            adminScrollPane.setContent(handelDiscounts());
+            adminPane.getChildren().add(adminScrollPane);
+        } else if (selectedButton.getText().equals("Category")) {
+            adminScrollPane.setContent(handelCategory());
+            adminPane.getChildren().add(adminScrollPane);
         } else if (selectedButton.getText().equals("Log out")) {
             AccountManager.setOnlineAccount(new Buyer("temp"));
             user.setVisible(false);
@@ -240,6 +262,85 @@ public class AdminPanel {
             backToMainMenu();
         }
         adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private FlowPane handelCategory() {
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(50, 0, 10, 70));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+
+        HBox hBoxTitle = new HBox(0);
+        hBoxTitle.setAlignment(Pos.CENTER_LEFT);
+        hBoxTitle.setPadding(new Insets(0, 12, 0, 12));
+        hBoxTitle.getStyleClass().add("hboxTitle");
+        hBoxTitle.setPrefHeight(60);
+
+        Label categoryName = new Label("Name");
+        categoryName.setPrefWidth(255);
+        categoryName.getStyleClass().add("labelForDiscount");
+
+        Label attributes = new Label("  " + "Attributes");
+        attributes.setGraphic(line());
+        attributes.setPrefWidth(680);
+        attributes.getStyleClass().add("labelForDiscount");
+
+        ImageView imageViewPlus = new ImageView();
+        imageViewPlus.setOnMouseClicked(event -> {
+            try {
+                popupSigUp("signUp");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        imageViewPlus.getStyleClass().add("imageViewPlus");
+        imageViewPlus.setFitWidth(35);
+        imageViewPlus.setFitHeight(35);
+
+        hBoxTitle.getChildren().addAll(categoryName, attributes, imageViewPlus);
+        flowPane.getChildren().add(hBoxTitle);
+
+
+        for (Category category : Shop.getShop().getAllCategories()) {
+            HBox hBox = new HBox(0);
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.getStyleClass().add("hbox");
+            hBox.setPrefHeight(60);
+
+            Label name = new Label("" + category.getName());
+            name.setPrefWidth(255);
+            name.getStyleClass().add("labelForDiscount");
+
+
+            Label attribute = new Label("  " + category.getAttributes());
+            attribute.setGraphic(line());
+            attribute.setPrefWidth(680);
+            attribute.getStyleClass().add("labelForDiscount");
+
+            ImageView edit = new ImageView();
+            edit.getStyleClass().add("editImage");
+            edit.setFitWidth(25);
+            edit.setFitHeight(25);
+
+            ImageView bin = new ImageView();
+            bin.getStyleClass().add("binImage");
+            bin.setFitWidth(31);
+            bin.setFitHeight(25);
+
+            hBox.getChildren().addAll(name, attribute, edit, bin);
+            flowPane.getChildren().add(hBox);
+            bin.setOnMouseClicked(e -> {
+                Shop.getShop().getAllCategories().remove(category);
+                flowPane.getChildren().remove(hBox);
+            });
+        }
+
+        return flowPane;
+
     }
 
     private FlowPane handelManageProduct() {
@@ -280,7 +381,6 @@ public class AdminPanel {
             imageView.setOnMouseClicked(e -> {
                 Shop.getShop().getAllGoods().remove(good);
                 GoodsManager.getFilteredGoods().remove(good);
-
                 flowPane.getChildren().remove(vBox);
             });
             flowPane.getChildren().add(vBox);
@@ -301,7 +401,7 @@ public class AdminPanel {
         return exitButton;
     }
 
-    private void signUp() {
+    private void signUpAdmin() {
         error.setText("");
         loginPane.getChildren().clear();
         imageViewForSignUp();
@@ -315,25 +415,125 @@ public class AdminPanel {
         firstNameText = textFieldForSignUp("First name", 40, 140);
         lastNameText = textFieldForSignUp("Last name", 40, 190);
 
-        JFXDatePicker datePicker = new JFXDatePicker();
-        datePicker.setLayoutY(500);
-        datePicker.setOnAction(event -> {
-            LocalDate date = datePicker.getValue();
-            System.out.println("Selected date: " + date);
-        });
-
-        JFXTimePicker timePicker = new JFXTimePicker();
-        timePicker.setLayoutY(520);
-        timePicker.setOnAction(event -> {
-            LocalTime date = timePicker.getValue();
-            System.out.println("Selected date: " + date);
-        });
-
-        loginPane.getChildren().addAll(exitButton(), firstNameText, datePicker, timePicker,
+        loginPane.getChildren().addAll(exitButton(), firstNameText,
                 lastNameText, usernameForSignUp(),
                 passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp, error);
 
         signUp.setOnMouseClicked(event -> processRegister());
+    }
+
+    private void addDiscount() {
+        error.setText("");
+        loginPane.getChildren().clear();
+
+        Label titleOFSignUp = new Label("+ SIGN UP Admin");
+        titleOFSignUp.setLayoutY(80);
+        titleOFSignUp.setLayoutX(40);
+        titleOFSignUp.getStyleClass().add("labelForLoginTitle");
+
+        JFXButton signUp = new JFXButton("Submit");
+        signUp.setLayoutY(445);
+        signUp.setLayoutX(40);
+        signUp.setPrefHeight(40);
+        signUp.setPrefWidth(400);
+        signUp.getStyleClass().add("signUp");
+
+        JFXDatePicker startDate = new JFXDatePicker();
+        startDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startDate.setDefaultColor(Color.rgb(244, 218, 0));
+        startDate.setLayoutY(150);
+        startDate.setLayoutX(40);
+        startDate.setPrefSize(240, 40);
+        startDate.setOnAction(event -> {
+            LocalDate date = startDate.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXTimePicker startTime = new JFXTimePicker();
+        startTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startTime.setDefaultColor(Color.rgb(244, 218, 0));
+        startTime.setPrefSize(140, 40);
+        startTime.setLayoutY(150);
+        startTime.setLayoutX(300);
+        startTime.setOnAction(event -> {
+            LocalTime date = startTime.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXDatePicker endDate = new JFXDatePicker();
+        endDate.setDefaultColor(Color.rgb(244, 218, 0));
+        endDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endDate.setPrefSize(240, 40);
+        endDate.setLayoutY(220);
+        endDate.setLayoutX(40);
+        endDate.setOnAction(event -> {
+            LocalDate date = endDate.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXTimePicker endTime = new JFXTimePicker();
+        endTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endTime.setDefaultColor(Color.rgb(244, 218, 0));
+        endTime.setPrefSize(140, 40);
+        endTime.setLayoutY(220);
+        endTime.setLayoutX(300);
+        endTime.setOnAction(event -> {
+            LocalTime date = endTime.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        NumberField percent = new NumberField();
+        percent.setLayoutY(290);
+        percent.setLayoutX(40);
+        percent.setPrefSize(100, 40);
+        percent.getStyleClass().add("text-fieldForSignUp");
+
+        NumberField maxPrice = new NumberField();
+        maxPrice.setLayoutY(290);
+        maxPrice.setLayoutX(150);
+        maxPrice.setPrefSize(180, 40);
+        maxPrice.getStyleClass().add("text-fieldForSignUp");
+
+        NumberField number = new NumberField();
+        number.setPrefSize(100, 40);
+        number.setLayoutX(340);
+        number.setLayoutY(290);
+        number.getStyleClass().add("text-fieldForSignUp");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setLayoutY(350);
+        scrollPane.setLayoutX(40);
+        scrollPane.setPrefSize(400, 80);
+
+        FlowPane flowPane = new FlowPane();
+        scrollPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setLayoutX(40);
+        flowPane.setLayoutY(350);
+        flowPane.setPrefSize(400, 80);
+        flowPane.setStyle("-fx-background-color: none");
+        scrollPane.setContent(flowPane);
+        scrollPane.getStyleClass().add("scroll-barInDiscount");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            HBox hBox = new HBox();
+            hBox.setPrefSize(100, 40);
+            hBox.setPadding(new Insets(8, 5, 8, 5));
+
+            JFXCheckBox username = new JFXCheckBox(allAccount.getUsername());
+            username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';");
+            hBox.getChildren().add(username);
+            hBox.setStyle("-fx-background-color: none");
+//            if ()
+
+            flowPane.getChildren().add(hBox);
+        }
+
+
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, startDate,
+                startTime, endDate, endTime, percent, maxPrice, number, signUp, scrollPane, error);
+//
+//        signUp.setOnMouseClicked(event -> processRegister());
     }
 
     private void processRegister() {
@@ -406,7 +606,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp();
+                popupSigUp("signUp");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -436,7 +636,7 @@ public class AdminPanel {
             label1.setPrefWidth(600);
             label1.getStyleClass().add("labelUsernameInProfile");
             ImageView imageView = new ImageView();
-            imageView.getStyleClass().add("imageView");
+            imageView.getStyleClass().add("binImage");
             imageView.setFitWidth(31);
             imageView.setFitHeight(25);
 
@@ -444,6 +644,121 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             imageView.setOnMouseClicked(e -> {
                 Shop.getShop().getAllAccounts().remove(allAccount);
+                flowPane.getChildren().remove(hBox);
+            });
+        }
+
+        return flowPane;
+    }
+
+    private Rectangle line() {
+        Rectangle line = new Rectangle(2, 60);
+        line.setStyle("-fx-fill: #d5d5d5");
+        return line;
+    }
+
+    private FlowPane handelDiscounts() {
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(50, 0, 10, 70));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+
+        HBox hBoxTitle = new HBox(0);
+        hBoxTitle.setAlignment(Pos.CENTER_LEFT);
+        hBoxTitle.setPadding(new Insets(0, 12, 0, 12));
+        hBoxTitle.getStyleClass().add("hboxTitle");
+        hBoxTitle.setPrefHeight(60);
+
+        Label discountCode = new Label("Code");
+        discountCode.setPrefWidth(55);
+        discountCode.getStyleClass().add("labelForDiscount");
+
+        Label startDate = new Label("  " + "Start date");
+        startDate.setGraphic(line());
+        startDate.setPrefWidth(255);
+        startDate.getStyleClass().add("labelForDiscount");
+
+        Label endDate = new Label("  " + "End date");
+        endDate.setGraphic(line());
+        endDate.setPrefWidth(255);
+        endDate.getStyleClass().add("labelForDiscount");
+
+        Label percent = new Label("  " + "Percent");
+        percent.setGraphic(line());
+        percent.setPrefWidth(100);
+        percent.getStyleClass().add("labelForDiscount");
+
+        Label people = new Label("  " + "People");
+        people.setGraphic(line());
+        people.setPrefWidth(274);
+        people.getStyleClass().add("labelForDiscount");
+
+        ImageView imageViewPlus = new ImageView();
+        imageViewPlus.setOnMouseClicked(event -> {
+            try {
+                popupSigUp("discount");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        imageViewPlus.getStyleClass().add("imageViewPlus");
+        imageViewPlus.setFitWidth(35);
+        imageViewPlus.setFitHeight(35);
+
+        hBoxTitle.getChildren().addAll(discountCode, startDate, endDate, percent, people, imageViewPlus);
+        flowPane.getChildren().add(hBoxTitle);
+
+
+        for (Discount discount : Shop.getShop().getAllDiscounts()) {
+            HBox hBox = new HBox(0);
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.getStyleClass().add("hbox");
+            hBox.setPrefHeight(60);
+
+            Label code = new Label("" + discount.getCode());
+            code.setPrefWidth(55);
+            code.getStyleClass().add("labelForDiscount");
+
+
+            Label start = new Label("  " + discount.getStartDate());
+            start.setGraphic(line());
+            start.setPrefWidth(255);
+            start.getStyleClass().add("labelForDiscount");
+
+            Label end = new Label("  " + discount.getEndDate());
+            end.setGraphic(line());
+            end.setPrefWidth(255);
+            end.getStyleClass().add("labelForDiscount");
+
+            Label percentNum = new Label("  " + discount.getPercent());
+            percentNum.setGraphic(line());
+            percentNum.setPrefWidth(100);
+            percentNum.getStyleClass().add("labelForDiscount");
+
+
+            Label peopleName = new Label("  " + discount.getUserNames());
+            peopleName.setGraphic(line());
+            peopleName.setPrefWidth(254);
+            peopleName.getStyleClass().add("labelForDiscount");
+
+            ImageView edit = new ImageView();
+            edit.getStyleClass().add("editImage");
+            edit.setFitWidth(25);
+            edit.setFitHeight(25);
+
+            ImageView bin = new ImageView();
+            bin.getStyleClass().add("binImage");
+            bin.setFitWidth(31);
+            bin.setFitHeight(25);
+
+            hBox.getChildren().addAll(code, start, end, percentNum, peopleName, edit, bin);
+            flowPane.getChildren().add(hBox);
+            bin.setOnMouseClicked(e -> {
+                Shop.getShop().getAllDiscounts().remove(discount);
                 flowPane.getChildren().remove(hBox);
             });
         }
