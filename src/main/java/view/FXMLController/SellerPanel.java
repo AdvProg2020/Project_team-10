@@ -297,7 +297,7 @@ public class SellerPanel {
                 vBox.setPrefWidth(297);
                 vBox.setPrefHeight(350);
                 vBox.getStyleClass().add("vBoxInMainMenu");
-                ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+                ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
                 logoImage.setFitHeight(190);
                 logoImage.setFitWidth(190);
                 logoImage.getStyleClass().add("goodImage");
@@ -382,17 +382,19 @@ public class SellerPanel {
         Stage windowImageFile = new Stage();
 
         loginPane.getChildren().addAll(selectAPhoto, rectangle);
-        selectAPhoto.setOnAction(e -> {
-            selectedImageFile = imageFileChooser.showOpenDialog(windowImageFile);
-            ImageView imageView = new ImageView(new Image("file:" + selectedImageFile));
-            imageView.setFitHeight(120);
-            imageView.setFitWidth(100);
-            imageView.setLayoutX(340);
-            imageView.setLayoutY(80);
-            imageView.getStyleClass().add("imageView");
-            imageView.autosize();
-            loginPane.getChildren().add(imageView);
-        });
+
+            selectAPhoto.setOnAction(e -> {
+
+                selectedImageFile = imageFileChooser.showOpenDialog(windowImageFile);
+                ImageView imageView = new ImageView(new Image("file:" + selectedImageFile));
+                imageView.setFitHeight(120);
+                imageView.setFitWidth(100);
+                imageView.setLayoutX(340);
+                imageView.setLayoutY(80);
+                imageView.getStyleClass().add("imageView");
+                imageView.autosize();
+                loginPane.getChildren().add(imageView);
+            });
 
         goodName = new TextField();
         goodName.setPromptText("Name");
@@ -722,7 +724,7 @@ public class SellerPanel {
             vBox.setPrefWidth(97);
             vBox.setPrefHeight(150);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image(good.getImagePath()));
+            ImageView logoImage = new ImageView(new Image("file:" +good.getImagePath()));
             logoImage.setFitHeight(50);
             logoImage.setFitWidth(50);
             logoImage.getStyleClass().add("goodImage");
