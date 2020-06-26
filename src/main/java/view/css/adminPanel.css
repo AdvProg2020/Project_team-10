@@ -119,6 +119,33 @@
     -fx-cursor: hand;
 }
 
+ .imageViewDetail{
+     -fx-image: url("../image/Detail.png");
+ }
+
+.imageViewDetail:hover{
+    -fx-image: url("../image/DetailHover.png");
+    -fx-cursor: hand;
+}
+
+.imageViewBack{
+    -fx-image: url("../image/back.png");
+}
+
+.imageViewBack:hover{
+    -fx-image: url("../image/backHover.png");
+    -fx-cursor: hand;
+}
+
+ .imageViewMines{
+     -fx-image: url("../image/mines.png");
+ }
+
+.imageViewMines:hover{
+    -fx-image: url("../image/minesHover.png");
+    -fx-cursor: hand;
+}
+
 .hbox{
 -fx-border-width: 1px;
 -fx-border-color: #e2e2e2;
@@ -169,7 +196,6 @@
 
 .scroll-barInDiscount:horizontal .thumb,
 .scroll-barInDiscount:vertical .thumb {
-
     -fx-background-color : #dddddd;
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;

@@ -78,6 +78,11 @@ public class Shop {
 //        allGoods.add(new Good(7 , "optima" , "kia"
 //                , 5 , 2000 , "seller" , "car" , hashMap , "dhsvjshvgg dfg d fdfgdfgdfg dfgdfg",
 //                "C:/Users/hossein/Desktop/optima.jpg").setVisitNumber(19));
+        Buyer buyer = new Buyer("farhad", "fdf", "Fdff", "fdfdf@ff.com", "62515151851818", "javad1379", "src/main/java/view/image/usersamad.jpg");
+        allAccounts.add(buyer);
+        allBuyers.add(buyer);
+        buyer.getBuyerLogs().add(new BuyerLog(5, new Date(), 1000, 0, null, null ));
+
     }
 
     public List<Comment> getAllComments() {
