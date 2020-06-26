@@ -15,9 +15,6 @@ public class Shop {
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
-    private List<SellerLog> allSellerLogs = new ArrayList<>();
-    private List<BuyerLog> allBuyerLogs = new ArrayList<>();
-    private List<Score> allScores = new ArrayList<>();
 
     private Shop() {
 
@@ -42,9 +39,35 @@ public class Shop {
 //        p.add("samad");
 //        p.add("javads");
 
+        ArrayList<String> arrayList = new ArrayList<>();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("asds", "200 km/h");
+        hashMap.put("spd", "200 km/h");
+        hashMap.put("speed", "300 km/h");
+        arrayList.add("speed");
+        arrayList.add("asds");
+        arrayList.add("speaffed");
+        allCategories.add(new Category("car", arrayList));
+
+
+//        allGoods.add(new Good(4, "dddd", "bmw"
+//                , 2, 4, null, "car", hashMap, "dhsvjshv",
+//                "src/main/java/view/image/usersamad.jpg").setVisitNumber(5));
+        Date date = new Date();
+        ArrayList<String> p = new ArrayList<>();
+        p.add("samad");
+        p.add("javads");
 
 //        allGoods.add(new Good(4 , "hhhh" , "bmw"
 //                , 2 , 500 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(50));
+        Seller account = new Seller("mohammad" , "dsvdsvs" , "sdvsdvsd" , "sdv@sdv.com" , "0912212783" ,
+                "javad1379" , "dvsdvsvsdvsv" , "src/main/java/view/image/usersamad.jpg");
+        account.getGoods().add( new Good(4 , "hhhh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        account.getGoods().add(new Good(8 , "hhdvshh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        allAccounts.add(account);
+
 //        allGoods.add(new Good(2 , "bbbb" , "bmw"
 //                , 2 , 2 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(20));
 //        allGoods.add(new Good(3 , "cccc" , "bmw"
@@ -119,18 +142,6 @@ public class Shop {
 
     public List<Request> getAllRequests() {
         return allRequests;
-    }
-
-    public List<SellerLog> getAllSellerLogs() {
-        return allSellerLogs;
-    }
-
-    public List<BuyerLog> getAllBuyerLogs() {
-        return allBuyerLogs;
-    }
-
-    public List<Score> getAllScores() {
-        return allScores;
     }
 
     private static Shop shop = new Shop();

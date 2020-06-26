@@ -24,6 +24,7 @@ public class Good implements Comparable<Good> {
     private Date date;
     private int offId;
     private String imagePath;
+    private String videoPath;
 
 
     public Good(int id, String name, String company, int number, long price, String sellerUsername, String category

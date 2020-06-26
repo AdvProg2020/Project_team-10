@@ -43,6 +43,7 @@ public class BuyerPanel {
     private AnchorPane mainMenu;
     private Button user;
     private Button btnLogin;
+    private ImageView imageViewBack;
 
 
     public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
@@ -439,6 +440,19 @@ public class BuyerPanel {
             flowPane.getChildren().add(hBox);
         }
 
+    }
+
+    private ImageView back(FlowPane flowPane) {
+        imageViewBack = new ImageView();
+        imageViewBack.setOnMouseClicked(event -> {
+            flowPane.getChildren().clear();
+            flowPane.getChildren().addAll(showOrders());
+        });
+        imageViewBack.getStyleClass().add("imageViewBack");
+        imageViewBack.setFitWidth(45);
+        imageViewBack.setFitHeight(45);
+
+        return imageViewBack;
     }
 
     private Rectangle line() {

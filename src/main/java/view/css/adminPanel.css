@@ -128,6 +128,15 @@
     -fx-cursor: hand;
 }
 
+.imageViewBack{
+    -fx-image: url("../image/back.png");
+}
+
+.imageViewBack:hover{
+    -fx-image: url("../image/backHover.png");
+    -fx-cursor: hand;
+}
+
  .imageViewMines{
      -fx-image: url("../image/mines.png");
  }
@@ -220,4 +229,13 @@
     -fx-text-fill: white;
     -fx-font-family: "sans-serif";
     -fx-font-size: 14pt;
+}
+
+.addGoodPlus{
+    -fx-image: url("../image/plus.png");
+}
+
+.addGoodPlus:hover{
+    -fx-image: url("../image/plusHover.png");
+    -fx-cursor: hand;
 }

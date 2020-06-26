@@ -980,14 +980,14 @@ public class AdminPanel {
         rectangle.setLayoutY(80);
         rectangle.setStyle("-fx-fill: white;" + "-fx-border-width: 20px");
 
-        Button button = new Button("Select a photo");
-        button.setLayoutX(340);
-        button.setLayoutY(206);
-        button.setPrefWidth(100);
-        button.getStyleClass().add("selectPhoto");
+        Button selectAPhoto = new Button("Select a photo");
+        selectAPhoto.setLayoutX(340);
+        selectAPhoto.setLayoutY(206);
+        selectAPhoto.setPrefWidth(100);
+        selectAPhoto.getStyleClass().add("selectPhoto");
 
-        loginPane.getChildren().addAll(titleOFSignUp, button, rectangle);
-        button.setOnAction(e -> {
+        loginPane.getChildren().addAll(titleOFSignUp, selectAPhoto, rectangle);
+        selectAPhoto.setOnAction(e -> {
             selectedFile = fileChooser.showOpenDialog(stage);
             ImageView imageView = new ImageView(new Image("file:" + selectedFile));
             imageView.setFitHeight(120);
