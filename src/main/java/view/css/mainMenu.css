@@ -271,3 +271,20 @@
     -fx-font-size: 12pt;
     -jfx-disable-visual-focus: false;
 }
+
+.filterText{
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 14pt;
+    -fx-text-fill: black;
+}
+
+.goodImage:hover{
+    -fx-cursor: hand;
+}
+
+.filterTextPrice {
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-prompt-text-fill: #d0d0d0;
+    -fx-font-size: 12pt;
+    -fx-text-fill: black;
+}

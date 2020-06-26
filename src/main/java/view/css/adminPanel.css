@@ -209,7 +209,7 @@
 }
 
 .scroll-barInDiscount{
-    -fx-background: none;
+    -fx-background: transparent;
     -fx-background-color: transparent;
     -fx-background-radius: 2em;
     -fx-focus-color: transparent;
@@ -229,4 +229,13 @@
     -fx-text-fill: white;
     -fx-font-family: "sans-serif";
     -fx-font-size: 14pt;
+}
+
+.addGoodPlus{
+    -fx-image: url("../image/plus.png");
+}
+
+.addGoodPlus:hover{
+    -fx-image: url("../image/plusHover.png");
+    -fx-cursor: hand;
 }

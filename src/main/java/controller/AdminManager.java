@@ -14,17 +14,15 @@ public class AdminManager {
     //Admin
 
 
-    public static boolean deleteAccount(String username) {
-        for (Account account : Shop.getShop().getAllAccounts()) {
-            if (account.getUsername().equals(username)) {
-                Shop.getShop().getAllAdmins().remove(account);
-                Shop.getShop().getAllBuyers().remove(account);
-                Shop.getShop().getAllSellers().remove(account);
-                Shop.getShop().getAllAccounts().remove(account);
-                return true;
-            }
+    public static void deleteAccount(Account account) {
+        Shop.getShop().getAllAccounts().remove(account);
+        if (account instanceof Buyer) {
+            Shop.getShop().getAllBuyers().remove(account);
+        } else if (account instanceof Seller) {
+            Shop.getShop().getAllSellers().remove(account);
+        } else if (account instanceof Admin) {
+            Shop.getShop().getAllAdmins().remove(account);
         }
-        return false;
     }
 
     public static void createDiscount(Date startDate, Date endDate, int percent,
@@ -80,8 +78,7 @@ public class AdminManager {
         Shop.getShop().getAllCategories().add(new Category(name, attributes));
     }
 
-    public static void removeCategory(String name) {
-        Category category = Shop.getShop().getCategoryByName(name);
+    public static void removeCategory(Category category) {
         Shop.getShop().getAllCategories().remove(category);
         Shop.getShop().getAllGoods().removeAll(category.getGoods());
     }

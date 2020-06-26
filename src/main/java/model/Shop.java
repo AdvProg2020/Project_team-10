@@ -22,6 +22,23 @@ public class Shop {
                 "sakcnakcsakd@gamil.com", "091221273738", "javad1379",
                 "src/main/java/view/image/usersamad.jpg"));
 
+//        ArrayList<String> arrayList = new ArrayList<>();
+//        HashMap<String, String> hashMap = new HashMap<>();
+//        hashMap.put("asds", "200 km/h");
+//        hashMap.put("spd", "200 km/h");
+//        hashMap.put("speed", "300 km/h");
+//        arrayList.add("speed");
+//        arrayList.add("asds");
+//        arrayList.add("speaffed");
+//        allCategories.add(new Category("car", arrayList));
+////        allGoods.add(new Good(4, "dddd", "bmw"
+////                , 2, 4, null, "car", hashMap, "dhsvjshv",
+////                "src/main/java/view/image/usersamad.jpg").setVisitNumber(5));
+//        Date date = new Date();
+//        ArrayList<String> p = new ArrayList<>();
+//        p.add("samad");
+//        p.add("javads");
+
         ArrayList<String> arrayList = new ArrayList<>();
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("asds", "200 km/h");
@@ -31,6 +48,8 @@ public class Shop {
         arrayList.add("asds");
         arrayList.add("speaffed");
         allCategories.add(new Category("car", arrayList));
+
+
 //        allGoods.add(new Good(4, "dddd", "bmw"
 //                , 2, 4, null, "car", hashMap, "dhsvjshv",
 //                "src/main/java/view/image/usersamad.jpg").setVisitNumber(5));
@@ -40,19 +59,27 @@ public class Shop {
         p.add("javads");
 
 //        allGoods.add(new Good(4 , "hhhh" , "bmw"
-//                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+//                , 2 , 500 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(50));
+        Seller account = new Seller("mohammad" , "dsvdsvs" , "sdvsdvsd" , "sdv@sdv.com" , "0912212783" ,
+                "javad1379" , "dvsdvsvsdvsv" , "src/main/java/view/image/usersamad.jpg");
+        account.getGoods().add( new Good(4 , "hhhh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        account.getGoods().add(new Good(8 , "hhdvshh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        allAccounts.add(account);
+
 //        allGoods.add(new Good(2 , "bbbb" , "bmw"
-//                , 2 , 2 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(2));
+//                , 2 , 2 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(20));
 //        allGoods.add(new Good(3 , "cccc" , "bmw"
-//                , 2 , 3 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(8));
+//                , 2 , 3 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(38));
 //        allGoods.add(new Good(1 , "iiii" , "bmw"
-//                , 2 , 9 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(1));
+//                , 2 , 9 , "seller111" , "car" , hashMap , "dhsvjshv").setVisitNumber(1));
 //        allGoods.add(new Good(1 , "eeee" , "bmw"
-//                , 2 , 5 , null , "car" , hashMap , "dhsvjshv"));
+//                , 2 , 5 , "seller111" , "car" , hashMap , "dhsvjshv").setVisitNumber(40));
 //        allGoods.add(new Good(2 , "ffff" , "bmw"
-//                , 2 , 6 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(12));
+//                , 2 , 6 , "seller222" , "car" , hashMap , "dhsvjshv").setVisitNumber(42));
 //        allGoods.add(new Good(3 , "kkkk" , "bmw"
-//                , 2 , 11 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(15));
+//                , 2 , 11 , "seller222" , "car" , hashMap , "dhsvjshv").setVisitNumber(55));
 //        allGoods.add(new Good(3 , "gggg" , "bmw"
 //                , 2 , 7 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(3));
 //        allGoods.add(new Good(1 , "aaaa" , "bmw"
@@ -70,10 +97,10 @@ public class Shop {
 //        allGoods.add(new Good(7 , "optima" , "kia"
 //                , 5 , 2000 , "seller" , "car" , hashMap , "dhsvjshvgg dfg d fdfgdfgdfg dfgdfg",
 //                "C:/Users/hossein/Desktop/optima.jpg").setVisitNumber(19));
-        Buyer buyer = new Buyer("farhad", "fdf", "Fdff", "fdfdf@ff.com", "62515151851818", "javad1379", "src/main/java/view/image/usersamad.jpg");
-        allAccounts.add(buyer);
-        allBuyers.add(buyer);
-        buyer.getBuyerLogs().add(new BuyerLog(5, new Date(), 1000, 0, null, null ));
+//        Buyer buyer = new Buyer("farhad", "fdf", "Fdff", "fdfdf@ff.com", "62515151851818", "javad1379", "src/main/java/view/image/usersamad.jpg");
+//        allAccounts.add(buyer);
+//        allBuyers.add(buyer);
+//        buyer.getBuyerLogs().add(new BuyerLog(5, new Date(), 1000, 0, new HashMap<>(), null ));
 
     }
 
@@ -193,6 +220,14 @@ public class Shop {
             }
         }
         return false;
+    }
+
+    public Set<String> allCompanies() {
+        Set<String> allCompanies = new HashSet<>();
+        for (Seller seller : allSellers) {
+            allCompanies.add(seller.getCompany());
+        }
+        return allCompanies;
     }
 
 }
