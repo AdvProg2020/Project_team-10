@@ -473,7 +473,7 @@ public class Login{
         if (AccountManager.getOnlineAccount() instanceof Admin) {
             new AdminPanel(mainPane, main, mainMenu).changePane();
         } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
-
+            new BuyerPanel(mainPane, main, mainMenu).changePane();
         } else {
 
         }
