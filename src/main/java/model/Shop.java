@@ -31,6 +31,8 @@ public class Shop {
         arrayList.add("asds");
         arrayList.add("speaffed");
         allCategories.add(new Category("car", arrayList));
+
+
 //        allGoods.add(new Good(4, "dddd", "bmw"
 //                , 2, 4, null, "car", hashMap, "dhsvjshv",
 //                "src/main/java/view/image/usersamad.jpg").setVisitNumber(5));
@@ -39,8 +41,14 @@ public class Shop {
         p.add("samad");
         p.add("javads");
 
-//        allGoods.add(new Good(4 , "hhhh" , "bmw"
-//                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        Seller account = new Seller("mohammad" , "dsvdsvs" , "sdvsdvsd" , "sdv@sdv.com" , "0912212783" ,
+                "javad1379" , "dvsdvsvsdvsv" , "src/main/java/view/image/usersamad.jpg");
+        account.getGoods().add( new Good(4 , "hhhh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        account.getGoods().add(new Good(8 , "hhdvshh" , "bmw"
+                , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
+        allAccounts.add(account);
+
 //        allGoods.add(new Good(2 , "bbbb" , "bmw"
 //                , 2 , 2 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(2));
 //        allGoods.add(new Good(3 , "cccc" , "bmw"

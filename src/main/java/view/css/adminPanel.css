@@ -204,3 +204,12 @@
     -fx-font-family: "sans-serif";
     -fx-font-size: 14pt;
 }
+
+.addGoodPlus{
+    -fx-image: url("../image/plus.png");
+}
+
+.addGoodPlus:hover{
+    -fx-image: url("../image/plusHover.png");
+    -fx-cursor: hand;
+}
