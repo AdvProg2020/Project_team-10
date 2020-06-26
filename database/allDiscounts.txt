@@ -1,1 +1,1 @@
-[]
+[{"code":0,"startDate":"May 2, 2020 10:01:42 AM","endDate":"Sep 2, 2020 12:01:42 AM","percent":50,"maxAmountOfDiscount":1000000,"repeatDiscount":2,"userNames":["buyer"]}]

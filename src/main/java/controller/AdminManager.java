@@ -32,7 +32,7 @@ public class AdminManager {
         Shop.getShop().getAllDiscounts().add(discount);
         for (String username : userNames) {
             ((Buyer) Shop.getShop().getAccountByUsername(username)).getDiscounts().add(discount);
-            ((Buyer) Shop.getShop().getAccountByUsername(username)).getDiscountAndNumberOfAvailableDiscount().put(discount, discount.getRepeatDiscount());
+            ((Buyer) Shop.getShop().getAccountByUsername(username)).getDiscountAndNumberOfAvailableDiscount().put(discount.getCode(), discount.getRepeatDiscount());
         }
     }
 

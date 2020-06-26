@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Buyer extends Account {
 
-    private HashMap<Discount, Integer> discountAndNumberOfAvailableDiscount;
+    private HashMap<Integer, Integer> discountAndNumberOfAvailableDiscount;
     private List<Good> goods;
     private List<Good> cart;
     private List<Discount> discounts;
@@ -33,7 +33,7 @@ public class Buyer extends Account {
         this.buyerLogs = new ArrayList<>();
     }
 
-    public HashMap<Discount, Integer> getDiscountAndNumberOfAvailableDiscount() {
+    public HashMap<Integer, Integer> getDiscountAndNumberOfAvailableDiscount() {
         return discountAndNumberOfAvailableDiscount;
     }
 
