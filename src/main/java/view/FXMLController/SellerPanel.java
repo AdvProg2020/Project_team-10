@@ -1,10 +1,10 @@
 package view.FXMLController;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRadioButton;
 import controller.AccountManager;
 import controller.GoodsManager;
+import controller.SellerManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -18,9 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -37,6 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.adminPopupURL;
@@ -55,6 +54,14 @@ public class SellerPanel {
     private Button btnLogin;
     private File selectedImageFile;
     private File selectedVideoFile;
+    private TextField goodName;
+    private TextField company;
+    private NumberField number;
+    private NumberField price;
+    private TextField description;
+    private JFXRadioButton selectedCategory;
+    private ArrayList<TextField> categoryAttributes;
+
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.mainPane = mainPane;
@@ -212,12 +219,11 @@ public class SellerPanel {
         return vBox;
     }
 
-
-    private JFXRadioButton select;
     private void addGood() {
         error.setText("");
         loginPane.getChildren().clear();
 
+        categoryAttributes = new ArrayList<>();
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(120);
         rectangle.setWidth(100);
@@ -225,13 +231,10 @@ public class SellerPanel {
         rectangle.setLayoutY(80);
         rectangle.setStyle("-fx-fill: white;" + "-fx-border-width: 20px");
 
-//        scrollPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-
-        Label titleOFSignUp = new Label("+ ADD GOOD");
-        titleOFSignUp.setLayoutY(80);
-        titleOFSignUp.setLayoutX(40);
-        titleOFSignUp.getStyleClass().add("labelForLoginTitle");
-
+        Label title = new Label("+ ADD GOOD");
+        title.setLayoutY(80);
+        title.setLayoutX(40);
+        title.getStyleClass().add("labelForLoginTitle");
 
         Button selectAPhoto = new Button("Select a photo");
         selectAPhoto.setLayoutX(340);
@@ -259,50 +262,48 @@ public class SellerPanel {
             loginPane.getChildren().add(imageView);
         });
 
-        TextField goodName = new TextField();
+        goodName = new TextField();
         goodName.setPromptText("Name");
         goodName.setLayoutY(140);
         goodName.setLayoutX(40);
         goodName.setPrefSize(260, 40);
         goodName.getStyleClass().add("text-fieldForSignUp");
 
-        TextField company = new TextField();
+        company = new TextField();
         company.setPromptText("Company");
         company.setLayoutY(190);
         company.setLayoutX(40);
         company.setPrefSize(260, 40);
         company.getStyleClass().add("text-fieldForSignUp");
 
-        NumberField number = new NumberField();
+        number = new NumberField();
         number.setPromptText("Number");
         number.setLayoutY(240);
         number.setLayoutX(40);
         number.setPrefSize(100, 40);
         number.getStyleClass().add("text-fieldForSignUp");
 
-        NumberField price = new NumberField();
+        price = new NumberField();
         price.setPromptText("Price");
         price.setLayoutY(240);
         price.setLayoutX(150);
         price.setPrefSize(150, 40);
         price.getStyleClass().add("text-fieldForSignUp");
 
-        TextField describe = new TextField();
-        describe.setPromptText("Description");
-        describe.setLayoutY(395);
-        describe.setLayoutX(40);
-        describe.setPrefSize(400, 40);
-        describe.getStyleClass().add("text-fieldForSignUp");
+        description = new TextField();
+        description.setPromptText("Description");
+        description.setLayoutY(395);
+        description.setLayoutX(40);
+        description.setPrefSize(400, 40);
+        description.getStyleClass().add("text-fieldForSignUp");
 
-        JFXButton signUp = new JFXButton("Submit");
-        signUp.setLayoutY(445);
-        signUp.setLayoutX(40);
-        signUp.setPrefHeight(40);
-        signUp.setPrefWidth(400);
-        signUp.getStyleClass().add("signUp");
-        signUp.setOnAction(event -> {
-            popupWindow.close();
-            handelManageProduct();
+        JFXButton submit = new JFXButton("Submit");
+        submit.setLayoutY(445);
+        submit.setLayoutX(40);
+        submit.setPrefSize(400, 40);
+        submit.getStyleClass().add("signUp");
+        submit.setOnAction(event -> {
+            processAddProduct();
         });
 
         Button selectAVideo = new Button("Select a video");
@@ -318,6 +319,7 @@ public class SellerPanel {
         categoryPack.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         categoryPack.getStyleClass().add("scroll-barInDiscount");
         categoryPack.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        categoryPack.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         ScrollPane attributePack = new ScrollPane();
         attributePack.setLayoutY(290);
@@ -326,11 +328,11 @@ public class SellerPanel {
         attributePack.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         attributePack.getStyleClass().add("scroll-barInDiscount");
         attributePack.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        attributePack.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         VBox attributeBox = new VBox(8);
-        attributeBox.setPrefSize(260 ,90);
+        attributeBox.setPrefSize(260, 90);
         attributePack.setContent(attributeBox);
-
-
 
         VBox categoryRadioButtonBox = new VBox(8);
         categoryRadioButtonBox.setPrefSize(110, 95);
@@ -341,20 +343,20 @@ public class SellerPanel {
             radioButton.setSelectedColor(Color.YELLOW);
             radioButton.setUnSelectedColor(Color.WHITE);
             radioButton.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white");
-           radioButton.setOnMouseClicked(event -> {
-               select = radioButton;
-               Category categorySelected = Shop.getShop().getCategoryByName(select.getText());
-               attributeBox.getChildren().clear();
-               for (String attribute : categorySelected.getAttributes()) {
-                   TextField attributeField = new TextField();
-                   attributeField.setPrefSize(260 , 30);
-                   attributeField.setPromptText(attribute);
-                   attributeField.getStyleClass().add("text-fieldForSignUp");
-                   attributeBox.getChildren().add(attributeField);
-               }
-           });
-
-            }
+            radioButton.setOnMouseClicked(event -> {
+                selectedCategory = radioButton;
+                Category categorySelected = Shop.getShop().getCategoryByName(selectedCategory.getText());
+                attributeBox.getChildren().clear();
+                for (String attribute : categorySelected.getAttributes()) {
+                    TextField attributeField = new TextField();
+                    attributeField.setPrefSize(260, 30);
+                    attributeField.setPromptText(attribute);
+                    attributeField.getStyleClass().add("text-fieldForSignUp");
+                    attributeBox.getChildren().add(attributeField);
+                    categoryAttributes.add(attributeField);
+                }
+            });
+        }
         categoryPack.setContent(categoryRadioButtonBox);
         FileChooser videoFileChooser = new FileChooser();
         videoFileChooser.getExtensionFilters().addAll(
@@ -366,12 +368,12 @@ public class SellerPanel {
             selectedVideoFile = videoFileChooser.showOpenDialog(windowVideoFile);
         });
 
-        FlowPane flowPane = new FlowPane();
-//        scrollPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-        flowPane.setLayoutX(40);
-        flowPane.setLayoutY(350);
-        flowPane.setPrefSize(400, 80);
-        flowPane.setStyle("-fx-background-color: none");
+//        FlowPane flowPane = new FlowPane();
+//        flowPane.setLayoutX(40);
+//        flowPane.setLayoutY(350);
+//        flowPane.setPrefSize(400, 80);
+//        flowPane.setStyle("-fx-background-color: none");
+
 //        scrollPane.setContent(flowPane);
 //        scrollPane.getStyleClass().add("scroll-barInDiscount");
 //        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -392,7 +394,41 @@ public class SellerPanel {
 
 
         loginPane.getChildren().addAll(exitButton(), goodName, company,
-                number, price, describe, categoryPack,attributePack, titleOFSignUp, signUp, error);
+                number, price, description, categoryPack, attributePack, title, submit, error);
+    }
+
+    private boolean isAllFieldsFilled() {
+        if (goodName.getText().length() == 0 || company.getText().length() == 0 || number.getText().length() == 0 ||
+        price.getText().length() == 0 || description.getText().length() == 0) {
+            return false;
+        } else {
+            for (TextField categoryAttribute : categoryAttributes) {
+                if (categoryAttribute.getText().length() == 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    private void processAddProduct() {
+        if (isAllFieldsFilled()) {
+            Category selectedCategory = Shop.getShop().getCategoryByName(this.selectedCategory.getText());
+            HashMap<String, String> hashMap = new HashMap<>();
+            for (int i = 0; i < selectedCategory.getAttributes().size(); i++) {
+                hashMap.put(selectedCategory.getAttributes().get(i), categoryAttributes.get(i).getText());
+            }
+            int number = Integer.parseInt(this.number.getText());
+            long price = Long.parseLong(this.price.getText());
+            SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
+                    hashMap, description.getText(), selectedImageFile.getAbsolutePath());
+            popupWindow.close();
+            fade(0.5, 10);
+            sellerScrollPane.setContent(null);
+            sellerScrollPane.setContent(handelManageProduct());
+        } else {
+            error.setText("you should fill all the fields");
+        }
     }
 
     private Button exitButton() {

@@ -222,4 +222,12 @@ public class Shop {
         return false;
     }
 
+    public Set<String> allCompanies() {
+        Set<String> allCompanies = new HashSet<>();
+        for (Seller seller : allSellers) {
+            allCompanies.add(seller.getCompany());
+        }
+        return allCompanies;
+    }
+
 }
