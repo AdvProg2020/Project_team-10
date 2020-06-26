@@ -24,6 +24,10 @@ public abstract class Account {
         this.imagePath = imagePath;
     }
 
+    protected Account(String username) {
+        this.username = username;
+    }
+
 
     @Override
     public String toString() {

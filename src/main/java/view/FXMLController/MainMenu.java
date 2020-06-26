@@ -1,5 +1,6 @@
 package view.FXMLController;
 
+import com.jfoenix.controls.JFXToggleButton;
 import controller.AccountManager;
 import controller.FileHandler;
 import controller.GoodsManager;
@@ -19,8 +20,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Buyer;
 import model.Good;
+import model.Shop;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
@@ -36,6 +40,8 @@ public class MainMenu implements Initializable {
     public URL location;
     public ResourceBundle resources;
     public MainMenu main;
+    public JFXToggleButton offFilterButton;
+    public JFXToggleButton availableFilterButton;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -162,8 +168,8 @@ public class MainMenu implements Initializable {
     }
 
     public void cartMenu(MouseEvent mouseEvent) {
-        mainPane.getChildren().remove(mainMenuScrollPane);
-        new CartMenu(mainPane, btnCartMenu).changePane();
+        mainPane.getChildren().remove(Login.currentPane);
+        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
@@ -172,6 +178,72 @@ public class MainMenu implements Initializable {
             initialize(location, resources);
             mainPane.getChildren().add(mainMenu);
         }
+    }
+
+    public void filterByOff(MouseEvent mouseEvent) {
+        if (offFilterButton.isSelected()) {
+            applyOffFilter();
+        } else {
+            GoodsManager.getKindOfFilter().remove("onlyOffs");
+            disableFilter();
+        }
+        initialize(location, resources);
+    }
+
+    public void filterByAvailability(MouseEvent mouseEvent) {
+        if (availableFilterButton.isSelected()) {
+            applyAvailabilityFilter();
+        } else {
+            GoodsManager.getKindOfFilter().remove("onlyAvailable");
+            disableFilter();
+        }
+        initialize(location, resources);
+
+    }
+
+    private void applyOffFilter() {
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (Good good : GoodsManager.getFilteredGoods()) {
+            if (good.getOffId() == 0) {
+                shouldBeRemoved.add(good);
+            }
+        }
+        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("onlyOffs", "onlyOffs");
+    }
+
+    private void applyAvailabilityFilter() {
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (Good good : GoodsManager.getFilteredGoods()) {
+            if (good.getNumber() <= 0) {
+                shouldBeRemoved.add(good);
+            }
+        }
+        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("onlyAvailable", "onlyAvailable");
+    }
+
+    private void disableFilter() {
+        GoodsManager.getFilteredGoods().clear();
+        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (String type : GoodsManager.getKindOfFilter().keySet()) {
+            if (type.equals("onlyOffs")) {
+                for (Good good : GoodsManager.getFilteredGoods()) {
+                    if (good.getOffId() == 0) {
+                        shouldBeRemoved.add(good);
+                    }
+                }
+
+            } else if (type.equals("onlyAvailable")) {
+                for (Good good : GoodsManager.getFilteredGoods()) {
+                    if (good.getNumber() <= 0) {
+                        shouldBeRemoved.add(good);
+                    }
+                }
+            }
+        }
+        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
     }
 
 }

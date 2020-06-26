@@ -3,7 +3,7 @@ package view.menus;
 import controller.GoodsManager;
 import view.CommandProcessor;
 
-public class FilteringMenu extends Menu{
+public class FilteringMenu extends Menu {
     public FilteringMenu(Menu parentMenu) {
         super("filter menu", parentMenu);
         subMenus.put(1, filter());
@@ -60,7 +60,8 @@ public class FilteringMenu extends Menu{
                     CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoods());
                 } else {
                     CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoodsInOffs());
-                }            }
+                }
+            }
         };
     }
 }

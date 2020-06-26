@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,8 +45,9 @@ public class GoodMenu {
 
     public void changePane() {
         Good currentGood = GoodsManager.getCurrentGood();
+//        System.out.println(currentGood.getVisitNumber());
         currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
-
+//        System.out.println(currentGood.getVisitNumber());
         AnchorPane innerPane = new AnchorPane();
 
         goodPageScrollPane = new ScrollPane(innerPane);
