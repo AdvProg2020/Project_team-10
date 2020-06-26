@@ -17,7 +17,8 @@ public class Shop {
     private List<Comment> allComments = new ArrayList<>();
 
     private Shop() {
-
+        allAccounts.add(new Admin("javads", "a", "A", "asd@dw.ds",
+                "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
     }
 
     public List<Comment> getAllComments() {

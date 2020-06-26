@@ -722,7 +722,7 @@ public class SellerPanel {
             vBox.setPrefWidth(97);
             vBox.setPrefHeight(150);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image(good.getImagePath()));
+            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
             logoImage.setFitHeight(50);
             logoImage.setFitWidth(50);
             logoImage.getStyleClass().add("goodImage");

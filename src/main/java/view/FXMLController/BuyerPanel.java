@@ -294,7 +294,7 @@ public class BuyerPanel {
 
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-        flowPane.setPrefWidth(1150);
+        flowPane.setPrefWidth(1165);
         flowPane.setPrefHeight(620);
         flowPane.setPadding(new Insets(50, 0, 10, 70));
         flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
@@ -395,10 +395,10 @@ public class BuyerPanel {
 
         Label goodTitle = new Label("  " + "Goods");
         goodTitle.setGraphic(line());
-        goodTitle.setPrefWidth(700);
+        goodTitle.setPrefWidth(655);
         goodTitle.getStyleClass().add("labelForDiscount");
 
-        hBoxTitle.getChildren().addAll(sellerTitle, goodTitle);
+        hBoxTitle.getChildren().addAll(sellerTitle, goodTitle, back(flowPane));
         flowPane.getChildren().add(hBoxTitle);
 
         for (String sellerUsername : buyerLog.getSellersToHisGoods().keySet()) {
@@ -447,7 +447,7 @@ public class BuyerPanel {
         imageViewBack = new ImageView();
         imageViewBack.setOnMouseClicked(event -> {
             flowPane.getChildren().clear();
-            flowPane.getChildren().addAll(showOrders());
+            buyerPaneScroll.setContent(showOrders());
         });
         imageViewBack.getStyleClass().add("imageViewBack");
         imageViewBack.setFitWidth(45);
