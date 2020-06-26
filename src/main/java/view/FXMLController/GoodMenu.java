@@ -25,6 +25,8 @@ import model.Admin;
 import model.Buyer;
 import model.Comment;
 import model.Good;
+import view.NumberField;
+
 import java.net.URL;
 import java.nio.file.Paths;
 
@@ -32,12 +34,14 @@ import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.loginURL;
 
 public class GoodMenu {
-    public AnchorPane mainPane;
+    private AnchorPane mainPane;
     public ScrollPane goodPageScrollPane;
     private Button addComment;
     private Stage popupWindow;
-    TextField title;
-    TextArea content;
+    private TextField title;
+    private TextArea content;
+    private NumberField scoreField;
+    private Label error;
 
     public GoodMenu(AnchorPane mainPane ) {
         this.mainPane = mainPane;
@@ -81,11 +85,26 @@ public class GoodMenu {
             ((Buyer) AccountManager.getOnlineAccount()).getCart().add(currentGood);
             currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
         });
+
+        JFXButton scoreButton = new JFXButton("Score");
+        scoreButton.setLayoutX(700);
+        scoreButton.setLayoutY(170);
+        scoreButton.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
+        scoreButton.setPrefSize(100, 50);
+        scoreButton.setOnMouseClicked(event -> {
+          popupScore();
+        });
+
+
         if (!(AccountManager.getOnlineAccount() instanceof Buyer) || ((Buyer) AccountManager.getOnlineAccount()).getCart().contains(currentGood)) {
             addToCart.setDisable(true);
         }
 
-        innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart);
+        if (!canScore()) {
+            scoreButton.setDisable(true);
+        }
+
+        innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart, scoreButton);
         goodImage.setFitWidth(500);
         goodImage.setFitHeight(500);
         goodImage.setLayoutX(50);
@@ -104,6 +123,53 @@ public class GoodMenu {
         innerPane.setPrefSize(1534, 699);
         Login.currentPane = goodPageScrollPane;
 
+    }
+
+    private boolean canScore() {
+        if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
+            return false;
+        } else{
+            for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getGoods()) {
+                if (good.getId() == GoodsManager.getCurrentGood().getId()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private void popupScore() {
+        AnchorPane scorePane = new AnchorPane();
+        scorePane.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
+        popupWindow = new Stage();
+        scoreField = new NumberField();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        AnchorPane layout = new AnchorPane();
+        Scene scene = new Scene(layout);
+        popupWindow.setMaximized(true);
+
+        layout.setStyle("-fx-background-color: none;");
+        scorePane.setStyle("-fx-background-color: #1089ff;" + "-fx-background-radius: 30px;");
+        scorePane.setPrefWidth(220);
+        scorePane.setPrefHeight(250);
+
+        fade(10, 0.5);
+
+        layout.setLayoutX(700);
+        layout.setLayoutY(300);
+        layout.getChildren().add(scorePane);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1500.0);
+        dropShadow.setHeight(1500);
+        dropShadow.setWidth(1500);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        layout.setEffect(dropShadow);
+
+        popupWindow.setScene(scene);
+        popupWindow.initStyle(StageStyle.TRANSPARENT);
+        popupWindow.getScene().setFill(Color.TRANSPARENT);
+        scorePane.getChildren().addAll(confirmScore() , exitPopupScore(), scoreField(), error());
+        popupWindow.showAndWait();
     }
 
     private void tabPane(AnchorPane innerPane) {
@@ -159,7 +225,6 @@ public class GoodMenu {
         return comments;
     }
 
-
     private void popupComment(){
         AnchorPane commentPane = new AnchorPane();
         commentPane.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
@@ -194,9 +259,6 @@ public class GoodMenu {
         commentPane.getChildren().addAll(title(), content(), submit(), exit());
         popupWindow.showAndWait();
 
-
-
-
     }
 
     private void fade(double fromValue, double toValue) {
@@ -220,10 +282,23 @@ public class GoodMenu {
         return exitButton;
     }
 
+    private Button exitPopupScore() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExit");
+        exitButton.setLayoutY(27);
+        exitButton.setLayoutX(345);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
+    }
+
     private Button addComment() {
         addComment = new Button();
         addComment.setText("Add");
         addComment.setPrefSize(290, 55);
+        addComment.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
         addComment.setLayoutX(100);
         addComment.setLayoutY(370);
         addComment.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
@@ -255,6 +330,29 @@ public class GoodMenu {
         return submit;
     }
 
+    private Button confirmScore() {
+        Button submit = new Button();
+        submit.setText("Ok!");
+        submit.setPrefSize(100, 50);
+        submit.setLayoutX(250);
+        submit.setLayoutY(190);
+        submit.getStyleClass().add("login");
+        submit.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent event) {
+                if (Integer.parseInt(scoreField.getText()) > 5 || Integer.parseInt(scoreField.getText()) < 0) {
+                    error.setText("only between 0 - 5");
+                    error.setStyle("-fx-text-fill: darkred");
+                } else {
+                    popupWindow.close();
+                    fade(0.5, 10);
+                    GoodsManager.getCurrentGood().getAllScores().add(Integer.parseInt(scoreField.getText()));
+                }
+            }
+        });
+        return submit;
+    }
+
     private TextField title() {
         title.setPromptText("title");
         title.setLayoutX(100);
@@ -265,6 +363,16 @@ public class GoodMenu {
         return title;
     }
 
+    private NumberField scoreField() {
+        scoreField.setPromptText("Score [0 - 5]");
+        scoreField.setLayoutX(100);
+        scoreField.setLayoutY(100);
+        scoreField.setPrefHeight(50);
+        scoreField.setPrefWidth(200);
+        scoreField.getStyleClass().add("typeField");
+        return scoreField;
+    }
+
     private TextArea content() {
         content.setPromptText("content");
         content.setLayoutX(100);
@@ -273,5 +381,13 @@ public class GoodMenu {
         content.setPrefWidth(290);
         return content;
     }
+
+    private Label error() {
+        error = new Label();
+        error.setLayoutX(110);
+        error.setLayoutY(160);
+        return error;
+    }
+
 
 }
