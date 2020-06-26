@@ -68,6 +68,8 @@ public class Shop {
                 , 2 , 8 , null , "car" , hashMap , "dhsvjshv").setVisitNumber(10));
         allAccounts.add(account);
 
+        allOffs.add(new Off(1 ,account.getGoods(), date ,date , 20 ));
+        allOffs.add(new Off(5 ,account.getGoods(), date ,date , 30 ));
 //        allGoods.add(new Good(2 , "bbbb" , "bmw"
 //                , 2 , 2 , "seller" , "car" , hashMap , "dhsvjshv").setVisitNumber(20));
 //        allGoods.add(new Good(3 , "cccc" , "bmw"

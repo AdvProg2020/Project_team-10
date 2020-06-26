@@ -22,6 +22,14 @@ public class Off {
         AccountManager.increaseLastOffId();
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public int getId() {
         return id;
     }
