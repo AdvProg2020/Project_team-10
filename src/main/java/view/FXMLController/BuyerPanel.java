@@ -40,6 +40,7 @@ public class BuyerPanel {
     private ScrollPane buyerPaneScroll = new ScrollPane();
     private MainMenu main;
     private AnchorPane mainMenu;
+    private ImageView imageViewBack;
 
     public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu) {
         this.main = main;
@@ -391,8 +392,8 @@ public class BuyerPanel {
         good.setPrefWidth(500);
         good.getStyleClass().add("labelForDiscount");
 
-        hBoxTitle.getChildren().addAll(seller1, good);
-        flowPane.getChildren().add(hBoxTitle);
+        hBoxTitle.getChildren().addAll(seller1, good, back(flowPane));
+        flowPane.getChildren().addAll(hBoxTitle);
 
         for (String seller : buyerLog.getSellersToHisGoods().keySet()) {
             HBox hBox = new HBox(0);
@@ -410,6 +411,19 @@ public class BuyerPanel {
             flowPane.getChildren().add(hBox);
         }
 
+    }
+
+    private ImageView back(FlowPane flowPane) {
+        imageViewBack = new ImageView();
+        imageViewBack.setOnMouseClicked(event -> {
+            flowPane.getChildren().clear();
+            flowPane.getChildren().addAll(showOrders());
+        });
+        imageViewBack.getStyleClass().add("imageViewBack");
+        imageViewBack.setFitWidth(45);
+        imageViewBack.setFitHeight(45);
+
+        return imageViewBack;
     }
 
     private Rectangle line() {

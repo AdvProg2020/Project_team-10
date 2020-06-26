@@ -128,6 +128,15 @@
     -fx-cursor: hand;
 }
 
+.imageViewBack{
+    -fx-image: url("../image/back.png");
+}
+
+.imageViewBack:hover{
+    -fx-image: url("../image/backHover.png");
+    -fx-cursor: hand;
+}
+
  .imageViewMines{
      -fx-image: url("../image/mines.png");
  }
