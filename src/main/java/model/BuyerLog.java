@@ -37,7 +37,7 @@ public class BuyerLog {
                 " status: '" + status + "\n-------------------------------";
     }
 
-    private String mapToString() {
+    public String mapToString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (String sellerUsername : sellersToHisGoods.keySet()) {
             stringBuilder.append("seller: ").append(sellerUsername);
@@ -47,5 +47,25 @@ public class BuyerLog {
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public long getPaidAmount() {
+        return paidAmount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public long getDiscount() {
+        return discount;
+    }
+
+    public Map<String, List<Good>> getSellersToHisGoods() {
+        return sellersToHisGoods;
     }
 }

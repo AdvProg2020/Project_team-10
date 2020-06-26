@@ -110,6 +110,33 @@
      -fx-cursor: hand;
  }
 
+ .imageViewMines{
+     -fx-image: url("../image/mines.png");
+ }
+
+.imageViewMines:hover{
+    -fx-image: url("../image/minesHover.png");
+    -fx-cursor: hand;
+}
+
+ .imageViewDetail{
+     -fx-image: url("../image/Detail.png");
+ }
+
+.imageViewDetail:hover{
+    -fx-image: url("../image/DetailHover.png");
+    -fx-cursor: hand;
+}
+
+ .imageViewMines{
+     -fx-image: url("../image/mines.png");
+ }
+
+.imageViewMines:hover{
+    -fx-image: url("../image/minesHover.png");
+    -fx-cursor: hand;
+}
+
 .hbox{
 -fx-border-width: 1px;
 -fx-border-color: #e2e2e2;
@@ -182,4 +209,15 @@
 
 .scroll-barInDiscount:vertical:focused {
     -fx-background-color: transparent;
+}
+
+.text-fieldForCategory{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
 }

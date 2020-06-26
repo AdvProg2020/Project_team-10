@@ -1,9 +1,6 @@
 package view.FXMLController;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.AdminManager;
 import controller.GoodsManager;
@@ -50,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.adminPopupURL;
@@ -201,10 +199,96 @@ public class AdminPanel {
         } else if (input.equals("discount")) {
             addDiscount();
         } else if (input.equals("category")) {
-
+            addCategory();
         }
         popupWindow.showAndWait();
 
+    }
+
+    private void addCategory() {
+
+        ArrayList<String> attributesArray = new ArrayList<>();
+        error.setText("");
+        loginPane.getChildren().clear();
+
+        Label titleOFSignUp = new Label("+ ADD CATEGORY");
+        titleOFSignUp.setLayoutY(80);
+        titleOFSignUp.setLayoutX(40);
+        titleOFSignUp.getStyleClass().add("labelForLoginTitle");
+
+        JFXButton signUp = new JFXButton("Submit");
+        signUp.setLayoutY(445);
+        signUp.setLayoutX(40);
+        signUp.setPrefHeight(40);
+        signUp.setPrefWidth(400);
+        signUp.getStyleClass().add("signUp");
+
+        ScrollPane containAttribute = new ScrollPane();
+        containAttribute.setLayoutX(40);
+        containAttribute.setLayoutY(135);
+        containAttribute.setPrefSize(400 , 300);
+        containAttribute.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        containAttribute.getStyleClass().add("scroll-barInDiscount");
+        containAttribute.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        VBox categoryPane = new VBox(10);
+        categoryPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        categoryPane.setPrefSize(380, 290);
+        categoryPane.setAlignment(Pos.TOP_CENTER);
+
+
+        TextField categoryName = new TextField();
+        categoryName.setPromptText("Category name");
+        HBox hBox = new HBox(categoryName);
+        hBox.setAlignment(Pos.CENTER);
+        categoryName.setPrefSize(300, 40);
+
+        categoryName.getStyleClass().add("text-fieldForCategory");
+
+        HBox att = new HBox(10);
+        att.setAlignment(Pos.CENTER);
+        ImageView plus = new ImageView();
+        plus.getStyleClass().add("imageViewPlus");
+        plus.setFitHeight(30);
+        plus.setFitWidth(30);
+
+        plus.setOnMouseClicked(e -> {
+            ImageView mines = new ImageView();
+            mines.getStyleClass().add("imageViewMines");
+            mines.setFitHeight(30);
+            mines.setFitWidth(30);
+
+            TextField attributeText = textFieldForAddCategory();
+
+            HBox attributePack = new HBox(attributeText, mines);
+            attributePack.setSpacing(10);
+            attributePack.setAlignment(Pos.CENTER);
+            mines.setOnMouseClicked(event -> {
+                categoryPane.getChildren().remove(attributePack);
+                attributesArray.remove(attributeText.getText());
+            });
+            attributesArray.add(attributeText.getText());
+
+            categoryPane.getChildren().add(attributePack);
+        });
+        TextField textField = textFieldForAddCategory();
+        att.getChildren().addAll(textField, plus);
+        System.out.println(attributesArray);
+        attributesArray.add(textField.getText());
+
+        categoryPane.getChildren().addAll(categoryName, att);
+        containAttribute.setContent(categoryPane);
+
+
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, signUp,containAttribute , error);
+    }
+
+    private TextField textFieldForAddCategory() {
+        TextField attribute = new TextField();
+        attribute.setPromptText("Attribute");
+        attribute.setPrefSize(350, 30);
+        attribute.getStyleClass().add("text-fieldForCategory");
+        return attribute;
     }
 
     public Button createButton(String text, String style) {
@@ -306,13 +390,13 @@ public class AdminPanel {
 
         Label attributes = new Label("  " + "Attributes");
         attributes.setGraphic(line());
-        attributes.setPrefWidth(680);
+        attributes.setPrefWidth(700);
         attributes.getStyleClass().add("labelForDiscount");
 
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp("signUp");
+                popupSigUp("category");
 
             } catch (IOException e) {
                 e.printStackTrace();
