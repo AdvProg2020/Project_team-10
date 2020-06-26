@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class AccountManager {
-    private static Account onlineAccount;
+    private static Account onlineAccount = new Buyer("temp");
     private static int lastRequestId;
     private static int lastGoodId;
     private static int lastCommentId;

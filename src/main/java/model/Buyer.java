@@ -17,13 +17,21 @@ public class Buyer extends Account {
     public Buyer(String username, String firstName, String lastName, String email, String phoneNumber
             , String password, String imagePath) {
         super(username, firstName, lastName, email, phoneNumber, password, imagePath);
-        goods = new ArrayList<>();
-        cart = new ArrayList<>();
-        discounts = new ArrayList<>();
+        this.goods = new ArrayList<>();
+        this.cart = new ArrayList<>();
+        this.discounts = new ArrayList<>();
         this.discountAndNumberOfAvailableDiscount = new HashMap<>();
         this.buyerLogs = new ArrayList<>();
     }
 
+    public Buyer(String username) {
+        super(username);
+        this.goods = new ArrayList<>();
+        this.cart = new ArrayList<>();
+        this.discounts = new ArrayList<>();
+        this.discountAndNumberOfAvailableDiscount = new HashMap<>();
+        this.buyerLogs = new ArrayList<>();
+    }
 
     public HashMap<Discount, Integer> getDiscountAndNumberOfAvailableDiscount() {
         return discountAndNumberOfAvailableDiscount;

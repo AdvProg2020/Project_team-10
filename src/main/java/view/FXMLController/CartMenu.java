@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXToggleButton;
 import controller.AccountManager;
 import controller.BuyerManager;
 import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -41,12 +39,8 @@ import static view.FXML.FXML.paymentURL;
 
 public class CartMenu {
     private AnchorPane mainPane;
-    private ScrollPane cartMenuScrollPane;
-    private AnchorPane innerPane;
-    private VBox products;
-    private VBox vBox;
     private Button btnCartMenu;
-    private JFXButton purchase;
+    private Button btnLogin;
     private Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
     private AnchorPane paymentPane;
     private TextField nameField;
@@ -56,7 +50,6 @@ public class CartMenu {
     private ZipCode discountCode;
     private Label error;
     private Stage paymentPopup;
-    private Label totalPrice;
     private Label payableAmount;
     private JFXToggleButton existenceOfDiscount;
     private Button confirmButton;
@@ -65,21 +58,26 @@ public class CartMenu {
     private double finalTotalPrice;
     private Discount discount;
     private ZipCode creditField;
+    private MainMenu main;
+    private AnchorPane mainMenu;
 
-    public CartMenu(AnchorPane mainPane, Button btnCartMenu) {
+    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu) {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
+        this.btnLogin = btnLogin;
+        this.main = main;
+        this.mainMenu = mainMenu;
     }
 
     public void changePane() {
         btnCartMenu.setVisible(false);
-        innerPane = new AnchorPane();
-        cartMenuScrollPane = new ScrollPane(innerPane);
+        AnchorPane innerPane = new AnchorPane();
+        ScrollPane cartMenuScrollPane = new ScrollPane(innerPane);
         cartMenuScrollPane.setLayoutY(164);
         cartMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         cartMenuScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        products = new VBox();
+        VBox products = new VBox();
         products.setSpacing(50);
         Label totalPrice = new Label();
         for (Good good : currentBuyer.getCart()) {
@@ -98,7 +96,7 @@ public class CartMenu {
             products.getChildren().add(productBox);
 
         }
-        purchase = new JFXButton("Purchase");
+        JFXButton purchase = new JFXButton("Purchase");
         totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
         if (BuyerManager.getTotalPrice() == 0) {
             purchase.setDisable(true);
@@ -106,14 +104,18 @@ public class CartMenu {
         purchase.getStyleClass().add("purchase");
         purchase.setOnMouseClicked(event -> {
             try {
-                paymentPopup();
+                if (AccountManager.getOnlineAccount().getUsername().equals("temp")) {
+                    new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(null);
+                } else {
+                    paymentPopup();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         HBox purchaseAndTotalPrice = new HBox(purchase, totalPrice);
         purchaseAndTotalPrice.setSpacing(500);
-        vBox = new VBox(products, purchaseAndTotalPrice);
+        VBox vBox = new VBox(products, purchaseAndTotalPrice);
         vBox.setSpacing(50);
         innerPane.getChildren().add(vBox);
         vBox.setLayoutX(50);
@@ -121,15 +123,15 @@ public class CartMenu {
         innerPane.getStylesheets().add("file:src/main/java/view/css/cartMenu.css");
         mainPane.getChildren().add(cartMenuScrollPane);
         innerPane.setPrefSize(1200, 699);
-
+        Login.currentPane = cartMenuScrollPane;
     }
 
     private HBox increaseOrDecreaseNumber(Label totalPrice, Good good) {
-        final int[] count = {1};
+        final int[] count = {good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername())};
         TextField number = new TextField();
         number.setAlignment(Pos.CENTER);
         number.setPrefSize(70, 45);
-        number.setText("1");
+        number.setText("" + good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()));
         number.setDisable(true);
         JFXButton plus = new JFXButton("+");
         plus.setPrefSize(45, 45);
@@ -143,14 +145,13 @@ public class CartMenu {
         JFXButton minus = new JFXButton("-");
         minus.setPrefSize(45, 45);
         minus.setOnMouseClicked(event -> {
-            if (count[0] != 0) {
-                count[0] -= 1;
-                number.setText("" + count[0]);
-                good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-                totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
-
-            }
+            if (count[0] != 0)
+            count[0] -= 1;
+            number.setText("" + count[0]);
+            good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+            totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
         });
+
         return new HBox(minus, number, plus);
     }
 
@@ -263,7 +264,7 @@ public class CartMenu {
     }
 
     private Label totalPrice() {
-        totalPrice = new Label("Total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+        Label totalPrice = new Label("Total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
         totalPrice.getStyleClass().add("totalPrice");
         totalPrice.setLayoutX(90);
         totalPrice.setLayoutY(380);
@@ -380,9 +381,7 @@ public class CartMenu {
             Purchase.pay(finalTotalPrice, discount);
             paymentPopup.close();
             fade(0.5, 10);
-            vBox.getChildren().remove(products);
-            purchase.setDisable(true);
-            totalPrice.setText("Total price: 0");
+            backToMainMenu();
         } else {
             error.setText("your credit is not enough");
         }
@@ -407,6 +406,12 @@ public class CartMenu {
         fade.setToValue(toValue);
         fade.setNode(mainPane);
         fade.play();
+    }
+
+    public void backToMainMenu() {
+        mainPane.getChildren().remove(Login.currentPane);
+        main.initialize(main.location, main.resources);
+        mainPane.getChildren().add(mainMenu);
     }
 
 }

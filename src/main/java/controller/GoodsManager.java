@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GoodsManager {
-    private static Good currentGood = new Good(10, "name", "company", 5, 1000, null, "car",
-            null, "asd", "C:/Users/hossein/Desktop//chess/3d-chess-game-pieces-design-illustration-isolated-white-background_216222-7.jpg");
+    private static Good currentGood;
     private static String kindOfSort = "visit number";
     private static List<Good> filteredGoods = new ArrayList<>();
     private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
@@ -95,7 +94,7 @@ public class GoodsManager {
         return filteredGoods;
     }
 
-    public static List getGoodsInOffs() {
+    public static List<Good> getGoodsInOffs() {
            List<Good> goodsInOffs = new ArrayList<>();
         for (Off off : Shop.getShop().getAllOffs()) {
             goodsInOffs.addAll(off.getGoods());

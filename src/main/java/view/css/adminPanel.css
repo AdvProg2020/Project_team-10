@@ -110,6 +110,15 @@
      -fx-cursor: hand;
  }
 
+ .imageViewMines{
+     -fx-image: url("../image/mines.png");
+ }
+
+.imageViewMines:hover{
+    -fx-image: url("../image/minesHover.png");
+    -fx-cursor: hand;
+}
+
  .imageViewDetail{
      -fx-image: url("../image/Detail.png");
  }
@@ -182,6 +191,7 @@
 }
 
 .scroll-barInDiscount{
+    -fx-background: none;
     -fx-background-color: transparent;
     -fx-background-radius: 2em;
     -fx-focus-color: transparent;
@@ -190,4 +200,15 @@
 
 .scroll-barInDiscount:vertical:focused {
     -fx-background-color: transparent;
+}
+
+.text-fieldForCategory{
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
 }
