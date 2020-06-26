@@ -29,7 +29,7 @@ public class ManageUsersMenu extends Menu {
         return new LastMenu("delete user", this) {
             @Override
             public void show() {
-                processDeleteAccountByAdmin();
+//                processDeleteAccountByAdmin();
                 super.show();
             }
 

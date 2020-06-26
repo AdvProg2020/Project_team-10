@@ -482,7 +482,7 @@ public class Login{
         if (AccountManager.getOnlineAccount() instanceof Admin) {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
-            new BuyerPanel(mainPane, main, mainMenu).changePane();
+            new BuyerPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else {
             new SellerPanel(mainPane,main, mainMenu, user, btnLogin).changePane();
         }
@@ -495,6 +495,7 @@ public class Login{
         popupUser.setVisible(false);
         btnLogin.setVisible(true);
         btnCartMenu.setVisible(true);
+        backToMainMenu();
     }
 
     private void fade(double fromValue, double toValue) {
@@ -506,7 +507,11 @@ public class Login{
         fade.play();
     }
 
-
+    public void backToMainMenu() {
+        mainPane.getChildren().remove(Login.currentPane);
+        main.initialize(main.location, main.resources);
+        mainPane.getChildren().add(mainMenu);
+    }
 
 
 

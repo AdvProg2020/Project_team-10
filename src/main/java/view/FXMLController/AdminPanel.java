@@ -5,16 +5,12 @@ import controller.AccountManager;
 import controller.AdminManager;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,19 +23,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import javafx.util.converter.LocalTimeStringConverter;
 import model.*;
 import view.CommandProcessor;
 import view.NumberField;
 
-import javax.swing.text.DateFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.adminPopupURL;
@@ -73,7 +64,7 @@ public class AdminPanel {
     private AnchorPane mainMenu;
     private Button user;
     private Button btnLogin;
-
+    //discount
     private List<String> selectedBuyers;
     private JFXDatePicker startDate;
     private JFXDatePicker endDate;
@@ -82,6 +73,10 @@ public class AdminPanel {
     private NumberField percent;
     private NumberField maxPrice;
     private NumberField number;
+    //category
+    private ArrayList<TextField> attributesTextField;
+    private TextField categoryName;
+
 
     public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.main = main;
@@ -162,7 +157,7 @@ public class AdminPanel {
         mainPane.getChildren().add(adminPane);
     }
 
-    public void popupSigUp(String input) throws IOException {
+    public void popup(String input) throws IOException {
         loginPane = new AnchorPane();
         error = new Label();
         popupWindow = new Stage();
@@ -207,7 +202,7 @@ public class AdminPanel {
 
     private void addCategory() {
 
-        ArrayList<String> attributesArray = new ArrayList<>();
+        attributesTextField = new ArrayList<>();
         error.setText("");
         loginPane.getChildren().clear();
 
@@ -216,12 +211,13 @@ public class AdminPanel {
         titleOFSignUp.setLayoutX(40);
         titleOFSignUp.getStyleClass().add("labelForLoginTitle");
 
-        JFXButton signUp = new JFXButton("Submit");
-        signUp.setLayoutY(445);
-        signUp.setLayoutX(40);
-        signUp.setPrefHeight(40);
-        signUp.setPrefWidth(400);
-        signUp.getStyleClass().add("signUp");
+        JFXButton submit = new JFXButton("Submit");
+        submit.setLayoutY(445);
+        submit.setLayoutX(40);
+        submit.setPrefHeight(40);
+        submit.setPrefWidth(400);
+        submit.getStyleClass().add("signUp");
+        submit.setOnMouseClicked(event -> processAddCategory());
 
         ScrollPane containAttribute = new ScrollPane();
         containAttribute.setLayoutX(40);
@@ -237,12 +233,11 @@ public class AdminPanel {
         categoryPane.setAlignment(Pos.TOP_CENTER);
 
 
-        TextField categoryName = new TextField();
+        categoryName = new TextField();
         categoryName.setPromptText("Category name");
         HBox hBox = new HBox(categoryName);
         hBox.setAlignment(Pos.CENTER);
         categoryName.setPrefSize(300, 40);
-
         categoryName.getStyleClass().add("text-fieldForCategory");
 
         HBox att = new HBox(10);
@@ -253,34 +248,33 @@ public class AdminPanel {
         plus.setFitWidth(30);
 
         plus.setOnMouseClicked(e -> {
-            ImageView mines = new ImageView();
-            mines.getStyleClass().add("imageViewMines");
-            mines.setFitHeight(30);
-            mines.setFitWidth(30);
+            ImageView minus = new ImageView();
+            minus.getStyleClass().add("imageViewMines");
+            minus.setFitHeight(30);
+            minus.setFitWidth(30);
 
-            TextField attributeText = textFieldForAddCategory();
+            TextField attributeTextField = textFieldForAddCategory();
+            attributesTextField.add(attributeTextField);
 
-            HBox attributePack = new HBox(attributeText, mines);
+            HBox attributePack = new HBox(attributeTextField, minus);
             attributePack.setSpacing(10);
             attributePack.setAlignment(Pos.CENTER);
-            mines.setOnMouseClicked(event -> {
+            minus.setOnMouseClicked(event -> {
+                attributesTextField.remove(attributeTextField);
                 categoryPane.getChildren().remove(attributePack);
-                attributesArray.remove(attributeText.getText());
             });
-            attributesArray.add(attributeText.getText());
 
             categoryPane.getChildren().add(attributePack);
         });
-        TextField textField = textFieldForAddCategory();
-        att.getChildren().addAll(textField, plus);
-        System.out.println(attributesArray);
-        attributesArray.add(textField.getText());
+        TextField firstAttribute = textFieldForAddCategory();
+        attributesTextField.add(firstAttribute);
+        att.getChildren().addAll(firstAttribute, plus);
 
         categoryPane.getChildren().addAll(categoryName, att);
         containAttribute.setContent(categoryPane);
 
 
-        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, signUp,containAttribute , error);
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, submit,containAttribute , error);
     }
 
     private TextField textFieldForAddCategory() {
@@ -289,6 +283,19 @@ public class AdminPanel {
         attribute.setPrefSize(350, 30);
         attribute.getStyleClass().add("text-fieldForCategory");
         return attribute;
+    }
+
+    private void processAddCategory() {
+        ArrayList<String> attributes = new ArrayList<>();
+        for (TextField textField : attributesTextField) {
+            attributes.add(textField.getText());
+        }
+        AdminManager.addCategory(categoryName.getText(), attributes);
+        popupWindow.close();
+        fade(0.5, 10);
+        adminScrollPane.setContent(null);
+        adminScrollPane.setContent(handelCategory());
+
     }
 
     public Button createButton(String text, String style) {
@@ -353,8 +360,6 @@ public class AdminPanel {
         } else if (selectedButton.getText().equals("Manage products")) {
             adminScrollPane.setContent(handelManageProduct());
             adminPane.getChildren().add(adminScrollPane);
-            adminScrollPane.setContent(handelManageProduct());
-            adminPane.getChildren().add(adminScrollPane);
         } else if (selectedButton.getText().equals("Discounts")) {
             adminScrollPane.setContent(handelDiscounts());
             adminPane.getChildren().add(adminScrollPane);
@@ -388,15 +393,15 @@ public class AdminPanel {
         categoryName.setPrefWidth(255);
         categoryName.getStyleClass().add("labelForDiscount");
 
-        Label attributes = new Label("  " + "Attributes");
-        attributes.setGraphic(line());
-        attributes.setPrefWidth(700);
-        attributes.getStyleClass().add("labelForDiscount");
+        Label attributesTitle = new Label("  " + "Attributes");
+        attributesTitle.setGraphic(line());
+        attributesTitle.setPrefWidth(700);
+        attributesTitle.getStyleClass().add("labelForDiscount");
 
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp("category");
+                popup("category");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -406,7 +411,7 @@ public class AdminPanel {
         imageViewPlus.setFitWidth(35);
         imageViewPlus.setFitHeight(35);
 
-        hBoxTitle.getChildren().addAll(categoryName, attributes, imageViewPlus);
+        hBoxTitle.getChildren().addAll(categoryName, attributesTitle, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
 
@@ -422,10 +427,10 @@ public class AdminPanel {
             name.getStyleClass().add("labelForDiscount");
 
 
-            Label attribute = new Label("  " + category.getAttributes());
-            attribute.setGraphic(line());
-            attribute.setPrefWidth(680);
-            attribute.getStyleClass().add("labelForDiscount");
+            Label attributes = new Label("  " + category.getAttributes());
+            attributes.setGraphic(line());
+            attributes.setPrefWidth(680);
+            attributes.getStyleClass().add("labelForDiscount");
 
             ImageView edit = new ImageView();
             edit.getStyleClass().add("editImage");
@@ -437,10 +442,10 @@ public class AdminPanel {
             bin.setFitWidth(31);
             bin.setFitHeight(25);
 
-            hBox.getChildren().addAll(name, attribute, edit, bin);
+            hBox.getChildren().addAll(name, attributes, edit, bin);
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
-                Shop.getShop().getAllCategories().remove(category);
+                AdminManager.removeCategory(category);
                 flowPane.getChildren().remove(hBox);
             });
         }
@@ -633,14 +638,11 @@ public class AdminPanel {
 
             JFXCheckBox username = new JFXCheckBox(buyer.getUsername());
             username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';");
-            username.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (username.isSelected()) {
-                        selectedBuyers.add(buyer.getUsername());
-                    } else {
-                        selectedBuyers.remove(buyer.getUsername());
-                    }
+            username.setOnAction(event -> {
+                if (username.isSelected()) {
+                    selectedBuyers.add(buyer.getUsername());
+                } else {
+                    selectedBuyers.remove(buyer.getUsername());
                 }
             });
             hBox.getChildren().add(username);
@@ -652,8 +654,6 @@ public class AdminPanel {
 
         loginPane.getChildren().addAll(exitButton(), titleAddDiscount, startDate,
                 startTime, endDate, endTime, percent, maxPrice, number, submit, scrollPane, error);
-//
-//        signUp.setOnMouseClicked(event -> processRegister());
     }
 
     private void processAddDiscount() {
@@ -685,9 +685,6 @@ public class AdminPanel {
         fade(0.5, 10);
         adminScrollPane.setContent(null);
         adminScrollPane.setContent(handelDiscounts());
-
-
-        ScrollPane scrollPane = new ScrollPane();
 
     }
 
@@ -790,7 +787,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp("signUp");
+                popup("signUp");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -810,31 +807,24 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 12, 0, 12));
             hBox.getStyleClass().add("hbox");
             hBox.setPrefHeight(60);
-            Label label = new Label(account.getUsername());
-            label.setPrefWidth(150);
-            label.getStyleClass().add("labelUsernameInProfile");
-            Label label1 = new Label("  " + account.getEmail());
+            Label usernameLabel = new Label(account.getUsername());
+            usernameLabel.setPrefWidth(150);
+            usernameLabel.getStyleClass().add("labelUsernameInProfile");
+            Label emailLabel = new Label("  " + account.getEmail());
             Rectangle rectangle = new Rectangle(2, 60);
             rectangle.setStyle("-fx-fill: #d5d5d5");
-            label1.setGraphic(rectangle);
-            label1.setPrefWidth(600);
-            label1.getStyleClass().add("labelUsernameInProfile");
-            ImageView imageView = new ImageView();
-            imageView.getStyleClass().add("binImage");
-            imageView.setFitWidth(31);
-            imageView.setFitHeight(25);
+            emailLabel.setGraphic(rectangle);
+            emailLabel.setPrefWidth(600);
+            emailLabel.getStyleClass().add("labelUsernameInProfile");
+            ImageView deleteAccountImage = new ImageView();
+            deleteAccountImage.getStyleClass().add("binImage");
+            deleteAccountImage.setFitWidth(31);
+            deleteAccountImage.setFitHeight(25);
 
-            hBox.getChildren().addAll(label, label1, imageView);
+            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
             flowPane.getChildren().add(hBox);
-            imageView.setOnMouseClicked(e -> {
-                Shop.getShop().getAllAccounts().remove(account);
-                if (account instanceof Buyer) {
-                    Shop.getShop().getAllBuyers().remove(account);
-                } else if (account instanceof Seller) {
-                    Shop.getShop().getAllSellers().remove(account);
-                } else if (account instanceof Admin){
-                    Shop.getShop().getAllAdmins().remove(account);
-                }
+            deleteAccountImage.setOnMouseClicked(e -> {
+                AdminManager.deleteAccount(account);
                 flowPane.getChildren().remove(hBox);
             });
         }
@@ -889,7 +879,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp("discount");
+                popup("discount");
 
             } catch (IOException e) {
                 e.printStackTrace();

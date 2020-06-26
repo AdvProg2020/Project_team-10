@@ -1,6 +1,7 @@
 package view.FXMLController;
 
 import controller.AccountManager;
+import controller.GoodsManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -40,11 +41,16 @@ public class BuyerPanel {
     private ScrollPane buyerPaneScroll = new ScrollPane();
     private MainMenu main;
     private AnchorPane mainMenu;
+    private Button user;
+    private Button btnLogin;
 
-    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu) {
+
+    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
+        this.user = user;
+        this.btnLogin = btnLogin;
         buyerPane = new AnchorPane();
         optionsPane = new AnchorPane();
         handelButtonOnMouseClick();
@@ -165,6 +171,9 @@ public class BuyerPanel {
             buyerPane.getChildren().add(buyerPaneScroll);
             buyerPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         } else if (selectedButton.getText().equals("Log out")) {
+            AccountManager.setOnlineAccount(new Buyer("temp"));
+            user.setVisible(false);
+            btnLogin.setVisible(true);
             backToMainMenu();
         } else if (selectedButton.getText().equals("Discounts")) {
             buyerPaneScroll.setContent(showDiscounts());
@@ -321,7 +330,6 @@ public class BuyerPanel {
         hBoxTitle.getChildren().addAll(code, date, paid, discount, status);
         flowPane.getChildren().add(hBoxTitle);
 
-
         for (BuyerLog log : ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogs()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
@@ -379,34 +387,55 @@ public class BuyerPanel {
         hBoxTitle.getStyleClass().add("hboxTitle");
         hBoxTitle.setPrefHeight(60);
 
-        ScrollPane scrollPane = new ScrollPane();
+        Label sellerTitle = new Label("  " + "Seller");
+        sellerTitle.setPrefWidth(200);
+        sellerTitle.getStyleClass().add("labelForDiscount");
 
+        Label goodTitle = new Label("  " + "Goods");
+        goodTitle.setGraphic(line());
+        goodTitle.setPrefWidth(700);
+        goodTitle.getStyleClass().add("labelForDiscount");
 
-        Label seller1 = new Label("  " + "Seller");
-        seller1.setPrefWidth(300);
-        seller1.getStyleClass().add("labelForDiscount");
-
-        Label good = new Label("  " + "Goods");
-        good.setGraphic(line());
-        good.setPrefWidth(500);
-        good.getStyleClass().add("labelForDiscount");
-
-        hBoxTitle.getChildren().addAll(seller1, good);
+        hBoxTitle.getChildren().addAll(sellerTitle, goodTitle);
         flowPane.getChildren().add(hBoxTitle);
 
-        for (String seller : buyerLog.getSellersToHisGoods().keySet()) {
+        for (String sellerUsername : buyerLog.getSellersToHisGoods().keySet()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
             hBox.getStyleClass().add("hbox");
-            hBox.setPrefHeight(60);
+            hBox.setPrefHeight(120);
 
-            Label sellerName = new Label("  " + seller);
-            sellerName.setGraphic(line());
-            sellerName.setPrefWidth(150);
+            Label sellerName = new Label("  " + sellerUsername);
+            sellerName.setPrefWidth(200);
             sellerName.getStyleClass().add("labelForDiscount");
 
-            hBox.getChildren().add(sellerName);
+            HBox goods = new HBox();
+            goods.setStyle("-fx-background-color: white");
+            goods.setPrefSize(700, 120);
+            ScrollPane goodsScrollPane = new ScrollPane(goods);
+            goodsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            goodsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            for (Good good : buyerLog.getSellersToHisGoods().get(sellerUsername)) {
+                VBox productBox = new VBox();
+                productBox.setPrefWidth(90);
+                productBox.setPrefHeight(100);
+                productBox.getStyleClass().add("vBoxInMainMenu");
+                ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+                logoImage.setFitHeight(60);
+                logoImage.setFitWidth(60);
+                Label name = new Label(good.getName());
+                Label price = new Label("$" +good.getPrice() + "");
+                name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
+                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 14px;" + "-fx-font-weight: bold;");
+                productBox.setAlignment(Pos.CENTER);
+                productBox.getChildren().addAll(logoImage, name, price);
+                goods.getChildren().add(productBox);
+            }
+
+
+            hBox.getChildren().addAll(sellerName, goodsScrollPane);
             flowPane.getChildren().add(hBox);
         }
 
