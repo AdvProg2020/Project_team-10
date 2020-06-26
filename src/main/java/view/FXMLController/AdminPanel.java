@@ -1,6 +1,7 @@
 package view.FXMLController;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import controller.AccountManager;
@@ -137,7 +138,7 @@ public class AdminPanel {
         mainPane.getChildren().add(adminPane);
     }
 
-    public void popupSigUp() throws IOException {
+    public void popupSigUp(String input) throws IOException {
         loginPane = new AnchorPane();
         error = new Label();
         popupWindow = new Stage();
@@ -169,7 +170,13 @@ public class AdminPanel {
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
 
-        signUpAdmin();
+        if (input.equals("signUp")) {
+            signUpAdmin();
+        } else if (input.equals("discount")) {
+            addDiscount();
+        } else if (input.equals("category")) {
+
+        }
         popupWindow.showAndWait();
 
     }
@@ -272,7 +279,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp();
+                popupSigUp("signUp");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -398,21 +405,7 @@ public class AdminPanel {
         firstNameText = textFieldForSignUp("First name", 40, 140);
         lastNameText = textFieldForSignUp("Last name", 40, 190);
 
-        JFXDatePicker datePicker = new JFXDatePicker();
-        datePicker.setLayoutY(500);
-        datePicker.setOnAction(event -> {
-            LocalDate date = datePicker.getValue();
-            System.out.println("Selected date: " + date);
-        });
-
-        JFXTimePicker timePicker = new JFXTimePicker();
-        timePicker.setLayoutY(520);
-        timePicker.setOnAction(event -> {
-            LocalTime date = timePicker.getValue();
-            System.out.println("Selected date: " + date);
-        });
-
-        loginPane.getChildren().addAll(exitButton(), firstNameText, datePicker, timePicker,
+        loginPane.getChildren().addAll(exitButton(), firstNameText,
                 lastNameText, usernameForSignUp(),
                 passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp, error);
 
@@ -422,34 +415,113 @@ public class AdminPanel {
     private void addDiscount() {
         error.setText("");
         loginPane.getChildren().clear();
-        imageViewForSignUp();
 
-//        JFXButton signUp = new JFXButton("Sign Up");
-//        signUp.setLayoutY(445);
-//        signUp.setLayoutX(40);
-//        signUp.setPrefHeight(40);
-//        signUp.setPrefWidth(400);
-//        signUp.getStyleClass().add("signUp");
-//        firstNameText = textFieldForSignUp("First name", 40, 140);
-//        lastNameText = textFieldForSignUp("Last name", 40, 190);
-//
-//        JFXDatePicker datePicker = new JFXDatePicker();
-//        datePicker.setLayoutY(500);
-//        datePicker.setOnAction(event -> {
-//            LocalDate date = datePicker.getValue();
-//            System.out.println("Selected date: " + date);
-//        });
-//
-//        JFXTimePicker timePicker = new JFXTimePicker();
-//        timePicker.setLayoutY(520);
-//        timePicker.setOnAction(event -> {
-//            LocalTime date = timePicker.getValue();
-//            System.out.println("Selected date: " + date);
-//        });
-//
-//        loginPane.getChildren().addAll(exitButton(), firstNameText, datePicker, timePicker,
-//                lastNameText, usernameForSignUp(),
-//                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp, error);
+        Label titleOFSignUp = new Label("+ SIGN UP Admin");
+        titleOFSignUp.setLayoutY(80);
+        titleOFSignUp.setLayoutX(40);
+        titleOFSignUp.getStyleClass().add("labelForLoginTitle");
+
+        JFXButton signUp = new JFXButton("Submit");
+        signUp.setLayoutY(445);
+        signUp.setLayoutX(40);
+        signUp.setPrefHeight(40);
+        signUp.setPrefWidth(400);
+        signUp.getStyleClass().add("signUp");
+
+        JFXDatePicker startDate = new JFXDatePicker();
+        startDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startDate.setDefaultColor(Color.rgb(244, 218, 0));
+        startDate.setLayoutY(150);
+        startDate.setLayoutX(40);
+        startDate.setPrefSize(240, 40);
+        startDate.setOnAction(event -> {
+            LocalDate date = startDate.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXTimePicker startTime = new JFXTimePicker();
+        startTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startTime.setDefaultColor(Color.rgb(244, 218, 0));
+        startTime.setPrefSize(140, 40);
+        startTime.setLayoutY(150);
+        startTime.setLayoutX(300);
+        startTime.setOnAction(event -> {
+            LocalTime date = startTime.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXDatePicker endDate = new JFXDatePicker();
+        endDate.setDefaultColor(Color.rgb(244, 218, 0));
+        endDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endDate.setPrefSize(240, 40);
+        endDate.setLayoutY(220);
+        endDate.setLayoutX(40);
+        endDate.setOnAction(event -> {
+            LocalDate date = endDate.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        JFXTimePicker endTime = new JFXTimePicker();
+        endTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endTime.setDefaultColor(Color.rgb(244, 218, 0));
+        endTime.setPrefSize(140, 40);
+        endTime.setLayoutY(220);
+        endTime.setLayoutX(300);
+        endTime.setOnAction(event -> {
+            LocalTime date = endTime.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
+        NumberField percent = new NumberField();
+        percent.setLayoutY(290);
+        percent.setLayoutX(40);
+        percent.setPrefSize(100, 40);
+        percent.getStyleClass().add("text-fieldForSignUp");
+
+        NumberField maxPrice = new NumberField();
+        maxPrice.setLayoutY(290);
+        maxPrice.setLayoutX(150);
+        maxPrice.setPrefSize(180, 40);
+        maxPrice.getStyleClass().add("text-fieldForSignUp");
+
+        NumberField number = new NumberField();
+        number.setPrefSize(100, 40);
+        number.setLayoutX(340);
+        number.setLayoutY(290);
+        number.getStyleClass().add("text-fieldForSignUp");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setLayoutY(350);
+        scrollPane.setLayoutX(40);
+        scrollPane.setPrefSize(400, 80);
+
+        FlowPane flowPane = new FlowPane();
+        scrollPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setLayoutX(40);
+        flowPane.setLayoutY(350);
+        flowPane.setPrefSize(400, 80);
+        flowPane.setStyle("-fx-background-color: none");
+        scrollPane.setContent(flowPane);
+        scrollPane.getStyleClass().add("scroll-barInDiscount");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        for (Account allAccount : Shop.getShop().getAllAccounts()) {
+            HBox hBox = new HBox();
+            hBox.setPrefSize(100, 40);
+            hBox.setPadding(new Insets(8, 5, 8, 5));
+
+            JFXCheckBox username = new JFXCheckBox(allAccount.getUsername());
+            username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';");
+            hBox.getChildren().add(username);
+            hBox.setStyle("-fx-background-color: none");
+//            if ()
+
+            flowPane.getChildren().add(hBox);
+        }
+
+
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, startDate,
+                startTime, endDate, endTime, percent, maxPrice, number, signUp, scrollPane, error);
 //
 //        signUp.setOnMouseClicked(event -> processRegister());
     }
@@ -524,7 +596,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp();
+                popupSigUp("signUp");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -616,7 +688,7 @@ public class AdminPanel {
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
             try {
-                popupSigUp();
+                popupSigUp("discount");
 
             } catch (IOException e) {
                 e.printStackTrace();
