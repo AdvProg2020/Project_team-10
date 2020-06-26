@@ -1,5 +1,6 @@
 package view.FXMLController;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
 import controller.AccountManager;
 import controller.FileHandler;
@@ -19,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Buyer;
+import model.Category;
 import model.Good;
 import model.Shop;
 
@@ -42,6 +44,8 @@ public class MainMenu implements Initializable {
     public MainMenu main;
     public JFXToggleButton offFilterButton;
     public JFXToggleButton availableFilterButton;
+    public VBox vBoxForAddCompanyFilter;
+    public VBox vBoxForAddCategoryFilter;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -69,6 +73,13 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        for (Category category : Shop.getShop().getAllCategories()) {
+            JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
+            vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
+            categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
+        }
+
         flowPane.getChildren().clear();
         this.location = location;
         this.resources = resources;
@@ -80,7 +91,7 @@ public class MainMenu implements Initializable {
         imageSort.setFitWidth(25);
         imageSort.setFitHeight(25);
         Label sort = new Label("Sort by:");
-        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
+//        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
 
         hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources), buttonForSort("Score", location, resources),
                 buttonForSort("Price(Descending)", location, resources), buttonForSort("The most visited", location, resources));
@@ -97,6 +108,7 @@ public class MainMenu implements Initializable {
             ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
             logoImage.setFitHeight(190);
             logoImage.setFitWidth(190);
+            logoImage.getStyleClass().add("goodImage");
             Label name = new Label(good.getName());
             Label price = new Label("$" +good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
