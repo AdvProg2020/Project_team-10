@@ -136,12 +136,12 @@ public class Purchase {
             good.getBuyersUsername().add(currentBuyer.getUsername());
             sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
-        for (Discount discount : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
-            if (discount == currentDiscount) {
-                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount);
-                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discount, number - 1);
+        for (int discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+            if (discountCode == currentDiscount.getCode()) {
+                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
+                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
                 if (number == 1) {
-                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discount);
+                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discountCode);
                 }
             }
         }

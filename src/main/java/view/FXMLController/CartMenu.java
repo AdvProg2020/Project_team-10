@@ -184,7 +184,7 @@ public class CartMenu {
         fade(10, 0.5);
 
         error.getStyleClass().add("error");
-        error.setLayoutX(90);
+        error.setLayoutX(60);
         error.setLayoutY(530);
         error.setAlignment(Pos.CENTER);
         layout.setLayoutX(500);
@@ -362,6 +362,7 @@ public class CartMenu {
                 error.setText("The discount code has expired");
             } else {
                 error.setText("");
+                finalTotalPrice = Purchase.getFinalTotalPrice(discount);
                 payableAmount.setText("payable amount: " + ((long) finalTotalPrice));
                 confirmButton.setVisible(false);
                 paymentButton.setVisible(true);

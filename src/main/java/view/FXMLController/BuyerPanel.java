@@ -225,12 +225,12 @@ public class BuyerPanel {
 
             Label startDate = new Label("  " + "Start date");
             startDate.setGraphic(line());
-            startDate.setPrefWidth(255);
+            startDate.setPrefWidth(270);
             startDate.getStyleClass().add("labelForDiscount");
 
             Label endDate = new Label("  " + "End date");
             endDate.setGraphic(line());
-            endDate.setPrefWidth(255);
+            endDate.setPrefWidth(270);
             endDate.getStyleClass().add("labelForDiscount");
 
             Label percent = new Label("  " + "Percent");
@@ -262,12 +262,12 @@ public class BuyerPanel {
 
                 Label start = new Label("  " + discount.getStartDate());
                 start.setGraphic(line());
-                start.setPrefWidth(255);
+                start.setPrefWidth(270);
                 start.getStyleClass().add("labelForDiscount");
 
                 Label end = new Label("  " + discount.getEndDate());
                 end.setGraphic(line());
-                end.setPrefWidth(255);
+                end.setPrefWidth(270);
                 end.getStyleClass().add("labelForDiscount");
 
                 Label percentNum = new Label("  " + discount.getPercent());
@@ -310,7 +310,7 @@ public class BuyerPanel {
 
         Label date = new Label("  " + "Date");
         date.setGraphic(line());
-        date.setPrefWidth(255);
+        date.setPrefWidth(270);
         date.getStyleClass().add("labelForDiscount");
 
         Label paid = new Label("  " + "Paid");
@@ -345,7 +345,7 @@ public class BuyerPanel {
 
             Label labelDate = new Label("  " + log.getDate());
             labelDate.setGraphic(line());
-            labelDate.setPrefWidth(255);
+            labelDate.setPrefWidth(270);
             labelDate.getStyleClass().add("labelForDiscount");
 
             Label labelPaid = new Label("  " + log.getPaidAmount());

@@ -77,6 +77,7 @@ public class GoodMenu {
         addToCart.setLayoutX(700);
         addToCart.setLayoutY(430);
         addToCart.setOnMouseClicked(event -> {
+            addToCart.setDisable(true);
             ((Buyer) AccountManager.getOnlineAccount()).getCart().add(currentGood);
             currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
         });
