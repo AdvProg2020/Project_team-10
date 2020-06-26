@@ -15,9 +15,19 @@ public class GoodsManager {
     private static List<Good> filteredGoods = new ArrayList<>();
     private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
     private static Map<String, String> kindOfFilter = new HashMap<>();
+    private static ArrayList<String> filteredCompanies = new ArrayList<>();
+    private static ArrayList<String> filteredCatogories = new ArrayList<>();
 
-       public static Map<String, String> getKindOfFilter() {
+    public static Map<String, String> getKindOfFilter() {
         return kindOfFilter;
+    }
+
+    public static ArrayList<String> getFilteredCatogories() {
+        return filteredCatogories;
+    }
+
+    public static ArrayList<String> getFilteredCompanies() {
+        return filteredCompanies;
     }
 
     public static void setCurrentGood(Good currentGood) {
@@ -25,46 +35,54 @@ public class GoodsManager {
     }
 
 
-    public static void filter(List<String> filterInfo){
+    public static void filter(List<String> filterInfo) {
 
     }
 
-    public static void showCurrentFilters(){
+    public static void showCurrentFilters() {
 
     }
 
-    public static void disableFilter(String filter){
+    public static void disableFilter(String filter) {
 
     }
 
 
-    public static void sort(String sortType){
+    public static void sort(String sortType) {
 
     }
 
-    public static void currentSort(){
+    public static void currentSort() {
 
     }
 
-    public static void disableSort(String sort){
+    public static void disableSort(String sort) {
 
     }
 
-    public static void showProducts(){}
+    public static void showProducts() {
+    }
 
-    public static void showProductById(String id){}
+    public static void showProductById(String id) {
+    }
 
-    public static void addToCart(){}
+    public static void addToCart() {
+    }
 
-    public static void showAttributes(){}
+    public static void showAttributes() {
+    }
 
-    public static void compareProduct(String id){}
+    public static void compareProduct(String id) {
+    }
 
-    public static void showComments(){}
+    public static void showComments() {
+    }
 
-    public static void addComment(){}
+    public static void addComment() {
+    }
 
-    public static void showOffs(){}
+    public static void showOffs() {
+    }
 
     public static String getKindOfSort() {
         return kindOfSort;
@@ -95,7 +113,7 @@ public class GoodsManager {
     }
 
     public static List<Good> getGoodsInOffs() {
-           List<Good> goodsInOffs = new ArrayList<>();
+        List<Good> goodsInOffs = new ArrayList<>();
         for (Off off : Shop.getShop().getAllOffs()) {
             goodsInOffs.addAll(off.getGoods());
         }

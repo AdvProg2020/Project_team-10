@@ -466,7 +466,7 @@ public class AdminPanel {
             vBox.setPrefWidth(225);
             vBox.setPrefHeight(350);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+            ImageView logoImage = new ImageView(new Image("file" + good.getImagePath()));
             logoImage.setFitHeight(170);
             logoImage.setFitWidth(170);
             Label name = new Label(good.getName());
@@ -1066,6 +1066,7 @@ public class AdminPanel {
     }
 
     public void backToMainMenu() {
+        main.backToMainMenu = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);

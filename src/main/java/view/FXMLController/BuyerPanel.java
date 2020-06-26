@@ -200,6 +200,7 @@ public class BuyerPanel {
     }
 
     private void backToMainMenu() {
+        main.backToMainMenu = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
@@ -423,7 +424,7 @@ public class BuyerPanel {
                 productBox.setPrefWidth(90);
                 productBox.setPrefHeight(100);
                 productBox.getStyleClass().add("vBoxInMainMenu");
-                ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+                ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
                 logoImage.setFitHeight(60);
                 logoImage.setFitWidth(60);
                 Label name = new Label(good.getName());

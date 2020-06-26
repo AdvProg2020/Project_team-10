@@ -137,7 +137,7 @@ public class Purchase {
             sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
         for (int discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
-            if (discountCode == currentDiscount.getCode()) {
+            if (currentDiscount != null && discountCode == currentDiscount.getCode()) {
                 int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
                 currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
                 if (number == 1) {
@@ -146,6 +146,7 @@ public class Purchase {
             }
         }
         makeLogs(sellers, finalPrice);
+        currentBuyer.getGoods().addAll(currentBuyer.getCart());
         currentBuyer.getCart().clear();
     }
 

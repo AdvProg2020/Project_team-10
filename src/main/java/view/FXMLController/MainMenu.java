@@ -7,6 +7,8 @@ import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,10 +21,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.Buyer;
-import model.Category;
-import model.Good;
-import model.Shop;
+import model.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +45,7 @@ public class MainMenu implements Initializable {
     public JFXToggleButton availableFilterButton;
     public VBox vBoxForAddCompanyFilter;
     public VBox vBoxForAddCategoryFilter;
+    public boolean backToMainMenu = true;
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -73,8 +73,9 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        updateAllFilter();
+        if (backToMainMenu) {
+            updateAllFilter();
+        }
 
         flowPane.getChildren().clear();
         this.location = location;
@@ -101,12 +102,12 @@ public class MainMenu implements Initializable {
             vBox.setPrefWidth(297);
             vBox.setPrefHeight(350);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
+            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
             logoImage.setFitHeight(190);
             logoImage.setFitWidth(190);
             logoImage.getStyleClass().add("goodImage");
             Label name = new Label(good.getName());
-            Label price = new Label("$" +good.getPrice() + "");
+            Label price = new Label("$" + good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
             name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
@@ -128,13 +129,36 @@ public class MainMenu implements Initializable {
     }
 
     private void updateAllFilter() {
+        vBoxForAddCategoryFilter.getChildren().clear();
+        vBoxForAddCompanyFilter.getChildren().clear();
         for (Category category : Shop.getShop().getAllCategories()) {
             JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
+            categoryFiltered.setSelected(true);
+            categoryFiltered.setOnAction(event -> {
+                if (categoryFiltered.isSelected()) {
+                    applyCategoryFilter(category.getName());
+                } else {
+                    disableCategoryFilter(category.getName());
+                }
+                backToMainMenu = false;
+                initialize(location, resources);
+            });
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
             categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }
         for (String company : Shop.getShop().allCompanies()) {
             JFXCheckBox companyFiltered = new JFXCheckBox(company);
+            companyFiltered.setSelected(true);
+            companyFiltered.setOnAction(event -> {
+                if (companyFiltered.isSelected()) {
+                    applyCompanyFilter(company);
+                } else {
+                    disableCompanyFilter(company);
+                }
+                backToMainMenu = false;
+                initialize(location, resources);
+            });
+
             vBoxForAddCompanyFilter.getChildren().add(companyFiltered);
             companyFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }
@@ -195,6 +219,7 @@ public class MainMenu implements Initializable {
 
     public void backToMainMenu(MouseEvent mouseEvent) {
         if (!mainPane.getChildren().contains(mainMenu)) {
+            backToMainMenu = true;
             mainPane.getChildren().remove(Login.currentPane);
             initialize(location, resources);
             mainPane.getChildren().add(mainMenu);
@@ -233,6 +258,39 @@ public class MainMenu implements Initializable {
         GoodsManager.getKindOfFilter().put("onlyOffs", "onlyOffs");
     }
 
+    private void applyCompanyFilter(String company) {
+        for (Good good : Shop.getShop().getAllGoods()) {
+            if (good.getCompany().equals(company)) {
+                GoodsManager.getFilteredGoods().add(good);
+            }
+        }
+    }
+
+    private void disableCompanyFilter(String company) {
+        for (Good good : Shop.getShop().getAllGoods()) {
+            if (good.getCompany().equals(company)) {
+                GoodsManager.getFilteredGoods().remove(good);
+            }
+        }
+    }
+
+    private void applyCategoryFilter(String category) {
+        for (Good good : Shop.getShop().getAllGoods()) {
+            if (good.getCategory().equals(category)) {
+                GoodsManager.getFilteredGoods().add(good);
+            }
+        }
+    }
+
+    private void disableCategoryFilter(String category) {
+        for (Good good : Shop.getShop().getAllGoods()) {
+            if (good.getCategory().equals(category)) {
+                GoodsManager.getFilteredGoods().remove(good);
+            }
+        }
+    }
+
+
     private void applyAvailabilityFilter() {
         ArrayList<Good> shouldBeRemoved = new ArrayList<>();
         for (Good good : GoodsManager.getFilteredGoods()) {
@@ -242,6 +300,17 @@ public class MainMenu implements Initializable {
         }
         GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
         GoodsManager.getKindOfFilter().put("onlyAvailable", "onlyAvailable");
+    }
+
+    private void applyPriceFilter(int start, int end) {
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+        for (Good good : GoodsManager.getFilteredGoods()) {
+            if (good.getPrice() < start || good.getPrice() > end) {
+                shouldBeRemoved.add(good);
+            }
+        }
+        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+        GoodsManager.getKindOfFilter().put("price", start + " to " + end);
     }
 
     private void disableFilter() {
@@ -260,6 +329,22 @@ public class MainMenu implements Initializable {
                 for (Good good : GoodsManager.getFilteredGoods()) {
                     if (good.getNumber() <= 0) {
                         shouldBeRemoved.add(good);
+                    }
+                }
+            } else if (type.equals("company")) {
+                for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
+                    for (Good good : GoodsManager.getFilteredGoods()) {
+                        if (!good.getCompany().equals(filteredCompany)) {
+                            shouldBeRemoved.add(good);
+                        }
+                    }
+                }
+            } else if (type.equals("category")) {
+                for (String filteredCatogory : GoodsManager.getFilteredCatogories()) {
+                    for (Good good : GoodsManager.getFilteredGoods()) {
+                        if (!good.getCategory().equals(filteredCatogory)) {
+                            shouldBeRemoved.add(good);
+                        }
                     }
                 }
             }
