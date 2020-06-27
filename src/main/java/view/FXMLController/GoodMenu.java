@@ -175,6 +175,7 @@ public class GoodMenu {
 
     private void tabPane(AnchorPane innerPane) {
         JFXTabPane tabPane = new JFXTabPane();
+        tabPane.setPrefWidth(1200);
         Tab productFieldsTab = new Tab("productFields", productFields());
         productFieldsTab.setClosable(false);
         productFieldsTab.getStyleClass().add("tabs");

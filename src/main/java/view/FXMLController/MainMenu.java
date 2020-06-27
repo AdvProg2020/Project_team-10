@@ -7,6 +7,8 @@ import controller.FileHandler;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -22,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.*;
+import org.controlsfx.control.RangeSlider;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +49,15 @@ public class MainMenu implements Initializable {
     public VBox vBoxForAddCompanyFilter;
     public VBox vBoxForAddCategoryFilter;
     public boolean backToMainMenu = true;
+    public RangeSlider rangeSlider1;
+    public Label label2;
+    public Label label1;
+
+
+    void setValue(Label label, Number number) {
+        String v = String.format("%d",number.intValue());
+        label.setText(v);
+    }
 
 
     public void exit(MouseEvent mouseEvent) {
@@ -73,6 +85,32 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        rangeSlider1.lowValueProperty().addListener(
+                new ChangeListener<Number>() {
+                    @Override
+                    public void changed(
+                            ObservableValue<? extends Number> observable,
+                            Number oldValue, Number newValue) {
+                        setValue(label1, newValue);
+                    }
+                }
+        );
+
+        rangeSlider1.highValueProperty().addListener(
+                new ChangeListener<Number>() {
+                    @Override
+                    public void changed(
+                            ObservableValue<? extends Number> observable,
+                            Number oldValue, Number newValue) {
+                        setValue(label2, newValue);
+                    }
+                }
+        );
+
+        rangeSlider1.setHighValue(10000.0);
+        rangeSlider1.setLowValue(0.0);
+
         if (backToMainMenu) {
             updateAllFilter();
         }
