@@ -136,7 +136,7 @@ public class Purchase {
             good.getBuyersUsername().add(currentBuyer.getUsername());
             sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
-        for (int discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+        for (Integer discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
             if (currentDiscount != null && discountCode == currentDiscount.getCode()) {
                 int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
                 currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
