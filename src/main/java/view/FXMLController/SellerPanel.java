@@ -6,6 +6,8 @@ import controller.AdminManager;
 import controller.GoodsManager;
 import controller.SellerManager;
 import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -64,6 +66,13 @@ public class SellerPanel {
     private TextField description;
     private JFXRadioButton selectedCategory;
     private ArrayList<TextField> categoryAttributes;
+
+    private JFXDatePicker startDate;
+    private JFXTimePicker startTime;
+    private JFXDatePicker endDate;
+    private JFXTimePicker endTime;
+    private NumberField percent;
+    private ArrayList<Good> selectedGoods;
 
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
@@ -263,7 +272,7 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, startDate, endDate, goodText, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        for (Off off : Shop.getShop().getAllOffs()) {
+        for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
@@ -297,23 +306,23 @@ public class SellerPanel {
                 vBox.setPrefWidth(297);
                 vBox.setPrefHeight(350);
                 vBox.getStyleClass().add("vBoxInMainMenu");
-                ImageView logoImage = new ImageView(new Image("file:src/main/java/view/image/logo.png"));
-                logoImage.setFitHeight(190);
-                logoImage.setFitWidth(190);
-                logoImage.getStyleClass().add("goodImage");
+                ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
+                productImage.setFitHeight(190);
+                productImage.setFitWidth(190);
+                productImage.getStyleClass().add("goodImage");
                 Label name = new Label(good.getName());
                 Label price = new Label("$" +good.getPrice() + "");
                 Label visit = new Label(good.getVisitNumber() + "");
                 name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
                 vBox.setOnMouseEntered(event -> fadeEffect(vBox));
-                logoImage.setOnMouseClicked(event -> {
+                productImage.setOnMouseClicked(event -> {
                     GoodsManager.setCurrentGood(good);
-                    mainPane.getChildren().remove(mainMenu);
+                    mainPane.getChildren().remove(Login.currentPane);
                     new GoodMenu(mainPane).changePane();
                 });
                 vBox.setAlignment(Pos.CENTER);
-                vBox.getChildren().addAll(logoImage, name, price, visit);
+                vBox.getChildren().addAll(productImage, name, price, visit);
                 flowPaneInner.getChildren().add(vBox);
             }
             goodOffPack.setContent(flowPaneInner);
@@ -331,7 +340,7 @@ public class SellerPanel {
             hBox.getChildren().addAll(id, start, end,goodOffPack, edit, bin);
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
-//                AdminManager.removeCategory(category);
+                //todo
                 flowPane.getChildren().remove(hBox);
             });
         }
@@ -631,14 +640,14 @@ public class SellerPanel {
     }
 
     private void addOff() {
-
+        selectedGoods = new ArrayList<>();
         error.setText("");
         loginPane.getChildren().clear();
 
-        Label titleAddDiscount = new Label("+ ADD OFF");
-        titleAddDiscount.setLayoutY(80);
-        titleAddDiscount.setLayoutX(40);
-        titleAddDiscount.getStyleClass().add("labelForLoginTitle");
+        Label title = new Label("+ ADD OFF");
+        title.setLayoutY(80);
+        title.setLayoutX(40);
+        title.getStyleClass().add("labelForLoginTitle");
 
         JFXButton submit = new JFXButton("Submit");
         submit.setLayoutY(445);
@@ -646,10 +655,10 @@ public class SellerPanel {
         submit.setPrefSize(400, 40);
         submit.getStyleClass().add("signUp");
         submit.setOnMouseClicked(event -> {
-
+            processAddOff();
         });
 
-        JFXDatePicker startDate = new JFXDatePicker();
+        startDate = new JFXDatePicker();
         startDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
         startDate.setDefaultColor(Color.rgb(244, 218, 0));
         startDate.setLayoutY(150);
@@ -660,7 +669,7 @@ public class SellerPanel {
             System.out.println("Selected date: " + date);
         });
 
-        JFXTimePicker startTime = new JFXTimePicker();
+        startTime = new JFXTimePicker();
         startTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
         startTime.setDefaultColor(Color.rgb(244, 218, 0));
         startTime.setPrefSize(140, 40);
@@ -671,7 +680,7 @@ public class SellerPanel {
             System.out.println("Selected date: " + date);
         });
 
-        JFXDatePicker endDate = new JFXDatePicker();
+        endDate = new JFXDatePicker();
         endDate.setDefaultColor(Color.rgb(244, 218, 0));
         endDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
         endDate.setPrefSize(240, 40);
@@ -682,7 +691,7 @@ public class SellerPanel {
             System.out.println("Selected date: " + date);
         });
 
-        JFXTimePicker endTime = new JFXTimePicker();
+        endTime = new JFXTimePicker();
         endTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
         endTime.setDefaultColor(Color.rgb(244, 218, 0));
         endTime.setPrefSize(140, 40);
@@ -693,7 +702,7 @@ public class SellerPanel {
             System.out.println("Selected date: " + date);
         });
 
-        NumberField percent = new NumberField();
+        percent = new NumberField();
         percent.setPromptText("Percent");
         percent.setLayoutY(280);
         percent.setLayoutX(40);
@@ -722,20 +731,55 @@ public class SellerPanel {
             vBox.setPrefWidth(97);
             vBox.setPrefHeight(150);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(50);
-            logoImage.setFitWidth(50);
-            logoImage.getStyleClass().add("goodImage");
-            JFXCheckBox checkBox = new JFXCheckBox(good.getName());
-
-            vBox.getChildren().addAll(logoImage , checkBox);
+            ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
+            productImage.setFitHeight(50);
+            productImage.setFitWidth(50);
+            productImage.getStyleClass().add("goodImage");
+            JFXCheckBox productCheckBox = new JFXCheckBox(good.getName());
+            productCheckBox.setOnAction(event -> {
+                if (productCheckBox.isSelected()) {
+                    selectedGoods.add(good);
+                } else {
+                    selectedGoods.remove(good);
+                }
+            });
+            vBox.getChildren().addAll(productImage , productCheckBox);
 
             flowPane.getChildren().add(vBox);
         }
         scrollPane.setContent(flowPane);
 
-        loginPane.getChildren().addAll(exitButton(), titleAddDiscount, startDate,
+        loginPane.getChildren().addAll(exitButton(), title, startDate,
                 startTime, endDate, endTime, percent, submit, scrollPane, error);
+
+    }
+
+    private void processAddOff() {
+        String startYear = "" + startDate.getValue().getYear();
+        String endYear = "" + endDate.getValue().getYear();
+        String startMonth = "" + startDate.getValue().getMonthValue();
+        if (startMonth.length() == 1) {
+            startMonth = "0" + startMonth;
+        }
+        String endMonth = "" + endDate.getValue().getMonthValue();
+        if (endMonth.length() == 1) {
+            endMonth = "0" + endMonth;
+        }
+        String startDay = "" + startDate.getValue().getDayOfMonth();
+        if (startDay.length() == 1) {
+            startDay = "0" + startDay;
+        }
+        String endDay = "" + endDate.getValue().getDayOfMonth();
+        if (endDay.length() == 1) {
+            endDay = "0" + endDay;
+        }
+        String startDate = (startMonth + "/" + startDay + "/" + startYear + " " + this.startTime.getValue());
+        String endDate = (endMonth + "/" + endDay + "/" + endYear + " " + this.endTime.getValue());
+        int percent = Integer.parseInt(this.percent.getText());
+        SellerManager.addOff(selectedGoods, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
+        popupWindow.close();
+        fade(0.5, 10);
+        sellerScrollPane.setContent(handelManageOff());
 
     }
 
@@ -746,11 +790,11 @@ public class SellerPanel {
         flowPane.setPrefHeight(620);
         flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
 
-        ImageView addGood = new ImageView();
-        addGood.setFitWidth(200);
-        addGood.setFitHeight(200);
-        addGood.getStyleClass().add("addGoodPlus");
-        addGood.setOnMouseClicked(event -> {
+        ImageView plus = new ImageView();
+        plus.setFitWidth(200);
+        plus.setFitHeight(200);
+        plus.getStyleClass().add("addGoodPlus");
+        plus.setOnMouseClicked(event -> {
             try {
                 popup("addGood");
             } catch (IOException e) {
@@ -762,7 +806,7 @@ public class SellerPanel {
         addGoodBox.setPrefWidth(225);
         addGoodBox.setPrefHeight(350);
         addGoodBox.getStyleClass().add("vBoxInMainMenu");
-        addGoodBox.getChildren().add(addGood);
+        addGoodBox.getChildren().add(plus);
         addGoodBox.setAlignment(Pos.CENTER);
         flowPane.getChildren().add(addGoodBox);
 
@@ -771,33 +815,32 @@ public class SellerPanel {
             goodPack.setPrefWidth(225);
             goodPack.setPrefHeight(350);
             goodPack.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(170);
-            logoImage.setFitWidth(170);
+            ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
+            productImage.setFitHeight(170);
+            productImage.setFitWidth(170);
             Label name = new Label(good.getName());
             Label price = new Label("$" + good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
             name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
             goodPack.setOnMouseEntered(event -> fadeEffect(goodPack));
-            logoImage.setOnMouseClicked(event -> {
+            productImage.setOnMouseClicked(event -> {
                 GoodsManager.setCurrentGood(good);
+                mainPane.getChildren().remove(Login.currentPane);
                 new GoodMenu(mainPane).changePane();
             });
             goodPack.setAlignment(Pos.CENTER);
-            ImageView imageView = new ImageView();
-            imageView.getStyleClass().add("imageViewRecy");
-            imageView.setFitWidth(31);
-            imageView.setFitHeight(31);
-            HBox hBox = new HBox(imageView);
+            ImageView bin = new ImageView();
+            bin.getStyleClass().add("imageViewRecy");
+            bin.setFitWidth(31);
+            bin.setFitHeight(31);
+            HBox hBox = new HBox(bin);
             hBox.setAlignment(Pos.CENTER_RIGHT);
             hBox.setPrefWidth(230);
             hBox.setPadding(new Insets(0, 20, 0, 0));
-            goodPack.getChildren().addAll(logoImage, name, price, visit, hBox);
-            imageView.setOnMouseClicked(e -> {
-                Shop.getShop().getAllGoods().remove(good);
-                GoodsManager.getFilteredGoods().remove(good);
-                ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
+            goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
+            bin.setOnMouseClicked(e -> {
+                SellerManager.removeProduct(good);
                 flowPane.getChildren().remove(goodPack);
             });
             flowPane.getChildren().add(goodPack);

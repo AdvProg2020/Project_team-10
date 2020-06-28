@@ -1,6 +1,5 @@
 package model.requests;
 
-import controller.AccountManager;
 import model.*;
 
 import java.util.Date;

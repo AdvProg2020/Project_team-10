@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.AdminManager;
 import controller.GoodsManager;
+import controller.SellerManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -462,14 +463,14 @@ public class AdminPanel {
         flowPane.setPrefHeight(620);
         flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
 
-        for (Good good : GoodsManager.getFilteredGoods()) {
+        for (Good good : Shop.getShop().getAllGoods()) {
             VBox vBox = new VBox();
             vBox.setPrefWidth(225);
             vBox.setPrefHeight(350);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(170);
-            logoImage.setFitWidth(170);
+            ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
+            productImage.setFitHeight(170);
+            productImage.setFitWidth(170);
             Label name = new Label(good.getName());
             Label price = new Label("$" + good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
@@ -481,18 +482,17 @@ public class AdminPanel {
 //                new GoodMenu(mainPane).changePane();
 //            });
             vBox.setAlignment(Pos.CENTER);
-            ImageView imageView = new ImageView();
-            imageView.getStyleClass().add("imageViewRecy");
-            imageView.setFitWidth(31);
-            imageView.setFitHeight(31);
-            HBox hBox = new HBox(imageView);
+            ImageView bin = new ImageView();
+            bin.getStyleClass().add("imageViewRecy");
+            bin.setFitWidth(31);
+            bin.setFitHeight(31);
+            HBox hBox = new HBox(bin);
             hBox.setAlignment(Pos.CENTER_RIGHT);
             hBox.setPrefWidth(230);
             hBox.setPadding(new Insets(0, 20, 0, 0));
-            vBox.getChildren().addAll(logoImage, name, price, visit, hBox);
-            imageView.setOnMouseClicked(e -> {
-                Shop.getShop().getAllGoods().remove(good);
-                GoodsManager.getFilteredGoods().remove(good);
+            vBox.getChildren().addAll(productImage, name, price, visit, hBox);
+            bin.setOnMouseClicked(e -> {
+                SellerManager.removeProduct(good);
                 flowPane.getChildren().remove(vBox);
             });
             flowPane.getChildren().add(vBox);
@@ -689,7 +689,7 @@ public class AdminPanel {
 
     }
 
-    private static Date getDateByString(String dateInput) {
+    public static Date getDateByString(String dateInput) {
         Calendar calendar = Calendar.getInstance();
         String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
         Pattern pattern = Pattern.compile(regex);

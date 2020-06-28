@@ -1105,7 +1105,7 @@ public class CommandProcessor {
         Date startDate1 = null;
         Date endDate1 = null;
         int discount = 0;
-        List<Good> goods = new ArrayList<>();
+        ArrayList<Good> goods = new ArrayList<>();
         String id = null;
         int flag = 1;
         while (true) {

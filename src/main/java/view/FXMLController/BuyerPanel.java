@@ -429,10 +429,12 @@ public class BuyerPanel {
                 logoImage.setFitWidth(60);
                 Label name = new Label(good.getName());
                 Label price = new Label("$" +good.getPrice() + "");
+                Label number = new Label(good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) + "x" );
                 name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 14px;" + "-fx-font-weight: bold;");
+                number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 productBox.setAlignment(Pos.CENTER);
-                productBox.getChildren().addAll(logoImage, name, price);
+                productBox.getChildren().addAll(logoImage, name, price, number);
                 goods.getChildren().add(productBox);
             }
 

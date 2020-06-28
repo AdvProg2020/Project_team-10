@@ -27,7 +27,7 @@ public class AdminManager {
 
     public static void createDiscount(Date startDate, Date endDate, int percent,
                                       long maxAmountOfDiscount, int repeatDiscount, List<String> userNames) {
-        Discount discount = new Discount(AccountManager.getLastDiscountCode(), startDate, endDate, percent,
+        Discount discount = new Discount(AccountManager.getLastDiscountCode() + 1, startDate, endDate, percent,
                 maxAmountOfDiscount, repeatDiscount, userNames);
         Shop.getShop().getAllDiscounts().add(discount);
         for (String username : userNames) {

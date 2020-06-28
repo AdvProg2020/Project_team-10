@@ -41,7 +41,7 @@
 
 .logo:hover {
     -fx-image: url("../image/logohover.png");
-
+    -fx-cursor: hand;
 }
 
 .header {
@@ -59,6 +59,7 @@
 
 .buttonAccount:hover {
     -fx-background-image: url("../image/accounthover.png");
+    -fx-cursor: hand;
 }
 
 .buttonCart {
@@ -73,6 +74,7 @@
 
 .buttonCart:hover {
     -fx-background-image: url("../image/carthover.png");
+    -fx-cursor: hand;
 }
 
 .hbox {
@@ -287,4 +289,8 @@
     -fx-prompt-text-fill: #d0d0d0;
     -fx-font-size: 12pt;
     -fx-text-fill: black;
+}
+
+.filterButton:hover {
+    -fx-cursor: hand;
 }

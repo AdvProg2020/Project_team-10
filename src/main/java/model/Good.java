@@ -67,10 +67,8 @@ public class Good implements Comparable<Good> {
 
     }
 
-    public Good setVisitNumber(int visitNumber) {
+    public void setVisitNumber(int visitNumber) {
         this.visitNumber = visitNumber;
-        //todo
-        return this;
     }
 
     public void subtractNumber() {

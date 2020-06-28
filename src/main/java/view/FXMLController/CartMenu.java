@@ -136,20 +136,22 @@ public class CartMenu {
         JFXButton plus = new JFXButton("+");
         plus.setPrefSize(45, 45);
         plus.setOnMouseClicked(event -> {
-            count[0] += 1;
-            number.setText("" + count[0]);
-            good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-            totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
-
+            if (count[0] < good.getNumber()) {
+                count[0] += 1;
+                number.setText("" + count[0]);
+                good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+                totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+            }
         });
         JFXButton minus = new JFXButton("-");
         minus.setPrefSize(45, 45);
         minus.setOnMouseClicked(event -> {
-            if (count[0] != 0)
-            count[0] -= 1;
-            number.setText("" + count[0]);
-            good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-            totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+            if (count[0] != 0) {
+                count[0] -= 1;
+                number.setText("" + count[0]);
+                good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+                totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+            }
         });
 
         return new HBox(minus, number, plus);
@@ -360,6 +362,8 @@ public class CartMenu {
                 error.setText("It is not yet time to use the discount code");
             } else if (discount.getEndDate().before(currentDate)) {
                 error.setText("The discount code has expired");
+            } else if (currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount.getCode()) == null) {
+                error.setText("you cannot use the discount anymore");
             } else {
                 error.setText("");
                 finalTotalPrice = Purchase.getFinalTotalPrice(discount);

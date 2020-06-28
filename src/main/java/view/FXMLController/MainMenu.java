@@ -120,7 +120,7 @@ public class MainMenu implements Initializable {
                 new GoodMenu(mainPane).changePane();
             });
             vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price,covertScoreToStar((int) good.calculateAverageRate()) , visit);
+            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()), visit);
             flowPane.getChildren().add(vBox);
         }
         mainMenuScrollPane.getStyleClass().add("scroll-bar");
@@ -133,34 +133,41 @@ public class MainMenu implements Initializable {
     private void updateAllFilter() {
         vBoxForAddCategoryFilter.getChildren().clear();
         vBoxForAddCompanyFilter.getChildren().clear();
+        GoodsManager.getFilteredCatogories().clear();
+        GoodsManager.getFilteredCompanies().clear();
         for (Category category : Shop.getShop().getAllCategories()) {
             JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
             categoryFiltered.setSelected(true);
+            GoodsManager.getFilteredCatogories().add(category.getName());
             categoryFiltered.setOnAction(event -> {
                 if (categoryFiltered.isSelected()) {
-                    applyCategoryFilter(category.getName());
+                    GoodsManager.getFilteredCatogories().add(category.getName());
                 } else {
-                    disableCategoryFilter(category.getName());
+                    GoodsManager.getFilteredCatogories().remove(category.getName());
                 }
+                filter();
                 backToMainMenu = false;
                 initialize(location, resources);
             });
+            categoryFiltered.getStyleClass().add("filterButton");
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
             categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }
         for (String company : Shop.getShop().allCompanies()) {
             JFXCheckBox companyFiltered = new JFXCheckBox(company);
             companyFiltered.setSelected(true);
+            GoodsManager.getFilteredCompanies().add(company);
             companyFiltered.setOnAction(event -> {
                 if (companyFiltered.isSelected()) {
-                    applyCompanyFilter(company);
+                    GoodsManager.getFilteredCompanies().add(company);
                 } else {
-                    disableCompanyFilter(company);
+                    GoodsManager.getFilteredCompanies().remove(company);
                 }
+                filter();
                 backToMainMenu = false;
                 initialize(location, resources);
             });
-
+            companyFiltered.getStyleClass().add("filterButton");
             vBoxForAddCompanyFilter.getChildren().add(companyFiltered);
             companyFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }
@@ -230,129 +237,126 @@ public class MainMenu implements Initializable {
 
     public void filterByOff(MouseEvent mouseEvent) {
         if (offFilterButton.isSelected()) {
-            applyOffFilter();
+            GoodsManager.getKindOfFilter().put("onlyOffs", "onlyOffs");
         } else {
             GoodsManager.getKindOfFilter().remove("onlyOffs");
-            disableFilter();
         }
+        filter();
         initialize(location, resources);
     }
 
     public void filterByAvailability(MouseEvent mouseEvent) {
         if (availableFilterButton.isSelected()) {
-            applyAvailabilityFilter();
+            GoodsManager.getKindOfFilter().put("onlyAvailable", "onlyAvailable");
         } else {
             GoodsManager.getKindOfFilter().remove("onlyAvailable");
-            disableFilter();
         }
+        filter();
         initialize(location, resources);
-
     }
 
-    private void applyOffFilter() {
-        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            if (good.getOffId() == 0) {
-                shouldBeRemoved.add(good);
-            }
-        }
-        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("onlyOffs", "onlyOffs");
-    }
+//    private void applyOffFilter() {
+//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (Good good : GoodsManager.getFilteredGoods()) {
+//            if (good.getOffId() == 0) {
+//                shouldBeRemoved.add(good);
+//            }
+//        }
+//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+//    }
 
-    private void applyCompanyFilter(String company) {
-        for (Good good : Shop.getShop().getAllGoods()) {
-            if (good.getCompany().equals(company)) {
-                GoodsManager.getFilteredGoods().add(good);
-            }
-        }
-    }
+//    private void applyCompanyFilter(String company) {
+//        for (Good good : Shop.getShop().getAllGoods()) {
+//            if (good.getCompany().equals(company)) {
+//                GoodsManager.getFilteredGoods().add(good);
+//            }
+//        }
+//    }
 
-    private void disableCompanyFilter(String company) {
-        for (Good good : Shop.getShop().getAllGoods()) {
-            if (good.getCompany().equals(company)) {
-                GoodsManager.getFilteredGoods().remove(good);
-            }
-        }
-    }
+//    private void disableCompanyFilter(String company) {
+//        for (Good good : Shop.getShop().getAllGoods()) {
+//            if (good.getCompany().equals(company)) {
+//                GoodsManager.getFilteredGoods().remove(good);
+//            }
+//        }
+//    }
 
-    private void applyCategoryFilter(String category) {
-        for (Good good : Shop.getShop().getAllGoods()) {
-            if (good.getCategory().equals(category)) {
-                GoodsManager.getFilteredGoods().add(good);
-            }
-        }
-    }
+//    private void applyCategoryFilter(String category) {
+//        for (Good good : Shop.getShop().getAllGoods()) {
+//            if (good.getCategory().equals(category)) {
+//                GoodsManager.getFilteredGoods().add(good);
+//            }
+//        }
+//    }
 
-    private void disableCategoryFilter(String category) {
-        for (Good good : Shop.getShop().getAllGoods()) {
-            if (good.getCategory().equals(category)) {
-                GoodsManager.getFilteredGoods().remove(good);
-            }
-        }
-    }
+//    private void disableCategoryFilter(String category) {
+//        for (Good good : Shop.getShop().getAllGoods()) {
+//            if (good.getCategory().equals(category)) {
+//                GoodsManager.getFilteredGoods().remove(good);
+//            }
+//        }
+//    }
 
 
-    private void applyAvailabilityFilter() {
-        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            if (good.getNumber() <= 0) {
-                shouldBeRemoved.add(good);
-            }
-        }
-        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("onlyAvailable", "onlyAvailable");
-    }
+//    private void applyAvailabilityFilter() {
+//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (Good good : GoodsManager.getFilteredGoods()) {
+//            if (good.getNumber() <= 0) {
+//                shouldBeRemoved.add(good);
+//            }
+//        }
+//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+//    }
 
-    private void applyPriceFilter(int start, int end) {
-        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            if (good.getPrice() < start || good.getPrice() > end) {
-                shouldBeRemoved.add(good);
-            }
-        }
-        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("price", start + " to " + end);
-    }
+//    private void applyPriceFilter(int start, int end) {
+//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (Good good : GoodsManager.getFilteredGoods()) {
+//            if (good.getPrice() < start || good.getPrice() > end) {
+//                shouldBeRemoved.add(good);
+//            }
+//        }
+//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+//        GoodsManager.getKindOfFilter().put("price", start + " to " + end);
+//    }
 
-    private void disableFilter() {
-        GoodsManager.getFilteredGoods().clear();
-        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
-        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        for (String type : GoodsManager.getKindOfFilter().keySet()) {
-            if (type.equals("onlyOffs")) {
-                for (Good good : GoodsManager.getFilteredGoods()) {
-                    if (good.getOffId() == 0) {
-                        shouldBeRemoved.add(good);
-                    }
-                }
-
-            } else if (type.equals("onlyAvailable")) {
-                for (Good good : GoodsManager.getFilteredGoods()) {
-                    if (good.getNumber() <= 0) {
-                        shouldBeRemoved.add(good);
-                    }
-                }
-            } else if (type.equals("company")) {
-                for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
-                    for (Good good : GoodsManager.getFilteredGoods()) {
-                        if (!good.getCompany().equals(filteredCompany)) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                }
-            } else if (type.equals("category")) {
-                for (String filteredCatogory : GoodsManager.getFilteredCatogories()) {
-                    for (Good good : GoodsManager.getFilteredGoods()) {
-                        if (!good.getCategory().equals(filteredCatogory)) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                }
-            }
-        }
-        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-    }
+//    private void disableFilter() {
+//        GoodsManager.getFilteredGoods().clear();
+//        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
+//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (String type : GoodsManager.getKindOfFilter().keySet()) {
+//            if (type.equals("onlyOffs")) {
+//                for (Good good : GoodsManager.getFilteredGoods()) {
+//                    if (good.getOffId() == 0) {
+//                        shouldBeRemoved.add(good);
+//                    }
+//                }
+//
+//            } else if (type.equals("onlyAvailable")) {
+//                for (Good good : GoodsManager.getFilteredGoods()) {
+//                    if (good.getNumber() <= 0) {
+//                        shouldBeRemoved.add(good);
+//                    }
+//                }
+//            } else if (type.equals("company")) {
+//                for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
+//                    for (Good good : GoodsManager.getFilteredGoods()) {
+//                        if (!good.getCompany().equals(filteredCompany)) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                }
+//            } else if (type.equals("category")) {
+//                for (String filteredCatogory : GoodsManager.getFilteredCatogories()) {
+//                    for (Good good : GoodsManager.getFilteredGoods()) {
+//                        if (!good.getCategory().equals(filteredCatogory)) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+//    }
 
     private HBox covertScoreToStar(int score) {
         ImageView star = new ImageView(new Image("file:src/main/java/view/image/5starblock.png"));
@@ -385,10 +389,43 @@ public class MainMenu implements Initializable {
             box.getChildren().add(star3);
         } else if (score == 4) {
             box.getChildren().add(star4);
-        }  else if (score == 5) {
+        } else if (score == 5) {
             box.getChildren().add(star5);
         }
         return box;
     }
 
+    private void filter() {
+        GoodsManager.getFilteredGoods().clear();
+        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (String filteredCategory : GoodsManager.getFilteredCatogories()) {
+//            for (Good good : Shop.getShop().getAllGoods()) {
+//                if (good.getCategory().equals(filteredCategory)) {
+//                    GoodsManager.getFilteredGoods().add(good);
+//                }
+//            }
+//        }
+        for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
+            for (Good good : Shop.getShop().getAllGoods()) {
+                if (good.getCompany().equals(filteredCompany)) {
+                    GoodsManager.getFilteredGoods().add(good);
+                }
+            }
+        }
+        if (GoodsManager.getKindOfFilter().containsKey("onlyOffs")) {
+            for (Good good : GoodsManager.getFilteredGoods()) {
+                if (good.getOffId() == 0) {
+                    shouldBeRemoved.add(good);
+                }
+            }
+        }
+        if (GoodsManager.getKindOfFilter().containsKey("onlyAvailable")) {
+            for (Good good : GoodsManager.getFilteredGoods()) {
+                if (good.getNumber() <= 0) {
+                    shouldBeRemoved.add(good);
+                }
+            }
+        }
+        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+    }
 }

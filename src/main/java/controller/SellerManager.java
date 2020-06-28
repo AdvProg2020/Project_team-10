@@ -39,6 +39,7 @@ public class SellerManager {
     public static void removeProduct(Good good) {
         ((Seller) AccountManager.getOnlineAccount()).getGoods().remove(good);
         Shop.getShop().getAllGoods().remove(good);
+        GoodsManager.getFilteredGoods().remove(good);
         Shop.getShop().getCategoryByName(good.getCategory()).getGoods().remove(good);
     }
 
