@@ -8,6 +8,10 @@
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import multirange.MultiRange?>
+<?import org.controlsfx.control.RangeSlider?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 <AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="view.FXMLController.MainMenu" stylesheets="@../css/mainMenu.css">
 
@@ -63,42 +67,73 @@
 
             <Label text="Price" styleClass="filterText" style="-fx-padding: 0 0 8 0;"/>
             <Rectangle height="1" width="240" fill="#404040"/>
-            <VBox spacing="10" style="-fx-padding: 10 0 0 0;">
-                <JFXTextField promptText="Start price" styleClass="filterTextPrice"/>
-                <JFXTextField promptText="End price" styleClass="filterTextPrice"/>
-            </VBox>
+            <VBox spacing="1" style="-fx-padding: 15 0 0 0;">
+
+                <RangeSlider
+                        fx:id="rangeSlider1"
+                        blockIncrement="5.0"
+                        highValue="80.0"
+                        lowValue="20.0"
+                        majorTickUnit="10.0"
+                        max="10000.0" min="0.0"
+                        minorTickCount="5"
+                        prefHeight="30.0"
+                        snapToTicks="true">
+                </RangeSlider>
+                <HBox prefHeight="20">
+                    <Label text="Start price: $ " style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
+                    <Label style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6E6E6E;"
+                           fx:id="label1"
+                           prefWidth="150"
+                           text="0">
+                    </Label>
+                </HBox>
+                <HBox>
+                    <Label text="End price: $" style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
+                <Label
+                        style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6e6e6e;"
+                        fx:id="label2"
+                        prefWidth="150.0"
+                        text="10000">
+
+                </Label>
+                </HBox>
+
+            <!--                <JFXTextField promptText="Start price" styleClass="filterTextPrice"/>-->
+            <!--                <JFXTextField promptText="End price" styleClass="filterTextPrice"/>-->
         </VBox>
-
-    </AnchorPane>
-
-    <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
-
-
-    <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
-        <tooltip>
-            <Tooltip text="Close"/>
-        </tooltip>
-    </Button>
-
-    <Button layoutX="1483" layoutY="10" mnemonicParsing="false" styleClass="buttonMinimize" onMouseClicked="#minimize">
-        <tooltip>
-            <Tooltip text="Minimize"/>
-        </tooltip>
-    </Button>
-
-    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount"
-            onMouseClicked="#popupLogin">
-
-    </Button>
-
-    <Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart"
-            onMouseClicked="#cartMenu">
-
-    </Button>
-
-    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"
-               onMouseClicked="#backToMainMenu"/>
-
+    </VBox>
 
 </AnchorPane>
+
+<Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
+
+
+<Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
+<tooltip>
+    <Tooltip text="Close"/>
+</tooltip>
+</Button>
+
+<Button layoutX="1483" layoutY="10" mnemonicParsing="false" styleClass="buttonMinimize" onMouseClicked="#minimize">
+<tooltip>
+    <Tooltip text="Minimize"/>
+</tooltip>
+</Button>
+
+<Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount"
+        onMouseClicked="#popupLogin">
+
+</Button>
+
+<Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart"
+        onMouseClicked="#cartMenu">
+
+</Button>
+
+<ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"
+           onMouseClicked="#backToMainMenu"/>
+
+
+        </AnchorPane>
 

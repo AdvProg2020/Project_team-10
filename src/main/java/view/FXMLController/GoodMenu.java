@@ -89,7 +89,8 @@ public class GoodMenu {
         JFXButton scoreButton = new JFXButton("Score");
         scoreButton.setLayoutX(700);
         scoreButton.setLayoutY(170);
-        scoreButton.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
+        scoreButton.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99);" +
+                " -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
         scoreButton.setPrefSize(100, 50);
         scoreButton.setOnMouseClicked(event -> {
           popupScore();
@@ -174,6 +175,7 @@ public class GoodMenu {
 
     private void tabPane(AnchorPane innerPane) {
         JFXTabPane tabPane = new JFXTabPane();
+        tabPane.setPrefWidth(1200);
         Tab productFieldsTab = new Tab("productFields", productFields());
         productFieldsTab.setClosable(false);
         productFieldsTab.getStyleClass().add("tabs");
