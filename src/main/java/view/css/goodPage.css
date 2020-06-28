@@ -3,16 +3,22 @@
 }
 
 .availableLabel {
-    -fx-font-size: 25;
-    -fx-text-fill: rgb(171, 170, 179);
-    -fx-pref-width: 200;
-    -fx-pref-height: 200;
+    -fx-font-size: 13;
+    -fx-text-fill: rgb(88, 87, 93);
+    -fx-pref-width: 95;
+    -fx-pref-height: 7;
+    -fx-background-radius: 10;
+    -fx-background-color: #e9e9e9;
+}
+.availableLabel:hover{
+    -fx-background-color: #f1f1f1;
 }
 
 .productNameLabel {
     -fx-font-size: 40;
     -fx-text-fill: black;
-    -fx-pref-width: 200;
+    -fx-pref-width: 600;
+    -fx-font-family: "Franklin Gothic Medium Cond";
     -fx-pref-height: 200;
 }
 
@@ -29,11 +35,11 @@
     -fx-font-size: 30;
     -fx-pref-width: 300;
     -fx-pref-height: 70;
+    -fx-background-radius: 15;
 }
 
 .addToCartButton:hover {
     -fx-background-color: #379dfd;
-    -fx-border-color: darkblue;
 }
 
 .increaseButton {
@@ -131,7 +137,89 @@
     -fx-font-size: 20;
 }
 
-.tabs {
-    -fx-pref-width: 200;
+.jfx-tab-pane .headers-region {
+    -fx-background-color: #0084ff;
+    -fx-pref-width: 400;
+}
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #0084ff;
+}
+.jfx-tab-pane .tab-selected-line {
+    -fx-stroke: #75bc1b;
+    -fx-stroke-width: 3pt;
+}
 
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color :transparent;
+    -fx-border-color :transparent;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .track-background,
+.scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2em;
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.15em 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color : #dddddd;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color : #9e9e9e;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar{
+    -fx-background-color: transparent;
+    -fx-background-radius: 2em;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-bar:vertical:focused {
+    -fx-background-color: transparent;
+}
+
+.rate{
+    -fx-image: url("../image/rate.png");
+}
+.rate:hover{
+    -fx-image: url("../image/rateHover.png");
 }

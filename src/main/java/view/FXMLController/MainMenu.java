@@ -23,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 import org.controlsfx.control.RangeSlider;
 
@@ -85,6 +86,7 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
 
         rangeSlider1.lowValueProperty().addListener(
                 new ChangeListener<Number>() {

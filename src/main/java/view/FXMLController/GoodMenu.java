@@ -14,6 +14,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -43,42 +44,59 @@ public class GoodMenu {
     private NumberField scoreField;
     private Label error;
 
-    public GoodMenu(AnchorPane mainPane ) {
+    public GoodMenu(AnchorPane mainPane) {
         this.mainPane = mainPane;
     }
 
     public void changePane() {
         Good currentGood = GoodsManager.getCurrentGood();
-//        System.out.println(currentGood.getVisitNumber());
         currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
-//        System.out.println(currentGood.getVisitNumber());
-        AnchorPane innerPane = new AnchorPane();
+        AnchorPane scrollPack = new AnchorPane();
+        scrollPack.setStyle("-fx-background-radius: 10;-fx-background-color: white;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10");
+        scrollPack.setLayoutY(190);
+        scrollPack.setLayoutX(30);
+        scrollPack.setPrefSize(1480 , 650);
 
+        AnchorPane innerPane = new AnchorPane();
+        innerPane.setStyle("-fx-background-color: white;-fx-background-radius: 10");
         goodPageScrollPane = new ScrollPane(innerPane);
-        goodPageScrollPane.setLayoutY(164);
+        goodPageScrollPane.setLayoutY(5);
+        goodPageScrollPane.setLayoutX(5);
         goodPageScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         goodPageScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        goodPageScrollPane.getStyleClass().add("scroll-bar");
 
         ImageView goodImage = new ImageView(new Image("file:" + currentGood.getImagePath()));
 
-        Label isAvailable = new Label();
+        Rectangle hLine = new Rectangle(2 , 500);
+        hLine.setStyle("-fx-fill: #eaeaea");
+        hLine.setLayoutX(570);
+        hLine.setLayoutY(50);
+
+        Rectangle vLine = new Rectangle(500 , 2);
+        vLine.setStyle("-fx-fill: #eaeaea");
+        vLine.setLayoutX(590);
+        vLine.setLayoutY(140);
+
+        Button isAvailable = new Button();
         isAvailable.getStyleClass().add("availableLabel");
-        isAvailable.setLayoutX(700);
-        isAvailable.setLayoutY(140);
+        isAvailable.setLayoutX(600);
+        isAvailable.setLayoutY(60);
+        isAvailable.setPrefSize(30 , 10);
 
         Label productName = new Label();
         productName.getStyleClass().add("productNameLabel");
-        productName.setLayoutX(700);
-        productName.setLayoutY(190);
+        productName.setLayoutX(600);
+        productName.setLayoutY(10);
 
         Label productPrice = new Label();
         productPrice.getStyleClass().add("priceLabel");
-        productPrice.setLayoutX(700);
-        productPrice.setLayoutY(250);
+        productPrice.setLayoutX(600);
+        productPrice.setLayoutY(300);
 
         JFXButton addToCart = new JFXButton("Add To Cart");
         addToCart.getStyleClass().add("addToCartButton");
-        addToCart.setLayoutX(700);
+        addToCart.setLayoutX(600);
         addToCart.setLayoutY(430);
         addToCart.setOnMouseClicked(event -> {
             addToCart.setDisable(true);
@@ -86,30 +104,26 @@ public class GoodMenu {
             currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
         });
 
-        JFXButton scoreButton = new JFXButton("Score");
-        scoreButton.setLayoutX(700);
-        scoreButton.setLayoutY(170);
-        scoreButton.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99);" +
-                " -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
-        scoreButton.setPrefSize(100, 50);
-        scoreButton.setOnMouseClicked(event -> {
-          popupScore();
-        });
-
+        ImageView rate = new ImageView();
+        rate.setLayoutY(62);
+        rate.setLayoutX(705);
+        rate.setFitHeight(25);
+        rate.setFitWidth(25);
+        rate.getStyleClass().add("rate");
+        rate.setOnMouseClicked(event -> popupScore());
 
         if (!(AccountManager.getOnlineAccount() instanceof Buyer) || ((Buyer) AccountManager.getOnlineAccount()).getCart().contains(currentGood)) {
             addToCart.setDisable(true);
         }
-
         if (!canScore()) {
-            scoreButton.setDisable(true);
+            rate.setDisable(true);
         }
 
-        innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart, scoreButton);
+        innerPane.getChildren().addAll(goodImage, productName, productPrice, isAvailable, addToCart, rate, hLine,vLine);
         goodImage.setFitWidth(500);
         goodImage.setFitHeight(500);
         goodImage.setLayoutX(50);
-        goodImage.setLayoutY(100);
+        goodImage.setLayoutY(50);
         if (currentGood.getNumber() > 0) {
             isAvailable.setText("Available");
         } else {
@@ -120,16 +134,17 @@ public class GoodMenu {
         productPrice.setText("$" + currentGood.getPrice());
         mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
-        mainPane.getChildren().add(goodPageScrollPane);
-        innerPane.setPrefSize(1534, 699);
-        Login.currentPane = goodPageScrollPane;
+        scrollPack.getChildren().add(goodPageScrollPane);
+        mainPane.getChildren().add(scrollPack);
+        innerPane.setPrefSize(1470, 640);
+        Login.currentPane = scrollPack;
 
     }
 
     private boolean canScore() {
         if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
             return false;
-        } else{
+        } else {
             for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getGoods()) {
                 if (good.getId() == GoodsManager.getCurrentGood().getId()) {
                     return true;
@@ -169,27 +184,39 @@ public class GoodMenu {
         popupWindow.setScene(scene);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        scorePane.getChildren().addAll(confirmScore() , exitPopupScore(), scoreField(), error());
+        scorePane.getChildren().addAll(confirmScore(), exitPopupScore(), scoreField(), error());
         popupWindow.showAndWait();
     }
 
     private void tabPane(AnchorPane innerPane) {
         JFXTabPane tabPane = new JFXTabPane();
-        tabPane.setPrefWidth(1200);
-        Tab productFieldsTab = new Tab("productFields", productFields());
+        tabPane.setPrefWidth(1360);
+
+        Tab productFieldsTab = new Tab("Specifications", productFields());
         productFieldsTab.setClosable(false);
-        productFieldsTab.getStyleClass().add("tabs");
-        Tab commentsTab = new Tab("comments", comments());
+        productFieldsTab.getStyleClass().add("jfx-tab-pane");
+        ImageView good = new ImageView(new Image("file:src/main/java/view/image/specifications.png"));
+        good.setFitWidth(30);
+        good.setFitHeight(30);
+        productFieldsTab.setGraphic(good);
+
+        Tab commentsTab = new Tab("Comments", comments());
+        ImageView comment = new ImageView(new Image("file:src/main/java/view/image/comment.png"));
+        comment.setFitWidth(30);
+        comment.setFitHeight(30);
+        commentsTab.setGraphic(comment);
         commentsTab.setClosable(false);
-        commentsTab.getStyleClass().add("tabs");
+        commentsTab.getStyleClass().add("jfx-tab-pane");
+
         tabPane.getTabs().addAll(productFieldsTab, commentsTab);
         tabPane.setLayoutX(50);
-        tabPane.setLayoutY(600);
+        tabPane.setLayoutY(580);
         innerPane.getChildren().add(tabPane);
     }
 
     private VBox productFields() {
         Good currentGood = GoodsManager.getCurrentGood();
+        HBox boxOneFiled = new HBox();
         VBox productFields = new VBox();
         Label seller = new Label("seller: " + currentGood.getSellerUsername());
         Label company = new Label("company: " + currentGood.getCompany());
@@ -227,7 +254,7 @@ public class GoodMenu {
         return comments;
     }
 
-    private void popupComment(){
+    private void popupComment() {
         AnchorPane commentPane = new AnchorPane();
         commentPane.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
         popupWindow = new Stage();

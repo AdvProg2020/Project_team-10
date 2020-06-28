@@ -110,6 +110,14 @@
             <version>8.40.12</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jfxtras/jmetro -->
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jmetro</artifactId>
+            <version>5.2</version>
+        </dependency>
+
+
 
     </dependencies>
 
