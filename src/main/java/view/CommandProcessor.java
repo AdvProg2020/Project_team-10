@@ -843,8 +843,7 @@ public class CommandProcessor {
         String title = Menu.scanner.nextLine();
         System.out.println("content : ");
         String content = Menu.scanner.nextLine();
-        GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood().getId(),
-                "title : " + title + "\n" + "content : " + content));
+        GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood().getId(),content , title));
 
     }
 
