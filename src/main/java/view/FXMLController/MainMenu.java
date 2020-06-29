@@ -154,8 +154,9 @@ public class MainMenu implements Initializable {
             visitAndOff.setPadding(new Insets(45 , 0, 0,15));
             visitAndOff.getChildren().add(visit);
             if (good.getOffId() != 0) {
-                Off off = Shop.getShop().getOffWithId(good.getId());
-                Label offLabel = new Label( off.getPercent() + "");
+
+                Off off = Shop.getShop().getOffWithId(good.getOffId());
+                Label offLabel = new Label( off.getPercent() + "%");
                 offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
                 ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
                 offImage.setFitWidth(15);
