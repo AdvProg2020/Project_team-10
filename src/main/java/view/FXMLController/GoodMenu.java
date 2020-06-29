@@ -291,7 +291,7 @@ public class GoodMenu {
         VBox comments = new VBox();
         for (Comment comment : currentGood.getComments()) {
             VBox commentVBox = new VBox(4);
-            commentVBox.setPadding(new Insets(7,0,0,0));
+            commentVBox.setPadding(new Insets(7, 0, 0, 0));
             commentVBox.setPrefHeight(120);
             Label title = new Label("   " + comment.getTitle());
             title.getStyleClass().add("labelForDiscount");
@@ -381,12 +381,6 @@ public class GoodMenu {
 
     private Button addComment() {
         addComment = new Button();
-        addComment.setText("Add");
-        addComment.setPrefSize(290, 55);
-        addComment.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
-        addComment.setLayoutX(100);
-        addComment.setLayoutY(370);
-        addComment.setOnMouseClicked(event -> popupComment());
         addComment.setText("ADD");
         addComment.setPrefSize(1450, 40);
         ImageView plus = new ImageView(new Image("file:src/main/java/view/image/plus.png"));
@@ -394,13 +388,7 @@ public class GoodMenu {
         plus.setFitHeight(30);
         addComment.getStyleClass().add("buttonComment");
         addComment.setGraphic(plus);
-        addComment.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupComment();
-            }
-        });
-
+        addComment.setOnMouseClicked(event -> popupComment());
         return addComment;
     }
 
@@ -414,16 +402,8 @@ public class GoodMenu {
         submit.setOnMouseClicked(event -> {
             popupWindow.close();
             fade(0.5, 10);
-            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(), GoodsManager.getCurrentGood().getId(),
-                    "title : " + title.getText() + "\n" + "content : " + content.getText()));
-        submit.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupWindow.close();
-                fade(0.5, 10);
-                GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(),
-                        GoodsManager.getCurrentGood().getId(), "" + content.getText(), "" + title.getText()));
-            }
+            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
+                    GoodsManager.getCurrentGood().getId(), "" + content.getText(), "" + title.getText()));
         });
         return submit;
     }

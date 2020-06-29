@@ -6,9 +6,13 @@ import controller.AccountManager;
 import controller.BuyerManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,18 +20,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Buyer;
-import model.Discount;
-import model.Good;
-import model.Shop;
+import model.*;
 import view.NumberField;
 import view.Purchase;
 import view.ZipCode;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -71,33 +74,26 @@ public class CartMenu {
 
     public void changePane() {
         btnCartMenu.setVisible(false);
-        AnchorPane innerPane = new AnchorPane();
-        ScrollPane cartMenuScrollPane = new ScrollPane(innerPane);
-        cartMenuScrollPane.setLayoutY(164);
-        cartMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        cartMenuScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        VBox products = new VBox();
-        products.setSpacing(50);
+        AnchorPane allPain = new AnchorPane();
+        allPain.setPrefSize(1400, 690);
+        allPain.setLayoutY(170);
+
+
+        VBox purchaseAndPrice = new VBox(10);
+        purchaseAndPrice.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10;");
+        purchaseAndPrice.setPrefSize(350, 300);
+        purchaseAndPrice.setPadding(new Insets(25, 25, 10, 25));
+        purchaseAndPrice.setLayoutX(1160);
+        purchaseAndPrice.setLayoutY(20);
+        purchaseAndPrice.getStylesheets().add("file:src/main/java/view/css/cartMenu.css");
+
+        //--------
+
         Label totalPrice = new Label();
-        for (Good good : currentBuyer.getCart()) {
-            ImageView goodImage = new ImageView(new Image("file:" + good.getImagePath()));
-            goodImage.setFitWidth(300);
-            goodImage.setFitHeight(300);
-            goodImage.getStyleClass().add("goodImage");
-
-            VBox productFields = new VBox(new Label("name: " + good.getName()),
-                    new Label("company: " + good.getCompany()), new Label("price: " + good.getPrice()));
-            productFields.getChildren().add(increaseOrDecreaseNumber(totalPrice, good));
-            productFields.setSpacing(25);
-            HBox productBox = new HBox(goodImage, productFields);
-            productBox.setSpacing(50);
-            productBox.getStylesheets().add("file:src/main/java/view/css/cartMenu.css");
-            products.getChildren().add(productBox);
-
-        }
+        totalPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
         JFXButton purchase = new JFXButton("Purchase");
-        totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+        totalPrice.setText("Total price: $" + BuyerManager.getTotalPrice());
         if (BuyerManager.getTotalPrice() == 0) {
             purchase.setDisable(true);
         }
@@ -113,45 +109,123 @@ public class CartMenu {
                 e.printStackTrace();
             }
         });
-        HBox purchaseAndTotalPrice = new HBox(purchase, totalPrice);
-        purchaseAndTotalPrice.setSpacing(500);
-        VBox vBox = new VBox(products, purchaseAndTotalPrice);
+
+        purchaseAndPrice.getChildren().addAll(totalPrice, purchase);
+
+        ///-----
+
+
+        AnchorPane cartMenuPack = new AnchorPane();
+        cartMenuPack.setLayoutX(30);
+        cartMenuPack.setLayoutY(20);
+        cartMenuPack.setPrefSize(1110, 650);
+        cartMenuPack.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10;");
+
+        AnchorPane innerPane = new AnchorPane();
+        ScrollPane cartMenuScrollPane = new ScrollPane(innerPane);
+        cartMenuScrollPane.setLayoutY(5);
+        cartMenuScrollPane.setLayoutX(1);
+        cartMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        cartMenuScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        VBox products = new VBox();
+        products.setSpacing(0);
+
+        for (Good good : currentBuyer.getCart()) {
+            ImageView goodImage = new ImageView(new Image("file:" + good.getImagePath()));
+            goodImage.setFitWidth(150);
+            goodImage.setFitHeight(150);
+            goodImage.getStyleClass().add("goodImage");
+
+            Rectangle line = new Rectangle(110, 1);
+            line.setStyle("-fx-fill: #e8e8e8");
+
+            VBox productFields = new VBox(labelForCartField(good.getName(), "Name: "),
+                    labelForCartField(good.getCompany(), "Company: "), labelForCartField("" + good.getPrice(), "Price: $"), line);
+
+            HBox productBox = new HBox(goodImage, productFields);
+            productFields.getChildren().add(increaseOrDecreaseNumber(totalPrice, good, productBox, products));
+            productFields.setSpacing(9);
+            productBox.setPrefWidth(1000);
+            productBox.setPadding(new Insets(10, 10, 10, 10));
+            productBox.setStyle("-fx-border-width: 1;-fx-border-color: #efefef");
+            productBox.setSpacing(30);
+            productBox.getStylesheets().add("file:src/main/java/view/css/cartMenu.css");
+            products.getChildren().add(productBox);
+
+        }
+
+        VBox vBox = new VBox(products);
         vBox.setSpacing(50);
         innerPane.getChildren().add(vBox);
         vBox.setLayoutX(50);
         vBox.setLayoutY(50);
         innerPane.getStylesheets().add("file:src/main/java/view/css/cartMenu.css");
-        mainPane.getChildren().add(cartMenuScrollPane);
-        innerPane.setPrefSize(1200, 699);
-        Login.currentPane = cartMenuScrollPane;
+        innerPane.setStyle("-fx-background-color: white");
+        cartMenuScrollPane.getStyleClass().add("scroll-bar");
+        cartMenuPack.getChildren().add(cartMenuScrollPane);
+        allPain.getChildren().addAll(cartMenuPack, purchaseAndPrice);
+        mainPane.getChildren().add(allPain);
+        innerPane.setPrefSize(1100, 640);
+        Login.currentPane = allPain;
     }
 
-    private HBox increaseOrDecreaseNumber(Label totalPrice, Good good) {
+    private Label labelForCartField(String text, String type) {
+        Label label = new Label(type + text);
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 16;-fx-text-fill: #313131");
+        return label;
+    }
+
+    private HBox increaseOrDecreaseNumber(Label totalPrice, Good good, HBox productBox, VBox products) {
         final int[] count = {good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername())};
         TextField number = new TextField();
-        number.setAlignment(Pos.CENTER);
-        number.setPrefSize(70, 45);
+        number.setAlignment(Pos.TOP_CENTER);
+        number.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;");
+        number.setPadding(new Insets(0, 0, 10, 0));
+        number.setPrefSize(50, 30);
+        number.setStyle("-fx-background-color: none");
         number.setText("" + good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()));
         number.setDisable(true);
-        JFXButton plus = new JFXButton("+");
-        plus.setPrefSize(45, 45);
+        ImageView plus = new ImageView();
+        plus.getStyleClass().add("plusCart");
+        plus.setFitHeight(30);
+        plus.setFitWidth(30);
+        ImageView minus = new ImageView();
         plus.setOnMouseClicked(event -> {
             if (count[0] < good.getNumber()) {
+                minus.getStyleClass().remove("minesCart2");
+                minus.getStyleClass().add("minesCart");
                 count[0] += 1;
                 number.setText("" + count[0]);
                 good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
                 totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+
             }
+
         });
-        JFXButton minus = new JFXButton("-");
-        minus.setPrefSize(45, 45);
+
+        minus.getStyleClass().add("minesCart");
+        minus.setFitHeight(30);
+        minus.setFitWidth(30);
+        if (count[0] == 1) {
+            minus.getStyleClass().add("minesCart2");
+        }
         minus.setOnMouseClicked(event -> {
-            if (count[0] != 0) {
-                count[0] -= 1;
-                number.setText("" + count[0]);
-                good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-                totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+
+            count[0] -= 1;
+            number.setText("" + count[0]);
+            good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+
+            if (count[0] == 1) {
+                minus.getStyleClass().add("minesCart2");
             }
+            if (count[0] == 0) {
+                good.getGoodsInBuyerCart().remove(AccountManager.getOnlineAccount().getUsername());
+                products.getChildren().remove(productBox);
+                ((Buyer) AccountManager.getOnlineAccount()).getCart().remove(good);
+            }
+
+            totalPrice.setText("Total price: " + BuyerManager.getTotalPrice());
         });
 
         return new HBox(minus, number, plus);
