@@ -70,12 +70,11 @@
             <VBox spacing="1" style="-fx-padding: 15 0 0 0;">
 
                 <RangeSlider
-                        fx:id="rangeSlider1"
-                        blockIncrement="5.0"
-                        highValue="80.0"
-                        lowValue="20.0"
+                        fx:id="rangeSlider"
+                        onKeyReleased="#filter"
+                        blockIncrement="500.0"
                         majorTickUnit="10.0"
-                        max="10000.0" min="0.0"
+                        max="50000.0" min="0.0"
                         minorTickCount="5"
                         prefHeight="30.0"
                         snapToTicks="true">
@@ -83,7 +82,7 @@
                 <HBox prefHeight="20">
                     <Label text="Start price: $ " style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
                     <Label style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6E6E6E;"
-                           fx:id="label1"
+                           fx:id="startPrice"
                            prefWidth="150"
                            text="0">
                     </Label>
@@ -92,9 +91,9 @@
                     <Label text="End price: $" style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
                 <Label
                         style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6e6e6e;"
-                        fx:id="label2"
+                        fx:id="endPrice"
                         prefWidth="150.0"
-                        text="10000">
+                        text="50000">
 
                 </Label>
                 </HBox>

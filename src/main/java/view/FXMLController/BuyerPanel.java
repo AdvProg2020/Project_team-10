@@ -1,7 +1,6 @@
 package view.FXMLController;
 
 import controller.AccountManager;
-import controller.GoodsManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -20,14 +19,13 @@ import model.*;
 import view.NumberField;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class BuyerPanel {
     public AnchorPane mainPane;
     public AnchorPane optionsPane;
     private AnchorPane buyerPane;
     private Button selectedButton = new Button("Profile");
+    private ImageView imageViewSelectedButton;
     private AnchorPane loginPane;
     private TextField firstNameText;
     private TextField lastNameText;
@@ -43,7 +41,6 @@ public class BuyerPanel {
     private AnchorPane mainMenu;
     private Button user;
     private Button btnLogin;
-    private ImageView imageViewBack;
 
 
     public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
@@ -138,10 +135,14 @@ public class BuyerPanel {
         button.setAlignment(Pos.CENTER_LEFT);
         if (text.equals("Profile")) {
             button.setGraphic(imageViewHover);
-            button.setStyle("-fx-text-fill: red");
+//            button.setStyle("-fx-text-fill: red");
+            selectedButton = button;
+            imageViewSelectedButton = imageView;
         }
 
         button.setOnMouseClicked(e -> {
+            selectedButton.setGraphic(imageViewSelectedButton);
+            imageViewSelectedButton = imageView;
             selectedButton = button;
             button.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
@@ -200,7 +201,7 @@ public class BuyerPanel {
     }
 
     private void backToMainMenu() {
-        main.backToMainMenu = true;
+        main.updateFilters = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
@@ -446,7 +447,7 @@ public class BuyerPanel {
     }
 
     private ImageView back(FlowPane flowPane) {
-        imageViewBack = new ImageView();
+        ImageView imageViewBack = new ImageView();
         imageViewBack.setOnMouseClicked(event -> {
             flowPane.getChildren().clear();
             buyerPaneScroll.setContent(showOrders());

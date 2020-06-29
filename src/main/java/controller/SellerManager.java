@@ -61,5 +61,13 @@ public class SellerManager {
                 AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent));
     }
 
+    public static void removeOff(Off off) {
+        for (Good good : off.getGoods()) {
+            good.setOffId(0);
+        }
+        ((Seller) AccountManager.getOnlineAccount()).getOffs().remove(off);
+        Shop.getShop().getAllOffs().remove(off);
+    }
+
 
 }

@@ -49,9 +49,7 @@ public class GoodMenu {
 
     public void changePane() {
         Good currentGood = GoodsManager.getCurrentGood();
-//        System.out.println(currentGood.getVisitNumber());
         currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
-//        System.out.println(currentGood.getVisitNumber());
         AnchorPane innerPane = new AnchorPane();
 
         goodPageScrollPane = new ScrollPane(innerPane);
@@ -127,16 +125,14 @@ public class GoodMenu {
     }
 
     private boolean canScore() {
-        if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
-            return false;
-        } else{
+        if (AccountManager.getOnlineAccount() instanceof Buyer) {
             for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getGoods()) {
                 if (good.getId() == GoodsManager.getCurrentGood().getId()) {
                     return true;
                 }
             }
-            return false;
         }
+        return false;
     }
 
     private void popupScore() {
@@ -303,12 +299,7 @@ public class GoodMenu {
         addComment.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
         addComment.setLayoutX(100);
         addComment.setLayoutY(370);
-        addComment.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupComment();
-            }
-        });
+        addComment.setOnMouseClicked(event -> popupComment());
 
         return addComment;
     }
@@ -320,14 +311,11 @@ public class GoodMenu {
         submit.setLayoutX(100);
         submit.setLayoutY(370);
         submit.getStyleClass().add("login");
-        submit.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupWindow.close();
-                fade(0.5, 10);
-                GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(), GoodsManager.getCurrentGood().getId(),
-                        "title : " + title.getText() + "\n" + "content : " + content.getText()));
-            }
+        submit.setOnMouseClicked(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(), GoodsManager.getCurrentGood().getId(),
+                    "title : " + title.getText() + "\n" + "content : " + content.getText()));
         });
         return submit;
     }
@@ -339,17 +327,14 @@ public class GoodMenu {
         submit.setLayoutX(250);
         submit.setLayoutY(190);
         submit.getStyleClass().add("login");
-        submit.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                if (Integer.parseInt(scoreField.getText()) > 5 || Integer.parseInt(scoreField.getText()) < 0) {
-                    error.setText("only between 0 - 5");
-                    error.setStyle("-fx-text-fill: darkred");
-                } else {
-                    popupWindow.close();
-                    fade(0.5, 10);
-                    GoodsManager.getCurrentGood().getAllScores().add(Integer.parseInt(scoreField.getText()));
-                }
+        submit.setOnMouseClicked(event -> {
+            if (Integer.parseInt(scoreField.getText()) > 5 || Integer.parseInt(scoreField.getText()) < 0) {
+                error.setText("only between 0 - 5");
+                error.setStyle("-fx-text-fill: darkred");
+            } else {
+                popupWindow.close();
+                fade(0.5, 10);
+                GoodsManager.getCurrentGood().getAllScores().add(Integer.parseInt(scoreField.getText()));
             }
         });
         return submit;

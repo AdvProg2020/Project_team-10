@@ -9,8 +9,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
@@ -48,10 +48,10 @@ public class MainMenu implements Initializable {
     public JFXToggleButton availableFilterButton;
     public VBox vBoxForAddCompanyFilter;
     public VBox vBoxForAddCategoryFilter;
-    public boolean backToMainMenu = true;
-    public RangeSlider rangeSlider1;
-    public Label label2;
-    public Label label1;
+    public boolean updateFilters = true;
+    public RangeSlider rangeSlider;
+    public Label startPrice;
+    public Label endPrice;
 
 
     void setValue(Label label, Number number) {
@@ -86,32 +86,16 @@ public class MainMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        rangeSlider1.lowValueProperty().addListener(
-                new ChangeListener<Number>() {
-                    @Override
-                    public void changed(
-                            ObservableValue<? extends Number> observable,
-                            Number oldValue, Number newValue) {
-                        setValue(label1, newValue);
-                    }
-                }
+        rangeSlider.lowValueProperty().addListener(
+                (observable, oldValue, newValue) -> setValue(startPrice, newValue)
         );
 
-        rangeSlider1.highValueProperty().addListener(
-                new ChangeListener<Number>() {
-                    @Override
-                    public void changed(
-                            ObservableValue<? extends Number> observable,
-                            Number oldValue, Number newValue) {
-                        setValue(label2, newValue);
-                    }
-                }
+        rangeSlider.highValueProperty().addListener(
+                (observable, oldValue, newValue) -> setValue(endPrice, newValue)
         );
 
-        rangeSlider1.setHighValue(10000.0);
-        rangeSlider1.setLowValue(0.0);
 
-        if (backToMainMenu) {
+        if (updateFilters) {
             updateAllFilter();
         }
 
@@ -136,6 +120,7 @@ public class MainMenu implements Initializable {
         hBox.setPadding(new Insets(10, 580, 10, 15));
         hBox.setSpacing(10);
         flowPane.getChildren().add(hBox);
+//        filter();
         Collections.sort(GoodsManager.getFilteredGoods());
         for (Good good : GoodsManager.getFilteredGoods()) {
             VBox vBox = new VBox();
@@ -169,6 +154,9 @@ public class MainMenu implements Initializable {
     }
 
     private void updateAllFilter() {
+        rangeSlider.setHighValue(50000.0);
+        rangeSlider.setLowValue(0.0);
+
         vBoxForAddCategoryFilter.getChildren().clear();
         vBoxForAddCompanyFilter.getChildren().clear();
         GoodsManager.getFilteredCatogories().clear();
@@ -184,8 +172,6 @@ public class MainMenu implements Initializable {
                     GoodsManager.getFilteredCatogories().remove(category.getName());
                 }
                 filter();
-                backToMainMenu = false;
-                initialize(location, resources);
             });
             categoryFiltered.getStyleClass().add("filterButton");
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
@@ -202,8 +188,6 @@ public class MainMenu implements Initializable {
                     GoodsManager.getFilteredCompanies().remove(company);
                 }
                 filter();
-                backToMainMenu = false;
-                initialize(location, resources);
             });
             companyFiltered.getStyleClass().add("filterButton");
             vBoxForAddCompanyFilter.getChildren().add(companyFiltered);
@@ -266,7 +250,7 @@ public class MainMenu implements Initializable {
 
     public void backToMainMenu(MouseEvent mouseEvent) {
         if (!mainPane.getChildren().contains(mainMenu)) {
-            backToMainMenu = true;
+            updateFilters = true;
             mainPane.getChildren().remove(Login.currentPane);
             initialize(location, resources);
             mainPane.getChildren().add(mainMenu);
@@ -280,7 +264,6 @@ public class MainMenu implements Initializable {
             GoodsManager.getKindOfFilter().remove("onlyOffs");
         }
         filter();
-        initialize(location, resources);
     }
 
     public void filterByAvailability(MouseEvent mouseEvent) {
@@ -290,7 +273,6 @@ public class MainMenu implements Initializable {
             GoodsManager.getKindOfFilter().remove("onlyAvailable");
         }
         filter();
-        initialize(location, resources);
     }
 
 //    private void applyOffFilter() {
@@ -433,6 +415,7 @@ public class MainMenu implements Initializable {
         return box;
     }
 
+    @FXML
     private void filter() {
         GoodsManager.getFilteredGoods().clear();
         ArrayList<Good> shouldBeRemoved = new ArrayList<>();
@@ -464,6 +447,18 @@ public class MainMenu implements Initializable {
                 }
             }
         }
+        long min = Long.parseLong(startPrice.getText());
+        long max = Long.parseLong(endPrice.getText());
+        if (min != 0 || max != 50000) {
+            for (Good filteredGood : GoodsManager.getFilteredGoods()) {
+                if (filteredGood.getPrice() < min || filteredGood.getPrice() > max) {
+                    shouldBeRemoved.add(filteredGood);
+                }
+            }
+        }
         GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
+        updateFilters = false;
+        initialize(location, resources);
     }
+
 }

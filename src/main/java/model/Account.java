@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Account {
     private String username;
@@ -28,6 +26,8 @@ public abstract class Account {
         this.username = username;
     }
 
+    public Account() {
+    }
 
     @Override
     public String toString() {

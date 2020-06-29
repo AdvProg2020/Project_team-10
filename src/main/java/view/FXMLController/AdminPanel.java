@@ -3,7 +3,6 @@ package view.FXMLController;
 import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.AdminManager;
-import controller.GoodsManager;
 import controller.SellerManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +49,7 @@ public class AdminPanel {
     public AnchorPane optionsPane;
     private AnchorPane adminPane;
     private Button selectedButton = new Button("Profile");
+    private ImageView imageViewSelectedButton;
     private AnchorPane loginPane;
     private TextField firstNameText;
     private TextField lastNameText;
@@ -308,19 +308,25 @@ public class AdminPanel {
         imageView.setFitWidth(30);
         Button button = new Button(text);
         button.setPrefSize(240, 25);
-        button.getStyleClass().add("button");
+//        button.getStyleClass().add("button");
         button.setGraphic(imageView);
         button.setAlignment(Pos.CENTER_LEFT);
         if (text.equals("Profile")) {
             button.setGraphic(imageViewHover);
-            button.setStyle("-fx-text-fill: red");
+            button.getStyleClass().add("selectedButton");
+            selectedButton = button;
+            imageViewSelectedButton = imageView;
         }
 
         button.setOnMouseClicked(e -> {
-//            selectedButton.setGraphic(imageView);
-
+            selectedButton.setGraphic(imageViewSelectedButton);
+            imageViewSelectedButton = imageView;
+//            selectedButton.setStyle("-fx-text-fill: black");
+//            selectedButton.getStyleClass().add("button");
+            selectedButton.getStyleClass().remove("selectedButton");
             selectedButton = button;
-            button.setGraphic(imageViewHover);
+            selectedButton.getStyleClass().add("selectedButton");
+            selectedButton.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
         });
         return button;
@@ -1067,7 +1073,7 @@ public class AdminPanel {
     }
 
     public void backToMainMenu() {
-        main.backToMainMenu = true;
+        main.updateFilters = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);

@@ -2,16 +2,12 @@ package view.FXMLController;
 
 import com.jfoenix.controls.*;
 import controller.AccountManager;
-import controller.AdminManager;
 import controller.GoodsManager;
 import controller.SellerManager;
 import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -51,7 +47,8 @@ public class SellerPanel {
     private AnchorPane mainPane;
     public AnchorPane optionsPane;
     private AnchorPane sellerPane;
-    private Button selectedButton;
+    private Button selectedButton = new Button("Profile");
+    private ImageView imageViewSelectedButton;
     private ScrollPane sellerScrollPane;
     private MainMenu main;
     private AnchorPane mainMenu;
@@ -84,7 +81,6 @@ public class SellerPanel {
         sellerPane = new AnchorPane();
         optionsPane = new AnchorPane();
         sellerScrollPane = new ScrollPane();
-        selectedButton = new Button("Profile");
         handelButtonOnMouseClick();
     }
 
@@ -169,12 +165,16 @@ public class SellerPanel {
         button.setAlignment(Pos.CENTER_LEFT);
         if (text.equals("Profile")) {
             button.setGraphic(imageViewHover);
-            button.setStyle("-fx-text-fill: red");
+//            button.setStyle("-fx-text-fill: red");
+            selectedButton = button;
+            imageViewSelectedButton = imageView;
         }
 
         button.setOnMouseClicked(e -> {
+            selectedButton.setGraphic(imageViewSelectedButton);
+            imageViewSelectedButton = imageView;
             selectedButton = button;
-            button.setGraphic(imageViewHover);
+            selectedButton.setGraphic(imageViewHover);
             handelButtonOnMouseClick();
         });
         return button;
@@ -336,13 +336,13 @@ public class SellerPanel {
             bin.getStyleClass().add("binImage");
             bin.setFitWidth(31);
             bin.setFitHeight(25);
+            bin.setOnMouseClicked(e -> {
+                SellerManager.removeOff(off);
+                flowPane.getChildren().remove(hBox);
+            });
 
             hBox.getChildren().addAll(id, start, end,goodOffPack, edit, bin);
             flowPane.getChildren().add(hBox);
-            bin.setOnMouseClicked(e -> {
-                //todo
-                flowPane.getChildren().remove(hBox);
-            });
         }
         return flowPane;
     }
@@ -851,7 +851,7 @@ public class SellerPanel {
 
 
     public void backToMainMenu() {
-        main.backToMainMenu = true;
+        main.updateFilters = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
