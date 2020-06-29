@@ -135,6 +135,12 @@ public class MainMenu implements Initializable {
             Label name = new Label(good.getName());
             Label price = new Label("$" + good.getPrice() + "");
             Label visit = new Label(good.getVisitNumber() + "");
+            visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
+            ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
+            eye.setFitHeight(15);
+            eye.setFitWidth(15);
+            visit.setGraphic(eye);
+
             name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
             vBox.setOnMouseEntered(event -> fadeEffect(vBox));
@@ -143,8 +149,24 @@ public class MainMenu implements Initializable {
                 mainPane.getChildren().remove(mainMenu);
                 new GoodMenu(mainPane).changePane();
             });
+
+            HBox visitAndOff = new HBox(5);
+            visitAndOff.setPadding(new Insets(45 , 0, 0,15));
+            visitAndOff.getChildren().add(visit);
+            if (good.getOffId() != 0) {
+                Off off = Shop.getShop().getOffWithId(good.getId());
+                Label offLabel = new Label( off.getPercent() + "");
+                offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
+                ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
+                offImage.setFitWidth(15);
+                offImage.setFitHeight(15);
+                offLabel.setGraphic(offImage);
+                visitAndOff.getChildren().add(offLabel);
+            }
+
+
             vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()), visit);
+            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()),visitAndOff);
             flowPane.getChildren().add(vBox);
         }
         mainMenuScrollPane.getStyleClass().add("scroll-bar");
