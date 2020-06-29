@@ -290,7 +290,7 @@ public class GoodMenu {
         VBox comments = new VBox();
         for (Comment comment : currentGood.getComments()) {
             VBox commentVBox = new VBox(4);
-            commentVBox.setPadding(new Insets(7,0,0,0));
+            commentVBox.setPadding(new Insets(7, 0, 0, 0));
             commentVBox.setPrefHeight(120);
             Label title = new Label("   " + comment.getTitle());
             title.getStyleClass().add("labelForDiscount");
@@ -388,7 +388,6 @@ public class GoodMenu {
         addComment.getStyleClass().add("buttonComment");
         addComment.setGraphic(plus);
         addComment.setOnMouseClicked(event -> popupComment());
-
         return addComment;
     }
 
@@ -399,7 +398,7 @@ public class GoodMenu {
         submit.setLayoutX(65);
         submit.setLayoutY(200);
         submit.getStyleClass().add("login");
-        submit.setOnMouseClicked(event1 -> {
+        submit.setOnMouseClicked(event -> {
             popupWindow.close();
             fade(0.5, 10);
             GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
