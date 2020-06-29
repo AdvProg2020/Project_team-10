@@ -38,7 +38,6 @@ import static view.FXML.FXML.loginURL;
 public class GoodMenu {
     private AnchorPane mainPane;
     public ScrollPane goodPageScrollPane;
-    private Button addComment;
     private Stage popupWindow;
     private TextField title;
     private TextField content;
@@ -165,12 +164,12 @@ public class GoodMenu {
 
         layout.setStyle("-fx-background-color: none;");
         scorePane.setStyle("-fx-background-color: #1089ff;" + "-fx-background-radius: 30px;");
-        scorePane.setPrefWidth(220);
+        scorePane.setPrefWidth(370);
         scorePane.setPrefHeight(250);
 
         fade(10, 0.5);
 
-        layout.setLayoutX(700);
+        layout.setLayoutX(580);
         layout.setLayoutY(300);
         layout.getChildren().add(scorePane);
         DropShadow dropShadow = new DropShadow();
@@ -370,8 +369,8 @@ public class GoodMenu {
     private Button exitPopupScore() {
         Button exitButton = new Button();
         exitButton.getStyleClass().add("btnExit");
-        exitButton.setLayoutY(27);
-        exitButton.setLayoutX(345);
+        exitButton.setLayoutY(25);
+        exitButton.setLayoutX(335);
         exitButton.setOnAction(event -> {
             popupWindow.close();
             fade(0.5, 10);
@@ -380,13 +379,7 @@ public class GoodMenu {
     }
 
     private Button addComment() {
-        addComment = new Button();
-        addComment.setText("Add");
-        addComment.setPrefSize(290, 55);
-        addComment.setStyle("-fx-font-size: 18pt; -fx-background-color: rgba(255,254,98,0.99); -fx-background-radius: 10%; -fx-border-radius: 10%; -fx-font-family: 'Franklin Gothic Medium Cond'");
-        addComment.setLayoutX(100);
-        addComment.setLayoutY(370);
-        addComment.setOnMouseClicked(event -> popupComment());
+        Button addComment = new Button();
         addComment.setText("ADD");
         addComment.setPrefSize(1450, 40);
         ImageView plus = new ImageView(new Image("file:src/main/java/view/image/plus.png"));
@@ -394,12 +387,7 @@ public class GoodMenu {
         plus.setFitHeight(30);
         addComment.getStyleClass().add("buttonComment");
         addComment.setGraphic(plus);
-        addComment.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupComment();
-            }
-        });
+        addComment.setOnMouseClicked(event -> popupComment());
 
         return addComment;
     }
@@ -411,29 +399,20 @@ public class GoodMenu {
         submit.setLayoutX(65);
         submit.setLayoutY(200);
         submit.getStyleClass().add("login");
-        submit.setOnMouseClicked(event -> {
+        submit.setOnMouseClicked(event1 -> {
             popupWindow.close();
             fade(0.5, 10);
-            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(), GoodsManager.getCurrentGood().getId(),
-                    "title : " + title.getText() + "\n" + "content : " + content.getText()));
-        submit.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                popupWindow.close();
-                fade(0.5, 10);
-                GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount(),
-                        GoodsManager.getCurrentGood().getId(), "" + content.getText(), "" + title.getText()));
-            }
+            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
+                    GoodsManager.getCurrentGood().getId(), "" + content.getText(), "" + title.getText()));
         });
         return submit;
     }
-
     private Button confirmScore() {
         Button submit = new Button();
-        submit.setText("Ok!");
-        submit.setPrefSize(100, 50);
-        submit.setLayoutX(250);
-        submit.setLayoutY(190);
+        submit.setText("OK");
+        submit.setPrefSize(200, 40);
+        submit.setLayoutX(85);
+        submit.setLayoutY(135);
         submit.getStyleClass().add("login");
         submit.setOnMouseClicked(event -> {
             if (Integer.parseInt(scoreField.getText()) > 5 || Integer.parseInt(scoreField.getText()) < 0) {
@@ -460,11 +439,11 @@ public class GoodMenu {
 
     private NumberField scoreField() {
         scoreField.setPromptText("Score [0 - 5]");
-        scoreField.setLayoutX(100);
-        scoreField.setLayoutY(100);
+        scoreField.setLayoutX(85);
+        scoreField.setLayoutY(70);
         scoreField.setPrefHeight(50);
         scoreField.setPrefWidth(200);
-        scoreField.getStyleClass().add("typeField");
+        scoreField.getStyleClass().add("scoreField");
         return scoreField;
     }
 
@@ -481,7 +460,7 @@ public class GoodMenu {
     private Label error() {
         error = new Label();
         error.setLayoutX(110);
-        error.setLayoutY(160);
+        error.setLayoutY(185);
         return error;
     }
 

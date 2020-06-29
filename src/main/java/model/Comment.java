@@ -10,7 +10,7 @@ public class Comment {
     private String status;
     private boolean isBought;
 
-    public Comment(String username, int goodId, String text) {
+    public Comment(String username, int goodId, String text, String title) {
         this.username = username;
         this.goodId = goodId;
         this.text = text;

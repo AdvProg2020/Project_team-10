@@ -33,6 +33,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Date;
 
+import static javafx.scene.paint.Color.WHITE;
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.paymentURL;
 
@@ -175,7 +176,7 @@ public class CartMenu {
         Label payment = new Label("Payment");
         payment.getStyleClass().add("labelForPaymentTitle");
         payment.setLayoutX(160);
-        payment.setLayoutY(30);
+        payment.setLayoutY(38);
 
         layout.setStyle("-fx-background-color: none;");
         paymentPane.setStyle("-fx-background-color: #1089ff;" + "-fx-background-radius: 30px;");
@@ -212,7 +213,7 @@ public class CartMenu {
     private TextField nameField() {
         nameField.setPromptText("name");
         nameField.setLayoutX(90);
-        nameField.setLayoutY(80);
+        nameField.setLayoutY(85);
         nameField.setPrefHeight(50);
         nameField.setPrefWidth(310);
         nameField.getStyleClass().add("paymentFields");
@@ -223,7 +224,7 @@ public class CartMenu {
     private NumberField phoneNumberField() {
         phoneNumberField.setPromptText("phone number");
         phoneNumberField.setLayoutX(90);
-        phoneNumberField.setLayoutY(140);
+        phoneNumberField.setLayoutY(145);
         phoneNumberField.setPrefHeight(50);
         phoneNumberField.setPrefWidth(310);
         phoneNumberField.getStyleClass().add("paymentFields");
@@ -234,7 +235,7 @@ public class CartMenu {
     private TextField addressField() {
         addressField.setPromptText("address");
         addressField.setLayoutX(90);
-        addressField.setLayoutY(200);
+        addressField.setLayoutY(205);
         addressField.setPrefHeight(50);
         addressField.setPrefWidth(310);
         addressField.getStyleClass().add("paymentFields");
@@ -245,7 +246,7 @@ public class CartMenu {
     private TextField zipCode() {
         zipCode.setPromptText("zip code");
         zipCode.setLayoutX(90);
-        zipCode.setLayoutY(260);
+        zipCode.setLayoutY(265);
         zipCode.setPrefHeight(50);
         zipCode.setPrefWidth(310);
         zipCode.getStyleClass().add("paymentFields");
@@ -256,9 +257,9 @@ public class CartMenu {
     private ZipCode discountCode() {
         discountCode.setPromptText("discount code");
         discountCode.setLayoutX(90);
-        discountCode.setLayoutY(320);
+        discountCode.setLayoutY(325);
         discountCode.setPrefHeight(50);
-        discountCode.setPrefWidth(310);
+        discountCode.setPrefWidth(240);
         discountCode.getStyleClass().add("paymentFields");
         discountCode.getStyleClass().add("discountCode");
         discountCode.setDisable(true);
@@ -266,17 +267,17 @@ public class CartMenu {
     }
 
     private Label totalPrice() {
-        Label totalPrice = new Label("Total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+        Label totalPrice = new Label("Total price: $ " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
         totalPrice.getStyleClass().add("totalPrice");
         totalPrice.setLayoutX(90);
-        totalPrice.setLayoutY(380);
+        totalPrice.setLayoutY(385);
         totalPrice.setAlignment(Pos.CENTER);
         return totalPrice;
     }
 
     private Label payableAmount() {
         finalTotalPrice = BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart());
-        payableAmount = new Label("payable amount: " + ((long) finalTotalPrice));
+        payableAmount = new Label("payable amount: $ " + ((long) finalTotalPrice));
         payableAmount.getStyleClass().add("totalPrice");
         payableAmount.setLayoutX(90);
         payableAmount.setLayoutY(420);
@@ -286,6 +287,8 @@ public class CartMenu {
 
     private JFXToggleButton existenceOfDiscount() {
         existenceOfDiscount = new JFXToggleButton();
+        existenceOfDiscount.setToggleColor(WHITE);
+        existenceOfDiscount.setToggleLineColor(WHITE);
         existenceOfDiscount.setOnAction(event -> {
             if (existenceOfDiscount.isSelected()) {
                 discountCode.setDisable(false);
@@ -293,8 +296,8 @@ public class CartMenu {
                 discountCode.setDisable(true);
             }
         });
-        existenceOfDiscount.setLayoutX(20);
-        existenceOfDiscount.setLayoutY(315);
+        existenceOfDiscount.setLayoutX(335);
+        existenceOfDiscount.setLayoutY(322);
         return existenceOfDiscount;
     }
 
@@ -302,7 +305,7 @@ public class CartMenu {
         confirmButton = new Button("Confirm");
         confirmButton.setPrefSize(310, 55);
         confirmButton.setLayoutX(90);
-        confirmButton.setLayoutY(470);
+        confirmButton.setLayoutY(465);
         confirmButton.getStyleClass().add("confirm");
         confirmButton.setOnMouseClicked(event -> processPurchase());
         return confirmButton;

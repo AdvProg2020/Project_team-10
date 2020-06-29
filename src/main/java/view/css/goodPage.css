@@ -40,6 +40,7 @@
 
 .addToCartButton:hover {
     -fx-background-color: #379dfd;
+    -fx-cursor: hand;
 }
 
 .increaseButton {
@@ -67,6 +68,7 @@
 
 .buttonExit:hover {
     -fx-background-image: url("../image/exithover.png");
+    -fx-cursor: hand;
 }
 
 .buttonMinimize {
@@ -80,6 +82,8 @@
 
 .buttonMinimize:hover {
     -fx-background-image: url("../image/minimizehover.png");
+    -fx-cursor: hand;
+
 }
 
 .logo {
@@ -222,6 +226,7 @@
 }
 .rate:hover{
     -fx-image: url("../image/rateHover.png");
+    -fx-cursor: hand;
 }
 
 .labelForDiscount{
@@ -261,8 +266,4 @@
     -fx-font-size: 16;
     -fx-border-color: #f7f7f7;
     -fx-cursor: hand;
-}
-
-.typeField{
-
 }
