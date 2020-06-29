@@ -29,8 +29,6 @@ import model.*;
 import view.NumberField;
 import view.Purchase;
 import view.ZipCode;
-
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -82,7 +80,8 @@ public class CartMenu {
 
 
         VBox purchaseAndPrice = new VBox(10);
-        purchaseAndPrice.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10;");
+        purchaseAndPrice.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;" +
+                "-fx-border-color: #E3E3E3;-fx-border-radius: 10;");
         purchaseAndPrice.setPrefSize(350, 300);
         purchaseAndPrice.setPadding(new Insets(25, 25, 10, 25));
         purchaseAndPrice.setLayoutX(1160);
