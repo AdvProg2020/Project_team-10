@@ -164,8 +164,6 @@ public class MainMenu implements Initializable {
         GoodsManager.getFilteredCompanies().clear();
         for (Category category : Shop.getShop().getAllCategories()) {
             JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
-            categoryFiltered.setSelected(true);
-            GoodsManager.getFilteredCatogories().add(category.getName());
             categoryFiltered.setOnAction(event -> {
                 if (categoryFiltered.isSelected()) {
                     GoodsManager.getFilteredCatogories().add(category.getName());
@@ -180,8 +178,6 @@ public class MainMenu implements Initializable {
         }
         for (String company : Shop.getShop().allCompanies()) {
             JFXCheckBox companyFiltered = new JFXCheckBox(company);
-            companyFiltered.setSelected(true);
-            GoodsManager.getFilteredCompanies().add(company);
             companyFiltered.setOnAction(event -> {
                 if (companyFiltered.isSelected()) {
                     GoodsManager.getFilteredCompanies().add(company);
@@ -420,13 +416,9 @@ public class MainMenu implements Initializable {
     private void filter() {
         GoodsManager.getFilteredGoods().clear();
         ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-//        for (String filteredCategory : GoodsManager.getFilteredCatogories()) {
-//            for (Good good : Shop.getShop().getAllGoods()) {
-//                if (good.getCategory().equals(filteredCategory)) {
-//                    GoodsManager.getFilteredGoods().add(good);
-//                }
-//            }
-//        }
+        if (GoodsManager.getFilteredCompanies().size() == 0) {
+            GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
+        }
         for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
             for (Good good : Shop.getShop().getAllGoods()) {
                 if (good.getCompany().equals(filteredCompany)) {

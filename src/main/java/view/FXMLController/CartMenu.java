@@ -91,10 +91,16 @@ public class CartMenu {
 
         //--------
 
-        Label totalPrice = new Label();
+        Label totalPrice = new Label("Total price: $" + BuyerManager.getTotalPrice());
         totalPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
+
+        Label finaTotalPrice = new Label("Total price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+        finaTotalPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: green");
+
+        Label offPrice = new Label("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
+        offPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: red");
+
         JFXButton purchase = new JFXButton("Purchase");
-        totalPrice.setText("Total price: $" + BuyerManager.getTotalPrice());
         if (BuyerManager.getTotalPrice() == 0) {
             purchase.setDisable(true);
         }
@@ -111,7 +117,7 @@ public class CartMenu {
             }
         });
 
-        purchaseAndPrice.getChildren().addAll(totalPrice, purchase);
+        purchaseAndPrice.getChildren().addAll(totalPrice,offPrice, finaTotalPrice, purchase);
 
         ///-----
 
@@ -145,7 +151,7 @@ public class CartMenu {
                     labelForCartField(good.getCompany(), "Company: "), labelForCartField("" + good.getPrice(), "Price: $"), line);
 
             HBox productBox = new HBox(goodImage, productFields);
-            productFields.getChildren().add(increaseOrDecreaseNumber(totalPrice, good, productBox, products));
+            productFields.getChildren().add(increaseOrDecreaseNumber(totalPrice,finaTotalPrice, offPrice, good, productBox, products));
             productFields.setSpacing(9);
             productBox.setPrefWidth(1000);
             productBox.setPadding(new Insets(10, 10, 10, 10));
@@ -177,7 +183,7 @@ public class CartMenu {
         return label;
     }
 
-    private HBox increaseOrDecreaseNumber(Label totalPrice, Good good, HBox productBox, VBox products) {
+    private HBox increaseOrDecreaseNumber(Label totalPrice,Label finalTotalPrice,Label offPrice, Good good, HBox productBox, VBox products) {
         final int[] count = {good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername())};
         TextField number = new TextField();
         number.setAlignment(Pos.TOP_CENTER);
@@ -200,7 +206,8 @@ public class CartMenu {
                 number.setText("" + count[0]);
                 good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
                 totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
-
+                finalTotalPrice.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+                offPrice.setText("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
             }
 
         });
@@ -212,11 +219,9 @@ public class CartMenu {
             minus.getStyleClass().add("minesCart2");
         }
         minus.setOnMouseClicked(event -> {
-
             count[0] -= 1;
             number.setText("" + count[0]);
             good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-
             if (count[0] == 1) {
                 minus.getStyleClass().add("minesCart2");
             }
@@ -225,8 +230,9 @@ public class CartMenu {
                 products.getChildren().remove(productBox);
                 ((Buyer) AccountManager.getOnlineAccount()).getCart().remove(good);
             }
-
-            totalPrice.setText("Total price: " + BuyerManager.getTotalPrice());
+            totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
+            finalTotalPrice.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+            offPrice.setText("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
         });
 
         return new HBox(minus, number, plus);
