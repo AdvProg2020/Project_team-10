@@ -6,6 +6,7 @@ public class Comment {
     private String username;
     private int goodId;
     private String text;
+    private String title;
     private String status;
     private boolean isBought;
 
@@ -13,12 +14,16 @@ public class Comment {
         this.username = username;
         this.goodId = goodId;
         this.text = text;
+        this.title = title;
         AccountManager.increaseLastCommentId();
     }
 
-    @Override
-    public String toString() {
-        return text + '\n' +
-                "isBought: " + isBought;
+    public String getText() {
+        return text;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
 }
