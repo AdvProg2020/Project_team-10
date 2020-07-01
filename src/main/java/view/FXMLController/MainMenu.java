@@ -154,8 +154,8 @@ public class MainMenu implements Initializable {
             visitAndOff.setPadding(new Insets(45 , 0, 0,15));
             visitAndOff.getChildren().add(visit);
             if (good.getOffId() != 0) {
-                Off off = Shop.getShop().getOffWithId(good.getId());
-                Label offLabel = new Label( off.getPercent() + "");
+                Off off = Shop.getShop().getOffWithId(good.getOffId());
+                Label offLabel = new Label( off.getPercent() + "%");
                 offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
                 ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
                 offImage.setFitWidth(15);
@@ -293,109 +293,6 @@ public class MainMenu implements Initializable {
         }
         filter();
     }
-
-//    private void applyOffFilter() {
-//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-//        for (Good good : GoodsManager.getFilteredGoods()) {
-//            if (good.getOffId() == 0) {
-//                shouldBeRemoved.add(good);
-//            }
-//        }
-//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-//    }
-
-//    private void applyCompanyFilter(String company) {
-//        for (Good good : Shop.getShop().getAllGoods()) {
-//            if (good.getCompany().equals(company)) {
-//                GoodsManager.getFilteredGoods().add(good);
-//            }
-//        }
-//    }
-
-//    private void disableCompanyFilter(String company) {
-//        for (Good good : Shop.getShop().getAllGoods()) {
-//            if (good.getCompany().equals(company)) {
-//                GoodsManager.getFilteredGoods().remove(good);
-//            }
-//        }
-//    }
-
-//    private void applyCategoryFilter(String category) {
-//        for (Good good : Shop.getShop().getAllGoods()) {
-//            if (good.getCategory().equals(category)) {
-//                GoodsManager.getFilteredGoods().add(good);
-//            }
-//        }
-//    }
-
-//    private void disableCategoryFilter(String category) {
-//        for (Good good : Shop.getShop().getAllGoods()) {
-//            if (good.getCategory().equals(category)) {
-//                GoodsManager.getFilteredGoods().remove(good);
-//            }
-//        }
-//    }
-
-
-//    private void applyAvailabilityFilter() {
-//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-//        for (Good good : GoodsManager.getFilteredGoods()) {
-//            if (good.getNumber() <= 0) {
-//                shouldBeRemoved.add(good);
-//            }
-//        }
-//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-//    }
-
-//    private void applyPriceFilter(int start, int end) {
-//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-//        for (Good good : GoodsManager.getFilteredGoods()) {
-//            if (good.getPrice() < start || good.getPrice() > end) {
-//                shouldBeRemoved.add(good);
-//            }
-//        }
-//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-//        GoodsManager.getKindOfFilter().put("price", start + " to " + end);
-//    }
-
-//    private void disableFilter() {
-//        GoodsManager.getFilteredGoods().clear();
-//        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
-//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-//        for (String type : GoodsManager.getKindOfFilter().keySet()) {
-//            if (type.equals("onlyOffs")) {
-//                for (Good good : GoodsManager.getFilteredGoods()) {
-//                    if (good.getOffId() == 0) {
-//                        shouldBeRemoved.add(good);
-//                    }
-//                }
-//
-//            } else if (type.equals("onlyAvailable")) {
-//                for (Good good : GoodsManager.getFilteredGoods()) {
-//                    if (good.getNumber() <= 0) {
-//                        shouldBeRemoved.add(good);
-//                    }
-//                }
-//            } else if (type.equals("company")) {
-//                for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
-//                    for (Good good : GoodsManager.getFilteredGoods()) {
-//                        if (!good.getCompany().equals(filteredCompany)) {
-//                            shouldBeRemoved.add(good);
-//                        }
-//                    }
-//                }
-//            } else if (type.equals("category")) {
-//                for (String filteredCatogory : GoodsManager.getFilteredCatogories()) {
-//                    for (Good good : GoodsManager.getFilteredGoods()) {
-//                        if (!good.getCategory().equals(filteredCatogory)) {
-//                            shouldBeRemoved.add(good);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        GoodsManager.getFilteredGoods().removeAll(shouldBeRemoved);
-//    }
 
     private HBox covertScoreToStar(int score) {
         ImageView star = new ImageView(new Image("file:src/main/java/view/image/5starblock.png"));

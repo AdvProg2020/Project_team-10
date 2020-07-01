@@ -43,8 +43,7 @@ public class FileHandler {
             readLastDiscountCodeId();
             readLastOffId();
             readLastRequestId();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 

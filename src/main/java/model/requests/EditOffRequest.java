@@ -27,7 +27,7 @@ public class EditOffRequest extends Request {
 
     @Override
     public void accept() {
-        ((Seller) account).getOffWithId(offId).setGoods(goods);
+//        ((Seller) account).getOffWithId(offId).setGoods(goods);
         ((Seller) account).getOffWithId(offId).setStartDate(startDate);
         ((Seller) account).getOffWithId(offId).setEndDate(endDate);
         ((Seller) account).getOffWithId(offId).setPercent(discount);

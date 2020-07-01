@@ -114,9 +114,9 @@ public class GoodsManager {
 
     public static List<Good> getGoodsInOffs() {
         List<Good> goodsInOffs = new ArrayList<>();
-        for (Off off : Shop.getShop().getAllOffs()) {
-            goodsInOffs.addAll(off.getGoods());
-        }
+//        for (Off off : Shop.getShop().getAllOffs()) {
+//            goodsInOffs.addAll(off.getGoods());
+//        }
         return goodsInOffs;
     }
 }

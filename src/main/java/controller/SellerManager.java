@@ -48,22 +48,22 @@ public class SellerManager {
                 AccountManager.getLastRequestId() + 1, id, goods, startDate, endDate, percent));
     }
 
-    public static void addOff(List<Good> goods, Date startDate, Date endDate, int percent) {
+    public static void addOff(List<Integer> goodsId, Date startDate, Date endDate, int percent) {
         //todo
-        Off off = new Off(AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent);
+        Off off = new Off(AccountManager.getLastOffId() + 1, goodsId, startDate, endDate, percent);
         Shop.getShop().getAllOffs().add(off);
         ((Seller) AccountManager.getOnlineAccount()).getOffs().add(off);
-        for (Good good : goods) {
-            good.setOffId(off.getId());
+        for (Integer goodId : goodsId) {
+            Shop.getShop().getProductWithId(goodId).setOffId(off.getId());
         }
         //todo
         Shop.getShop().getAllRequests().add(new AddOffRequest(AccountManager.getOnlineAccount(),
-                AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goods, startDate, endDate, percent));
+                AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goodsId, startDate, endDate, percent));
     }
 
     public static void removeOff(Off off) {
-        for (Good good : off.getGoods()) {
-            good.setOffId(0);
+        for (Integer goodId : off.getGoodsId()) {
+            Shop.getShop().getProductWithId(goodId).setOffId(0);
         }
         ((Seller) AccountManager.getOnlineAccount()).getOffs().remove(off);
         Shop.getShop().getAllOffs().remove(off);

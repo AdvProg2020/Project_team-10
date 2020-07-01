@@ -69,7 +69,7 @@ public class SellerPanel {
     private JFXDatePicker endDate;
     private JFXTimePicker endTime;
     private NumberField percent;
-    private ArrayList<Good> selectedGoods;
+    private ArrayList<Integer> selectedGoodsId;
 
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
@@ -301,7 +301,8 @@ public class SellerPanel {
 
             ScrollPane goodOffPack = new ScrollPane();
             goodOffPack.setPrefSize(430, 50);
-            for (Good good : off.getGoods()) {
+            for (Integer goodId : off.getGoodsId()) {
+                Good good = Shop.getShop().getProductWithId(goodId);
                 VBox vBox = new VBox();
                 vBox.setPrefWidth(297);
                 vBox.setPrefHeight(350);
@@ -640,7 +641,7 @@ public class SellerPanel {
     }
 
     private void addOff() {
-        selectedGoods = new ArrayList<>();
+        selectedGoodsId = new ArrayList<>();
         error.setText("");
         loginPane.getChildren().clear();
 
@@ -738,9 +739,9 @@ public class SellerPanel {
             JFXCheckBox productCheckBox = new JFXCheckBox(good.getName());
             productCheckBox.setOnAction(event -> {
                 if (productCheckBox.isSelected()) {
-                    selectedGoods.add(good);
+                    selectedGoodsId.add(good.getId());
                 } else {
-                    selectedGoods.remove(good);
+                    selectedGoodsId.remove(good.getId());
                 }
             });
             vBox.getChildren().addAll(productImage , productCheckBox);
@@ -776,7 +777,7 @@ public class SellerPanel {
         String startDate = (startMonth + "/" + startDay + "/" + startYear + " " + this.startTime.getValue());
         String endDate = (endMonth + "/" + endDay + "/" + endYear + " " + this.endTime.getValue());
         int percent = Integer.parseInt(this.percent.getText());
-        SellerManager.addOff(selectedGoods, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
+        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
         popupWindow.close();
         fade(0.5, 10);
         sellerScrollPane.setContent(handelManageOff());

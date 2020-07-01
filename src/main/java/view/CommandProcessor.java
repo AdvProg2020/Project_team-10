@@ -1153,7 +1153,7 @@ public class CommandProcessor {
             SellerManager.editOff(offId, goods, startDate1, endDate1, discount);
         } else {
             System.out.println("the add off request sent");
-            SellerManager.addOff(goods, startDate1, endDate1, discount);
+//            SellerManager.addOff(goods, startDate1, endDate1, discount);
         }
     }
 

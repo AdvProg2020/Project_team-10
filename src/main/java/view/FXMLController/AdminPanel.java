@@ -453,7 +453,6 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
                 AdminManager.removeCategory(category);
-                AdminManager.removeCategory(category);
                 flowPane.getChildren().remove(hBox);
             });
         }

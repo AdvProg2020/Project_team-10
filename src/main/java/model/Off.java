@@ -7,15 +7,15 @@ import java.util.List;
 
 public class Off {
     private int id;
-    private List<Good> goods;
+    private List<Integer> goodsId;
     private String status;
     private Date startDate;
     private Date endDate;
     private int percent;
 
-    public Off(int id, List<Good> goods, Date startDate, Date endDate, int percent) {
+    public Off(int id, List<Integer> goodsId, Date startDate, Date endDate, int percent) {
         this.id = id;
-        this.goods = goods;
+        this.goodsId = goodsId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percent = percent;
@@ -34,8 +34,12 @@ public class Off {
         return id;
     }
 
-    public void setGoods(List<Good> goods) {
-        this.goods = goods;
+    public List<Integer> getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(List<Integer> goodsId) {
+        this.goodsId = goodsId;
     }
 
     public void setStartDate(Date startDate) {
@@ -54,9 +58,6 @@ public class Off {
         return percent;
     }
 
-    public List<Good> getGoods() {
-        return goods;
-    }
 
     @Override
     public String toString() {
@@ -69,11 +70,10 @@ public class Off {
     }
 
     private String goodsToString() {
-        StringBuilder goodString = new StringBuilder("| ");
-        for (Good good : this.goods) {
-            goodString.append("id: ").append(good.getId()).append(" , ").append("name: ").append(good.getName()).append(" | ");
-        }
-        return goodString.toString();
+        //        for (Good good : this.goods) {
+//            goodString.append("id: ").append(good.getId()).append(" , ").append("name: ").append(good.getName()).append(" | ");
+//        }
+        return "| ";
     }
 
 }
