@@ -1,5 +1,6 @@
 package view.FXMLController;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
 import controller.AccountManager;
@@ -185,16 +186,7 @@ public class MainMenu implements Initializable {
         GoodsManager.getFilteredCatogories().clear();
         GoodsManager.getFilteredCompanies().clear();
         for (Category category : Shop.getShop().getAllCategories()) {
-            JFXCheckBox categoryFiltered = new JFXCheckBox(category.getName());
-            categoryFiltered.setOnAction(event -> {
-                if (categoryFiltered.isSelected()) {
-                    GoodsManager.getFilteredCatogories().add(category.getName());
-                } else {
-                    GoodsManager.getFilteredCatogories().remove(category.getName());
-                }
-                filter();
-            });
-            categoryFiltered.getStyleClass().add("filterButton");
+            JFXButton categoryFiltered = new JFXButton("● "+category.getName());
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
             categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }

@@ -187,39 +187,108 @@ public class SellerPanel {
         sellerScrollPane.getStyleClass().add("scroll-bar");
         sellerScrollPane.setLayoutX(330);
         sellerScrollPane.setLayoutY(35);
-        Account currentAccount = AccountManager.getOnlineAccount();
+        Seller currentAccount = ((Seller) AccountManager.getOnlineAccount());
 
-        if (selectedButton.getText().equals("Profile")) {
-            FlowPane flowPane = new FlowPane();
-            flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-            flowPane.setPrefWidth(1200);
-            flowPane.setPrefHeight(420);
-            flowPane.setPadding(new Insets(50, 0, 10, 70));
-            flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
-            flowPane.getChildren().addAll(createItemOfProfile("Username:", currentAccount.getUsername()),
-                    createItemOfProfile("Full name:", currentAccount.getFirstName() + " " + currentAccount.getLastName()),
-                    createItemOfProfile("Phone number:", currentAccount.getPhoneNumber()),
-                    createItemOfProfile("Email:", currentAccount.getEmail()));
-            sellerScrollPane.setContent(flowPane);
-            sellerPane.getChildren().add(sellerScrollPane);
-            sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        } else if (selectedButton.getText().equals("Manage offs")) {
-            sellerScrollPane.setContent(handelManageOff());
-            sellerPane.getChildren().add(sellerScrollPane);
-        } else if (selectedButton.getText().equals("Manage products")) {
-            sellerScrollPane.setContent(handelManageProduct());
-            sellerPane.getChildren().add(sellerScrollPane);
-        } else if (selectedButton.getText().equals("Log out")) {
-            AccountManager.setOnlineAccount(new Buyer("temp"));
-            user.setVisible(false);
-            btnLogin.setVisible(true);
-            backToMainMenu();
+        switch (selectedButton.getText()) {
+            case "Profile":
+                FlowPane flowPane = new FlowPane();
+                flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+                flowPane.setPrefWidth(1200);
+                flowPane.setPrefHeight(420);
+                flowPane.setPadding(new Insets(50, 0, 10, 70));
+                flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+                flowPane.getChildren().addAll(createItemOfProfile("Username:", currentAccount.getUsername()),
+                        createItemOfProfile("Full name:", currentAccount.getFirstName() + " " + currentAccount.getLastName()),
+                        createItemOfProfile("Phone number:", currentAccount.getPhoneNumber()),
+                        createItemOfProfile("Email:", currentAccount.getEmail()),
+                        createCompanyOfProfile(currentAccount.getCompany()));
+                sellerScrollPane.setContent(flowPane);
+                sellerPane.getChildren().add(sellerScrollPane);
+                sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                break;
+            case "Manage offs":
+                sellerScrollPane.setContent(handelManageOff());
+                sellerPane.getChildren().add(sellerScrollPane);
+                break;
+            case "Manage products":
+                sellerScrollPane.setContent(handelManageProduct());
+                sellerPane.getChildren().add(sellerScrollPane);
+                break;
+            case "Category":
+                sellerScrollPane.setContent(handelCategory());
+                sellerPane.getChildren().add(sellerScrollPane);
+                break;
+            case "Log out":
+                AccountManager.setOnlineAccount(new Buyer("temp"));
+                user.setVisible(false);
+                btnLogin.setVisible(true);
+                backToMainMenu();
+                break;
         }
     }
 
+    private FlowPane handelCategory() {
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(50, 0, 10, 70));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+
+        HBox hBoxTitle = new HBox(0);
+        hBoxTitle.setAlignment(Pos.CENTER_LEFT);
+        hBoxTitle.setPadding(new Insets(0, 12, 0, 12));
+        hBoxTitle.getStyleClass().add("hboxTitle");
+        hBoxTitle.setPrefHeight(40);
+
+        Label categoryName = new Label("Name");
+        categoryName.setPrefWidth(255);
+        categoryName.getStyleClass().add("labelForDiscount");
+
+        Label attributesTitle = new Label("  " + "Attributes");
+        attributesTitle.setGraphic(line2());
+        attributesTitle.setPrefWidth(700);
+        attributesTitle.getStyleClass().add("labelForDiscount");
+
+
+        hBoxTitle.getChildren().addAll(categoryName, attributesTitle);
+        flowPane.getChildren().add(hBoxTitle);
+
+
+        for (Category category : Shop.getShop().getAllCategories()) {
+            HBox hBox = new HBox(0);
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.getStyleClass().add("hbox");
+            hBox.setPrefHeight(30);
+
+            Label name = new Label("" + category.getName());
+            name.setPrefWidth(255);
+            name.getStyleClass().add("labelForDiscount");
+
+
+            Label attributes = new Label("  " + category.getAttributes());
+            attributes.setGraphic(line2());
+            attributes.setPrefWidth(700);
+            attributes.getStyleClass().add("labelForDiscount");
+
+            hBox.getChildren().addAll(name, attributes);
+            flowPane.getChildren().add(hBox);
+        }
+
+        return flowPane;
+
+    }
+
+    private Rectangle line2() {
+        Rectangle line = new Rectangle(2, 40);
+        line.setStyle("-fx-fill: #d5d5d5");
+        return line;
+    }
+
     private Rectangle line() {
-        Rectangle line = new Rectangle(2, 60);
+        Rectangle line = new Rectangle(2, 70);
         line.setStyle("-fx-fill: #d5d5d5");
         return line;
     }
@@ -239,17 +308,17 @@ public class SellerPanel {
         hBoxTitle.setPrefHeight(60);
 
         Label categoryName = new Label("Id");
-        categoryName.setPrefWidth(80);
+        categoryName.setPrefWidth(50);
         categoryName.getStyleClass().add("labelForDiscount");
 
         Label startDate = new Label("  " + "Start date");
         startDate.setGraphic(line());
-        startDate.setPrefWidth(210);
+        startDate.setPrefWidth(225);
         startDate.getStyleClass().add("labelForDiscount");
 
         Label endDate = new Label("  " + "End date");
         endDate.setGraphic(line());
-        endDate.setPrefWidth(210);
+        endDate.setPrefWidth(225);
         endDate.getStyleClass().add("labelForDiscount");
 
         Label goodText = new Label("  " + "Good");
@@ -277,45 +346,48 @@ public class SellerPanel {
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
             hBox.getStyleClass().add("hbox");
-            hBox.setPrefHeight(60);
+            hBox.setPrefHeight(70);
 
             Label id = new Label("" + off.getId());
-            id.setPrefWidth(80);
+            id.setPrefWidth(50);
             id.getStyleClass().add("labelForDiscount");
 
             Label start = new Label("  " + off.getStartDate());
             start.setGraphic(line());
-            start.setPrefWidth(210);
+            start.setPrefWidth(225);
             start.getStyleClass().add("labelForDiscount");
 
             Label end = new Label("  " + off.getEndDate());
             end.setGraphic(line());
-            end.setPrefWidth(210);
+            end.setPrefWidth(225);
             end.getStyleClass().add("labelForDiscount");
 
             FlowPane flowPaneInner = new FlowPane();
             flowPaneInner.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
             flowPaneInner.setPrefWidth(440);
             flowPaneInner.setPrefHeight(50);
-            flowPaneInner.setPadding(new Insets(20, 0, 10, 20));
+//            flowPaneInner.setPadding(new Insets(20, 0, 10, 20));
 
             ScrollPane goodOffPack = new ScrollPane();
-            goodOffPack.setPrefSize(430, 50);
+            goodOffPack.setPrefSize(427, 50);
+            goodOffPack.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            goodOffPack.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            goodOffPack.getStyleClass().add("scroll-barInDiscount");
             for (Integer goodId : off.getGoodsId()) {
+                HBox goodPack = new HBox(1);
+                goodPack.setPadding(new Insets(5, 5, 5, 5));
                 Good good = Shop.getShop().getProductWithId(goodId);
-                VBox vBox = new VBox();
-                vBox.setPrefWidth(297);
-                vBox.setPrefHeight(350);
-                vBox.getStyleClass().add("vBoxInMainMenu");
+                VBox vBox = new VBox(2);
+                vBox.setPrefWidth(43);
+                vBox.setPrefHeight(60);
                 ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
-                productImage.setFitHeight(190);
-                productImage.setFitWidth(190);
+                productImage.setFitHeight(50);
+                productImage.setFitWidth(50);
                 productImage.getStyleClass().add("goodImage");
                 Label name = new Label(good.getName());
-                Label price = new Label("$" +good.getPrice() + "");
-                Label visit = new Label(good.getVisitNumber() + "");
-                name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
-                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
+                Label price = new Label("$" + good.getPrice() + "");
+                name.setStyle("-fx-font-family: 'Myriad Pro'; -fx-font-size: 10px;-fx-text-fill: black");
+                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden'; -fx-font-size: 8px;-fx-font-weight: bold;-fx-text-fill: black");
                 vBox.setOnMouseEntered(event -> fadeEffect(vBox));
                 productImage.setOnMouseClicked(event -> {
                     GoodsManager.setCurrentGood(good);
@@ -323,8 +395,9 @@ public class SellerPanel {
                     new GoodMenu(mainPane).changePane();
                 });
                 vBox.setAlignment(Pos.CENTER);
-                vBox.getChildren().addAll(productImage, name, price, visit);
-                flowPaneInner.getChildren().add(vBox);
+                vBox.getChildren().addAll(name, price);
+                goodPack.getChildren().addAll(productImage, vBox);
+                flowPaneInner.getChildren().add(goodPack);
             }
             goodOffPack.setContent(flowPaneInner);
 
@@ -342,10 +415,27 @@ public class SellerPanel {
                 flowPane.getChildren().remove(hBox);
             });
 
-            hBox.getChildren().addAll(id, start, end,goodOffPack, edit, bin);
+            hBox.getChildren().addAll(id, start, end, line(), goodOffPack, edit, bin);
             flowPane.getChildren().add(hBox);
         }
         return flowPane;
+    }
+
+    private VBox createCompanyOfProfile(String account) {
+        VBox vBox = new VBox(2);
+        vBox.setPrefSize(1000, 80);
+        vBox.setPadding(new Insets(10, 10, 0, 10));
+        vBox.setStyle("-fx-border-width: 1px;" + "-fx-border-color: #e2e2e2;");
+        Label label = new Label("Company: ");
+        ImageView company = new ImageView(new Image("file:src/main/java/view/image/company.png"));
+        company.setFitWidth(30);
+        company.setFitHeight(30);
+        label.setGraphic(company);
+        label.getStyleClass().add("labelUser");
+        Label labelUsername = new Label(account);
+        labelUsername.getStyleClass().add("labelUsernameInProfile");
+        vBox.getChildren().addAll(label, labelUsername);
+        return vBox;
     }
 
     private VBox createItemOfProfile(String text, String account) {
@@ -729,8 +819,8 @@ public class SellerPanel {
 
         for (Good good : seller.getGoods()) {
             VBox vBox = new VBox();
-            vBox.setPrefWidth(97);
-            vBox.setPrefHeight(150);
+            vBox.setPrefWidth(100);
+            vBox.setPrefHeight(60);
             vBox.getStyleClass().add("vBoxInMainMenu");
             ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
             productImage.setFitHeight(50);
@@ -744,7 +834,7 @@ public class SellerPanel {
                     selectedGoodsId.remove(good.getId());
                 }
             });
-            vBox.getChildren().addAll(productImage , productCheckBox);
+            vBox.getChildren().addAll(productImage, productCheckBox);
 
             flowPane.getChildren().add(vBox);
         }
