@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Seller;
@@ -16,6 +17,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import static javafx.scene.media.MediaPlayer.INDEFINITE;
 import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
@@ -32,6 +34,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
         URL url = Paths.get(mainMenuURL).toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
@@ -39,5 +42,8 @@ public class Main extends Application {
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
+        AudioClip audio = new AudioClip("file:src/main/java/view/image/Free-ambient-background-music.mp3");
+        audio.setVolume(0.2f);
+        audio.play();
     }
 }
