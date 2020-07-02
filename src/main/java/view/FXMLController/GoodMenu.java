@@ -5,12 +5,9 @@ import com.jfoenix.controls.JFXTabPane;
 import controller.AccountManager;
 import controller.GoodsManager;
 import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -18,23 +15,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Admin;
-import model.Buyer;
-import model.Comment;
-import model.Good;
+import model.*;
 import view.NumberField;
 
-import java.net.URL;
-import java.nio.file.Paths;
+import java.io.File;
 
 import static javafx.scene.paint.Color.color;
-import static view.FXML.FXML.loginURL;
 
 public class GoodMenu {
     private AnchorPane mainPane;
@@ -44,6 +39,7 @@ public class GoodMenu {
     private TextField content;
     private NumberField scoreField;
     private Label error;
+    private boolean isPlaying;
 
     public GoodMenu(AnchorPane mainPane) {
         this.mainPane = mainPane;
@@ -88,6 +84,22 @@ public class GoodMenu {
 
     public void changePane() {
         Good currentGood = GoodsManager.getCurrentGood();
+
+        Media media = new Media(new File(currentGood.getVideoPath()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setLayoutX(750);
+        mediaView.setLayoutY(170);
+        mediaView.setOnMouseClicked(event -> {
+            if (isPlaying) {
+                mediaPlayer.pause();
+                isPlaying = false;
+            } else {
+                mediaPlayer.play();
+                isPlaying = true;
+            }
+        });
+
         currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
         AnchorPane scrollPack = new AnchorPane();
         scrollPack.setStyle("-fx-background-radius: 10;-fx-background-color: white;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10");
@@ -161,7 +173,7 @@ public class GoodMenu {
             rate.setDisable(true);
         }
 
-        innerPane.getChildren().addAll(goodImage, productName, productPrice,hBox,  isAvailable, addToCart, rate, hLine, vLine);
+        innerPane.getChildren().addAll(mediaView, goodImage, productName, productPrice, hBox, isAvailable, addToCart, rate, hLine, vLine);
         goodImage.setFitWidth(500);
         goodImage.setFitHeight(500);
         goodImage.setLayoutX(50);
@@ -176,11 +188,45 @@ public class GoodMenu {
         productPrice.setText("$" + currentGood.getPrice());
         mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
+        similarProducts(innerPane);
         scrollPack.getChildren().add(goodPageScrollPane);
         mainPane.getChildren().add(scrollPack);
         innerPane.setPrefSize(1470, 640);
         Login.currentPane = scrollPack;
 
+    }
+
+    private void similarProducts(AnchorPane innerPane) {
+        HBox goods = new HBox();
+        for (Good good : Shop.getShop().getCategoryByName(GoodsManager.getCurrentGood().getCategory()).getGoods()) {
+            VBox productBox = new VBox();
+            productBox.setPrefWidth(180);
+            productBox.setPrefHeight(200);
+            productBox.getStyleClass().add("vBoxInMainMenu");
+            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
+            logoImage.setFitHeight(120);
+            logoImage.setFitWidth(120);
+            Label name = new Label(good.getName());
+            Label price = new Label("$" + good.getPrice() + "");
+            Label number = new Label(good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) + "x");
+            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
+            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 16px;" + "-fx-font-weight: bold;");
+            number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
+            productBox.setAlignment(Pos.CENTER);
+            productBox.getChildren().addAll(logoImage, name, price, number);
+            goods.getChildren().add(productBox);
+        }
+//        goods.setLayoutX(50);
+//        goods.setLayoutY(1000);
+        AnchorPane anchorPane = new AnchorPane(goods);
+        anchorPane.setPrefWidth(1360);
+        anchorPane.setPrefHeight(200);
+        ScrollPane similarProductsScrollPane = new ScrollPane(anchorPane);
+        similarProductsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        similarProductsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        similarProductsScrollPane.setLayoutX(50);
+        similarProductsScrollPane.setLayoutY(1000);
+        innerPane.getChildren().add(similarProductsScrollPane);
     }
 
     private boolean canScore() {
@@ -448,6 +494,7 @@ public class GoodMenu {
         });
         return submit;
     }
+
     private Button confirmScore() {
         Button submit = new Button();
         submit.setText("OK");

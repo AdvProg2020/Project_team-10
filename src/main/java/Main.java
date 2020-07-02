@@ -44,6 +44,6 @@ public class Main extends Application {
         stage.show();
         AudioClip audio = new AudioClip("file:src/main/java/view/image/Free-ambient-background-music.mp3");
         audio.setVolume(0.2f);
-        audio.play();
+//        audio.play();
     }
 }

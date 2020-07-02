@@ -5,6 +5,7 @@ import controller.AccountManager;
 import controller.GoodsManager;
 import controller.SellerManager;
 import javafx.animation.FadeTransition;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -71,6 +73,12 @@ public class SellerPanel {
     private NumberField percent;
     private ArrayList<Integer> selectedGoodsId;
 
+    private TextField firstName;
+    private TextField lastName;
+    private TextField email;
+    private TextField phoneNumber;
+    private PasswordField password;
+
     private VBox boxForEdit(String name) {
         VBox boxFirstName = new VBox(2);
         boxFirstName.setAlignment(Pos.CENTER_LEFT);
@@ -80,11 +88,14 @@ public class SellerPanel {
 
         if (name.equals("First name: ")) {
             label.setText(" First name: ");
+            firstName = field;
             field.setText(AccountManager.getOnlineAccount().getFirstName());
         } else if (name.equals("Last name: ")) {
+            lastName = field;
             label.setText(" Last name: ");
             field.setText(AccountManager.getOnlineAccount().getLastName());
         } else if (name.equals("Email: ")) {
+            email = field;
             label.setText(" Email: ");
             field.setText(AccountManager.getOnlineAccount().getEmail());
         } else if (name.equals("Phone: ")) {
@@ -93,11 +104,13 @@ public class SellerPanel {
             numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
             label.setText(" Phone number: ");
             field = numberField;
+            phoneNumber = field;
         } else if (name.equals("password")) {
             PasswordField passwordField = new PasswordField();
             passwordField.setPromptText("Current password");
             passwordField.setPrefSize(350, 40);
             field = passwordField;
+            password = passwordField;
         } else if (name.equals("newPass")) {
             PasswordField passwordField = new PasswordField();
             passwordField.setPromptText("New password");
@@ -135,12 +148,18 @@ public class SellerPanel {
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
         submit.setPrefSize(780 , 40);
+        submit.setOnMouseClicked(event -> processEdit());
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
                 boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
 
 
+    }
+
+    private void processEdit() {
+        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
+        handelButtonOnMouseClick();
     }
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
@@ -738,7 +757,7 @@ public class SellerPanel {
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
             SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
-                    hashMap, description.getText(), selectedImageFile.getAbsolutePath());
+                    hashMap, description.getText(), selectedImageFile.getAbsolutePath(), selectedVideoFile.getAbsolutePath());
             popupWindow.close();
             fade(0.5, 10);
             sellerScrollPane.setContent(null);

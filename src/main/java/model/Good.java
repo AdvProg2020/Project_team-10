@@ -67,6 +67,14 @@ public class Good implements Comparable<Good> {
 
     }
 
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
+    }
+
     public void setVisitNumber(int visitNumber) {
         this.visitNumber = visitNumber;
     }

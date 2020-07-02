@@ -11,12 +11,13 @@ public class SellerManager {
 
 
     public static void addProduct(String name, String company, int number, long price, String category,
-                                  HashMap<String, String> categoryAttribute, String description, String imagePath) {
+                                  HashMap<String, String> categoryAttribute, String description, String imagePath, String videoPath) {
         //TODO
         Good good = new Good(AccountManager.getLastGoodId() + 1, name, company, number, price, AccountManager.getOnlineAccount().getUsername(), category, categoryAttribute, description, imagePath);
         ((Seller) AccountManager.getOnlineAccount()).getGoods().add(good);
         Shop.getShop().getAllGoods().add(good);
         Shop.getShop().getCategoryByName(category).getGoods().add(good);
+        good.setVideoPath(videoPath);
         Shop.getShop().getAllRequests().add(new AddProductRequest(AccountManager.getOnlineAccount(), AccountManager.getLastRequestId() + 1,
                 AccountManager.getLastGoodId() + 1, name, company, number, price, category, categoryAttribute, description, imagePath));
     }

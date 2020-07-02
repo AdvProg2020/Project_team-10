@@ -5,12 +5,14 @@ import controller.AccountManager;
 import controller.AdminManager;
 import controller.SellerManager;
 import javafx.animation.FadeTransition;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -78,6 +80,12 @@ public class AdminPanel {
     private ArrayList<TextField> attributesTextField;
     private TextField categoryName;
 
+    private TextField firstName;
+    private TextField lastName;
+    private TextField email;
+    private TextField phoneNumber;
+    private PasswordField password;
+
 
     private VBox boxForEdit(String name) {
         VBox boxFirstName = new VBox(2);
@@ -89,18 +97,22 @@ public class AdminPanel {
         if (name.equals("First name: ")) {
             label.setText(" First name: ");
             field.setText(AccountManager.getOnlineAccount().getFirstName());
+            firstName = field;
         } else if (name.equals("Last name: ")) {
             label.setText(" Last name: ");
             field.setText(AccountManager.getOnlineAccount().getLastName());
+            lastName = field;
         } else if (name.equals("Email: ")) {
             label.setText(" Email: ");
             field.setText(AccountManager.getOnlineAccount().getEmail());
+            email = field;
         } else if (name.equals("Phone: ")) {
             NumberField numberField = new NumberField();
             numberField.setPrefSize(350, 40);
             numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
             label.setText(" Phone number: ");
             field = numberField;
+            phoneNumber = numberField;
         } else if (name.equals("password")) {
             PasswordField passwordField = new PasswordField();
             passwordField.setPromptText("Current password");
@@ -111,6 +123,7 @@ public class AdminPanel {
             passwordField.setPromptText("New password");
             passwordField.setPrefSize(350, 40);
             field = passwordField;
+            password = passwordField;
         }
         label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15;-fx-text-fill:rgb(16,137,255)");
         field.getStyleClass().add("text-fieldForEdit");
@@ -118,6 +131,11 @@ public class AdminPanel {
 
         return boxFirstName;
 
+    }
+
+    private void processEdit() {
+        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
+        handelButtonOnMouseClick();
     }
 
     private void editProfilePain(FlowPane flowPane) {
@@ -143,6 +161,10 @@ public class AdminPanel {
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
         submit.setPrefSize(780 , 40);
+        submit.setOnMouseClicked(event -> {
+            processEdit();
+            handelButtonOnMouseClick();
+        });
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
