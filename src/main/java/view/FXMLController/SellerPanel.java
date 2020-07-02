@@ -71,6 +71,77 @@ public class SellerPanel {
     private NumberField percent;
     private ArrayList<Integer> selectedGoodsId;
 
+    private VBox boxForEdit(String name) {
+        VBox boxFirstName = new VBox(2);
+        boxFirstName.setAlignment(Pos.CENTER_LEFT);
+        Label label = new Label();
+        TextField field = new TextField();
+        field.setPrefSize(350, 40);
+
+        if (name.equals("First name: ")) {
+            label.setText(" First name: ");
+            field.setText(AccountManager.getOnlineAccount().getFirstName());
+        } else if (name.equals("Last name: ")) {
+            label.setText(" Last name: ");
+            field.setText(AccountManager.getOnlineAccount().getLastName());
+        } else if (name.equals("Email: ")) {
+            label.setText(" Email: ");
+            field.setText(AccountManager.getOnlineAccount().getEmail());
+        } else if (name.equals("Phone: ")) {
+            NumberField numberField = new NumberField();
+            numberField.setPrefSize(350, 40);
+            numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
+            label.setText(" Phone number: ");
+            field = numberField;
+        } else if (name.equals("password")) {
+            PasswordField passwordField = new PasswordField();
+            passwordField.setPromptText("Current password");
+            passwordField.setPrefSize(350, 40);
+            field = passwordField;
+        } else if (name.equals("newPass")) {
+            PasswordField passwordField = new PasswordField();
+            passwordField.setPromptText("New password");
+            passwordField.setPrefSize(350, 40);
+            field = passwordField;
+        }
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15;-fx-text-fill:rgb(16,137,255)");
+        field.getStyleClass().add("text-fieldForEdit");
+        boxFirstName.getChildren().addAll(label, field);
+
+        return boxFirstName;
+
+    }
+
+    private void editProfilePain(FlowPane flowPane) {
+        flowPane.getChildren().clear();
+        flowPane.setHgap(80);
+        flowPane.setVgap(12);
+
+        VBox backBox = new VBox();
+        backBox.setPrefSize(800 , 40);
+        ImageView back = new ImageView();
+        back.getStyleClass().add("backStyle");
+        back.setFitWidth(30);
+        back.setFitHeight(30);
+        backBox.getChildren().add(back);
+        back.setOnMouseClicked(event -> handelButtonOnMouseClick());
+
+        VBox currentPass = boxForEdit("password");
+        currentPass.setDisable(true);
+        VBox newPass = boxForEdit("newPass");
+
+        VBox submitBox = new VBox();
+        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        Button submit = new Button("Submit");
+        submit.getStyleClass().add("buttonSubmit");
+        submit.setPrefSize(780 , 40);
+        submitBox.getChildren().add(submit);
+
+        flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+
+
+    }
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.mainPane = mainPane;
@@ -195,13 +266,27 @@ public class SellerPanel {
                 flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
                 flowPane.setPrefWidth(1200);
                 flowPane.setPrefHeight(420);
+
+                VBox hyperLink = new VBox();
+                hyperLink.setPadding(new Insets(20, 0, 0, 0));
+                Hyperlink editProfile = new Hyperlink("Edit profile");
+                editProfile.setOnMouseClicked(event -> editProfilePain(flowPane));
+                editProfile.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;");
+                ImageView edit = new ImageView(new Image("file:src/main/java/view/image/edit.png"));
+                edit.setFitHeight(18);
+                edit.setFitWidth(18);
+                hyperLink.setPrefWidth(960);
+                hyperLink.setAlignment(Pos.CENTER);
+                editProfile.setGraphic(edit);
+                hyperLink.getChildren().add(editProfile);
+
                 flowPane.setPadding(new Insets(50, 0, 10, 70));
                 flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
                 flowPane.getChildren().addAll(createItemOfProfile("Username:", currentAccount.getUsername()),
                         createItemOfProfile("Full name:", currentAccount.getFirstName() + " " + currentAccount.getLastName()),
                         createItemOfProfile("Phone number:", currentAccount.getPhoneNumber()),
                         createItemOfProfile("Email:", currentAccount.getEmail()),
-                        createCompanyOfProfile(currentAccount.getCompany()));
+                        createCompanyOfProfile(currentAccount.getCompany()) , hyperLink);
                 sellerScrollPane.setContent(flowPane);
                 sellerPane.getChildren().add(sellerScrollPane);
                 sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

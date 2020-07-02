@@ -250,8 +250,6 @@ public class BuyerPanel {
 
     }
 
-    JFXCheckBox checkBox;
-
     private void editProfilePain(FlowPane flowPane) {
         flowPane.getChildren().clear();
         flowPane.setHgap(80);
@@ -266,16 +264,9 @@ public class BuyerPanel {
         backBox.getChildren().add(back);
         back.setOnMouseClicked(event -> handelButtonOnMouseClick());
 
-        VBox box = new VBox();
-        box.setPrefSize(150 , 40);
-        checkBox = new JFXCheckBox("Change password");
-        box.getChildren().add(checkBox);
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10,0,0,0));
         VBox currentPass = boxForEdit("password");
         currentPass.setDisable(true);
         VBox newPass = boxForEdit("newPass");
-        newPass.setDisable(true);
 
         VBox submitBox = new VBox();
         submitBox.setPadding(new Insets(20, 0 ,0,0));
@@ -285,17 +276,8 @@ public class BuyerPanel {
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), currentPass, newPass, box ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
 
-        checkBox.setOnMouseClicked(event -> {
-            if (checkBox.isSelected()) {
-                currentPass.setDisable(false);
-                newPass.setDisable(false);
-            }else {
-                currentPass.setDisable(true);
-                newPass.setDisable(true);
-            }
-        });
 
     }
 

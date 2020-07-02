@@ -79,6 +79,78 @@ public class AdminPanel {
     private TextField categoryName;
 
 
+    private VBox boxForEdit(String name) {
+        VBox boxFirstName = new VBox(2);
+        boxFirstName.setAlignment(Pos.CENTER_LEFT);
+        Label label = new Label();
+        TextField field = new TextField();
+        field.setPrefSize(350, 40);
+
+        if (name.equals("First name: ")) {
+            label.setText(" First name: ");
+            field.setText(AccountManager.getOnlineAccount().getFirstName());
+        } else if (name.equals("Last name: ")) {
+            label.setText(" Last name: ");
+            field.setText(AccountManager.getOnlineAccount().getLastName());
+        } else if (name.equals("Email: ")) {
+            label.setText(" Email: ");
+            field.setText(AccountManager.getOnlineAccount().getEmail());
+        } else if (name.equals("Phone: ")) {
+            NumberField numberField = new NumberField();
+            numberField.setPrefSize(350, 40);
+            numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
+            label.setText(" Phone number: ");
+            field = numberField;
+        } else if (name.equals("password")) {
+            PasswordField passwordField = new PasswordField();
+            passwordField.setPromptText("Current password");
+            passwordField.setPrefSize(350, 40);
+            field = passwordField;
+        } else if (name.equals("newPass")) {
+            PasswordField passwordField = new PasswordField();
+            passwordField.setPromptText("New password");
+            passwordField.setPrefSize(350, 40);
+            field = passwordField;
+        }
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15;-fx-text-fill:rgb(16,137,255)");
+        field.getStyleClass().add("text-fieldForEdit");
+        boxFirstName.getChildren().addAll(label, field);
+
+        return boxFirstName;
+
+    }
+
+    private void editProfilePain(FlowPane flowPane) {
+        flowPane.getChildren().clear();
+        flowPane.setHgap(80);
+        flowPane.setVgap(12);
+
+        VBox backBox = new VBox();
+        backBox.setPrefSize(800 , 40);
+        ImageView back = new ImageView();
+        back.getStyleClass().add("backStyle");
+        back.setFitWidth(30);
+        back.setFitHeight(30);
+        backBox.getChildren().add(back);
+        back.setOnMouseClicked(event -> handelButtonOnMouseClick());
+
+        VBox currentPass = boxForEdit("password");
+        currentPass.setDisable(true);
+        VBox newPass = boxForEdit("newPass");
+
+        VBox submitBox = new VBox();
+        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        Button submit = new Button("Submit");
+        submit.getStyleClass().add("buttonSubmit");
+        submit.setPrefSize(780 , 40);
+        submitBox.getChildren().add(submit);
+
+        flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+
+
+    }
+
     public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.main = main;
         this.mainMenu = mainMenu;
@@ -347,37 +419,58 @@ public class AdminPanel {
 //        adminPaneScroll.;
         Account account = AccountManager.getOnlineAccount();
 
-        if (selectedButton.getText().equals("Profile")) {
-            FlowPane flowPane = new FlowPane();
-            flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
-            flowPane.setPrefWidth(1200);
-            flowPane.setPrefHeight(420);
-            flowPane.setPadding(new Insets(50, 0, 10, 70));
-            flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
-            flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
-                    createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
-                    createItemOfProfile("Phone number:", account.getPhoneNumber()),
-                    createItemOfProfile("Email:", account.getEmail()));
-            adminScrollPane.setContent(flowPane);
-            adminPane.getChildren().add(adminScrollPane);
-            adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        } else if (selectedButton.getText().equals("Manage users")) {
-            adminScrollPane.setContent(handelManageUsers());
-            adminPane.getChildren().add(adminScrollPane);
-        } else if (selectedButton.getText().equals("Manage products")) {
-            adminScrollPane.setContent(handelManageProduct());
-            adminPane.getChildren().add(adminScrollPane);
-        } else if (selectedButton.getText().equals("Discounts")) {
-            adminScrollPane.setContent(handelDiscounts());
-            adminPane.getChildren().add(adminScrollPane);
-        } else if (selectedButton.getText().equals("Category")) {
-            adminScrollPane.setContent(handelCategory());
-            adminPane.getChildren().add(adminScrollPane);
-        } else if (selectedButton.getText().equals("Log out")) {
-            AccountManager.setOnlineAccount(new Buyer("temp"));
-            user.setVisible(false);
-            btnLogin.setVisible(true);
-            backToMainMenu();
+        switch (selectedButton.getText()) {
+            case "Profile":
+                FlowPane flowPane = new FlowPane();
+                flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+                flowPane.setPrefWidth(1200);
+                flowPane.setPrefHeight(420);
+
+                VBox hyperLink = new VBox();
+                hyperLink.setPadding(new Insets(20, 0, 0, 0));
+                Hyperlink editProfile = new Hyperlink("Edit profile");
+                editProfile.setOnMouseClicked(event -> editProfilePain(flowPane));
+                editProfile.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;");
+                ImageView edit = new ImageView(new Image("file:src/main/java/view/image/edit.png"));
+                edit.setFitHeight(18);
+                edit.setFitWidth(18);
+                hyperLink.setPrefWidth(960);
+                hyperLink.setAlignment(Pos.CENTER);
+                editProfile.setGraphic(edit);
+                hyperLink.getChildren().add(editProfile);
+
+                flowPane.setPadding(new Insets(50, 0, 10, 70));
+                flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+                flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
+                        createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
+                        createItemOfProfile("Phone number:", account.getPhoneNumber()),
+                        createItemOfProfile("Email:", account.getEmail()) ,hyperLink);
+                adminScrollPane.setContent(flowPane);
+                adminPane.getChildren().add(adminScrollPane);
+                adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+                break;
+            case "Manage users":
+                adminScrollPane.setContent(handelManageUsers());
+                adminPane.getChildren().add(adminScrollPane);
+                break;
+            case "Manage products":
+                adminScrollPane.setContent(handelManageProduct());
+                adminPane.getChildren().add(adminScrollPane);
+                break;
+            case "Discounts":
+                adminScrollPane.setContent(handelDiscounts());
+                adminPane.getChildren().add(adminScrollPane);
+                break;
+            case "Category":
+                adminScrollPane.setContent(handelCategory());
+                adminPane.getChildren().add(adminScrollPane);
+                break;
+            case "Log out":
+                AccountManager.setOnlineAccount(new Buyer("temp"));
+                user.setVisible(false);
+                btnLogin.setVisible(true);
+                backToMainMenu();
+                break;
         }
         adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
