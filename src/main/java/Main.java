@@ -28,7 +28,7 @@ import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         launch(args);
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu mainMenu = new MainMenu();

@@ -10,8 +10,6 @@ import java.util.UUID;
 
 public class Server {
     public static void main(String[] args) throws IOException {
-        UUID token = UUID.randomUUID();
-        System.out.println(token);
         FileHandler.updateDatabase();
         ServerSocket serverSocket = new ServerSocket(8080);
         Socket clientSocket = serverSocket.accept();
@@ -21,8 +19,6 @@ public class Server {
         dataOutputStream.writeUTF(allProductsJson);
         dataOutputStream.flush();
 
-        dataOutputStream.writeUTF(Shop.getShop().allCompanies().toString());
-        System.out.println(Shop.getShop().allCompanies().toString());
         while (true) {
         }
     }
