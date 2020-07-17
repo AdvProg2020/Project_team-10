@@ -65,7 +65,7 @@ public class ManageProductsMenu extends Menu {
         return new LastMenu("edit product" , this) {
             @Override
             public void show() {
-                processAddOrEditProduct(false);
+//                processAddOrEditProduct(false);
                 super.show();
             }
 

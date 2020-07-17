@@ -295,3 +295,13 @@
 .filterButton:hover {
     -fx-cursor: hand;
 }
+
+.btnSlid{
+    -fx-background-color: #f8f8f8;
+    -fx-text-fill: #bbbbbb;
+    -fx-background-radius: 10;
+}
+.btnSlid:hover{
+    -fx-text-fill: #808080;
+    -fx-cursor: hand;
+}

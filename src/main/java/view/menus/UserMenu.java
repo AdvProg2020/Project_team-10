@@ -243,7 +243,7 @@ public class UserMenu extends Menu {
         return new LastMenu("add product", this) {
             @Override
             public void show() {
-                processAddOrEditProduct(true);
+//                processAddOrEditProduct(true);
                 super.show();
             }
 

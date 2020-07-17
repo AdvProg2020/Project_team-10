@@ -267,3 +267,11 @@
     -fx-border-color: #f7f7f7;
     -fx-cursor: hand;
 }
+.zoom{
+    -fx-image: url("../image/zoom.png");
+}
+
+.zoom:hover{
+    -fx-image: url("../image/zoomHover.png");
+    -fx-cursor: hand;
+}

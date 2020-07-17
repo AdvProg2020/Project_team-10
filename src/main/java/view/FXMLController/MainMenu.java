@@ -10,10 +10,12 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -32,14 +34,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainMenu implements Initializable {
     public Button btnLogin;
     public AnchorPane mainPane;
     public AnchorPane mainMenu;
-    public FlowPane flowPane;
-    public ScrollPane mainMenuScrollPane = new ScrollPane();
+    public FlowPane flowPane = new FlowPane();
+//    public ScrollPane mainMenuScrollPane = new ScrollPane();
     public Rectangle header;
     public Button selectedButton = new Button("The most visited");
     public Button btnCartMenu;
@@ -54,10 +57,17 @@ public class MainMenu implements Initializable {
     public RangeSlider rangeSlider;
     public Label startPrice;
     public Label endPrice;
+    public Pagination pagi;
+    public ImageView gif;
+    private List<String> list = new ArrayList<String>();
+    int j = 0;
+    double orgCliskSceneX, orgReleaseSceneX;
+    Button lbutton, rButton;
+    ImageView imageView;
 
 
     void setValue(Label label, Number number) {
-        String v = String.format("%d",number.intValue());
+        String v = String.format("%d", number.intValue());
         label.setText(v);
     }
 
@@ -85,9 +95,141 @@ public class MainMenu implements Initializable {
         new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(mouseEvent);
     }
 
+    public FlowPane createPage(int pageIndex) {
+        FlowPane box = new FlowPane();
+        int page = pageIndex * 4;
+        for (int i = page; i < page + 4; i++) {
+            if (i >= GoodsManager.getFilteredGoods().size()){
+                break;
+            }
+            VBox vBox = new VBox();
+            vBox.setPrefWidth(297);
+            vBox.setPrefHeight(500);
+            vBox.getStyleClass().add("vBoxInMainMenu");
+            ImageView logoImage = new ImageView(new Image("file:" + GoodsManager.getFilteredGoods().get(i).getImagePath()));
+            logoImage.setFitHeight(190);
+            logoImage.setFitWidth(190);
+            logoImage.getStyleClass().add("goodImage");
+            Label name = new Label(GoodsManager.getFilteredGoods().get(i).getName());
+            Label price = new Label("$" + GoodsManager.getFilteredGoods().get(i).getPrice() + "");
+            Label visit = new Label(GoodsManager.getFilteredGoods().get(i).getVisitNumber() + "");
+            visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
+            ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
+            eye.setFitHeight(15);
+            eye.setFitWidth(15);
+            visit.setGraphic(eye);
+
+            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
+            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
+            vBox.setOnMouseEntered(event -> fadeEffect(vBox));
+            int finalI = i;
+            logoImage.setOnMouseClicked(event -> {
+                GoodsManager.setCurrentGood(GoodsManager.getFilteredGoods().get(finalI));
+                mainPane.getChildren().remove(mainMenu);
+                new GoodMenu(mainPane).changePane();
+            });
+
+            HBox visitAndOff = new HBox(5);
+            visitAndOff.setPadding(new Insets(45, 0, 0, 15));
+            visitAndOff.getChildren().add(visit);
+            if (GoodsManager.getFilteredGoods().get(i).getOffId() != 0) {
+                Off off = Shop.getShop().getOffWithId(GoodsManager.getFilteredGoods().get(i).getOffId());
+                Label offLabel = new Label(off.getPercent() + "%");
+                offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
+                ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
+                offImage.setFitWidth(15);
+                offImage.setFitHeight(15);
+                offLabel.setGraphic(offImage);
+                visitAndOff.getChildren().add(offLabel);
+            }
+
+
+            vBox.setAlignment(Pos.CENTER);
+            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) GoodsManager.getFilteredGoods().get(i).calculateAverageRate()), visitAndOff);
+
+            box.getChildren().add(vBox);
+        }
+        return box;
+    }
+
+    EventHandler<MouseEvent> circleOnMousePressedEventHandler = new EventHandler<MouseEvent>() {
+
+        @Override
+        public void handle(MouseEvent t) {
+            orgCliskSceneX = t.getSceneX();
+        }
+    };
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
+            list.add("file:src/main/java/view/image/266661.jpg");
+            list.add("file:src/main/java/view/image/2156097.jpg");
+            list.add("file:src/main/java/view/image/112551619.jpg");
+
+
+            GridPane root = new GridPane();
+            root.setAlignment(Pos.CENTER);
+
+            lbutton = new Button("❮");
+            lbutton.getStyleClass().add("btnSlid");
+            rButton = new Button("❯");
+            rButton.getStyleClass().add("btnSlid");
+
+            Image[] images = new Image[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                images[i] = new Image(list.get(i));
+            }
+
+            imageView = new ImageView(images[j]);
+            imageView.setCursor(Cursor.CLOSED_HAND);
+
+            imageView.setOnMousePressed(circleOnMousePressedEventHandler);
+
+            imageView.setOnMouseReleased(e -> {
+                orgReleaseSceneX = e.getSceneX();
+                if (orgCliskSceneX > orgReleaseSceneX) {
+                    lbutton.fire();
+                } else {
+                    rButton.fire();
+                }
+            });
+
+            rButton.setOnAction(e -> {
+                j = j + 1;
+                if (j == list.size()) {
+                    j = 0;
+                }
+                imageView.setImage(images[j]);
+
+            });
+            lbutton.setOnAction(e -> {
+                j = j - 1;
+                if (j == 0 || j > list.size() + 1 || j == -1) {
+                    j = list.size() - 1;
+                }
+                imageView.setImage(images[j]);
+
+            });
+
+            imageView.setFitHeight(110);
+            imageView.setFitWidth(110);
+
+            HBox hBox1 = new HBox();
+            hBox1.setSpacing(15);
+            hBox1.setAlignment(Pos.CENTER);
+             hBox1.getChildren().addAll(lbutton, imageView, rButton);
+            hBox1.setLayoutX(350);
+            hBox1.setLayoutY(30);
+
+            mainPane.getChildren().add(hBox1);
+
+            gif.setImage(new Image("file:src/main/java/view/image/shopGif.gif"));
+
+//        flowPane.setPrefSize(1100 , 600);
+        pagi.setPadding(new Insets(50 , 5 , 5 , 5));
+        pagi.setPrefSize(1200, 650);
         rangeSlider.lowValueProperty().addListener(
                 (observable, oldValue, newValue) -> setValue(startPrice, newValue)
         );
@@ -121,58 +263,24 @@ public class MainMenu implements Initializable {
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(10, 580, 10, 15));
         hBox.setSpacing(10);
-        flowPane.getChildren().add(hBox);
+        hBox.setLayoutY(190);
+        hBox.setLayoutX(35);
+        mainPane.getChildren().add(hBox);
 //        filter();
+        pagi.setPageCount(21);
+        pagi.setCurrentPageIndex(0);
+        pagi.setMaxPageIndicatorCount(3);
         Collections.sort(GoodsManager.getFilteredGoods());
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            VBox vBox = new VBox();
-            vBox.setPrefWidth(297);
-            vBox.setPrefHeight(350);
-            vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(190);
-            logoImage.setFitWidth(190);
-            logoImage.getStyleClass().add("goodImage");
-            Label name = new Label(good.getName());
-            Label price = new Label("$" + good.getPrice() + "");
-            Label visit = new Label(good.getVisitNumber() + "");
-            visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
-            ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
-            eye.setFitHeight(15);
-            eye.setFitWidth(15);
-            visit.setGraphic(eye);
-
-            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
-            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
-            vBox.setOnMouseEntered(event -> fadeEffect(vBox));
-            logoImage.setOnMouseClicked(event -> {
-                GoodsManager.setCurrentGood(good);
-                mainPane.getChildren().remove(mainMenu);
-                new GoodMenu(mainPane).changePane();
-            });
-
-            HBox visitAndOff = new HBox(5);
-            visitAndOff.setPadding(new Insets(45 , 0, 0,15));
-            visitAndOff.getChildren().add(visit);
-            if (good.getOffId() != 0) {
-                Off off = Shop.getShop().getOffWithId(good.getOffId());
-                Label offLabel = new Label( off.getPercent() + "%");
-                offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
-                ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
-                offImage.setFitWidth(15);
-                offImage.setFitHeight(15);
-                offLabel.setGraphic(offImage);
-                visitAndOff.getChildren().add(offLabel);
-            }
+        pagi.setPageFactory(this::createPage);
 
 
-            vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()),visitAndOff);
-            flowPane.getChildren().add(vBox);
-        }
-        mainMenuScrollPane.getStyleClass().add("scroll-bar");
+
+
+//        mainMenuScrollPane.setContent(pagi);
+
+//        mainMenuScrollPane.getStyleClass().add("scroll-bar");
         flowPane.setStyle("-fx-background-color: white;");
-        mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         Login.currentPane = mainMenu;
         main = this;
     }
@@ -186,7 +294,7 @@ public class MainMenu implements Initializable {
         GoodsManager.getFilteredCatogories().clear();
         GoodsManager.getFilteredCompanies().clear();
         for (Category category : Shop.getShop().getAllCategories()) {
-            JFXButton categoryFiltered = new JFXButton("● "+category.getName());
+            JFXButton categoryFiltered = new JFXButton("● " + category.getName());
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
             categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }

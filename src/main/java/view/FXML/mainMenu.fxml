@@ -17,13 +17,16 @@
 
     <AnchorPane fx:id="mainMenu" layoutY="165">
 
-        <ScrollPane pannable="true" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">
+<!--        <ScrollPane pannable="true" prefHeight="650" prefWidth="1200" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">-->
 
-            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">
 
-            </FlowPane>
+<!--&lt;!&ndash;            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">&ndash;&gt;-->
 
-        </ScrollPane>
+<!--&lt;!&ndash;            </FlowPane>&ndash;&gt;-->
+
+<!--        </ScrollPane>-->
+
+        <Pagination fx:id="pagi" layoutX="30" layoutY="25" style="-fx-background-color: white;-fx-background-radius: 10;"/>
 
 
         <VBox layoutY="25" layoutX="1250" prefWidth="260" prefHeight="200" styleClass="vboxForFilter"
@@ -110,6 +113,10 @@
 
 <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
 
+
+    <ImageView fx:id="gif" layoutY="40" layoutX="160" fitHeight="100" fitWidth="133.4">
+
+    </ImageView>
 
 <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
 <tooltip>
