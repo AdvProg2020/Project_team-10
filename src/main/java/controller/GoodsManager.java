@@ -16,15 +16,15 @@ public class GoodsManager {
     private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
     private static Map<String, String> kindOfFilter = new HashMap<>();
     private static ArrayList<String> filteredCompanies = new ArrayList<>();
-    private static ArrayList<String> filteredCatogories = new ArrayList<>();
+//    private static ArrayList<String> filteredCatogories = new ArrayList<>();
 
     public static Map<String, String> getKindOfFilter() {
         return kindOfFilter;
     }
 
-    public static ArrayList<String> getFilteredCatogories() {
-        return filteredCatogories;
-    }
+//    public static ArrayList<String> getFilteredCatogories() {
+//        return filteredCatogories;
+//    }
 
     public static ArrayList<String> getFilteredCompanies() {
         return filteredCompanies;

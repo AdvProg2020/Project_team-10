@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import controller.AccountManager;
 import controller.FileHandler;
 import javafx.application.Application;
@@ -7,23 +9,26 @@ import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Good;
 import model.Seller;
 import model.Shop;
 import view.menus.MainMenu;
 import view.menus.Menu;
 
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static javafx.scene.media.MediaPlayer.INDEFINITE;
 import static view.FXML.FXML.mainMenuURL;
 
 public class Main extends Application {
-    public static void main(String[] args) {
-        FileHandler.updateDatabase();
 
+    public static void main(String[] args) throws IOException, InterruptedException {
         launch(args);
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu mainMenu = new MainMenu();

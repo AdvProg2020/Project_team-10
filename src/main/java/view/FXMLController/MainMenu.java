@@ -1,5 +1,7 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
@@ -28,7 +30,9 @@ import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 import org.controlsfx.control.RangeSlider;
 
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +58,25 @@ public class MainMenu implements Initializable {
     public RangeSlider rangeSlider;
     public Label startPrice;
     public Label endPrice;
+    private Socket socket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    public ArrayList<Good> filteredGoods;
+    public ArrayList<String> filteredCompanies = new ArrayList<>();
+
+    public MainMenu() throws IOException {
+        socket = new Socket("localhost", 8080);
+        dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        filteredGoods = getAllProducts();
+    }
+
+    private ArrayList<Good> getAllProducts() throws IOException {
+        String allProductsJson = dataInputStream.readUTF();
+        Type productsListType = new TypeToken<ArrayList<Good>>() {}.getType();
+        ArrayList<Good> allProducts = new Gson().fromJson(allProductsJson, productsListType);
+        return allProducts;
+    }
 
 
     void setValue(Label label, Number number) {
@@ -87,94 +110,102 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            rangeSlider.lowValueProperty().addListener(
+                    (observable, oldValue, newValue) -> setValue(startPrice, newValue)
+            );
 
-        rangeSlider.lowValueProperty().addListener(
-                (observable, oldValue, newValue) -> setValue(startPrice, newValue)
-        );
-
-        rangeSlider.highValueProperty().addListener(
-                (observable, oldValue, newValue) -> setValue(endPrice, newValue)
-        );
+            rangeSlider.highValueProperty().addListener(
+                    (observable, oldValue, newValue) -> setValue(endPrice, newValue)
+            );
 
 
-        if (updateFilters) {
-            updateAllFilter();
-        }
-
-        flowPane.getChildren().clear();
-        this.location = location;
-        this.resources = resources;
-        HBox hBox = new HBox();
-        if (AccountManager.getOnlineAccount() instanceof Buyer) {
-            btnCartMenu.setVisible(true);
-        }
-        ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
-        imageSort.setFitWidth(25);
-        imageSort.setFitHeight(25);
-        Label sort = new Label("Sort by:");
-//        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
-
-        hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources),
-                buttonForSort("Score", location, resources),
-                buttonForSort("Price(Descending)", location, resources),
-                buttonForSort("The most visited", location, resources));
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(10, 580, 10, 15));
-        hBox.setSpacing(10);
-        flowPane.getChildren().add(hBox);
-//        filter();
-        Collections.sort(GoodsManager.getFilteredGoods());
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            VBox vBox = new VBox();
-            vBox.setPrefWidth(297);
-            vBox.setPrefHeight(350);
-            vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(190);
-            logoImage.setFitWidth(190);
-            logoImage.getStyleClass().add("goodImage");
-            Label name = new Label(good.getName());
-            Label price = new Label("$" + good.getPrice() + "");
-            Label visit = new Label(good.getVisitNumber() + "");
-            visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
-            ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
-            eye.setFitHeight(15);
-            eye.setFitWidth(15);
-            visit.setGraphic(eye);
-
-            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
-            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
-            vBox.setOnMouseEntered(event -> fadeEffect(vBox));
-            logoImage.setOnMouseClicked(event -> {
-                GoodsManager.setCurrentGood(good);
-                mainPane.getChildren().remove(mainMenu);
-                new GoodMenu(mainPane).changePane();
-            });
-
-            HBox visitAndOff = new HBox(5);
-            visitAndOff.setPadding(new Insets(45 , 0, 0,15));
-            visitAndOff.getChildren().add(visit);
-            if (good.getOffId() != 0) {
-                Off off = Shop.getShop().getOffWithId(good.getOffId());
-                Label offLabel = new Label( off.getPercent() + "%");
-                offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
-                ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
-                offImage.setFitWidth(15);
-                offImage.setFitHeight(15);
-                offLabel.setGraphic(offImage);
-                visitAndOff.getChildren().add(offLabel);
+            if (updateFilters) {
+                updateAllFilter();
             }
 
+            flowPane.getChildren().clear();
+            this.location = location;
+            this.resources = resources;
+            HBox hBox = new HBox();
+            if (AccountManager.getOnlineAccount() instanceof Buyer) {
+                btnCartMenu.setVisible(true);
+            }
+            ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));
+            imageSort.setFitWidth(25);
+            imageSort.setFitHeight(25);
+            Label sort = new Label("Sort by:");
+//        sort.setStyle("-fx-font-size: 15px;-fx-text-fill: black;-fx-font-family: sans-serif;");
 
-            vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()),visitAndOff);
-            flowPane.getChildren().add(vBox);
+            hBox.getChildren().addAll(imageSort, sort, buttonForSort("Time", location, resources),
+                    buttonForSort("Score", location, resources),
+                    buttonForSort("Price(Descending)", location, resources),
+                    buttonForSort("The most visited", location, resources));
+            hBox.setAlignment(Pos.CENTER);
+            hBox.setPadding(new Insets(10, 580, 10, 15));
+            hBox.setSpacing(10);
+            flowPane.getChildren().add(hBox);
+//        filter();
+            Collections.sort(filteredGoods);
+            for (Good good : filteredGoods) {
+                VBox vBox = new VBox();
+                vBox.setPrefWidth(297);
+                vBox.setPrefHeight(350);
+                vBox.getStyleClass().add("vBoxInMainMenu");
+                ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
+                logoImage.setFitHeight(190);
+                logoImage.setFitWidth(190);
+                logoImage.getStyleClass().add("goodImage");
+                Label name = new Label(good.getName());
+                Label price = new Label("$" + good.getPrice() + "");
+                Label visit = new Label(good.getVisitNumber() + "");
+                visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
+                ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
+                eye.setFitHeight(15);
+                eye.setFitWidth(15);
+                visit.setGraphic(eye);
+
+                name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
+                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
+                vBox.setOnMouseEntered(event -> fadeEffect(vBox));
+                logoImage.setOnMouseClicked(event -> {
+                    GoodMenu goodMenu = new GoodMenu(mainPane);
+                    GoodMenu.setCurrentGood(good);
+                    mainPane.getChildren().remove(mainMenu);
+                    goodMenu.changePane();
+                });
+
+                HBox visitAndOff = new HBox(5);
+                visitAndOff.setPadding(new Insets(45 , 0, 0,15));
+                visitAndOff.getChildren().add(visit);
+                if (good.getOffId() != 0) {
+                    dataOutputStream.writeUTF("get off " + good.getOffId());
+
+                    Type offType = new TypeToken<Off>() {}.getType();
+                    Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
+                    Label offLabel = new Label( off.getPercent() + "%");
+                    offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
+                    ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
+                    offImage.setFitWidth(15);
+                    offImage.setFitHeight(15);
+                    offLabel.setGraphic(offImage);
+                    visitAndOff.getChildren().add(offLabel);
+                }
+
+
+                vBox.setAlignment(Pos.CENTER);
+                vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) good.calculateAverageRate()),visitAndOff);
+                flowPane.getChildren().add(vBox);
+            }
+            mainMenuScrollPane.getStyleClass().add("scroll-bar");
+            flowPane.setStyle("-fx-background-color: white;");
+            mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            Login.currentPane = mainMenu;
+            main = this;
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
-        mainMenuScrollPane.getStyleClass().add("scroll-bar");
-        flowPane.setStyle("-fx-background-color: white;");
-        mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        Login.currentPane = mainMenu;
-        main = this;
     }
 
     private void updateAllFilter() {
@@ -183,8 +214,8 @@ public class MainMenu implements Initializable {
 
         vBoxForAddCategoryFilter.getChildren().clear();
         vBoxForAddCompanyFilter.getChildren().clear();
-        GoodsManager.getFilteredCatogories().clear();
-        GoodsManager.getFilteredCompanies().clear();
+//        GoodsManager.getFilteredCatogories().clear();
+        filteredCompanies.clear();
         for (Category category : Shop.getShop().getAllCategories()) {
             JFXButton categoryFiltered = new JFXButton("● "+category.getName());
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
@@ -325,7 +356,7 @@ public class MainMenu implements Initializable {
 
     @FXML
     private void filter() {
-        GoodsManager.getFilteredGoods().clear();
+        filteredGoods.clear();
         ArrayList<Good> shouldBeRemoved = new ArrayList<>();
         if (GoodsManager.getFilteredCompanies().size() == 0) {
             GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());

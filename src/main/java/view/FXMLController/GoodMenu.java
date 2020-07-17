@@ -40,6 +40,11 @@ public class GoodMenu {
     private NumberField scoreField;
     private Label error;
     private boolean isPlaying;
+    private static Good currentGood;
+
+    public static void setCurrentGood(Good currentGood) {
+        GoodMenu.currentGood = currentGood;
+    }
 
     public GoodMenu(AnchorPane mainPane) {
         this.mainPane = mainPane;
@@ -83,7 +88,6 @@ public class GoodMenu {
     }
 
     public void changePane() {
-        Good currentGood = GoodsManager.getCurrentGood();
 
         Media media = new Media(new File(currentGood.getVideoPath()).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
