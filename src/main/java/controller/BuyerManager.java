@@ -34,10 +34,10 @@ public class BuyerManager {
         return amount;
     }
 
-    public static long getPriceAfterApplyOff(List<Good> goods, Account account) {
+    public static long getPriceAfterApplyOff(Account account) {
         long totalPrice = 0;
         Buyer currentBuyer = ((Buyer) account);
-        for (Good good : goods) {
+        for (Good good : currentBuyer.getCart()) {
             int numberOfGoodInCart = good.getGoodsInBuyerCart().get(currentBuyer.getUsername());
             if (good.getOffId() != 0) {
                 totalPrice += (good.getPrice() * ((100 - Shop.getShop().getOffWithId(good.getOffId()).getPercent()) / 100.0)
