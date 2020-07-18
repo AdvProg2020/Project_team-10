@@ -66,11 +66,12 @@ public class GoodMenu {
         this.currentGood = currentGood;
     }
 
-    public GoodMenu(AnchorPane mainPane , Socket socket) throws IOException {
+    public GoodMenu(AnchorPane mainPane , Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.socket = socket;
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
     }
 
     private HBox covertScoreToStar(int score) {

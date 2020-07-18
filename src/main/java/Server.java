@@ -4,7 +4,13 @@ import com.google.gson.reflect.TypeToken;
 import controller.AccountManager;
 import controller.FileHandler;
 import controller.SellerManager;
+import model.Account;
+import model.Buyer;
+import model.Seller;
 import model.Shop;
+import view.CommandProcessor;
+import view.FXMLController.AdminPanel;
+import view.Purchase;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -96,18 +102,14 @@ class ClientHandler extends Thread {
                     Type goodsIdType = new TypeToken<List<Integer>>() {
                     }.getType();
                     List<Integer> goodsId = new Gson().fromJson(info[2], goodsIdType);
-                    Type startDateType = new TypeToken<Date>() {
-                    }.getType();
-                    Date startDate = new Gson().fromJson(info[3], startDateType);
-                    Type endDateType = new TypeToken<Date>() {
-                    }.getType();
-                    Date endDate = new Gson().fromJson(info[4], endDateType);
+                    Date startDate = AdminPanel.getDateByString(info[3] + " " + info[4]);
+                    Date endDate = AdminPanel.getDateByString(info[5] + " " + info[6]);
 
 //                    SellerManager.addOff(null, goodsId, startDate, endDate, Integer.parseInt(info[5]));
-                    System.out.println(goodsId);
-                    System.out.println(startDate);
-                    System.out.println(endDate);
-                    System.out.println(info[5]);
+//                    System.out.println(goodsId);
+                    System.out.println("startDate: " + startDate);
+                    System.out.println("endDate: " + endDate);
+                    System.out.println("percent:" + info[7]);
                 } else if (request.equals("getAllCategories")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllCategories()));
                     dataOutputStream.flush();
@@ -115,6 +117,34 @@ class ClientHandler extends Thread {
                     int id = Integer.parseInt(request.substring(15));
 //                    SellerManager.removeProduct(id);
                     System.out.println(id);
+                } else if (request.startsWith("can register")) {
+                    String username = request.substring(13);
+                    if (Shop.getShop().getAccountByUsername(username) == null) {
+                        dataOutputStream.writeUTF("true");
+                    } else {
+                        dataOutputStream.writeUTF("false");
+                    }
+                    dataOutputStream.flush();
+                    System.out.println("username: " + username);
+                } else if (request.startsWith("register")) {
+                    String[] info = request.split("\\s");
+                    AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
+                } else if (request.startsWith("can login")) {
+                    String[] info = request.split("\\s");
+                    Account account = AccountManager.canLogin(info[2], info[3]);
+                    if (account == null) {
+                        dataOutputStream.writeUTF("false");
+                    } else {
+                        if (account instanceof Buyer) {
+                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " buyer");
+                        } else if (account instanceof Seller) {
+                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller");
+                        } else {
+                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " admin");
+                        }
+                        //TODO add to hashMap
+                    }
+                    dataOutputStream.flush();
                 } else if (request.equals("exit")) {
                     FileHandler.write();
                     dataOutputStream.writeUTF("successfully logged out");

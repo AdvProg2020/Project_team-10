@@ -134,7 +134,7 @@ public class AdminPanel {
     }
 
     private void processEdit() {
-        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
+//        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
         handelButtonOnMouseClick();
     }
 
@@ -612,7 +612,7 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 20, 0, 0));
             vBox.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
-                SellerManager.removeProduct(good);
+                SellerManager.removeProduct(good.getId());
                 flowPane.getChildren().remove(vBox);
             });
             flowPane.getChildren().add(vBox);
@@ -821,8 +821,8 @@ public class AdminPanel {
                     dateSplit[i] = Integer.parseInt(matcher.group(i + 1));
                 }
             }
-            calendar.set(Calendar.MONTH, dateSplit[0]);
-            calendar.set(Calendar.DAY_OF_MONTH, dateSplit[1]);
+            calendar.set(Calendar.MONTH, dateSplit[0] - 1);
+            calendar.set(Calendar.DAY_OF_MONTH, dateSplit[1] - 1);
             calendar.set(Calendar.YEAR, dateSplit[2]);
             calendar.set(Calendar.HOUR, dateSplit[3]);
             calendar.set(Calendar.MINUTE, dateSplit[4]);
@@ -850,15 +850,15 @@ public class AdminPanel {
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
-                        if (AccountManager.canRegister(username)) {
-                            AccountManager.register(username, password, "admin", firstName, lastName, email, phoneNumber
-                                    , " ", imagePath);
-                            adminScrollPane.setContent(handelManageUsers());
-                            popupWindow.close();
-                            fade(0.5, 10);
-                        } else {
-                            printErrorForRegister("a user exists with this username");
-                        }
+//                        if (AccountManager.canRegister(username)) {
+//                            AccountManager.register(username, password, "admin", firstName, lastName, email, phoneNumber
+//                                    , " ", imagePath);
+//                            adminScrollPane.setContent(handelManageUsers());
+//                            popupWindow.close();
+//                            fade(0.5, 10);
+//                        } else {
+//                            printErrorForRegister("a user exists with this username");
+//                        }
                     } else {
                         printErrorForRegister("invalid email");
                     }

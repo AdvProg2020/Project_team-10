@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class AccountManager {
-//    private static Account onlineAccount = new Buyer("temp");
+    private static Account onlineAccount = new Buyer("temp");
     private static int lastRequestId;
     private static int lastGoodId;
     private static int lastCommentId;
@@ -108,13 +108,13 @@ public class AccountManager {
         return lastSellerLogId;
     }
 
-//    private static Account getOnlineAccount() {
-//        return onlineAccount;
-//    }
+    public static Account getOnlineAccount() {
+        return onlineAccount;
+    }
 
-//    private static void setOnlineAccount(Account onlineAccount) {
-//        AccountManager.onlineAccount = onlineAccount;
-//    }
+    public static void setOnlineAccount(Account onlineAccount) {
+        AccountManager.onlineAccount = onlineAccount;
+    }
 
     // logical methods
 
@@ -147,8 +147,8 @@ public class AccountManager {
             if (account.getUsername().equals(username)) {
                 if (account.getPassword().equals(password)) {
 //                    onlineAccount = Shop.getShop().getAccountByUsername(username);
-                    Menu.setIsLogged(true);
-                    UserMenu.setUsername(username);
+//                    Menu.setIsLogged(true);
+//                    UserMenu.setUsername(username);
                     return Shop.getShop().getAccountByUsername(username);
                 }
             }

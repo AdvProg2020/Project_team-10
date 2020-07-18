@@ -1,1 +1,1 @@
-[{"name":"asdsad","attributes":["sadsad"],"goods":[]}]
+[{"name":"asdsad","attributes":["sadsad"],"goods":[]},{"name":"asdsad","attributes":["sadsad"],"goods":[]},{"name":"asdsad","attributes":["sadsad"],"goods":[]},{"name":"asdsad","attributes":["sadsad"],"goods":[]}]

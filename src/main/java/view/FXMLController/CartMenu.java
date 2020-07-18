@@ -48,7 +48,6 @@ public class CartMenu {
     private AnchorPane mainPane;
     private Button btnCartMenu;
     private Button btnLogin;
-    private Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
     private AnchorPane paymentPane;
     private TextField nameField;
     private NumberField phoneNumberField;
@@ -72,7 +71,8 @@ public class CartMenu {
     private Socket socket;
     private Account onlineAccount;
 
-    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu, Socket socket) throws IOException {
+    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu
+            , Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
         this.btnLogin = btnLogin;
@@ -81,6 +81,7 @@ public class CartMenu {
         this.socket = socket;
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
     }
 
     public long totalPrice;
@@ -134,7 +135,7 @@ public class CartMenu {
         purchase.setOnMouseClicked(event -> {
             try {
                 if (onlineAccount.getUsername().equals("temp")) {
-                    new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(null);
+                    new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
                 } else {
                     paymentPopup();
                 }
@@ -164,7 +165,7 @@ public class CartMenu {
         VBox products = new VBox();
         products.setSpacing(0);
 
-        for (Good good : currentBuyer.getCart()) {
+        for (Good good : ((Buyer) onlineAccount).getCart()) {
             ImageView goodImage = new ImageView(new Image("file:" + good.getImagePath()));
             goodImage.setFitWidth(150);
             goodImage.setFitHeight(150);
@@ -230,7 +231,7 @@ public class CartMenu {
                 minus.getStyleClass().add("minesCart");
                 count[0] += 1;
                 number.setText("" + count[0]);
-                good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+                good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
                 totalPriceLabel.setText("Total price : " + totalPrice);
                 finalTotalPriceLabel.setText("Final price price: $" + finalPrice);
                 offPrice.setText("Off price: $" + (totalPrice - finalPrice));
@@ -247,12 +248,12 @@ public class CartMenu {
         minus.setOnMouseClicked(event -> {
             count[0] -= 1;
             number.setText("" + count[0]);
-            good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
+            good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
             if (count[0] == 1) {
                 minus.getStyleClass().add("minesCart2");
             }
             if (count[0] == 0) {
-                good.getGoodsInBuyerCart().remove(AccountManager.getOnlineAccount().getUsername());
+                good.getGoodsInBuyerCart().remove(onlineAccount.getUsername());
                 products.getChildren().remove(productBox);
                 ((Buyer) onlineAccount).getCart().remove(good);
             }
@@ -479,7 +480,7 @@ public class CartMenu {
                     error.setText("It is not yet time to use the discount code");
                 } else if (discount.getEndDate().before(currentDate)) {
                     error.setText("The discount code has expired");
-                } else if (currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount.getCode()) == null) {
+                } else if (((Buyer) onlineAccount).getDiscountAndNumberOfAvailableDiscount().get(discount.getCode()) == null) {
                     error.setText("you cannot use the discount anymore");
                 } else {
                     error.setText("");

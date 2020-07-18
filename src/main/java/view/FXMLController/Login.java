@@ -1,5 +1,7 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import controller.AccountManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
@@ -25,14 +27,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Account;
-import model.Admin;
-import model.Buyer;
-import model.Good;
+import model.*;
 import view.CommandProcessor;
 import view.NumberField;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -361,7 +361,10 @@ public class Login {
         Buyer temp = ((Buyer) onlineAccount);
         dataOutputStream.writeUTF("can login " + username + " " + password);
         dataOutputStream.flush();
-        if (dataInputStream.readUTF().equals("true")) {
+        String response = dataInputStream.readUTF();
+        if (response.startsWith("true")) {
+            login(response);
+            main.onlineAccount = this.onlineAccount;
             popupWindow.close();
             handleUserBtn();
             if (!(onlineAccount instanceof Buyer)) {
@@ -382,6 +385,22 @@ public class Login {
             error.setLayoutY(470);
             error.setTextFill(Color.RED);
         }
+    }
+
+    private void login(String response) {
+        String type = response.split("\\s")[2];
+        Type accountType;
+        if (type.equals("buyer")) {
+            accountType = new TypeToken<Buyer>() {
+            }.getType();
+        } else if (type.equals("seller")) {
+            accountType = new TypeToken<Seller>() {
+            }.getType();
+        } else {
+            accountType = new TypeToken<Admin>() {
+            }.getType();
+        }
+        onlineAccount = new Gson().fromJson(response.split("\\s")[1], accountType);
     }
 
     private void processRegister() throws IOException {
@@ -527,6 +546,7 @@ public class Login {
 
     private void logout() {
         onlineAccount = new Buyer("temp");
+        main.onlineAccount = this.onlineAccount;
         user.setVisible(false);
         popupUser.getChildren().clear();
         popupUser.setVisible(false);

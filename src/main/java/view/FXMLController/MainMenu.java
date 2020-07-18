@@ -62,7 +62,7 @@ public class MainMenu implements Initializable {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
-    private Account onlineAccount = new Buyer("temp");
+    public Account onlineAccount = new Buyer("temp");
 
     public ArrayList<Good> filteredGoods;
     private String kindOfSort = "visit number";
@@ -159,7 +159,12 @@ public class MainMenu implements Initializable {
             vBox.setOnMouseEntered(event -> fadeEffect(vBox));
             int finalI = i;
             logoImage.setOnMouseClicked(event -> {
-                GoodMenu goodMenu = new GoodMenu(mainPane);
+                GoodMenu goodMenu = null;
+                try {
+                    goodMenu = new GoodMenu(mainPane, socket, onlineAccount);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 goodMenu.setCurrentGood(filteredGoods.get(finalI));
                 mainPane.getChildren().remove(mainMenu);
                 goodMenu.changePane();
@@ -417,9 +422,9 @@ public class MainMenu implements Initializable {
         initialize(location, resources);
     }
 
-    public void cartMenu(MouseEvent mouseEvent) {
+    public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu, socket, onlineAccount).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {

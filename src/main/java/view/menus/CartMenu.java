@@ -72,7 +72,7 @@ public class CartMenu extends Menu {
         return new LastMenu("show total price", this) {
             @Override
             public void show() {
-                System.out.println("total price : " + BuyerManager.getTotalPrice());
+//                System.out.println("total price : " + BuyerManager.getTotalPrice());
                 super.show();
             }
 

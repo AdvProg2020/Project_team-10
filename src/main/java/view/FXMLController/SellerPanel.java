@@ -539,7 +539,12 @@ public class SellerPanel {
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden'; -fx-font-size: 8px;-fx-font-weight: bold;-fx-text-fill: black");
                 vBox.setOnMouseEntered(event -> fadeEffect(vBox));
                 productImage.setOnMouseClicked(event -> {
-                    GoodMenu goodMenu = new GoodMenu(mainPane);
+                    GoodMenu goodMenu = null;
+                    try {
+                        goodMenu = new GoodMenu(mainPane, socket, onlineAccount);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     goodMenu.setCurrentGood(good);
                     mainPane.getChildren().remove(Login.currentPane);
                     goodMenu.changePane();
@@ -940,7 +945,6 @@ public class SellerPanel {
         startDate.setPrefSize(240, 40);
         startDate.setOnAction(event -> {
             LocalDate date = startDate.getValue();
-            System.out.println("Selected date: " + date);
         });
 
         startTime = new JFXTimePicker();
@@ -1052,8 +1056,7 @@ public class SellerPanel {
         int percent = Integer.parseInt(this.percent.getText());
 
         dataOutputStream.writeUTF("create off " + new Gson().toJson(selectedGoodsId) + " " +
-                new Gson().toJson(AdminPanel.getDateByString(startDate)) + " " + new Gson().toJson(AdminPanel.getDateByString(endDate))
-                + " " + percent);
+                startDate + " " + endDate + " " + percent);
         dataOutputStream.flush();
 //        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
         popupWindow.close();
@@ -1104,7 +1107,12 @@ public class SellerPanel {
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
             goodPack.setOnMouseEntered(event -> fadeEffect(goodPack));
             productImage.setOnMouseClicked(event -> {
-                GoodMenu goodMenu = new GoodMenu(mainPane);
+                GoodMenu goodMenu = null;
+                try {
+                    goodMenu = new GoodMenu(mainPane, socket, onlineAccount);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 goodMenu.setCurrentGood(good);
                 mainPane.getChildren().remove(Login.currentPane);
                 goodMenu.changePane();

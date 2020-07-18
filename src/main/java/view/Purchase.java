@@ -66,7 +66,7 @@ public class Purchase {
                 processGiveDiscountCode();
                 break;
             } else if (selected == 2) {
-                payment(BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()), null);
+//                payment(BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()), null);
                 break;
             } else {
                 System.out.println("you must choose one of following options");
@@ -95,16 +95,18 @@ public class Purchase {
     }
 
     public static double getFinalTotalPrice(Discount discount) {
-        if (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
-            return (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - discount.getMaxAmountOfDiscount());
-        } else {
-            return BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * ((100.0 - discount.getPercent()) / 100.0);
-        }
+        //TODO
+//        if (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
+//            return (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - discount.getMaxAmountOfDiscount());
+//        } else {
+//            return BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * ((100.0 - discount.getPercent()) / 100.0);
+//        }
+        return 0;
     }
 
     public static void payment(double finalPrice, Discount discount) {
         System.out.println("Payment page");
-        System.out.println("total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+//        System.out.println("total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
         System.out.println("payable amount: " + ((long) finalPrice));
         System.out.println("1: confirm\n2: increase credit\n3: back");
         int selected = Integer.parseInt(Menu.scanner.nextLine());
@@ -132,7 +134,7 @@ public class Purchase {
         currentBuyer.subtractCredit(finalPrice);
         Set<Seller> sellers = new HashSet<>();
         for (Good good : currentBuyer.getCart()) {
-            good.subtractNumber();
+//            good.subtractNumber();
             good.getBuyersUsername().add(currentBuyer.getUsername());
             sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
@@ -151,24 +153,25 @@ public class Purchase {
     }
 
     private static void makeLogs(Set<Seller> sellers, double finalPrice) {
-        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
-        Map<String, List<Good>> sellersToHisGoods = new HashMap<>();
-        for (Seller seller : sellers) {
-            ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
-            for (Good good : currentBuyer.getCart()) {
-                if (good.getSellerUsername().equals(seller.getUsername())) {
-                    goodsOfOneSeller.add(good);
-                }
-            }
-            sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
-            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(goodsOfOneSeller));
-            seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
-                    BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(currentBuyer.getCart()), sellersToHisGoods.get(seller),
-                    currentBuyer.getUsername(), "received"));
-        }
-        currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
-                ((long) (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - finalPrice)), sellersToHisGoods, "paid"));
-
+        //TODO
+//        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+//        Map<String, List<Good>> sellersToHisGoods = new HashMap<>();
+//        for (Seller seller : sellers) {
+//            ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
+//            for (Good good : currentBuyer.getCart()) {
+//                if (good.getSellerUsername().equals(seller.getUsername())) {
+//                    goodsOfOneSeller.add(good);
+//                }
+//            }
+//            sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
+//            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(goodsOfOneSeller));
+//            seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
+//                    BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(currentBuyer.getCart()), sellersToHisGoods.get(seller),
+//                    currentBuyer.getUsername(), "received"));
+//        }
+//        currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
+//                ((long) (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - finalPrice)), sellersToHisGoods, "paid"));
+//
     }
 
 }
