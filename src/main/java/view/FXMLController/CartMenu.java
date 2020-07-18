@@ -1,5 +1,7 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import controller.AccountManager;
@@ -29,7 +31,10 @@ import model.*;
 import view.NumberField;
 import view.Purchase;
 import view.ZipCode;
-import java.io.IOException;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -62,16 +67,26 @@ public class CartMenu {
     private ZipCode creditField;
     private MainMenu main;
     private AnchorPane mainMenu;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private Socket socket;
+    private Account onlineAccount;
 
-    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu) {
+    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu, Socket socket) throws IOException {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
         this.btnLogin = btnLogin;
         this.main = main;
         this.mainMenu = mainMenu;
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
 
-    public void changePane() {
+    public long totalPrice;
+    public long finalPrice;
+
+    public void changePane() throws IOException {
         btnCartMenu.setVisible(false);
 
         AnchorPane allPain = new AnchorPane();
@@ -90,23 +105,35 @@ public class CartMenu {
 
         //--------
 
-        Label totalPrice = new Label("Total price: $" + BuyerManager.getTotalPrice());
-        totalPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
+        dataOutputStream.writeUTF("get total price ");
+        dataOutputStream.flush();
+        Type totalPriceType = new TypeToken<Long>() {
+        }.getType();
+        totalPrice = new Gson().fromJson(dataInputStream.readUTF(), totalPriceType);
+        Label totalPriceLabel = new Label("Total price: $" + totalPrice);
+        totalPriceLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
 
-        Label finaTotalPrice = new Label("Total price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
-        finaTotalPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: green");
+        dataOutputStream.writeUTF("get final price ");
+        dataOutputStream.flush();
+        Type finalPriceType = new TypeToken<Long>() {
+        }.getType();
+        finalPrice = new Gson().fromJson(dataInputStream.readUTF(), finalPriceType);
+        Label finaTotalPriceLabel = new Label("Total price: $" + finalPrice);
+//        Label finaTotalPrice = new Label("Total price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+        finaTotalPriceLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: green");
 
-        Label offPrice = new Label("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
+        Label offPrice = new Label("Off price: $" + (totalPrice - finalPrice));
+//        Label offPrice = new Label("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
         offPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: red");
 
         JFXButton purchase = new JFXButton("Purchase");
-        if (BuyerManager.getTotalPrice() == 0) {
+        if (totalPrice == 0) {
             purchase.setDisable(true);
         }
         purchase.getStyleClass().add("purchase");
         purchase.setOnMouseClicked(event -> {
             try {
-                if (AccountManager.getOnlineAccount().getUsername().equals("temp")) {
+                if (onlineAccount.getUsername().equals("temp")) {
                     new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(null);
                 } else {
                     paymentPopup();
@@ -116,7 +143,7 @@ public class CartMenu {
             }
         });
 
-        purchaseAndPrice.getChildren().addAll(totalPrice,offPrice, finaTotalPrice, purchase);
+        purchaseAndPrice.getChildren().addAll(totalPriceLabel, offPrice, finaTotalPriceLabel, purchase);
 
         ///-----
 
@@ -150,7 +177,7 @@ public class CartMenu {
                     labelForCartField(good.getCompany(), "Company: "), labelForCartField("" + good.getPrice(), "Price: $"), line);
 
             HBox productBox = new HBox(goodImage, productFields);
-            productFields.getChildren().add(increaseOrDecreaseNumber(totalPrice,finaTotalPrice, offPrice, good, productBox, products));
+            productFields.getChildren().add(increaseOrDecreaseNumber(totalPriceLabel, finaTotalPriceLabel, offPrice, good, productBox, products));
             productFields.setSpacing(9);
             productBox.setPrefWidth(1000);
             productBox.setPadding(new Insets(10, 10, 10, 10));
@@ -182,15 +209,15 @@ public class CartMenu {
         return label;
     }
 
-    private HBox increaseOrDecreaseNumber(Label totalPrice,Label finalTotalPrice,Label offPrice, Good good, HBox productBox, VBox products) {
-        final int[] count = {good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername())};
+    private HBox increaseOrDecreaseNumber(Label totalPriceLabel, Label finalTotalPriceLabel, Label offPrice, Good good, HBox productBox, VBox products) {
+        final int[] count = {good.getGoodsInBuyerCart().get(onlineAccount.getUsername())};
         TextField number = new TextField();
         number.setAlignment(Pos.TOP_CENTER);
         number.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;");
         number.setPadding(new Insets(0, 0, 10, 0));
         number.setPrefSize(50, 30);
         number.setStyle("-fx-background-color: none");
-        number.setText("" + good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()));
+        number.setText("" + good.getGoodsInBuyerCart().get(onlineAccount.getUsername()));
         number.setDisable(true);
         ImageView plus = new ImageView();
         plus.getStyleClass().add("plusCart");
@@ -204,9 +231,9 @@ public class CartMenu {
                 count[0] += 1;
                 number.setText("" + count[0]);
                 good.getGoodsInBuyerCart().put(currentBuyer.getUsername(), count[0]);
-                totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
-                finalTotalPrice.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
-                offPrice.setText("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
+                totalPriceLabel.setText("Total price : " + totalPrice);
+                finalTotalPriceLabel.setText("Final price price: $" + finalPrice);
+                offPrice.setText("Off price: $" + (totalPrice - finalPrice));
             }
 
         });
@@ -227,11 +254,12 @@ public class CartMenu {
             if (count[0] == 0) {
                 good.getGoodsInBuyerCart().remove(AccountManager.getOnlineAccount().getUsername());
                 products.getChildren().remove(productBox);
-                ((Buyer) AccountManager.getOnlineAccount()).getCart().remove(good);
+                ((Buyer) onlineAccount).getCart().remove(good);
             }
-            totalPrice.setText("Total price : " + BuyerManager.getTotalPrice());
-            finalTotalPrice.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
-            offPrice.setText("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
+            totalPriceLabel.setText("Total price : " + totalPrice);
+            finalTotalPriceLabel.setText("Final price price: $" + finalPrice);
+//            finalTotalPriceLabel.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+            offPrice.setText("Off price: $" + (totalPrice - finalPrice));
         });
 
         return new HBox(minus, number, plus);
@@ -346,7 +374,8 @@ public class CartMenu {
     }
 
     private Label totalPrice() {
-        Label totalPrice = new Label("Total price: $ " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+//        Label totalPrice = new Label("Total price: $ " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+        Label totalPrice = new Label("Total price: $ " + finalPrice);
         totalPrice.getStyleClass().add("totalPrice");
         totalPrice.setLayoutX(90);
         totalPrice.setLayoutY(385);
@@ -355,7 +384,8 @@ public class CartMenu {
     }
 
     private Label payableAmount() {
-        finalTotalPrice = BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart());
+//        finalTotalPrice = BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart());
+        finalTotalPrice = finalPrice;
         payableAmount = new Label("payable amount: $ " + ((long) finalTotalPrice));
         payableAmount.getStyleClass().add("totalPrice");
         payableAmount.setLayoutX(90);
@@ -424,7 +454,7 @@ public class CartMenu {
             creditField.getStyleClass().add("paymentFields");
             paymentPane.getChildren().add(creditField);
         } else {
-            AccountManager.getOnlineAccount().increaseCredit(Long.parseLong(creditField.getText()));
+            onlineAccount.increaseCredit(Long.parseLong(creditField.getText()));
             error.setText("your credit increased");
             creditField.setVisible(false);
             paymentButton.setVisible(true);
@@ -436,23 +466,31 @@ public class CartMenu {
                 nameField.getText().length() == 0 || addressField.getText().length() == 0) {
             error.setText("you must fill all the fields");
         } else if (existenceOfDiscount.isSelected()) {
-            discount = Shop.getShop().getDiscountWithCode(((int) Long.parseLong(discountCode.getText())));
-            Date currentDate = new Date();
-            if (discount == null) {
-                error.setText("discount does not exist");
-            } else if (discount.getStartDate().after(currentDate)) {
-                error.setText("It is not yet time to use the discount code");
-            } else if (discount.getEndDate().before(currentDate)) {
-                error.setText("The discount code has expired");
-            } else if (currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount.getCode()) == null) {
-                error.setText("you cannot use the discount anymore");
-            } else {
-                error.setText("");
-                finalTotalPrice = Purchase.getFinalTotalPrice(discount);
-                payableAmount.setText("payable amount: " + ((long) finalTotalPrice));
-                confirmButton.setVisible(false);
-                paymentButton.setVisible(true);
-                increaseCreditButton.setVisible(true);
+            try {
+                dataOutputStream.writeUTF("get discount " + ((int) Long.parseLong(discountCode.getText())));
+                dataOutputStream.flush();
+                Type discountType = new TypeToken<Discount>() {
+                }.getType();
+                discount = new Gson().fromJson(dataInputStream.readUTF(), discountType);
+                Date currentDate = new Date();
+                if (discount == null) {
+                    error.setText("discount does not exist");
+                } else if (discount.getStartDate().after(currentDate)) {
+                    error.setText("It is not yet time to use the discount code");
+                } else if (discount.getEndDate().before(currentDate)) {
+                    error.setText("The discount code has expired");
+                } else if (currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discount.getCode()) == null) {
+                    error.setText("you cannot use the discount anymore");
+                } else {
+                    error.setText("");
+                    finalTotalPrice = Purchase.getFinalTotalPrice(discount);
+                    payableAmount.setText("payable amount: " + ((long) finalTotalPrice));
+                    confirmButton.setVisible(false);
+                    paymentButton.setVisible(true);
+                    increaseCreditButton.setVisible(true);
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
         } else {
             error.setText("");
