@@ -6,37 +6,37 @@ import java.util.List;
 
 public class BuyerManager {
 
-    public static boolean canIncrease(Good good) {
-        int number = good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername());
+    public static boolean canIncrease(Good good, Account account) {
+        int number = good.getGoodsInBuyerCart().get(account.getUsername());
         if (good.getNumber() > number) {
-            good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), number + 1);
+            good.getGoodsInBuyerCart().put(account.getUsername(), number + 1);
             return true;
         }
         return false;
     }
 
-    public static boolean canDecrease(Good good) {
-        int number = good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername());
-        good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), number - 1);
+    public static boolean canDecrease(Good good, Account account) {
+        int number = good.getGoodsInBuyerCart().get(account.getUsername());
+        good.getGoodsInBuyerCart().put(account.getUsername(), number - 1);
         if (number == 1) {
-            good.getGoodsInBuyerCart().remove(AccountManager.getOnlineAccount().getUsername());
-            ((Buyer) AccountManager.getOnlineAccount()).getCart().remove(good);
+            good.getGoodsInBuyerCart().remove(account.getUsername());
+            ((Buyer) account).getCart().remove(good);
             return false;
         }
         return true;
     }
 
-    public static long getTotalPrice() {
+    public static long getTotalPrice(Account account) {
         int amount = 0;
-        for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
-            amount += good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) * good.getPrice();
+        for (Good good : ((Buyer) account).getCart()) {
+            amount += good.getGoodsInBuyerCart().get(account.getUsername()) * good.getPrice();
         }
         return amount;
     }
 
-    public static long getPriceAfterApplyOff(List<Good> goods) {
+    public static long getPriceAfterApplyOff(List<Good> goods, Account account) {
         long totalPrice = 0;
-        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+        Buyer currentBuyer = ((Buyer) account);
         for (Good good : goods) {
             int numberOfGoodInCart = good.getGoodsInBuyerCart().get(currentBuyer.getUsername());
             if (good.getOffId() != 0) {
@@ -52,8 +52,8 @@ public class BuyerManager {
     public static void purchase() {
     }
 
-    public static boolean rateProduct(int id, int rate) {
-        Buyer buyer = (Buyer) AccountManager.getOnlineAccount();
+    public static boolean rateProduct(int id, int rate, Account account) {
+        Buyer buyer = (Buyer) account;
         for (Good good : buyer.getGoods()) {
             if (good.getId() == id) {
                 good.getAllScores().add(rate);

@@ -150,142 +150,142 @@ public class CommandProcessor {
     //seller
 
     public static void showCompanyInfo() {
-        System.out.println("company: " + ((Seller) AccountManager.getOnlineAccount()).getCompany());
+//        System.out.println("company: " + ((Seller) AccountManager.getOnlineAccount()).getCompany());
     }
 
     public static void showSalesHistory() {
-        for (SellerLog sellerLog : ((Seller) AccountManager.getOnlineAccount()).getSellerLogs()) {
-            System.out.println(sellerLog);
-        }
+//        for (SellerLog sellerLog : ((Seller) AccountManager.getOnlineAccount()).getSellerLogs()) {
+//            System.out.println(sellerLog);
+//        }
     }
 
     public static void showHisProducts() {
-        Collections.sort(((Seller) AccountManager.getOnlineAccount()).getGoods());
-        for (Good good : ((Seller) AccountManager.getOnlineAccount()).getGoods()) {
-            System.out.println(good);
-        }
+//        Collections.sort(((Seller) AccountManager.getOnlineAccount()).getGoods());
+//        for (Good good : ((Seller) AccountManager.getOnlineAccount()).getGoods()) {
+//            System.out.println(good);
+//        }
     }
 
     public static boolean showBuyersOfThisProduct(int id) {
-        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-        if (good != null) {
-            System.out.println(good.getBuyersUsername());
-            return true;
-        }
+//        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+//        if (good != ne;
+//        }ull) {
+//            System.out.println(good.getBuyersUsername());
+//            return tru
         return false;
     }
 
     public static void viewBalance() {
-        System.out.println(AccountManager.getOnlineAccount().getCredit());
+//        System.out.println(AccountManager.getOnlineAccount().getCredit());
     }
 
     public static void processRegister(boolean register) {
-        ArrayList<String> info = new ArrayList<>();
-        int flag = 1;
-        while (true) {
-            if (flag == 1) {
-                System.out.print("enter your username: ");
-                String username = Menu.scanner.nextLine();
-                if (checkUsernameInvalidation(username)) {
-                    if (AccountManager.canRegister(username)) {
-                        info.add(username);
-                        flag += 1;
-                    } else {
-                        System.out.println("username exists");
-                    }
-                }
-            } else if (flag == 2) {
-                System.out.print("enter your password: ");
-                String password = Menu.scanner.nextLine();
-                if (checkPasswordInvalidation(password)) {
-                    info.add(password);
-                    flag += 1;
-                }
-            } else if (flag == 3) {
-                if (register) {
-                    if (isAdminRegistered) {
-                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
-                    } else {
-                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
-                    }
-                    int type = Menu.scanner.nextInt();
-                    Menu.scanner.nextLine();
-                    if (checkTypeInvalidation(type)) {
-                        info.add(typeName);
-                        flag += 1;
-                    }
-                } else {
-                    flag += 1;
-                }
-            } else if (flag == 4) {
-                System.out.print("enter your first name: ");
-                String firstName = Menu.scanner.nextLine();
-                if (checkNameInvalidation(firstName)) {
-                    info.add(firstName);
-                    flag += 1;
-                }
-            } else if (flag == 5) {
-                System.out.print("enter your last name: ");
-                String lastName = Menu.scanner.nextLine();
-                if (checkNameInvalidation(lastName)) {
-                    info.add(lastName);
-                    flag += 1;
-                }
-            } else if (flag == 6) {
-                System.out.print("enter your email: ");
-                String email = Menu.scanner.nextLine();
-                if (checkEmailInvalidation(email)) {
-                    info.add(email);
-                    flag += 1;
-                }
-            } else {
-                System.out.print("enter your phone number: ");
-                String phoneNumber = Menu.scanner.nextLine();
-                if (checkPhoneNumberInvalidation(phoneNumber)) {
-                    info.add(phoneNumber);
-                    info.add(company);
-                    if (register) {
-                        AccountManager.register(info.get(0), info.get(1), info.get(2)
-                                , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7), null);
-                        System.out.println(info.get(0) + " was registered successfully");
-                    } else {
-                        AccountManager.register(info.get(0), info.get(1), "admin"
-                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6), null);
-                        System.out.println(" The new manager was registered successfully");
-                    }
-                    break;
-                }
-            }
-        }
+//        ArrayList<String> info = new ArrayList<>();
+//        int flag = 1;
+//        while (true) {
+//            if (flag == 1) {
+//                System.out.print("enter your username: ");
+//                String username = Menu.scanner.nextLine();
+//                if (checkUsernameInvalidation(username)) {
+//                    if (AccountManager.canRegister(username)) {
+//                        info.add(username);
+//                        flag += 1;
+//                    } else {
+//                        System.out.println("username exists");
+//                    }
+//                }
+//            } else if (flag == 2) {
+//                System.out.print("enter your password: ");
+//                String password = Menu.scanner.nextLine();
+//                if (checkPasswordInvalidation(password)) {
+//                    info.add(password);
+//                    flag += 1;
+//                }
+//            } else if (flag == 3) {
+//                if (register) {
+//                    if (isAdminRegistered) {
+//                        System.out.print("enter your type:\n1: buyer\n2: seller\n");
+//                    } else {
+//                        System.out.print("enter your type:\n1: buyer\n2: seller\n3: admin\n");
+//                    }
+//                    int type = Menu.scanner.nextInt();
+//                    Menu.scanner.nextLine();
+//                    if (checkTypeInvalidation(type)) {
+//                        info.add(typeName);
+//                        flag += 1;
+//                    }
+//                } else {
+//                    flag += 1;
+//                }
+//            } else if (flag == 4) {
+//                System.out.print("enter your first name: ");
+//                String firstName = Menu.scanner.nextLine();
+//                if (checkNameInvalidation(firstName)) {
+//                    info.add(firstName);
+//                    flag += 1;
+//                }
+//            } else if (flag == 5) {
+//                System.out.print("enter your last name: ");
+//                String lastName = Menu.scanner.nextLine();
+//                if (checkNameInvalidation(lastName)) {
+//                    info.add(lastName);
+//                    flag += 1;
+//                }
+//            } else if (flag == 6) {
+//                System.out.print("enter your email: ");
+//                String email = Menu.scanner.nextLine();
+//                if (checkEmailInvalidation(email)) {
+//                    info.add(email);
+//                    flag += 1;
+//                }
+//            } else {
+//                System.out.print("enter your phone number: ");
+//                String phoneNumber = Menu.scanner.nextLine();
+//                if (checkPhoneNumberInvalidation(phoneNumber)) {
+//                    info.add(phoneNumber);
+//                    info.add(company);
+//                    if (register) {
+//                        AccountManager.register(info.get(0), info.get(1), info.get(2)
+//                                , info.get(3), info.get(4), info.get(5), info.get(6), info.get(7), null);
+//                        System.out.println(info.get(0) + " was registered successfully");
+//                    } else {
+//                        AccountManager.register(info.get(0), info.get(1), "admin"
+//                                , info.get(2), info.get(3), info.get(4), info.get(5), info.get(6), null);
+//                        System.out.println(" The new manager was registered successfully");
+//                    }
+//                    break;
+//                }
+//            }
+//        }
     }
 
     public static void processLogin() {
-        if (AccountManager.getOnlineAccount() != null) {
-            System.out.println("you are logged in");
-        } else {
-            String username = null, password = null;
-            int flag = 0;
-            while (flag < 2) {
-                if (flag == 0) {
-                    System.out.println("enter your username: ");
-                    username = Menu.scanner.nextLine();
-                    if (checkUsernameInvalidation(username)) {
-                        flag++;
-                    }
-                } else if (flag == 1) {
-                    System.out.println("enter your password: ");
-                    password = Menu.scanner.nextLine();
-                    if (checkPasswordInvalidation(password)) {
-                        flag++;
-                    }
-                }
-            }
-            if (AccountManager.login(username, password)) {
-                System.out.println("login successful");
-            } else {
-                System.out.println("username/password is incorrect");
-            }
-        }
+//        if (AccountManager.getOnlineAccount() != null) {
+//            System.out.println("you are logged in");
+//        } else {
+//            String username = null, password = null;
+//            int flag = 0;
+//            while (flag < 2) {
+//                if (flag == 0) {
+//                    System.out.println("enter your username: ");
+//                    username = Menu.scanner.nextLine();
+//                    if (checkUsernameInvalidation(username)) {
+//                        flag++;
+//                    }
+//                } else if (flag == 1) {
+//                    System.out.println("enter your password: ");
+//                    password = Menu.scanner.nextLine();
+//                    if (checkPasswordInvalidation(password)) {
+//                        flag++;
+//                    }
+//                }
+//            }
+//            if (AccountManager.login(username, password)) {
+//                System.out.println("login successful");
+//            } else {
+//                System.out.println("username/password is incorrect");
+//            }
+//        }
     }
 
     public static void processEditProfile() {
@@ -325,7 +325,7 @@ public class CommandProcessor {
                 String phoneNumber = Menu.scanner.nextLine();
                 if (checkPhoneNumberInvalidation(phoneNumber)) {
                     info.add(phoneNumber);
-                    AccountManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
+//                    AccountManager.editPersonalInfo(info.get(0), info.get(1), info.get(2), info.get(3), info.get(4));
                     break;
                 }
             }
@@ -333,13 +333,13 @@ public class CommandProcessor {
     }
 
     public static void processLogout() {
-        if (AccountManager.getOnlineAccount() == null) {
-            System.out.println("no body is logged in");
-        } else {
-            System.out.println("logout successful");
-            AccountManager.setOnlineAccount(null);
-            Menu.setIsLogged(false);
-        }
+//        if (AccountManager.getOnlineAccount() == null) {
+//            System.out.println("no body is logged in");
+//        } else {
+//            System.out.println("logout successful");
+//            AccountManager.setOnlineAccount(null);
+//            Menu.setIsLogged(false);
+//        }
     }
 
 //    public static void processDeleteAccountByAdmin() {
@@ -356,14 +356,14 @@ public class CommandProcessor {
         while (true) {
             System.out.println("enter your id");
             int id = Menu.scanner.nextInt();
-            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-            if (good == null) {
+//            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+//            if (good == null) {
                 System.out.println("product with id " + id + " doesnt exist");
-            } else {
-                SellerManager.removeProduct(good);
-                System.out.println("product with id " + id + " removed successfully");
-                break;
-            }
+//            } else {
+//                SellerManager.removeProduct(good);
+//                System.out.println("product with id " + id + " removed successfully");
+//                break;
+//            }
         }
 
     }
@@ -440,106 +440,106 @@ public class CommandProcessor {
         String company;
         int number = 0;
         long price = 0;
-        String category = null;
-        String description;
-        HashMap<String, String> categoryAttributes = new HashMap<>();
-        int flag = 1;
-        int id = 0;
-        if (!add) {
-            while (true) {
-                System.out.println("enter your id");
-                id = Menu.scanner.nextInt();
-                Menu.scanner.nextLine();
-                if (((Seller) AccountManager.getOnlineAccount()).getProductWithId(id) != null) {
-                    break;
-                } else {
-                    System.out.println("product with id " + id + " does not exist");
-                }
-            }
-        }
-        System.out.print("enter name of the product: ");
-        name = Menu.scanner.nextLine();
-        System.out.print("enter company of the product: ");
-        company = Menu.scanner.nextLine();
-        while (true) {
-            if (flag == 1) {
-                System.out.print("enter number of the product: ");
-                number = Integer.parseInt(Menu.scanner.nextLine());
-                if (number < 1) {
-                    System.out.println("your number must be larger than 0");
-                } else {
-                    flag += 1;
-                }
-            } else if (flag == 2) {
-                System.out.print("enter price of the product: ");
-                price = Menu.scanner.nextLong();
-                Menu.scanner.nextLine();
-                if (price < 1) {
-                    System.out.println("your price must be larger than 0");
-                } else {
-                    flag += 1;
-                }
-            } else if (flag == 3) {
-                System.out.print("enter category of the product: ");
-                category = Menu.scanner.nextLine();
-                if (Shop.getShop().getCategoryByName(category) == null) {
-                    System.out.println("this category dose not exist");
-                } else {
-                    flag += 1;
-                }
-            } else {
-                for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
-                    System.out.print(attribute + ": ");
-                    categoryAttributes.put(attribute, Menu.scanner.nextLine());
-                }
-                System.out.println("write any description about your product");
-                description = Menu.scanner.nextLine();
-                if (add) {
-//                    SellerManager.addProduct(name, company, number, price, category, categoryAttributes, description,
-//                            "file:src/main/java/view/image/usersamad.jpg");
-                } else {
-                    SellerManager.editProduct(id, name, company, number, price, category, categoryAttributes, description);
-                }
-                break;
-            }
-        }
+//        String category = null;
+//        String description;
+//        HashMap<String, String> categoryAttributes = new HashMap<>();
+//        int flag = 1;
+//        int id = 0;
+//        if (!add) {
+//            while (true) {
+//                System.out.println("enter your id");
+//                id = Menu.scanner.nextInt();
+//                Menu.scanner.nextLine();
+//                if (((Seller) AccountManager.getOnlineAccount()).getProductWithId(id) != null) {
+//                    break;
+//                } else {
+//                    System.out.println("product with id " + id + " does not exist");
+//                }
+//            }
+//        }
+//        System.out.print("enter name of the product: ");
+//        name = Menu.scanner.nextLine();
+//        System.out.print("enter company of the product: ");
+//        company = Menu.scanner.nextLine();
+//        while (true) {
+//            if (flag == 1) {
+//                System.out.print("enter number of the product: ");
+//                number = Integer.parseInt(Menu.scanner.nextLine());
+//                if (number < 1) {
+//                    System.out.println("your number must be larger than 0");
+//                } else {
+//                    flag += 1;
+//                }
+//            } else if (flag == 2) {
+//                System.out.print("enter price of the product: ");
+//                price = Menu.scanner.nextLong();
+//                Menu.scanner.nextLine();
+//                if (price < 1) {
+//                    System.out.println("your price must be larger than 0");
+//                } else {
+//                    flag += 1;
+//                }
+//            } else if (flag == 3) {
+//                System.out.print("enter category of the product: ");
+//                category = Menu.scanner.nextLine();
+//                if (Shop.getShop().getCategoryByName(category) == null) {
+//                    System.out.println("this category dose not exist");
+//                } else {
+//                    flag += 1;
+//                }
+//            } else {
+//                for (String attribute : Shop.getShop().getCategoryByName(category).getAttributes()) {
+//                    System.out.print(attribute + ": ");
+//                    categoryAttributes.put(attribute, Menu.scanner.nextLine());
+//                }
+//                System.out.println("write any description about your product");
+//                description = Menu.scanner.nextLine();
+//                if (add) {
+////                    SellerManager.addProduct(name, company, number, price, category, categoryAttributes, description,
+////                            "file:src/main/java/view/image/usersamad.jpg");
+//                } else {
+//                    SellerManager.editProduct(id, name, company, number, price, category, categoryAttributes, description);
+//                }
+//                break;
+//            }
+//        }
     }
 
     public static void processShowProductByIdForSeller() {
-        System.out.println("enter your id");
-        int id = Menu.scanner.nextInt();
-        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-        if (good == null) {
-            System.out.println("product with this id doesnt exist");
-        } else {
-            System.out.println(good);
-        }
+//        System.out.println("enter your id");
+//        int id = Menu.scanner.nextInt();
+//        Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+//        if (good == null) {
+//            System.out.println("product with this id doesnt exist");
+//        } else {
+//            System.out.println(good);
+//        }
     }
 
     public static void processShowBuyersForSeller() {
-        while (true) {
-            System.out.println("enter your id");
-            int id = Menu.scanner.nextInt();
-            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
-            if (good == null) {
-                System.out.println("product with this id doesnt exist");
-            } else {
-                System.out.println(good.getBuyersUsername());
-                break;
-            }
-        }
+//        while (true) {
+//            System.out.println("enter your id");
+//            int id = Menu.scanner.nextInt();
+//            Good good = ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id);
+//            if (good == null) {
+//                System.out.println("product with this id doesnt exist");
+//            } else {
+//                System.out.println(good.getBuyersUsername());
+//                break;
+//            }
+//        }
     }
 
     public static void processEditDiscountCode() {
-        System.out.print("enter the Discount code for edit: ");
-        int code;
-        code = Menu.scanner.nextInt();
-        Discount discount = Shop.getShop().getDiscountWithCode(code);
-        if (discount == null) {
-            System.out.println("discount code not exist");
-        } else {
-            processAddDiscountCode(discount, true);
-        }
+//        System.out.print("enter the Discount code for edit: ");
+//        int code;
+//        code = Menu.scanner.nextInt();
+//        Discount discount = Shop.getShop().getDiscountWithCode(code);
+//        if (discount == null) {
+//            System.out.println("discount code not exist");
+//        } else {
+//            processAddDiscountCode(discount, true);
+//        }
     }
 
     private static Date getDateByString(String dateInput) {
@@ -565,7 +565,7 @@ public class CommandProcessor {
     }
 
     public static void showPersonalInfo() {
-        System.out.println(AccountManager.getOnlineAccount());
+//        System.out.println(AccountManager.getOnlineAccount());
     }
 
     public static void showDiscountForAdmin() {
@@ -607,45 +607,45 @@ public class CommandProcessor {
     }
 
     public static void showProductsInCart() {
-        Buyer currentBuyer = (Buyer) AccountManager.getOnlineAccount();
-        for (Good good : currentBuyer.getCart()) {
-            System.out.print(good.goodMenuToString());
-            System.out.println("number of this product in your cart: " + good.getGoodsInBuyerCart().get(currentBuyer));
-        }
+//        Buyer currentBuyer = (Buyer) AccountManager.getOnlineAccount();
+//        for (Good good : currentBuyer.getCart()) {
+//            System.out.print(good.goodMenuToString());
+//            System.out.println("number of this product in your cart: " + good.getGoodsInBuyerCart().get(currentBuyer));
+//        }
     }
 
     public static void showProductInCart(int id) {
-        int counter = 0;
-        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
-        if (good != null) {
-            System.out.println("name: " + good.getName() + " id: " + good.getId());
-            counter++;
-        }
-        if (counter == 0) {
-            System.out.println("product with id : " + id + " is not exist");
-        }
+//        int counter = 0;
+//        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+//        if (good != null) {
+//            System.out.println("name: " + good.getName() + " id: " + good.getId());
+//            counter++;
+//        }
+//        if (counter == 0) {
+//            System.out.println("product with id : " + id + " is not exist");
+//        }
         //TODO
     }
 
     public static void showAllOrders() {
-        for (BuyerLog buyerLog : ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogs()) {
-            System.out.println(buyerLog);
-        }
+//        for (BuyerLog buyerLog : ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogs()) {
+//            System.out.println(buyerLog);
+//        }
     }
 
     public static void showOrder(int id) {
-        BuyerLog buyerLog = ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogWithId(id);
-        if (buyerLog == null) {
-            System.out.println("order with id : " + id + " is not exist");
-        } else {
-            System.out.println(buyerLog);
-        }
+//        BuyerLog buyerLog = ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogWithId(id);
+//        if (buyerLog == null) {
+//            System.out.println("order with id : " + id + " is not exist");
+//        } else {
+//            System.out.println(buyerLog);
+//        }
     }
 
     public static void showAllDiscountsCodeForBuyer() {
-        for (Discount discount : ((Buyer) AccountManager.getOnlineAccount()).getDiscounts()) {
-            System.out.println(discount.toStringForBuyer());
-        }
+//        for (Discount discount : ((Buyer) AccountManager.getOnlineAccount()).getDiscounts()) {
+//            System.out.println(discount.toStringForBuyer());
+//        }
     }
 
     public static void processAddOrEditCategory(boolean edit, String oldName) {
@@ -695,11 +695,11 @@ public class CommandProcessor {
     }
 
     public static void viewAllUsers() {
-        for (Account account : Shop.getShop().getAllAccounts()) {
-            if (account != AccountManager.getOnlineAccount()) {
-                System.out.println(account.getUsername());
-            }
-        }
+//        for (Account account : Shop.getShop().getAllAccounts()) {
+//            if (account != AccountManager.getOnlineAccount()) {
+//                System.out.println(account.getUsername());
+//            }
+//        }
     }
 
     public static void processShowAllRequests() {
@@ -711,31 +711,31 @@ public class CommandProcessor {
     public static void processIncreaseNumberOfProductInCart() {
         System.out.print("enter product id: ");
         int id = Integer.parseInt(Menu.scanner.nextLine());
-        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
-        if (good == null) {
-            System.out.println("product with id " + id + " does not exist.");
-        } else {
-            if (!BuyerManager.canIncrease(good)) {
-                System.out.println("There are no more of these products available");
-            } else {
-                System.out.println("the good was increased");
-            }
-        }
+//        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+//        if (good == null) {
+//            System.out.println("product with id " + id + " does not exist.");
+//        } else {
+//            if (!BuyerManager.canIncrease(good)) {
+//                System.out.println("There are no more of these products available");
+//            } else {
+//                System.out.println("the good was increased");
+//            }
+//        }
     }
 
     public static void processDecreaseNumberOfProductInCart() {
-        System.out.print("enter product id: ");
-        int id = Integer.parseInt(Menu.scanner.nextLine());
-        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
-        if (good == null) {
-            System.out.println("product with id " + id + " does not exist.");
-        } else {
-            if (!BuyerManager.canDecrease(good)) {
-                System.out.println("The good was removed from the shopping cart");
-            } else {
-                System.out.println("the good was decreased");
-            }
-        }
+//        System.out.print("enter product id: ");
+//        int id = Integer.parseInt(Menu.scanner.nextLine());
+//        Good good = ((Buyer) AccountManager.getOnlineAccount()).getGoodInCartById(id);
+//        if (good == null) {
+//            System.out.println("product with id " + id + " does not exist.");
+//        } else {
+//            if (!BuyerManager.canDecrease(good)) {
+//                System.out.println("The good was removed from the shopping cart");
+//            } else {
+//                System.out.println("the good was decreased");
+//            }
+//        }
     }
 
     public static void processShowRequestDetail() {
@@ -1150,7 +1150,7 @@ public class CommandProcessor {
         }
         if (edit) {
             System.out.println("the edit off request sent");
-            SellerManager.editOff(offId, goods, startDate1, endDate1, discount);
+//            SellerManager.editOff(offId, goods, startDate1, endDate1, discount);
         } else {
             System.out.println("the add off request sent");
 //            SellerManager.addOff(goods, startDate1, endDate1, discount);
@@ -1179,9 +1179,9 @@ public class CommandProcessor {
     }
 
     public static void showAllOffsForSeller() {
-        for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
-            System.out.println(off);
-        }
+//        for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
+//            System.out.println(off);
+//        }
     }
 
     public static void processAddToCart() {
@@ -1203,7 +1203,7 @@ public class CommandProcessor {
     public static void processIncreaseCredit() {
         System.out.println("enter the amount of credit charge: ");
         long credit = Integer.parseInt(Menu.scanner.nextLine());
-        (AccountManager.getOnlineAccount()).increaseCredit(credit);
+//        (AccountManager.getOnlineAccount()).increaseCredit(credit);
         System.out.println("Your credit has increased by " + credit + " units");
     }
 }

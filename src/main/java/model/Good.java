@@ -79,8 +79,8 @@ public class Good implements Comparable<Good> {
         this.visitNumber = visitNumber;
     }
 
-    public void subtractNumber() {
-        int numberOfGoodInCart = getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername());
+    public void subtractNumber(Account account) {
+        int numberOfGoodInCart = getGoodsInBuyerCart().get(account.getUsername());
         this.number -= numberOfGoodInCart;
     }
 

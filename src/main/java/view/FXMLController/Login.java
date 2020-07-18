@@ -31,14 +31,16 @@ import model.Buyer;
 import model.Good;
 import view.CommandProcessor;
 import view.NumberField;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
+
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.loginURL;
 
-public class Login{
+public class Login {
     private AnchorPane mainPane;
     private AnchorPane loginPane;
     private TextField usernameField;
@@ -63,12 +65,22 @@ public class Login{
     private AnchorPane mainMenu;
     private MainMenu main;
 
-    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main) {
+    private Socket socket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private Account onlineAccount;
+
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
+                 Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
         this.btnCartMenu = btnCartMenu;
         this.mainMenu = mainMenu;
         this.main = main;
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -134,7 +146,13 @@ public class Login{
         button.setLayoutX(100);
         button.setLayoutY(370);
         button.getStyleClass().add("login");
-        button.setOnMouseClicked(event -> processLogin());
+        button.setOnMouseClicked(event -> {
+            try {
+                processLogin();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         return button;
     }
 
@@ -221,7 +239,13 @@ public class Login{
                 passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(),
                 sellerType, buyerType, signUp, error);
 
-        signUp.setOnMouseClicked(event -> processRegister());
+        signUp.setOnMouseClicked(event -> {
+            try {
+                processRegister();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private Button typeOfSignUp(String text, int y) {
@@ -331,21 +355,23 @@ public class Login{
 
     }
 
-    private void processLogin() {
+    private void processLogin() throws IOException {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
-        Buyer temp = ((Buyer) AccountManager.getOnlineAccount());
-        if (AccountManager.login(username, password)) {
+        Buyer temp = ((Buyer) onlineAccount);
+        dataOutputStream.writeUTF("can login " + username + " " + password);
+        dataOutputStream.flush();
+        if (dataInputStream.readUTF().equals("true")) {
             popupWindow.close();
             handleUserBtn();
-            if (!(AccountManager.getOnlineAccount() instanceof Buyer)) {
+            if (!(onlineAccount instanceof Buyer)) {
                 btnCartMenu.setVisible(false);
             } else {
                 btnCartMenu.setVisible(true);
-                ((Buyer) AccountManager.getOnlineAccount()).getCart().addAll(temp.getCart());
+                ((Buyer) onlineAccount).getCart().addAll(temp.getCart());
                 for (Good good : temp.getCart()) {
                     int number = good.getGoodsInBuyerCart().get("temp");
-                    good.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), number);
+                    good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), number);
                     good.getGoodsInBuyerCart().remove("temp");
                 }
             }
@@ -358,7 +384,7 @@ public class Login{
         }
     }
 
-    private void processRegister() {
+    private void processRegister() throws IOException {
         String firstName = firstNameText.getText();
         String lastName = lastNameText.getText();
         String username = usernameFieldForSignUp.getText();
@@ -377,9 +403,14 @@ public class Login{
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
-                        if (AccountManager.canRegister(username)) {
-                            AccountManager.register(username, password, type, firstName, lastName, email, phoneNumber
-                                    , company, imagePath);
+                        dataOutputStream.writeUTF("can register " + username);
+                        dataOutputStream.flush();
+                        if (dataInputStream.readUTF().equals("true")) {
+                            dataOutputStream.writeUTF("register " + username + " " + password + " " + type + " " + firstName
+                                    + " " + lastName + " " + email + " " + phoneNumber + " " + company + " " + imagePath);
+                            dataOutputStream.flush();
+//                            AccountManager.register(username, password, type, firstName, lastName, email, phoneNumber
+//                                    , company, imagePath);
                             popupWindow.close();
                             fade(0.5, 10);
                         } else {
@@ -425,7 +456,7 @@ public class Login{
 
         HBox hBox = new HBox();
         Circle circle = new Circle(20);
-        ImagePattern pattern = new ImagePattern(new Image("file:" + AccountManager.getOnlineAccount().getImagePath()));
+        ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(1.5);
         circle.setStroke(Color.rgb(16, 137, 255));
@@ -443,7 +474,7 @@ public class Login{
 
         popupUser.setAlignment(Pos.CENTER);
 
-        Label username = new Label("Hi " + AccountManager.getOnlineAccount().getUsername());
+        Label username = new Label("Hi " + onlineAccount.getUsername());
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, username);
@@ -453,7 +484,13 @@ public class Login{
         accountPage.setPrefHeight(40);
         accountPage.getStyleClass().add("accountPageBtn");
         accountPage.setAlignment(Pos.BASELINE_LEFT);
-        accountPage.setOnMouseClicked(e-> createAccountPanel());
+        accountPage.setOnMouseClicked(e -> {
+            try {
+                createAccountPanel();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         Button logout = new Button("Log out");
         logout.getStyleClass().add("logoutBtn");
@@ -476,20 +513,20 @@ public class Login{
 
     }
 
-    private void createAccountPanel() {
+    private void createAccountPanel() throws IOException {
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
-        if (AccountManager.getOnlineAccount() instanceof Admin) {
+        if (onlineAccount instanceof Admin) {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
-        } else if (AccountManager.getOnlineAccount() instanceof Buyer) {
+        } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else {
-            new SellerPanel(mainPane,main, mainMenu, user, btnLogin).changePane();
+            new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         }
     }
 
     private void logout() {
-        AccountManager.setOnlineAccount(new Buyer("temp"));
+        onlineAccount = new Buyer("temp");
         user.setVisible(false);
         popupUser.getChildren().clear();
         popupUser.setVisible(false);
@@ -512,7 +549,6 @@ public class Login{
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
     }
-
 
 
 }

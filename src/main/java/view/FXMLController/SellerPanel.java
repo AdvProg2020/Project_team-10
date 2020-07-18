@@ -71,6 +71,7 @@ public class SellerPanel {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
+    private Account onlineAccount = new Buyer("temp");
 
     private JFXDatePicker startDate;
     private JFXTimePicker startTime;
@@ -85,7 +86,12 @@ public class SellerPanel {
     private TextField phoneNumber;
     private PasswordField password;
 
-    public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket) throws IOException {
+    private AnchorPane loginPane;
+    private Label error;
+    private Stage popupWindow;
+
+    public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
+            , Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.main = main;
         this.mainMenu = mainMenu;
@@ -94,6 +100,7 @@ public class SellerPanel {
         this.socket = socket;
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
         sellerPane = new AnchorPane();
         optionsPane = new AnchorPane();
         sellerScrollPane = new ScrollPane();
@@ -111,19 +118,19 @@ public class SellerPanel {
         if (name.equals("First name: ")) {
             label.setText(" First name: ");
             firstName = field;
-            field.setText(AccountManager.getOnlineAccount().getFirstName());
+            field.setText(onlineAccount.getFirstName());
         } else if (name.equals("Last name: ")) {
             lastName = field;
             label.setText(" Last name: ");
-            field.setText(AccountManager.getOnlineAccount().getLastName());
+            field.setText(onlineAccount.getLastName());
         } else if (name.equals("Email: ")) {
             email = field;
             label.setText(" Email: ");
-            field.setText(AccountManager.getOnlineAccount().getEmail());
+            field.setText(onlineAccount.getEmail());
         } else if (name.equals("Phone: ")) {
             NumberField numberField = new NumberField();
             numberField.setPrefSize(350, 40);
-            numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
+            numberField.setText(onlineAccount.getPhoneNumber());
             label.setText(" Phone number: ");
             field = numberField;
             phoneNumber = field;
@@ -159,7 +166,13 @@ public class SellerPanel {
         back.setFitWidth(30);
         back.setFitHeight(30);
         backBox.getChildren().add(back);
-        back.setOnMouseClicked(event -> handelButtonOnMouseClick());
+        back.setOnMouseClicked(event -> {
+            try {
+                handelButtonOnMouseClick();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         VBox currentPass = boxForEdit("password");
         currentPass.setDisable(true);
@@ -170,7 +183,13 @@ public class SellerPanel {
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
         submit.setPrefSize(780, 40);
-        submit.setOnMouseClicked(event -> processEdit());
+        submit.setOnMouseClicked(event -> {
+            try {
+                processEdit();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
@@ -179,8 +198,11 @@ public class SellerPanel {
 
     }
 
-    private void processEdit() {
-        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
+    private void processEdit() throws IOException {
+        dataOutputStream.writeUTF("edit profile " + password.getText() + " " + firstName.getText() + " " +
+                lastName.getText() + " " + phoneNumber.getText() + " " + email.getText());
+        dataOutputStream.flush();
+
         handelButtonOnMouseClick();
     }
 
@@ -192,7 +214,7 @@ public class SellerPanel {
 
         HBox hBox = new HBox();
         Circle circle = new Circle(40);
-        ImagePattern pattern = new ImagePattern(new Image("file:" + AccountManager.getOnlineAccount().getImagePath()));
+        ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(4);
         circle.setStroke(Color.rgb(16, 137, 255));
@@ -205,7 +227,7 @@ public class SellerPanel {
         ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
         credit.setFitHeight(20);
         credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + AccountManager.getOnlineAccount().getCredit());
+        Label creditLabel = new Label("$" + onlineAccount.getCredit());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00ff30");
 
@@ -215,7 +237,7 @@ public class SellerPanel {
 
 
         VBox vBoxP = new VBox();
-        Label username = new Label("Hi " + AccountManager.getOnlineAccount().getUsername());
+        Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
         vBoxP.setSpacing(8);
         vBoxP.getChildren().addAll(username, hBox1);
@@ -275,19 +297,23 @@ public class SellerPanel {
             imageViewSelectedButton = imageView;
             selectedButton = button;
             selectedButton.setGraphic(imageViewHover);
-            handelButtonOnMouseClick();
+            try {
+                handelButtonOnMouseClick();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
         return button;
     }
 
-    private void handelButtonOnMouseClick() {
+    private void handelButtonOnMouseClick() throws IOException {
 
         sellerPane.getChildren().remove(sellerScrollPane);
         sellerScrollPane.setPrefSize(1150, 620);
         sellerScrollPane.getStyleClass().add("scroll-bar");
         sellerScrollPane.setLayoutX(330);
         sellerScrollPane.setLayoutY(35);
-        Seller currentAccount = ((Seller) AccountManager.getOnlineAccount());
+        Seller currentAccount = ((Seller) onlineAccount);
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -334,7 +360,7 @@ public class SellerPanel {
                 sellerPane.getChildren().add(sellerScrollPane);
                 break;
             case "Log out":
-                AccountManager.setOnlineAccount(new Buyer("temp"));
+                onlineAccount = new Buyer("temp");
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -412,7 +438,7 @@ public class SellerPanel {
         return line;
     }
 
-    private FlowPane handelManageOff() {
+    private FlowPane handelManageOff() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
@@ -460,7 +486,7 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, startDate, endDate, goodText, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        for (Off off : ((Seller) AccountManager.getOnlineAccount()).getOffs()) {
+        for (Off off : ((Seller) onlineAccount).getOffs()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
@@ -535,7 +561,12 @@ public class SellerPanel {
             bin.setFitWidth(31);
             bin.setFitHeight(25);
             bin.setOnMouseClicked(e -> {
-                SellerManager.removeOff(off);
+                try {
+                    dataOutputStream.writeUTF("remove off " + off.getId());
+                    dataOutputStream.flush();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 flowPane.getChildren().remove(hBox);
             });
 
@@ -575,7 +606,7 @@ public class SellerPanel {
         return vBox;
     }
 
-    private void addGood() {
+    private void addGood() throws  IOException {
         error.setText("");
         loginPane.getChildren().clear();
 
@@ -659,7 +690,11 @@ public class SellerPanel {
         submit.setPrefSize(400, 40);
         submit.getStyleClass().add("signUp");
         submit.setOnAction(event -> {
-            processAddProduct();
+            try {
+                processAddProduct();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         Button selectAVideo = new Button("Select a video");
@@ -694,23 +729,37 @@ public class SellerPanel {
         categoryRadioButtonBox.setPrefSize(110, 95);
         //showCategory
 
-        for (Category category : Shop.getShop().getAllCategories()) {
+        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.flush();
+        Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
+        }.getType();
+        ArrayList<Category> allCategories = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
+
+        for (Category category : allCategories) {
             JFXRadioButton radioButton = new JFXRadioButton(category.getName());
             categoryRadioButtonBox.getChildren().add(radioButton);
             radioButton.setSelectedColor(Color.YELLOW);
             radioButton.setUnSelectedColor(Color.WHITE);
             radioButton.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white");
             radioButton.setOnMouseClicked(event -> {
-                selectedCategory = radioButton;
-                Category categorySelected = Shop.getShop().getCategoryByName(selectedCategory.getText());
-                attributeBox.getChildren().clear();
-                for (String attribute : categorySelected.getAttributes()) {
-                    TextField attributeField = new TextField();
-                    attributeField.setPrefSize(260, 30);
-                    attributeField.setPromptText(attribute);
-                    attributeField.getStyleClass().add("text-fieldForSignUp");
-                    attributeBox.getChildren().add(attributeField);
-                    categoryAttributes.add(attributeField);
+                try {
+                    selectedCategory = radioButton;
+                    dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+                    dataOutputStream.flush();
+                    Type categoryType = new TypeToken<Category>() {
+                    }.getType();
+                    Category categorySelected = new Gson().fromJson(dataInputStream.readUTF(), categoryType);
+                    attributeBox.getChildren().clear();
+                    for (String attribute : categorySelected.getAttributes()) {
+                        TextField attributeField = new TextField();
+                        attributeField.setPrefSize(260, 30);
+                        attributeField.setPromptText(attribute);
+                        attributeField.getStyleClass().add("text-fieldForSignUp");
+                        attributeBox.getChildren().add(attributeField);
+                        categoryAttributes.add(attributeField);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
         }
@@ -768,17 +817,27 @@ public class SellerPanel {
         }
     }
 
-    private void processAddProduct() {
+    private void processAddProduct() throws IOException {
         if (isAllFieldsFilled()) {
-            Category selectedCategory = Shop.getShop().getCategoryByName(this.selectedCategory.getText());
+            dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+            dataOutputStream.flush();
+            Type categoryType = new TypeToken<Category>() {
+            }.getType();
+            Category selectedCategory = new Gson().fromJson(dataInputStream.readUTF(), categoryType);
             HashMap<String, String> hashMap = new HashMap<>();
             for (int i = 0; i < selectedCategory.getAttributes().size(); i++) {
                 hashMap.put(selectedCategory.getAttributes().get(i), categoryAttributes.get(i).getText());
             }
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
-            SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
-                    hashMap, description.getText(), selectedImageFile.getAbsolutePath(), selectedVideoFile.getAbsolutePath());
+
+            dataOutputStream.writeUTF("create product " + goodName.getText() + " " + company.getText() + " " + number
+                    + " " + price + " " + selectedCategory.getName() + " " + new Gson().toJson(hashMap) + " " + description.getText()
+                    + " " + selectedImageFile.getAbsolutePath() + " " + selectedVideoFile.getAbsolutePath());
+            dataOutputStream.flush();
+//            SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
+//                    hashMap, description.getText(), selectedImageFile.getAbsolutePath(), selectedVideoFile.getAbsolutePath());
+
             popupWindow.close();
             fade(0.5, 10);
             sellerScrollPane.setContent(null);
@@ -800,10 +859,6 @@ public class SellerPanel {
         return exitButton;
     }
 
-    private AnchorPane loginPane;
-    private Label error;
-    private Stage popupWindow;
-
     private void fade(double fromValue, double toValue) {
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(600));
@@ -812,7 +867,6 @@ public class SellerPanel {
         fade.setNode(mainPane);
         fade.play();
     }
-
 
     public void popup(String input) throws IOException {
         loginPane = new AnchorPane();
@@ -871,7 +925,11 @@ public class SellerPanel {
         submit.setPrefSize(400, 40);
         submit.getStyleClass().add("signUp");
         submit.setOnMouseClicked(event -> {
-            processAddOff();
+            try {
+                processAddOff();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         startDate = new JFXDatePicker();
@@ -940,7 +998,7 @@ public class SellerPanel {
         scrollPane.getStyleClass().add("scroll-barInDiscount");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        Seller seller = ((Seller) AccountManager.getOnlineAccount());
+        Seller seller = ((Seller) onlineAccount);
 
         for (Good good : seller.getGoods()) {
             VBox vBox = new VBox();
@@ -970,7 +1028,7 @@ public class SellerPanel {
 
     }
 
-    private void processAddOff() {
+    private void processAddOff() throws IOException {
         String startYear = "" + startDate.getValue().getYear();
         String endYear = "" + endDate.getValue().getYear();
         String startMonth = "" + startDate.getValue().getMonthValue();
@@ -992,7 +1050,12 @@ public class SellerPanel {
         String startDate = (startMonth + "/" + startDay + "/" + startYear + " " + this.startTime.getValue());
         String endDate = (endMonth + "/" + endDay + "/" + endYear + " " + this.endTime.getValue());
         int percent = Integer.parseInt(this.percent.getText());
-        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
+
+        dataOutputStream.writeUTF("create off " + new Gson().toJson(selectedGoodsId) + " " +
+                new Gson().toJson(AdminPanel.getDateByString(startDate)) + " " + new Gson().toJson(AdminPanel.getDateByString(endDate))
+                + " " + percent);
+        dataOutputStream.flush();
+//        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
         popupWindow.close();
         fade(0.5, 10);
         sellerScrollPane.setContent(handelManageOff());
@@ -1026,7 +1089,7 @@ public class SellerPanel {
         addGoodBox.setAlignment(Pos.CENTER);
         flowPane.getChildren().add(addGoodBox);
 
-        for (Good good : ((Seller) AccountManager.getOnlineAccount()).getGoods()) {
+        for (Good good : ((Seller) onlineAccount).getGoods()) {
             VBox goodPack = new VBox();
             goodPack.setPrefWidth(225);
             goodPack.setPrefHeight(350);
@@ -1057,7 +1120,12 @@ public class SellerPanel {
             hBox.setPadding(new Insets(0, 20, 0, 0));
             goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
-                SellerManager.removeProduct(good);
+                try {
+                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.flush();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 flowPane.getChildren().remove(goodPack);
             });
             flowPane.getChildren().add(goodPack);
@@ -1065,7 +1133,6 @@ public class SellerPanel {
 
         return flowPane;
     }
-
 
     public void backToMainMenu() {
         main.updateFilters = true;

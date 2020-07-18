@@ -62,6 +62,8 @@ public class MainMenu implements Initializable {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
+    private Account onlineAccount = new Buyer("temp");
+
     public ArrayList<Good> filteredGoods;
     private String kindOfSort = "visit number";
     private Map<String, String> kindOfFilter = new HashMap<>();
@@ -125,7 +127,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
     }
 
     public FlowPane createPage(int pageIndex) {
@@ -288,7 +290,7 @@ public class MainMenu implements Initializable {
         this.location = location;
         this.resources = resources;
         HBox hBox = new HBox();
-        if (AccountManager.getOnlineAccount() instanceof Buyer) {
+        if (onlineAccount instanceof Buyer) {
             btnCartMenu.setVisible(true);
         }
         ImageView imageSort = new ImageView(new Image("file:src/main/java/view/image/sorticon.png"));

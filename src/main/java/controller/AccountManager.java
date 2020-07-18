@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class AccountManager {
-    private static Account onlineAccount = new Buyer("temp");
+//    private static Account onlineAccount = new Buyer("temp");
     private static int lastRequestId;
     private static int lastGoodId;
     private static int lastCommentId;
@@ -108,19 +108,19 @@ public class AccountManager {
         return lastSellerLogId;
     }
 
-    public static Account getOnlineAccount() {
-        return onlineAccount;
-    }
+//    private static Account getOnlineAccount() {
+//        return onlineAccount;
+//    }
 
-    public static void setOnlineAccount(Account onlineAccount) {
-        AccountManager.onlineAccount = onlineAccount;
-    }
+//    private static void setOnlineAccount(Account onlineAccount) {
+//        AccountManager.onlineAccount = onlineAccount;
+//    }
 
     // logical methods
 
-    public static boolean canRegister(String username) {
-        return Shop.getShop().getAccountByUsername(username) == null;
-    }
+//    private static boolean canRegister(String username) {
+//        return Shop.getShop().getAccountByUsername(username) == null;
+//    }
 
     public static void register(String username, String password, String type, String firstName,
                                 String lastName, String email, String phoneNumber, String company, String imagePath) {
@@ -142,26 +142,27 @@ public class AccountManager {
         }
     }
 
-    public static boolean login(String username, String password) {
+    public static Account canLogin(String username, String password) {
         for (Account account : Shop.getShop().getAllAccounts()) {
             if (account.getUsername().equals(username)) {
                 if (account.getPassword().equals(password)) {
-                    onlineAccount = Shop.getShop().getAccountByUsername(username);
+//                    onlineAccount = Shop.getShop().getAccountByUsername(username);
                     Menu.setIsLogged(true);
                     UserMenu.setUsername(username);
-                    return true;
+                    return Shop.getShop().getAccountByUsername(username);
                 }
             }
         }
-        return false;
+        return null;
     }
 
-    public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber, String email) {
-        AccountManager.getOnlineAccount().setPassword(password);
-        AccountManager.getOnlineAccount().setFirstName(firstName);
-        AccountManager.getOnlineAccount().setLastName(lastName);
-        AccountManager.getOnlineAccount().setPhoneNumber(phoneNumber);
-        AccountManager.getOnlineAccount().setEmail(email);
+    public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber
+            , String email, Account account) {
+        account.setPassword(password);
+        account.setFirstName(firstName);
+        account.setLastName(lastName);
+        account.setPhoneNumber(phoneNumber);
+        account.setEmail(email);
     }
 
 
