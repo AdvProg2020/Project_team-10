@@ -1,5 +1,7 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.GoodsManager;
@@ -31,8 +33,9 @@ import javafx.util.Duration;
 import model.*;
 import view.NumberField;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -65,6 +68,9 @@ public class SellerPanel {
     private TextField description;
     private JFXRadioButton selectedCategory;
     private ArrayList<TextField> categoryAttributes;
+    private Socket socket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
 
     private JFXDatePicker startDate;
     private JFXTimePicker startTime;
@@ -78,6 +84,22 @@ public class SellerPanel {
     private TextField email;
     private TextField phoneNumber;
     private PasswordField password;
+
+    public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket) throws IOException {
+        this.mainPane = mainPane;
+        this.main = main;
+        this.mainMenu = mainMenu;
+        this.btnLogin = btnLogin;
+        this.user = user;
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        sellerPane = new AnchorPane();
+        optionsPane = new AnchorPane();
+        sellerScrollPane = new ScrollPane();
+        handelButtonOnMouseClick();
+    }
+
 
     private VBox boxForEdit(String name) {
         VBox boxFirstName = new VBox(2);
@@ -131,7 +153,7 @@ public class SellerPanel {
         flowPane.setVgap(12);
 
         VBox backBox = new VBox();
-        backBox.setPrefSize(800 , 40);
+        backBox.setPrefSize(800, 40);
         ImageView back = new ImageView();
         back.getStyleClass().add("backStyle");
         back.setFitWidth(30);
@@ -144,33 +166,21 @@ public class SellerPanel {
         VBox newPass = boxForEdit("newPass");
 
         VBox submitBox = new VBox();
-        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        submitBox.setPadding(new Insets(20, 0, 0, 0));
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
-        submit.setPrefSize(780 , 40);
+        submit.setPrefSize(780, 40);
         submit.setOnMouseClicked(event -> processEdit());
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass, submitBox);
 
 
     }
 
     private void processEdit() {
         AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
-        handelButtonOnMouseClick();
-    }
-
-    public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
-        this.mainPane = mainPane;
-        this.main = main;
-        this.mainMenu = mainMenu;
-        this.btnLogin = btnLogin;
-        this.user = user;
-        sellerPane = new AnchorPane();
-        optionsPane = new AnchorPane();
-        sellerScrollPane = new ScrollPane();
         handelButtonOnMouseClick();
     }
 
@@ -305,7 +315,7 @@ public class SellerPanel {
                         createItemOfProfile("Full name:", currentAccount.getFirstName() + " " + currentAccount.getLastName()),
                         createItemOfProfile("Phone number:", currentAccount.getPhoneNumber()),
                         createItemOfProfile("Email:", currentAccount.getEmail()),
-                        createCompanyOfProfile(currentAccount.getCompany()) , hyperLink);
+                        createCompanyOfProfile(currentAccount.getCompany()), hyperLink);
                 sellerScrollPane.setContent(flowPane);
                 sellerPane.getChildren().add(sellerScrollPane);
                 sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -332,7 +342,7 @@ public class SellerPanel {
         }
     }
 
-    private FlowPane handelCategory() {
+    private FlowPane handelCategory() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
@@ -359,8 +369,13 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, attributesTitle);
         flowPane.getChildren().add(hBoxTitle);
 
+        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.flush();
+        Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
+        }.getType();
+        ArrayList<Category> categories = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
 
-        for (Category category : Shop.getShop().getAllCategories()) {
+        for (Category category : categories) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
@@ -480,7 +495,11 @@ public class SellerPanel {
             for (Integer goodId : off.getGoodsId()) {
                 HBox goodPack = new HBox(1);
                 goodPack.setPadding(new Insets(5, 5, 5, 5));
-                Good good = Shop.getShop().getProductWithId(goodId);
+                dataOutputStream.writeUTF("get product " + goodId);
+                dataOutputStream.flush();
+                Type productType = new TypeToken<Good>() {
+                }.getType();
+                Good good = new Gson().fromJson(dataInputStream.readUTF(), productType);
                 VBox vBox = new VBox(2);
                 vBox.setPrefWidth(43);
                 vBox.setPrefHeight(60);
@@ -494,9 +513,10 @@ public class SellerPanel {
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden'; -fx-font-size: 8px;-fx-font-weight: bold;-fx-text-fill: black");
                 vBox.setOnMouseEntered(event -> fadeEffect(vBox));
                 productImage.setOnMouseClicked(event -> {
-                    GoodsManager.setCurrentGood(good);
+                    GoodMenu goodMenu = new GoodMenu(mainPane);
+                    goodMenu.setCurrentGood(good);
                     mainPane.getChildren().remove(Login.currentPane);
-                    new GoodMenu(mainPane).changePane();
+                    goodMenu.changePane();
                 });
                 vBox.setAlignment(Pos.CENTER);
                 vBox.getChildren().addAll(name, price);
@@ -673,6 +693,7 @@ public class SellerPanel {
         VBox categoryRadioButtonBox = new VBox(8);
         categoryRadioButtonBox.setPrefSize(110, 95);
         //showCategory
+
         for (Category category : Shop.getShop().getAllCategories()) {
             JFXRadioButton radioButton = new JFXRadioButton(category.getName());
             categoryRadioButtonBox.getChildren().add(radioButton);
@@ -1020,9 +1041,10 @@ public class SellerPanel {
             price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
             goodPack.setOnMouseEntered(event -> fadeEffect(goodPack));
             productImage.setOnMouseClicked(event -> {
-                GoodsManager.setCurrentGood(good);
+                GoodMenu goodMenu = new GoodMenu(mainPane);
+                goodMenu.setCurrentGood(good);
                 mainPane.getChildren().remove(Login.currentPane);
-                new GoodMenu(mainPane).changePane();
+                goodMenu.changePane();
             });
             goodPack.setAlignment(Pos.CENTER);
             ImageView bin = new ImageView();

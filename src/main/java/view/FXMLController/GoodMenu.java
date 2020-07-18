@@ -46,10 +46,10 @@ public class GoodMenu {
     private NumberField scoreField;
     private Label error;
     private boolean isPlaying;
-    private static Good currentGood;
+    private Good currentGood;
 
-    public static void setCurrentGood(Good currentGood) {
-        GoodMenu.currentGood = currentGood;
+    public void setCurrentGood(Good currentGood) {
+        this.currentGood = currentGood;
     }
 
     public GoodMenu(AnchorPane mainPane) {
@@ -97,8 +97,8 @@ public class GoodMenu {
     static double inity;
     static int height;
     static int width;
-    public static String path = GoodsManager.getCurrentGood().getImagePath();
-    static Scene initialScene,View;
+//    public String path = currentGood.getImagePath();
+//    static Scene initialScene,View;
     static double offSetX,offSetY,zoomlvl;
 
     private VBox initView(){
@@ -107,7 +107,7 @@ public class GoodMenu {
 
         Image source = null;
         try {
-            source = new Image(new FileInputStream(path));
+            source = new Image(new FileInputStream(currentGood.getImagePath()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -362,7 +362,7 @@ public class GoodMenu {
 
     private void similarProducts(AnchorPane innerPane) {
         HBox goods = new HBox();
-        for (Good good : Shop.getShop().getCategoryByName(GoodsManager.getCurrentGood().getCategory()).getGoods()) {
+        for (Good good : Shop.getShop().getCategoryByName(currentGood.getCategory()).getGoods()) {
             VBox productBox = new VBox();
             productBox.setPrefWidth(180);
             productBox.setPrefHeight(200);
@@ -396,7 +396,7 @@ public class GoodMenu {
     private boolean canScore() {
         if (AccountManager.getOnlineAccount() instanceof Buyer) {
             for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getGoods()) {
-                if (good.getId() == GoodsManager.getCurrentGood().getId()) {
+                if (good.getId() == currentGood.getId()) {
                     return true;
                 }
             }
@@ -513,7 +513,6 @@ public class GoodMenu {
         VBox productFields = new VBox();
         productFields.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
 
-        Good currentGood = GoodsManager.getCurrentGood();
         HBox boxOneFiled = new HBox();
         Label sellerLabel = new Label(" Seller");
         sellerLabel.setPrefSize(150, 60);
@@ -576,7 +575,6 @@ public class GoodMenu {
     }
 
     private VBox comments() {
-        Good currentGood = GoodsManager.getCurrentGood();
         VBox comments = new VBox();
         for (Comment comment : currentGood.getComments()) {
             VBox commentVBox = new VBox(4);
@@ -703,8 +701,8 @@ public class GoodMenu {
         submit.setOnMouseClicked(event -> {
             popupWindow.close();
             fade(0.5, 10);
-            GoodsManager.getCurrentGood().getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
-                    GoodsManager.getCurrentGood().getId(), "" + content.getText(), "" + title.getText()));
+            currentGood.getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
+                    currentGood.getId(), "" + content.getText(), "" + title.getText()));
         });
         return submit;
     }
@@ -723,7 +721,7 @@ public class GoodMenu {
             } else {
                 popupWindow.close();
                 fade(0.5, 10);
-                GoodsManager.getCurrentGood().getAllScores().add(Integer.parseInt(scoreField.getText()));
+                currentGood.getAllScores().add(Integer.parseInt(scoreField.getText()));
             }
         });
         return submit;

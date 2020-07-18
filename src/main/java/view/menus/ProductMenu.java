@@ -17,7 +17,7 @@ public class ProductMenu extends Menu {
 
     @Override
     public void show() {
-        System.out.println("name: " + GoodsManager.getCurrentGood().getName());
+//        System.out.println("name: " + GoodsManager.getCurrentGood().getName());
         super.show();
     }
 

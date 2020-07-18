@@ -780,62 +780,62 @@ public class CommandProcessor {
     }
 
     public static void getKindOfSort(Menu currentMenu) {
-        int selectedSort = Integer.parseInt(Menu.scanner.nextLine());
-        if (selectedSort > 0 && selectedSort < 6) {
-            if (selectedSort == 1) {
-                GoodsManager.setKindOfSort("time");
-            } else if (selectedSort == 2) {
-                GoodsManager.setKindOfSort("score");
-            } else if (selectedSort == 3) {
-                GoodsManager.setKindOfSort("visit number");
-            } else if (selectedSort == 4) {
-                GoodsManager.setKindOfSort("price");
-            }
-            currentMenu.getParentMenu().show();
-            currentMenu.getParentMenu().execute();
-        } else {
-            System.out.println("you must choose one of following options");
-            currentMenu.show();
-            currentMenu.execute();
-        }
+//        int selectedSort = Integer.parseInt(Menu.scanner.nextLine());
+//        if (selectedSort > 0 && selectedSort < 6) {
+//            if (selectedSort == 1) {
+//                GoodsManager.setKindOfSort("time");
+//            } else if (selectedSort == 2) {
+//                GoodsManager.setKindOfSort("score");
+//            } else if (selectedSort == 3) {
+//                GoodsManager.setKindOfSort("visit number");
+//            } else if (selectedSort == 4) {
+//                GoodsManager.setKindOfSort("price");
+//            }
+//            currentMenu.getParentMenu().show();
+//            currentMenu.getParentMenu().execute();
+//        } else {
+//            System.out.println("you must choose one of following options");
+//            currentMenu.show();
+//            currentMenu.execute();
+//        }
     }
 
     public static void showProductAttribute() {
-        System.out.println(GoodsManager.getCurrentGood());
+//        System.out.println(GoodsManager.getCurrentGood());
     }
 
     public static void processCompare() {
-        System.out.print("enter product id : ");
-        int id = Integer.parseInt(Menu.scanner.nextLine());
-        Good good = Shop.getShop().getProductWithId(id);
-        Good currentGood = GoodsManager.getCurrentGood();
-
-        if (good == null) {
-            System.out.println("product with id " + id + "does not exist.");
-        } else {
-            if (good.getCategory().equals(currentGood.getCategory())) {
-                System.out.println("name: " + currentGood.getName() + " || " + good.getName());
-                System.out.println("price: " + currentGood.getPrice() + " || " + good.getPrice());
-                System.out.println("score: " + currentGood.calculateAverageRate() + " || " + good.calculateAverageRate());
-                System.out.println("company: " + currentGood.getCompany() + " || " + good.getCompany());
-                System.out.println("description: " + currentGood.getDescription() + " || " + good.getDescription());
-                System.out.println("category: " + currentGood.getCategory() + " || " + good.getCategory());
-                System.out.println("attribute:");
-                for (String attribute : currentGood.getCategoryAttribute().keySet()) {
-                    System.out.println(attribute + ": " + currentGood.getCategoryAttribute().get(attribute)
-                            + " || " + good.getCategoryAttribute().get(attribute));
-                }
-            } else {
-                System.out.println("You have to choose the same category of goods");
-            }
-        }
-
+//        System.out.print("enter product id : ");
+//        int id = Integer.parseInt(Menu.scanner.nextLine());
+//        Good good = Shop.getShop().getProductWithId(id);
+//        Good currentGood = GoodsManager.getCurrentGood();
+//
+//        if (good == null) {
+//            System.out.println("product with id " + id + "does not exist.");
+//        } else {
+//            if (good.getCategory().equals(currentGood.getCategory())) {
+//                System.out.println("name: " + currentGood.getName() + " || " + good.getName());
+//                System.out.println("price: " + currentGood.getPrice() + " || " + good.getPrice());
+//                System.out.println("score: " + currentGood.calculateAverageRate() + " || " + good.calculateAverageRate());
+//                System.out.println("company: " + currentGood.getCompany() + " || " + good.getCompany());
+//                System.out.println("description: " + currentGood.getDescription() + " || " + good.getDescription());
+//                System.out.println("category: " + currentGood.getCategory() + " || " + good.getCategory());
+//                System.out.println("attribute:");
+//                for (String attribute : currentGood.getCategoryAttribute().keySet()) {
+//                    System.out.println(attribute + ": " + currentGood.getCategoryAttribute().get(attribute)
+//                            + " || " + good.getCategoryAttribute().get(attribute));
+//                }
+//            } else {
+//                System.out.println("You have to choose the same category of goods");
+//            }
+//        }
+//
     }
 
     public static void showComments() {
-        for (Comment comment : GoodsManager.getCurrentGood().getComments()) {
-            System.out.println(comment);
-        }
+//        for (Comment comment : GoodsManager.getCurrentGood().getComments()) {
+//            System.out.println(comment);
+//        }
     }
 
     public static void processAddComment() {
@@ -873,25 +873,25 @@ public class CommandProcessor {
 //    }
 
     public static void showProductsInGoodsMenu() {
-        Collections.sort(GoodsManager.getFilteredGoods());
-        for (Good good : GoodsManager.getFilteredGoods()) {
-            System.out.println(good.goodMenuToString());
-        }
+//        Collections.sort(GoodsManager.getFilteredGoods());
+//        for (Good good : GoodsManager.getFilteredGoods()) {
+//            System.out.println(good.goodMenuToString());
+//        }
     }
 
     public static void enterProductMenu(Menu parentMenu) {
-        System.out.print("enter product id: ");
-        int id = Integer.parseInt(Menu.scanner.nextLine());
-        Good good = Shop.getShop().getProductWithId(id);
-        if (good == null) {
-            System.out.println("product with id " + id + " does not exist.");
-        } else {
-            ProductMenu productMenu = new ProductMenu(parentMenu);
-            GoodsManager.setCurrentGood(good);
-            good.increaseVisitNumber();
-            productMenu.show();
-            productMenu.execute();
-        }
+//        System.out.print("enter product id: ");
+//        int id = Integer.parseInt(Menu.scanner.nextLine());
+//        Good good = Shop.getShop().getProductWithId(id);
+//        if (good == null) {
+//            System.out.println("product with id " + id + " does not exist.");
+//        } else {
+//            ProductMenu productMenu = new ProductMenu(parentMenu);
+//            GoodsManager.setCurrentGood(good);
+//            good.increaseVisitNumber();
+//            productMenu.show();
+//            productMenu.execute();
+//        }
     }
 
     public static void showAvailableFilters() {
@@ -930,7 +930,7 @@ public class CommandProcessor {
             }
         }
         filteredList.removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("available goods", "available goods");
+//        GoodsManager.getKindOfFilter().put("available goods", "available goods");
     }
 
     private static void categoryFilter(List<Good> filteredList) {
@@ -943,7 +943,7 @@ public class CommandProcessor {
             }
         }
         filteredList.removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("category", category);
+//        GoodsManager.getKindOfFilter().put("category", category);
     }
 
     private static void companyFilter(List<Good> filteredList) {
@@ -956,7 +956,7 @@ public class CommandProcessor {
             }
         }
         filteredList.removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("company", company);
+//        GoodsManager.getKindOfFilter().put("company", company);
     }
 
     private static void productNameFilter(List<Good> filteredList) {
@@ -969,7 +969,7 @@ public class CommandProcessor {
             }
         }
         filteredList.removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("name", productName);
+//        GoodsManager.getKindOfFilter().put("name", productName);
     }
 
     private static void priceFilter(List<Good> filteredList) {
@@ -983,14 +983,14 @@ public class CommandProcessor {
                 shouldBeRemoved.add(good);
             }
         }
-        filteredList.removeAll(shouldBeRemoved);
-        GoodsManager.getKindOfFilter().put("price", minimum + " to " + maximum);
+//        filteredList.removeAll(shouldBeRemoved);
+//        GoodsManager.getKindOfFilter().put("price", minimum + " to " + maximum);
     }
 
     public static void showCurrentFilters() {
-        for (String key : GoodsManager.getKindOfFilter().keySet()) {
-            System.out.println(key + ": " + GoodsManager.getKindOfFilter().get(key));
-        }
+//        for (String key : GoodsManager.getKindOfFilter().keySet()) {
+//            System.out.println(key + ": " + GoodsManager.getKindOfFilter().get(key));
+//        }
     }
 
     public static void disableFilter(Menu currentMenu, List<Good> filteredGoods) {
@@ -1019,84 +1019,84 @@ public class CommandProcessor {
     }
 
     private static void disableOneFilter(String filter, List<Good> filteredGoods) {
-        for (String key : GoodsManager.getKindOfFilter().keySet()) {
-            if (key.equals(filter)) {
-                GoodsManager.getKindOfFilter().remove(key);
-                break;
-            }
-        }
+//        for (String key : GoodsManager.getKindOfFilter().keySet()) {
+//            if (key.equals(filter)) {
+//                GoodsManager.getKindOfFilter().remove(key);
+//                break;
+//            }
+//        }
     }
 
     private static void processDisableFilter(Menu currentMenu, List<Good> filteredGoods) {
-        filteredGoods.clear();
-        filteredGoods.addAll(Shop.getShop().getAllGoods());
-        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        for (String type : GoodsManager.getKindOfFilter().keySet()) {
-            switch (type) {
-                case "category": {
-                    String valueOfMap = GoodsManager.getKindOfFilter().get("category");
-                    for (Good good : filteredGoods) {
-                        if (!valueOfMap.equals(good.getCategory())) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                    filteredGoods.removeAll(shouldBeRemoved);
-                    break;
-                }
-                case "company": {
-                    String valueOfMap = GoodsManager.getKindOfFilter().get("company");
-                    for (Good good : filteredGoods) {
-                        if (!valueOfMap.equals(good.getCompany())) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                    filteredGoods.removeAll(shouldBeRemoved);
-                    break;
-                }
-                case "name": {
-                    String valueOfMap = GoodsManager.getKindOfFilter().get("name");
-                    for (Good good : filteredGoods) {
-                        if (!valueOfMap.equals(good.getName())) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                    filteredGoods.removeAll(shouldBeRemoved);
-                    break;
-                }
-                case "price": {
-                    String valueOfMap = GoodsManager.getKindOfFilter().get("price");
-                    String[] m = valueOfMap.split(" to ");
-                    int minimum = Integer.parseInt(m[0]);
-                    int maximum = Integer.parseInt(m[1]);
-                    for (Good good : filteredGoods) {
-                        if (good.getPrice() > maximum || good.getPrice() < minimum) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                    filteredGoods.removeAll(shouldBeRemoved);
-                    break;
-                }
-                case "available goods": {
-                    for (Good good : filteredGoods) {
-                        if (good.getNumber() <= 0) {
-                            shouldBeRemoved.add(good);
-                        }
-                    }
-                    filteredGoods.removeAll(shouldBeRemoved);
-                    break;
-                }
-            }
-        }
-
-
+//        filteredGoods.clear();
+//        filteredGoods.addAll(Shop.getShop().getAllGoods());
+//        ArrayList<Good> shouldBeRemoved = new ArrayList<>();
+//        for (String type : GoodsManager.getKindOfFilter().keySet()) {
+//            switch (type) {
+//                case "category": {
+//                    String valueOfMap = GoodsManager.getKindOfFilter().get("category");
+//                    for (Good good : filteredGoods) {
+//                        if (!valueOfMap.equals(good.getCategory())) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                    filteredGoods.removeAll(shouldBeRemoved);
+//                    break;
+//                }
+//                case "company": {
+//                    String valueOfMap = GoodsManager.getKindOfFilter().get("company");
+//                    for (Good good : filteredGoods) {
+//                        if (!valueOfMap.equals(good.getCompany())) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                    filteredGoods.removeAll(shouldBeRemoved);
+//                    break;
+//                }
+//                case "name": {
+//                    String valueOfMap = GoodsManager.getKindOfFilter().get("name");
+//                    for (Good good : filteredGoods) {
+//                        if (!valueOfMap.equals(good.getName())) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                    filteredGoods.removeAll(shouldBeRemoved);
+//                    break;
+//                }
+//                case "price": {
+//                    String valueOfMap = GoodsManager.getKindOfFilter().get("price");
+//                    String[] m = valueOfMap.split(" to ");
+//                    int minimum = Integer.parseInt(m[0]);
+//                    int maximum = Integer.parseInt(m[1]);
+//                    for (Good good : filteredGoods) {
+//                        if (good.getPrice() > maximum || good.getPrice() < minimum) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                    filteredGoods.removeAll(shouldBeRemoved);
+//                    break;
+//                }
+//                case "available goods": {
+//                    for (Good good : filteredGoods) {
+//                        if (good.getNumber() <= 0) {
+//                            shouldBeRemoved.add(good);
+//                        }
+//                    }
+//                    filteredGoods.removeAll(shouldBeRemoved);
+//                    break;
+//                }
+//            }
+//        }
+//
+//
     }
 
     public static void showProductsInOffsMenu() {
-        for (Good good : GoodsManager.getFilteredGoodsInOffs()) {
-            System.out.println("id: " + good.getId() + "\n" + "name: " + good.getName() + "\n" + "price: "
-                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - Shop.getShop().getOffWithId(good.getOffId()).getPercent()) / 100.0)
-                    + "-----------------------------------------");
-        }
+//        for (Good good : GoodsManager.getFilteredGoodsInOffs()) {
+//            System.out.println("id: " + good.getId() + "\n" + "name: " + good.getName() + "\n" + "price: "
+//                    + good.getPrice() + "\n" + "off price: " + good.getPrice() * ((100 - Shop.getShop().getOffWithId(good.getOffId()).getPercent()) / 100.0)
+//                    + "-----------------------------------------");
+//        }
     }
 
     public static void processAddOrEditOff(boolean edit, int offId) {
@@ -1185,19 +1185,19 @@ public class CommandProcessor {
     }
 
     public static void processAddToCart() {
-        Good currentGood = GoodsManager.getCurrentGood();
-        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
-        if (currentBuyer.getGoodInCartById(currentGood.getId()) == null) {
-            if (currentGood.getNumber() > 0) {
-                currentBuyer.getCart().add(currentGood);
-                currentGood.getGoodsInBuyerCart().put(currentBuyer.getUsername(), 1);
-                System.out.println("the product added");
-            } else {
-                System.out.println("this product is not available");
-            }
-        } else {
-            System.out.println("this product has already been added");
-        }
+//        Good currentGood = GoodsManager.getCurrentGood();
+//        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+//        if (currentBuyer.getGoodInCartById(currentGood.getId()) == null) {
+//            if (currentGood.getNumber() > 0) {
+//                currentBuyer.getCart().add(currentGood);
+//                currentGood.getGoodsInBuyerCart().put(currentBuyer.getUsername(), 1);
+//                System.out.println("the product added");
+//            } else {
+//                System.out.println("this product is not available");
+//            }
+//        } else {
+//            System.out.println("this product has already been added");
+//        }
     }
 
     public static void processIncreaseCredit() {

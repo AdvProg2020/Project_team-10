@@ -22,11 +22,11 @@ public class FilteringMenu extends Menu {
 
             @Override
             public void execute() {
-                if (this.getParentMenu().getName().equals("goods menu")) {
-                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoods());
-                } else {
-                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoodsInOffs());
-                }
+//                if (this.getParentMenu().getName().equals("goods menu")) {
+//                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoods());
+//                } else {
+//                    CommandProcessor.getKindOfFilter(this, GoodsManager.getFilteredGoodsInOffs());
+//                }
 
             }
         };
@@ -56,11 +56,11 @@ public class FilteringMenu extends Menu {
 
             @Override
             public void execute() {
-                if (this.getParentMenu().getName().equals("goods menu")) {
-                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoods());
-                } else {
-                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoodsInOffs());
-                }
+//                if (this.getParentMenu().getName().equals("goods menu")) {
+//                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoods());
+//                } else {
+//                    CommandProcessor.disableFilter(this, GoodsManager.getFilteredGoodsInOffs());
+//                }
             }
         };
     }

@@ -61,9 +61,12 @@ public class Shop {
         return allRequests;
     }
 
-    private static Shop shop = new Shop();
+    private static Shop shop;
 
     public static Shop getShop() {
+        if (shop == null) {
+            shop = new Shop();
+        }
         return shop;
     }
 

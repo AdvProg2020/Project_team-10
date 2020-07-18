@@ -43,7 +43,8 @@ public class FileHandler {
             readLastDiscountCodeId();
             readLastOffId();
             readLastRequestId();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -263,7 +264,7 @@ public class FileHandler {
         bufferedReader.close();
         fileReader.close();
 
-        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
+//        GoodsManager.getFilteredGoods().addAll(Shop.getShop().getAllGoods());
 
     }
 

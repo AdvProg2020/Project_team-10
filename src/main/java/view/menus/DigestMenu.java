@@ -14,7 +14,7 @@ public class DigestMenu extends Menu {
 
     @Override
     public void show() {
-        System.out.println(GoodsManager.getCurrentGood().digestToString());
+//        System.out.println(GoodsManager.getCurrentGood().digestToString());
         super.show();
     }
 

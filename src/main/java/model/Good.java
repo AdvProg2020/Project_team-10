@@ -228,16 +228,17 @@ public class Good implements Comparable<Good> {
 
     @Override
     public int compareTo(Good good) {
-        switch (GoodsManager.getKindOfSort()) {
-            case "time":
-                return this.date.compareTo(good.date);
-            case "score":
-                return (int) (good.calculateAverageRate() - this.calculateAverageRate());
-            case "visit number":
-                return good.visitNumber - this.visitNumber;
-            default:
-                return (int) (good.price - this.price);
-        }
+//        switch (GoodsManager.getKindOfSorts().get()) {
+//            case "time":
+//                return this.date.compareTo(good.date);
+//            case "score":
+//                return (int) (good.calculateAverageRate() - this.calculateAverageRate());
+//            case "visit number":
+//                return good.visitNumber - this.visitNumber;
+//            default:
+//                return (int) (good.price - this.price);
+//        }
+        return 0;
     }
 
     public void increaseVisitNumber() {

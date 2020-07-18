@@ -34,7 +34,7 @@ public class SortMenu extends Menu {
         return new LastMenu("current sort", this) {
             @Override
             public void show() {
-                System.out.println("current sort is : " + GoodsManager.getKindOfSort());
+//                System.out.println("current sort is : " + GoodsManager.getKindOfSort());
                 super.show();
             }
 
@@ -49,7 +49,7 @@ public class SortMenu extends Menu {
         return new LastMenu("disable sort", this) {
             @Override
             public void show() {
-                GoodsManager.setKindOfSort("visit number");
+//                GoodsManager.setKindOfSort("visit number");
                 super.show();
             }
 

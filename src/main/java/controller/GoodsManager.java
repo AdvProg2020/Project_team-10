@@ -1,8 +1,7 @@
 package controller;
 
+import model.Account;
 import model.Good;
-import model.Off;
-import model.Shop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,30 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public class GoodsManager {
-    private static Good currentGood;
-    private static String kindOfSort = "visit number";
-    private static List<Good> filteredGoods = new ArrayList<>();
-    private static List<Good> filteredGoodsInOffs = new ArrayList<>(getGoodsInOffs());
-    private static Map<String, String> kindOfFilter = new HashMap<>();
-    private static ArrayList<String> filteredCompanies = new ArrayList<>();
-//    private static ArrayList<String> filteredCatogories = new ArrayList<>();
+    private static Map<String, String> kindOfSorts = new HashMap<>();
 
-    public static Map<String, String> getKindOfFilter() {
-        return kindOfFilter;
+    public static Map<String, String> getKindOfSorts() {
+        return kindOfSorts;
     }
-
-//    public static ArrayList<String> getFilteredCatogories() {
-//        return filteredCatogories;
-//    }
-
-    public static ArrayList<String> getFilteredCompanies() {
-        return filteredCompanies;
-    }
-
-    public static void setCurrentGood(Good currentGood) {
-        GoodsManager.currentGood = currentGood;
-    }
-
 
     public static void filter(List<String> filterInfo) {
 
@@ -84,39 +64,4 @@ public class GoodsManager {
     public static void showOffs() {
     }
 
-    public static String getKindOfSort() {
-        return kindOfSort;
-    }
-
-    public static Good getCurrentGood() {
-        return currentGood;
-    }
-
-    public static void setKindOfSort(String kindOfSort) {
-        GoodsManager.kindOfSort = kindOfSort;
-    }
-
-    public static void setFilteredGoodsInOffs(List<Good> filteredGoodsInOffs) {
-        GoodsManager.filteredGoodsInOffs = filteredGoodsInOffs;
-    }
-
-    public static List<Good> getFilteredGoodsInOffs() {
-        return filteredGoodsInOffs;
-    }
-
-    public static void setFilteredGoods(List<Good> filteredGoods) {
-        GoodsManager.filteredGoods = filteredGoods;
-    }
-
-    public static List<Good> getFilteredGoods() {
-        return filteredGoods;
-    }
-
-    public static List<Good> getGoodsInOffs() {
-        List<Good> goodsInOffs = new ArrayList<>();
-//        for (Off off : Shop.getShop().getAllOffs()) {
-//            goodsInOffs.addAll(off.getGoods());
-//        }
-        return goodsInOffs;
-    }
 }

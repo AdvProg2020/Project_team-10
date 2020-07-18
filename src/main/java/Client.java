@@ -26,9 +26,10 @@ import java.util.Scanner;
 import static javafx.scene.media.MediaPlayer.INDEFINITE;
 import static view.FXML.FXML.mainMenuURL;
 
-public class Main extends Application {
+public class Client extends Application {
 
     public static void main(String[] args) {
+//        FileHandler.updateDatabase();
         launch(args);
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu mainMenu = new MainMenu();

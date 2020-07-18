@@ -31,15 +31,13 @@ import javafx.util.Duration;
 import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 import org.controlsfx.control.RangeSlider;
+import view.menus.GoodsMenu;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainMenu implements Initializable {
     public Button btnLogin;
@@ -65,7 +63,9 @@ public class MainMenu implements Initializable {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     public ArrayList<Good> filteredGoods;
-    public ArrayList<String> filteredCompanies = new ArrayList<>();
+    private String kindOfSort = "visit number";
+    private Map<String, String> kindOfFilter = new HashMap<>();
+    private ArrayList<String> filteredCompanies = new ArrayList<>();
 
     public Pagination pagi;
     public ImageView gif;
@@ -91,6 +91,8 @@ public class MainMenu implements Initializable {
     }
 
     private ArrayList<Good> getAllProducts() throws IOException {
+        dataOutputStream.writeUTF("getAllGoods");
+        dataOutputStream.flush();
         String allProductsJson = dataInputStream.readUTF();
         Type productsListType = new TypeToken<ArrayList<Good>>() {
         }.getType();
@@ -102,8 +104,9 @@ public class MainMenu implements Initializable {
         label.setText(v);
     }
 
-    public void exit(MouseEvent mouseEvent) {
-        FileHandler.write();
+    public void exit(MouseEvent mouseEvent) throws IOException {
+        dataOutputStream.writeUTF("exit");
+        dataOutputStream.flush();
         Platform.exit();
     }
 
@@ -154,23 +157,31 @@ public class MainMenu implements Initializable {
             vBox.setOnMouseEntered(event -> fadeEffect(vBox));
             int finalI = i;
             logoImage.setOnMouseClicked(event -> {
-                GoodsManager.setCurrentGood(filteredGoods.get(finalI));
+                GoodMenu goodMenu = new GoodMenu(mainPane);
+                goodMenu.setCurrentGood(filteredGoods.get(finalI));
                 mainPane.getChildren().remove(mainMenu);
-                new GoodMenu(mainPane).changePane();
+                goodMenu.changePane();
             });
 
             HBox visitAndOff = new HBox(5);
             visitAndOff.setPadding(new Insets(45, 0, 0, 15));
             visitAndOff.getChildren().add(visit);
             if (filteredGoods.get(i).getOffId() != 0) {
-                Off off = Shop.getShop().getOffWithId(filteredGoods.get(i).getOffId());
-                Label offLabel = new Label(off.getPercent() + "%");
-                offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
-                ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
-                offImage.setFitWidth(15);
-                offImage.setFitHeight(15);
-                offLabel.setGraphic(offImage);
-                visitAndOff.getChildren().add(offLabel);
+                try {
+                    dataOutputStream.writeUTF("get off " + filteredGoods.get(i).getOffId());
+                    dataOutputStream.flush();
+                    Type offType = new TypeToken<Off>() {}.getType();
+                    Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
+                    Label offLabel = new Label(off.getPercent() + "%");
+                    offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
+                    ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
+                    offImage.setFitWidth(15);
+                    offImage.setFitHeight(15);
+                    offLabel.setGraphic(offImage);
+                    visitAndOff.getChildren().add(offLabel);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
 
@@ -266,7 +277,11 @@ public class MainMenu implements Initializable {
 
 
         if (updateFilters) {
-            updateAllFilter();
+            try {
+                updateAllFilter();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         flowPane.getChildren().clear();
@@ -299,6 +314,7 @@ public class MainMenu implements Initializable {
         Collections.sort(filteredGoods);
         pagi.setPageFactory(this::createPage);
 
+
 //        mainMenuScrollPane.setContent(pagi);
 
 //        mainMenuScrollPane.getStyleClass().add("scroll-bar");
@@ -308,28 +324,42 @@ public class MainMenu implements Initializable {
         main = this;
     }
 
-    private void updateAllFilter() {
+    private void updateAllFilter() throws IOException {
         rangeSlider.setHighValue(50000.0);
         rangeSlider.setLowValue(0.0);
 
         vBoxForAddCategoryFilter.getChildren().clear();
         vBoxForAddCompanyFilter.getChildren().clear();
 //        GoodsManager.getFilteredCatogories().clear();
+        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.flush();
         filteredCompanies.clear();
-        for (Category category : Shop.getShop().getAllCategories()) {
+        Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
+        }.getType();
+        ArrayList<Category> categories = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
+        for (Category category : categories) {
             JFXButton categoryFiltered = new JFXButton("● " + category.getName());
             vBoxForAddCategoryFilter.getChildren().add(categoryFiltered);
             categoryFiltered.setStyle("-fx-font-family:'Franklin Gothic Medium Cond';" + "-fx-font-size: 14pt;" + "-fx-text-fill: #8c8c8c");
         }
-        for (String company : Shop.getShop().allCompanies()) {
+        dataOutputStream.writeUTF("getAllCompanies");
+        dataOutputStream.flush();
+        Type allCompaniesType = new TypeToken<Set<String>>() {
+        }.getType();
+        Set<String> allCompanies = new Gson().fromJson(dataInputStream.readUTF(), allCompaniesType);
+        for (String company : allCompanies) {
             JFXCheckBox companyFiltered = new JFXCheckBox(company);
             companyFiltered.setOnAction(event -> {
                 if (companyFiltered.isSelected()) {
-                    GoodsManager.getFilteredCompanies().add(company);
+                    filteredCompanies.add(company);
                 } else {
-                    GoodsManager.getFilteredCompanies().remove(company);
+                    filteredCompanies.remove(company);
                 }
-                filter();
+                try {
+                    filter();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
             companyFiltered.getStyleClass().add("filterButton");
             vBoxForAddCompanyFilter.getChildren().add(companyFiltered);
@@ -343,7 +373,7 @@ public class MainMenu implements Initializable {
         if (input.equals("Time")) {
             button.setOnMouseClicked(event -> {
                 selectedButton = button;
-                GoodsManager.setKindOfSort("time");
+                kindOfSort = "time";
                 sort(location, resources);
             });
             if (selectedButton.getText().equals("Time")) {
@@ -352,7 +382,7 @@ public class MainMenu implements Initializable {
         } else if (input.equals("Score")) {
             button.setOnMouseClicked(event -> {
                 selectedButton = button;
-                GoodsManager.setKindOfSort("score");
+                kindOfSort = "score";
                 sort(location, resources);
             });
             if (selectedButton.getText().equals("Score")) {
@@ -361,7 +391,7 @@ public class MainMenu implements Initializable {
         } else if (input.startsWith("Price")) {
             button.setOnMouseClicked(event -> {
                 selectedButton = button;
-                GoodsManager.setKindOfSort("price");
+                kindOfSort = "price";
                 sort(location, resources);
             });
             if (selectedButton.getText().startsWith("Price")) {
@@ -370,7 +400,7 @@ public class MainMenu implements Initializable {
         } else {
             button.setOnMouseClicked(event -> {
                 selectedButton = button;
-                GoodsManager.setKindOfSort("visit number");
+                kindOfSort = "visit number";
                 sort(location, resources);
             });
             if (selectedButton.getText().startsWith("The")) {
@@ -399,20 +429,20 @@ public class MainMenu implements Initializable {
         }
     }
 
-    public void filterByOff(MouseEvent mouseEvent) {
+    public void filterByOff(MouseEvent mouseEvent) throws IOException {
         if (offFilterButton.isSelected()) {
-            GoodsManager.getKindOfFilter().put("onlyOffs", "onlyOffs");
+            kindOfFilter.put("onlyOffs", "onlyOffs");
         } else {
-            GoodsManager.getKindOfFilter().remove("onlyOffs");
+            kindOfFilter.remove("onlyOffs");
         }
         filter();
     }
 
-    public void filterByAvailability(MouseEvent mouseEvent) {
+    public void filterByAvailability(MouseEvent mouseEvent) throws IOException {
         if (availableFilterButton.isSelected()) {
-            GoodsManager.getKindOfFilter().put("onlyAvailable", "onlyAvailable");
+            kindOfFilter.put("onlyAvailable", "onlyAvailable");
         } else {
-            GoodsManager.getKindOfFilter().remove("onlyAvailable");
+            kindOfFilter.remove("onlyAvailable");
         }
         filter();
     }
@@ -455,27 +485,32 @@ public class MainMenu implements Initializable {
     }
 
     @FXML
-    private void filter() {
+    private void filter() throws IOException {
         filteredGoods.clear();
         ArrayList<Good> shouldBeRemoved = new ArrayList<>();
-        if (GoodsManager.getFilteredCompanies().size() == 0) {
-            filteredGoods.addAll(Shop.getShop().getAllGoods());
+        dataOutputStream.writeUTF("getAllGoods");
+        dataOutputStream.flush();
+        Type allGoodsType = new TypeToken<ArrayList<Good>>() {
+        }.getType();
+        ArrayList<Good> allGoods = new Gson().fromJson(dataInputStream.readUTF(), allGoodsType);
+        if (filteredCompanies.size() == 0) {
+            filteredGoods.addAll(allGoods);
         }
-        for (String filteredCompany : GoodsManager.getFilteredCompanies()) {
-            for (Good good : Shop.getShop().getAllGoods()) {
+        for (String filteredCompany : filteredCompanies) {
+            for (Good good : allGoods) {
                 if (good.getCompany().equals(filteredCompany)) {
                     filteredGoods.add(good);
                 }
             }
         }
-        if (GoodsManager.getKindOfFilter().containsKey("onlyOffs")) {
+        if (kindOfFilter.containsKey("onlyOffs")) {
             for (Good good : filteredGoods) {
                 if (good.getOffId() == 0) {
                     shouldBeRemoved.add(good);
                 }
             }
         }
-        if (GoodsManager.getKindOfFilter().containsKey("onlyAvailable")) {
+        if (kindOfFilter.containsKey("onlyAvailable")) {
             for (Good good : filteredGoods) {
                 if (good.getNumber() <= 0) {
                     shouldBeRemoved.add(good);
