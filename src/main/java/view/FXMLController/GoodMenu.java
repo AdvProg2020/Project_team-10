@@ -1,5 +1,7 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import controller.AccountManager;
@@ -31,9 +33,9 @@ import javafx.util.Duration;
 import model.*;
 import view.NumberField;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.Socket;
 
 import static javafx.scene.paint.Color.color;
 
@@ -43,17 +45,32 @@ public class GoodMenu {
     private Stage popupWindow;
     private TextField title;
     private TextField content;
+    static double initx;
+    static double inity;
+    static int height;
+    static int width;
+    //    public String path = currentGood.getImagePath();
+//    static Scene initialScene,View;
+    static double offSetX,offSetY,zoomlvl;
     private NumberField scoreField;
     private Label error;
     private boolean isPlaying;
     private Good currentGood;
+    private DataInputStream dataInputStream;
+    private DataOutputStream dataOutputStream;
+    private Socket socket;
+    private Account onlineAccount;
+
 
     public void setCurrentGood(Good currentGood) {
         this.currentGood = currentGood;
     }
 
-    public GoodMenu(AnchorPane mainPane) {
+    public GoodMenu(AnchorPane mainPane , Socket socket) throws IOException {
         this.mainPane = mainPane;
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
 
     private HBox covertScoreToStar(int score) {
@@ -92,14 +109,6 @@ public class GoodMenu {
         }
         return box;
     }
-
-    static double initx;
-    static double inity;
-    static int height;
-    static int width;
-//    public String path = currentGood.getImagePath();
-//    static Scene initialScene,View;
-    static double offSetX,offSetY,zoomlvl;
 
     private VBox initView(){
         VBox root = new VBox(20);
@@ -318,8 +327,8 @@ public class GoodMenu {
         addToCart.setLayoutY(430);
         addToCart.setOnMouseClicked(event -> {
             addToCart.setDisable(true);
-            ((Buyer) AccountManager.getOnlineAccount()).getCart().add(currentGood);
-            currentGood.getGoodsInBuyerCart().put(AccountManager.getOnlineAccount().getUsername(), 1);
+            ((Buyer) onlineAccount).getCart().add(currentGood);
+            currentGood.getGoodsInBuyerCart().put(onlineAccount.getUsername(), 1);
         });
 
         ImageView rate = new ImageView();
@@ -330,7 +339,7 @@ public class GoodMenu {
         rate.getStyleClass().add("rate");
         rate.setOnMouseClicked(event -> popupScore());
 
-        if (!(AccountManager.getOnlineAccount() instanceof Buyer) || ((Buyer) AccountManager.getOnlineAccount()).getCart().contains(currentGood)) {
+        if (!(onlineAccount instanceof Buyer) || ((Buyer) onlineAccount).getCart().contains(currentGood)) {
             addToCart.setDisable(true);
         }
         if (!canScore()) {
@@ -362,23 +371,33 @@ public class GoodMenu {
 
     private void similarProducts(AnchorPane innerPane) {
         HBox goods = new HBox();
-        for (Good good : Shop.getShop().getCategoryByName(currentGood.getCategory()).getGoods()) {
-            VBox productBox = new VBox();
-            productBox.setPrefWidth(180);
-            productBox.setPrefHeight(200);
-            productBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
-            logoImage.setFitHeight(120);
-            logoImage.setFitWidth(120);
-            Label name = new Label(good.getName());
-            Label price = new Label("$" + good.getPrice() + "");
-            Label number = new Label(good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) + "x");
-            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
-            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 16px;" + "-fx-font-weight: bold;");
-            number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
-            productBox.setAlignment(Pos.CENTER);
-            productBox.getChildren().addAll(logoImage, name, price, number);
-            goods.getChildren().add(productBox);
+        try {
+            dataOutputStream.writeUTF("get category " + currentGood.getCategory());
+            dataOutputStream.flush();
+            Type categoryType = new TypeToken<Category>() {
+            }.getType();
+            Category category = new Gson().fromJson(dataInputStream.readUTF(), categoryType);
+
+            for (Good good : category.getGoods()) {
+                VBox productBox = new VBox();
+                productBox.setPrefWidth(180);
+                productBox.setPrefHeight(200);
+                productBox.getStyleClass().add("vBoxInMainMenu");
+                ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
+                logoImage.setFitHeight(120);
+                logoImage.setFitWidth(120);
+                Label name = new Label(good.getName());
+                Label price = new Label("$" + good.getPrice() + "");
+                Label number = new Label(good.getGoodsInBuyerCart().get(onlineAccount.getUsername()) + "x");
+                name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
+                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 16px;" + "-fx-font-weight: bold;");
+                number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 16px;");
+                productBox.setAlignment(Pos.CENTER);
+                productBox.getChildren().addAll(logoImage, name, price, number);
+                goods.getChildren().add(productBox);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
 //        goods.setLayoutX(50);
 //        goods.setLayoutY(1000);
@@ -394,8 +413,8 @@ public class GoodMenu {
     }
 
     private boolean canScore() {
-        if (AccountManager.getOnlineAccount() instanceof Buyer) {
-            for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getGoods()) {
+        if (onlineAccount instanceof Buyer) {
+            for (Good good : ((Buyer) onlineAccount).getGoods()) {
                 if (good.getId() == currentGood.getId()) {
                     return true;
                 }
@@ -701,7 +720,7 @@ public class GoodMenu {
         submit.setOnMouseClicked(event -> {
             popupWindow.close();
             fade(0.5, 10);
-            currentGood.getComments().add(new Comment(AccountManager.getOnlineAccount().getUsername(),
+            currentGood.getComments().add(new Comment(onlineAccount.getUsername(),
                     currentGood.getId(), "" + content.getText(), "" + title.getText()));
         });
         return submit;

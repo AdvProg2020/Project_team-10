@@ -26,7 +26,7 @@ public class BuyerManager {
         return true;
     }
 
-    public static long getTotalPrice() {
+    public static long getTotalPrice(Account account) {
         int amount = 0;
         for (Good good : ((Buyer) AccountManager.getOnlineAccount()).getCart()) {
             amount += good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) * good.getPrice();
