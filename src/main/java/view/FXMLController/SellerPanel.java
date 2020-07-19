@@ -206,7 +206,7 @@ public class SellerPanel {
         handelButtonOnMouseClick();
     }
 
-    private void changePane() {
+    void changePane() {
         sellerPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);

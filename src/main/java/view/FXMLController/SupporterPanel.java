@@ -28,8 +28,8 @@ import model.*;
 import view.CommandProcessor;
 import view.NumberField;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -84,6 +84,10 @@ public class SupporterPanel {
     private TextField email;
     private TextField phoneNumber;
     private PasswordField password;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private Socket socket;
+    private Account onlineAccount;
 
 
     private VBox boxForEdit(String name) {
@@ -172,7 +176,7 @@ public class SupporterPanel {
 
     }
 
-    public SupporterPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
+    public SupporterPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -180,6 +184,10 @@ public class SupporterPanel {
         this.user = user;
         adminPane = new AnchorPane();
         optionsPane = new AnchorPane();
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
         handelButtonOnMouseClick();
     }
 
@@ -283,12 +291,16 @@ public class SupporterPanel {
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
 
-        if (input.equals("signUp")) {
-            signUpAdmin();
-        } else if (input.equals("discount")) {
-            addDiscount();
-        } else if (input.equals("category")) {
-            addCategory();
+        switch (input) {
+            case "signUp":
+                signUpAdmin();
+                break;
+            case "discount":
+                addDiscount();
+                break;
+            case "category":
+                addCategory();
+                break;
         }
         popupWindow.showAndWait();
 

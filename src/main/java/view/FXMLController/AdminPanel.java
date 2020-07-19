@@ -679,10 +679,21 @@ public class AdminPanel {
         return exitButton;
     }
 
+    private Button typeOfSignUp(String text, int y) {
+        Button type = new Button(text);
+        type.setLayoutX(40);
+        type.setLayoutY(y);
+        type.setPrefWidth(60);
+        type.setPrefHeight(20);
+        return type;
+    }
+
     private void signUpAdmin() {
         error.setText("");
         loginPane.getChildren().clear();
         imageViewForSignUp();
+
+
 
         JFXButton signUp = new JFXButton("Sign Up");
         signUp.setLayoutY(445);
@@ -693,11 +704,32 @@ public class AdminPanel {
         firstNameText = textFieldForSignUp("First name", 40, 140);
         lastNameText = textFieldForSignUp("Last name", 40, 190);
 
+        Button supporterType = typeOfSignUp("Supporter", 445);
+        supporterType.getStyleClass().add("typeField");
+        supporterType.setOnMouseClicked(event -> {
+            signUp.setDisable(false);
+            isSeller = true;
+        });
+
+        Button adminType = typeOfSignUp("Admin", 470);
+
+        adminType.getStyleClass().add("typeField");
+        adminType.setOnMouseClicked(event -> {
+            signUp.setDisable(false);
+            isSeller = false;
+        });
+
         loginPane.getChildren().addAll(exitButton(), firstNameText,
                 lastNameText, usernameForSignUp(),
-                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp, error);
+                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp,adminType,supporterType, error);
 
-        signUp.setOnMouseClicked(event -> processRegister());
+        signUp.setOnMouseClicked(event -> {
+            try {
+                processRegister();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
     private void addDiscount() throws IOException {
@@ -895,28 +927,37 @@ public class AdminPanel {
         matcher.find();
         return matcher;
     }
-
-    private void processRegister() {
+    private boolean isSeller;
+    private void processRegister() throws IOException {
         String firstName = firstNameText.getText();
         String lastName = lastNameText.getText();
         String username = usernameFieldForSignUp.getText();
         String password = passwordFieldForSignUp.getText();
         String email = emailText.getText();
         String phoneNumber = phoneNumberText.getText();
+        String type;
+        if (isSeller) {
+            type = "supporter";
+        } else {
+            type = "admin";
+        }
         if (selectedFile != null) {
             String imagePath = selectedFile.getAbsolutePath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
-//                        if (AccountManager.canRegister(username)) {
-//                            AccountManager.register(username, password, "admin", firstName, lastName, email, phoneNumber
-//                                    , " ", imagePath);
-//                            adminScrollPane.setContent(handelManageUsers());
-//                            popupWindow.close();
-//                            fade(0.5, 10);
-//                        } else {
-//                            printErrorForRegister("a user exists with this username");
-//                        }
+                        dataOutputStream.writeUTF("can register " + username);
+                        dataOutputStream.flush();
+                        if (dataInputStream.readUTF().equals("true")) {
+                            dataOutputStream.writeUTF("register " + username + " " + password + " " + type + " " + firstName
+                                    + " " + lastName + " " + email + " " + phoneNumber + " " + " " + " " + imagePath);
+                            dataOutputStream.flush();
+                            adminScrollPane.setContent(handelManageUsers());
+                            popupWindow.close();
+                            fade(0.5, 10);
+                        } else {
+                            printErrorForRegister("a user exists with this username");
+                        }
                     } else {
                         printErrorForRegister("invalid email");
                     }
@@ -962,6 +1003,7 @@ public class AdminPanel {
         rectangleTitle.setStyle("-fx-fill: #d5d5d5");
         labelEmail.setGraphic(rectangleTitle);
         labelEmail.setPrefWidth(596);
+
         labelEmail.getStyleClass().add("labelUsernameInProfile");
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
@@ -969,9 +1011,10 @@ public class AdminPanel {
                 popup("signUp");
 
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         });
+
         imageViewPlus.getStyleClass().add("imageViewPlus");
         imageViewPlus.setFitWidth(35);
         imageViewPlus.setFitHeight(35);
@@ -979,39 +1022,39 @@ public class AdminPanel {
         hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllAccounts");
-        dataOutputStream.flush();
-        Type allAccountsType = new TypeToken<ArrayList<Account>>() {
-        }.getType();
-        ArrayList<Account> accounts = new Gson().fromJson(dataInputStream.readUTF(), allAccountsType);
+//        dataOutputStream.writeUTF("getAllAccounts");
+//        dataOutputStream.flush();
+//        Type allAccountsType = new TypeToken<ArrayList<Account>>() {
+//        }.getType();
+//        ArrayList<Account> accounts = new Gson().fromJson(dataInputStream.readUTF(), allAccountsType);
 
-        for (Account account : accounts) {
-            HBox hBox = new HBox(100);
-            hBox.setAlignment(Pos.CENTER_LEFT);
-            hBox.setPadding(new Insets(0, 12, 0, 12));
-            hBox.getStyleClass().add("hbox");
-            hBox.setPrefHeight(60);
-            Label usernameLabel = new Label(account.getUsername());
-            usernameLabel.setPrefWidth(150);
-            usernameLabel.getStyleClass().add("labelUsernameInProfile");
-            Label emailLabel = new Label("  " + account.getEmail());
-            Rectangle rectangle = new Rectangle(2, 60);
-            rectangle.setStyle("-fx-fill: #d5d5d5");
-            emailLabel.setGraphic(rectangle);
-            emailLabel.setPrefWidth(600);
-            emailLabel.getStyleClass().add("labelUsernameInProfile");
-            ImageView deleteAccountImage = new ImageView();
-            deleteAccountImage.getStyleClass().add("binImage");
-            deleteAccountImage.setFitWidth(31);
-            deleteAccountImage.setFitHeight(25);
-
-            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
-            flowPane.getChildren().add(hBox);
-            deleteAccountImage.setOnMouseClicked(e -> {
-                AdminManager.deleteAccount(account);
-                flowPane.getChildren().remove(hBox);
-            });
-        }
+//        for (Account account : accounts) {
+//            HBox hBox = new HBox(100);
+//            hBox.setAlignment(Pos.CENTER_LEFT);
+//            hBox.setPadding(new Insets(0, 12, 0, 12));
+//            hBox.getStyleClass().add("hbox");
+//            hBox.setPrefHeight(60);
+//            Label usernameLabel = new Label(account.getUsername());
+//            usernameLabel.setPrefWidth(150);
+//            usernameLabel.getStyleClass().add("labelUsernameInProfile");
+//            Label emailLabel = new Label("  " + account.getEmail());
+//            Rectangle rectangle = new Rectangle(2, 60);
+//            rectangle.setStyle("-fx-fill: #d5d5d5");
+//            emailLabel.setGraphic(rectangle);
+//            emailLabel.setPrefWidth(600);
+//            emailLabel.getStyleClass().add("labelUsernameInProfile");
+//            ImageView deleteAccountImage = new ImageView();
+//            deleteAccountImage.getStyleClass().add("binImage");
+//            deleteAccountImage.setFitWidth(31);
+//            deleteAccountImage.setFitHeight(25);
+//
+//            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
+//            flowPane.getChildren().add(hBox);
+//            deleteAccountImage.setOnMouseClicked(e -> {
+//                AdminManager.deleteAccount(account);
+//                flowPane.getChildren().remove(hBox);
+//            });
+//        }
 
         return flowPane;
     }

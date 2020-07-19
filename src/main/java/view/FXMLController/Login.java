@@ -536,11 +536,11 @@ public class Login {
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (onlineAccount instanceof Admin) {
-            new AdminPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
+            new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
-            new BuyerPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
+            new BuyerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
-            new SupporterPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
+            new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         }

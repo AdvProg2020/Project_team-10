@@ -118,9 +118,9 @@ public class AccountManager {
 
     // logical methods
 
-//    private static boolean canRegister(String username) {
-//        return Shop.getShop().getAccountByUsername(username) == null;
-//    }
+    private static boolean canRegister(String username) {
+        return Shop.getShop().getAccountByUsername(username) == null;
+    }
 
     public static void register(String username, String password, String type, String firstName,
                                 String lastName, String email, String phoneNumber, String company, String imagePath) {
