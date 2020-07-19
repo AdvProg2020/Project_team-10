@@ -6,6 +6,8 @@ import controller.BuyerManager;
 import controller.FileHandler;
 import controller.SellerManager;
 import model.*;
+import controller.*;
+import model.*;
 import view.CommandProcessor;
 import view.FXMLController.AdminPanel;
 import view.Purchase;
@@ -155,7 +157,30 @@ class ClientHandler extends Thread {
                         //TODO add to hashMap
                     }
                     dataOutputStream.flush();
-                } else if (request.equals("exit")) {
+                } else if (request.startsWith("create category ")) {
+                    String[] info = request.split("\\s");
+                    Type categoryAttribute = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> attributes = new Gson().fromJson(info[3], categoryAttribute);
+                    AdminManager.addCategory(info[2], attributes);
+
+                } else if (request.startsWith("remove category ")) {
+                    String[] info = request.split("\\s");
+                    Category category = Shop.getShop().getCategoryByName(info[2]);
+                    AdminManager.removeCategory(category);
+                } else if (request.startsWith("create discount ")) {
+                    String[] info = request.split("\\s");
+                    Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
+                    Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);
+                    int percent = Integer.parseInt(info[6]);
+                    long maxAmount = Long.parseLong(info[7]);
+                    int number = Integer.parseInt(info[8]);
+                    Type selectedBuyersType = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> selectedBuyers = new Gson().fromJson(info[9], selectedBuyersType);
+                    AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
+
+                }else if (request.equals("exit")) {
                     FileHandler.write();
                     dataOutputStream.writeUTF("successfully logged out");
                     dataOutputStream.flush();

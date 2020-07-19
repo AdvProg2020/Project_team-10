@@ -416,7 +416,10 @@ public class AdminPanel {
         for (TextField textField : attributesTextField) {
             attributes.add(textField.getText());
         }
-        AdminManager.addCategory(categoryName.getText(), attributes);
+//        AdminManager.addCategory(categoryName.getText(), attributes);
+        dataOutputStream.writeUTF("create category " + categoryName.getText() + " " + new Gson().toJson(attributes));
+        dataOutputStream.flush();
+
         popupWindow.close();
         fade(0.5, 10);
         adminScrollPane.setContent(null);
@@ -607,8 +610,15 @@ public class AdminPanel {
             hBox.getChildren().addAll(name, attributes, edit, bin);
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
-                AdminManager.removeCategory(category);
-                flowPane.getChildren().remove(hBox);
+                try {
+                    dataOutputStream.writeUTF("remove category " + category.getName());
+                    dataOutputStream.flush();
+                    flowPane.getChildren().remove(hBox);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+//                AdminManager.removeCategory(category);
+
             });
         }
 
@@ -658,8 +668,14 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 20, 0, 0));
             vBox.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
-                SellerManager.removeProduct(good.getId());
-                flowPane.getChildren().remove(vBox);
+                try {
+                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.flush();
+                    flowPane.getChildren().remove(vBox);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+//                SellerManager.removeProduct(good.getId());
             });
             flowPane.getChildren().add(vBox);
         }
@@ -692,8 +708,6 @@ public class AdminPanel {
         error.setText("");
         loginPane.getChildren().clear();
         imageViewForSignUp();
-
-
 
         JFXButton signUp = new JFXButton("Sign Up");
         signUp.setLayoutY(445);
@@ -891,7 +905,12 @@ public class AdminPanel {
         int percent = Integer.parseInt(this.percent.getText());
         long maxAmount = Long.parseLong(this.maxPrice.getText());
         int number = Integer.parseInt(this.number.getText());
-        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
+
+
+        dataOutputStream.writeUTF("create discount " + startDate + " " + endDate + " " + percent + " " + maxAmount + " "
+         + number + " " + new Gson().toJson(selectedBuyers));
+        dataOutputStream.flush();
+//        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
         fade(0.5, 10);
         adminScrollPane.setContent(null);
@@ -1003,7 +1022,6 @@ public class AdminPanel {
         rectangleTitle.setStyle("-fx-fill: #d5d5d5");
         labelEmail.setGraphic(rectangleTitle);
         labelEmail.setPrefWidth(596);
-
         labelEmail.getStyleClass().add("labelUsernameInProfile");
         ImageView imageViewPlus = new ImageView();
         imageViewPlus.setOnMouseClicked(event -> {
@@ -1014,7 +1032,6 @@ public class AdminPanel {
                 System.out.println(e.getMessage());
             }
         });
-
         imageViewPlus.getStyleClass().add("imageViewPlus");
         imageViewPlus.setFitWidth(35);
         imageViewPlus.setFitHeight(35);
@@ -1022,39 +1039,46 @@ public class AdminPanel {
         hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-//        dataOutputStream.writeUTF("getAllAccounts");
-//        dataOutputStream.flush();
-//        Type allAccountsType = new TypeToken<ArrayList<Account>>() {
-//        }.getType();
-//        ArrayList<Account> accounts = new Gson().fromJson(dataInputStream.readUTF(), allAccountsType);
+        dataOutputStream.writeUTF("getAllAccounts");
+        dataOutputStream.flush();
+        Type allAccountsType = new TypeToken<ArrayList<Account>>() {
+        }.getType();
+        ArrayList<Account> accounts = new Gson().fromJson(dataInputStream.readUTF(), allAccountsType);
 
-//        for (Account account : accounts) {
-//            HBox hBox = new HBox(100);
-//            hBox.setAlignment(Pos.CENTER_LEFT);
-//            hBox.setPadding(new Insets(0, 12, 0, 12));
-//            hBox.getStyleClass().add("hbox");
-//            hBox.setPrefHeight(60);
-//            Label usernameLabel = new Label(account.getUsername());
-//            usernameLabel.setPrefWidth(150);
-//            usernameLabel.getStyleClass().add("labelUsernameInProfile");
-//            Label emailLabel = new Label("  " + account.getEmail());
-//            Rectangle rectangle = new Rectangle(2, 60);
-//            rectangle.setStyle("-fx-fill: #d5d5d5");
-//            emailLabel.setGraphic(rectangle);
-//            emailLabel.setPrefWidth(600);
-//            emailLabel.getStyleClass().add("labelUsernameInProfile");
-//            ImageView deleteAccountImage = new ImageView();
-//            deleteAccountImage.getStyleClass().add("binImage");
-//            deleteAccountImage.setFitWidth(31);
-//            deleteAccountImage.setFitHeight(25);
-//
-//            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
-//            flowPane.getChildren().add(hBox);
-//            deleteAccountImage.setOnMouseClicked(e -> {
+        for (Account account : accounts) {
+            HBox hBox = new HBox(100);
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.getStyleClass().add("hbox");
+            hBox.setPrefHeight(60);
+            Label usernameLabel = new Label(account.getUsername());
+            usernameLabel.setPrefWidth(150);
+            usernameLabel.getStyleClass().add("labelUsernameInProfile");
+            Label emailLabel = new Label("  " + account.getEmail());
+            Rectangle rectangle = new Rectangle(2, 60);
+            rectangle.setStyle("-fx-fill: #d5d5d5");
+            emailLabel.setGraphic(rectangle);
+            emailLabel.setPrefWidth(600);
+            emailLabel.getStyleClass().add("labelUsernameInProfile");
+            ImageView deleteAccountImage = new ImageView();
+            deleteAccountImage.getStyleClass().add("binImage");
+            deleteAccountImage.setFitWidth(31);
+            deleteAccountImage.setFitHeight(25);
+
+            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
+            flowPane.getChildren().add(hBox);
+            deleteAccountImage.setOnMouseClicked(e -> {
+                try {
+                    dataOutputStream.writeUTF("remove account " + new Gson().toJson(account));
+                    dataOutputStream.flush();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
 //                AdminManager.deleteAccount(account);
-//                flowPane.getChildren().remove(hBox);
-//            });
-//        }
+                flowPane.getChildren().remove(hBox);
+            });
+        }
 
         return flowPane;
     }
