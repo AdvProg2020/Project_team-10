@@ -71,7 +71,8 @@ public class SellerPanel {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
-    private Account onlineAccount = new Buyer("temp");
+    private Account onlineAccount;
+    private String token;
 
     private JFXDatePicker startDate;
     private JFXTimePicker startTime;
@@ -91,7 +92,7 @@ public class SellerPanel {
     private Stage popupWindow;
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
-            , Socket socket, Account onlineAccount) throws IOException {
+            , Socket socket, Account onlineAccount, String token) throws IOException {
         this.mainPane = mainPane;
         this.main = main;
         this.mainMenu = mainMenu;
@@ -101,6 +102,7 @@ public class SellerPanel {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
+        this.token = token;
         sellerPane = new AnchorPane();
         optionsPane = new AnchorPane();
         sellerScrollPane = new ScrollPane();
@@ -200,7 +202,7 @@ public class SellerPanel {
 
     private void processEdit() throws IOException {
         dataOutputStream.writeUTF("edit profile " + password.getText() + " " + firstName.getText() + " " +
-                lastName.getText() + " " + phoneNumber.getText() + " " + email.getText());
+                lastName.getText() + " " + phoneNumber.getText() + " " + email.getText() + " " + token);
         dataOutputStream.flush();
 
         handelButtonOnMouseClick();
@@ -395,7 +397,7 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, attributesTitle);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.writeUTF("getAllCategories " + token);
         dataOutputStream.flush();
         Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
         }.getType();
@@ -521,7 +523,7 @@ public class SellerPanel {
             for (Integer goodId : off.getGoodsId()) {
                 HBox goodPack = new HBox(1);
                 goodPack.setPadding(new Insets(5, 5, 5, 5));
-                dataOutputStream.writeUTF("get product " + goodId);
+                dataOutputStream.writeUTF("get product " + goodId + " " + token);
                 dataOutputStream.flush();
                 Type productType = new TypeToken<Good>() {
                 }.getType();
@@ -567,7 +569,7 @@ public class SellerPanel {
             bin.setFitHeight(25);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove off " + off.getId());
+                    dataOutputStream.writeUTF("remove off " + off.getId() + " " + token);
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -734,12 +736,12 @@ public class SellerPanel {
         categoryRadioButtonBox.setPrefSize(110, 95);
         //showCategory
 
-        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.writeUTF("getAllCategories " + token);
         dataOutputStream.flush();
         Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
         }.getType();
         ArrayList<Category> allCategories = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
-
+        System.out.println("number of categories = " + allCategories.size());
         for (Category category : allCategories) {
             JFXRadioButton radioButton = new JFXRadioButton(category.getName());
             categoryRadioButtonBox.getChildren().add(radioButton);
@@ -749,7 +751,7 @@ public class SellerPanel {
             radioButton.setOnMouseClicked(event -> {
                 try {
                     selectedCategory = radioButton;
-                    dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+                    dataOutputStream.writeUTF("get category " + selectedCategory.getText() + " " + token);
                     dataOutputStream.flush();
                     Type categoryType = new TypeToken<Category>() {
                     }.getType();
@@ -824,7 +826,7 @@ public class SellerPanel {
 
     private void processAddProduct() throws IOException {
         if (isAllFieldsFilled()) {
-            dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+            dataOutputStream.writeUTF("get category " + selectedCategory.getText() + " " + token);
             dataOutputStream.flush();
             Type categoryType = new TypeToken<Category>() {
             }.getType();
@@ -838,7 +840,7 @@ public class SellerPanel {
 
             dataOutputStream.writeUTF("create product " + goodName.getText() + " " + company.getText() + " " + number
                     + " " + price + " " + selectedCategory.getName() + " " + new Gson().toJson(hashMap) + " " + description.getText()
-                    + " " + selectedImageFile.getAbsolutePath() + " " + selectedVideoFile.getAbsolutePath());
+                    + " " + selectedImageFile.getAbsolutePath() + " " + selectedVideoFile.getAbsolutePath() + " " + token);
             dataOutputStream.flush();
 //            SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
 //                    hashMap, description.getText(), selectedImageFile.getAbsolutePath(), selectedVideoFile.getAbsolutePath());
@@ -1056,7 +1058,7 @@ public class SellerPanel {
         int percent = Integer.parseInt(this.percent.getText());
 
         dataOutputStream.writeUTF("create off " + new Gson().toJson(selectedGoodsId) + " " +
-                startDate + " " + endDate + " " + percent);
+                startDate + " " + endDate + " " + percent + " " + token);
         dataOutputStream.flush();
 //        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
         popupWindow.close();
@@ -1129,7 +1131,7 @@ public class SellerPanel {
             goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.writeUTF("remove product " + good.getId() + " " + token);
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();

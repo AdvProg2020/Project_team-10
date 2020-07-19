@@ -69,6 +69,7 @@ public class Login {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private Account onlineAccount;
+    private String token;
 
     public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
@@ -358,6 +359,7 @@ public class Login {
     private void processLogin() throws IOException {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
+        //TODO check user & pass in not empty
         Buyer temp = ((Buyer) onlineAccount);
         dataOutputStream.writeUTF("can login " + username + " " + password);
         dataOutputStream.flush();
@@ -401,6 +403,10 @@ public class Login {
             }.getType();
         }
         onlineAccount = new Gson().fromJson(response.split("\\s")[1], accountType);
+        token = response.split("\\s")[3];
+        main.token = this.token;
+        System.out.println("token: " + token);
+        AccountManager.setOnlineAccount(onlineAccount);
     }
 
     private void processRegister() throws IOException {
@@ -540,7 +546,7 @@ public class Login {
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else {
-            new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
+            new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
         }
     }
 

@@ -63,6 +63,7 @@ public class MainMenu implements Initializable {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     public Account onlineAccount = new Buyer("temp");
+    public String token;
 
     public ArrayList<Good> filteredGoods;
     private String kindOfSort = "visit number";

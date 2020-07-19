@@ -10,9 +10,10 @@ import java.util.List;
 public class SellerManager {
 
 
-    public static void addProduct(Account account, String name, String company, int number, long price, String category,
+    public static void addProduct(String username, String name, String company, int number, long price, String category,
                                   HashMap<String, String> categoryAttribute, String description, String imagePath, String videoPath) {
         //TODO
+        Account account = Shop.getShop().getAccountByUsername(username);
         Good good = new Good(AccountManager.getLastGoodId() + 1, name, company, number, price, account.getUsername(), category, categoryAttribute, description, imagePath);
         ((Seller) account).getGoods().add(good);
         Shop.getShop().getAllGoods().add(good);
@@ -45,13 +46,15 @@ public class SellerManager {
         Shop.getShop().getCategoryByName(good.getCategory()).getGoods().remove(good);
     }
 
-    public static void editOff(Account account, int id, List<Good> goods, Date startDate, Date endDate, int percent) {
+    public static void editOff(String username, int id, List<Good> goods, Date startDate, Date endDate, int percent) {
+        Account account = Shop.getShop().getAccountByUsername(username);
         Shop.getShop().getAllRequests().add(new EditOffRequest(account, AccountManager.getLastRequestId() + 1, id,
                 goods, startDate, endDate, percent));
     }
 
-    public static void addOff(Account account, List<Integer> goodsId, Date startDate, Date endDate, int percent) {
+    public static void addOff(String username, List<Integer> goodsId, Date startDate, Date endDate, int percent) {
         //todo
+        Account account = Shop.getShop().getAccountByUsername(username);
         Off off = new Off(AccountManager.getLastOffId() + 1, goodsId, startDate, endDate, percent);
         Shop.getShop().getAllOffs().add(off);
         ((Seller) account).getOffs().add(off);
@@ -63,7 +66,8 @@ public class SellerManager {
                 AccountManager.getLastRequestId() + 1, AccountManager.getLastOffId() + 1, goodsId, startDate, endDate, percent));
     }
 
-    public static void removeOff(Account account, int offId) {
+    public static void removeOff(String username, int offId) {
+        Account account = Shop.getShop().getAccountByUsername(username);
         Off off = Shop.getShop().getOffWithId(offId);
         for (Integer goodId : off.getGoodsId()) {
             Shop.getShop().getProductWithId(goodId).setOffId(0);
