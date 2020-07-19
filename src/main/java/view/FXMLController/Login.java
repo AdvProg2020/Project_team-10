@@ -539,6 +539,8 @@ public class Login {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
+        } else if (onlineAccount instanceof Supporter) {
+            new SupporterPanel(mainPane, main, mainMenu, user, btnLogin).changePane();
         } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         }

@@ -5,10 +5,7 @@ import controller.AccountManager;
 import controller.BuyerManager;
 import controller.FileHandler;
 import controller.SellerManager;
-import model.Account;
-import model.Buyer;
-import model.Seller;
-import model.Shop;
+import model.*;
 import view.CommandProcessor;
 import view.FXMLController.AdminPanel;
 import view.Purchase;
@@ -150,7 +147,9 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " buyer");
                         } else if (account instanceof Seller) {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller");
-                        } else {
+                        }  else if (account instanceof Supporter) {
+                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " supporter");
+                        }else {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " admin");
                         }
                         //TODO add to hashMap

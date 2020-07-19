@@ -1,5 +1,4 @@
 package view.FXMLController;
-
 import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.AdminManager;
@@ -46,7 +45,7 @@ import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.adminPopupURL;
 import static view.FXMLController.MainMenu.fadeEffect;
 
-public class AdminPanel {
+public class SupporterPanel {
     public AnchorPane mainPane;
     public AnchorPane optionsPane;
     private AnchorPane adminPane;
@@ -173,7 +172,7 @@ public class AdminPanel {
 
     }
 
-    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
+    public SupporterPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -284,16 +283,12 @@ public class AdminPanel {
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
 
-        switch (input) {
-            case "signUp":
-                signUpAdmin();
-                break;
-            case "discount":
-                addDiscount();
-                break;
-            case "category":
-                addCategory();
-                break;
+        if (input.equals("signUp")) {
+            signUpAdmin();
+        } else if (input.equals("discount")) {
+            addDiscount();
+        } else if (input.equals("category")) {
+            addCategory();
         }
         popupWindow.showAndWait();
 

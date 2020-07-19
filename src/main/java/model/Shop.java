@@ -15,10 +15,15 @@ public class Shop {
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
+    private List<Supporter> allSupporter = new ArrayList<>();
 
     private Shop() {
         allAccounts.add(new Admin("javads", "Abdossamad", "Haghiri", "haghiri@gmail.com",
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
+    }
+
+    public List<Supporter> getAllSupporter() {
+        return allSupporter;
     }
 
     public List<Comment> getAllComments() {
