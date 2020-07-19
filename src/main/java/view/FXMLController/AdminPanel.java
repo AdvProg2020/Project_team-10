@@ -412,7 +412,10 @@ public class AdminPanel {
         for (TextField textField : attributesTextField) {
             attributes.add(textField.getText());
         }
-        AdminManager.addCategory(categoryName.getText(), attributes);
+//        AdminManager.addCategory(categoryName.getText(), attributes);
+        dataOutputStream.writeUTF("create category " + categoryName.getText() + " " + new Gson().toJson(attributes));
+        dataOutputStream.flush();
+
         popupWindow.close();
         fade(0.5, 10);
         adminScrollPane.setContent(null);
@@ -603,8 +606,15 @@ public class AdminPanel {
             hBox.getChildren().addAll(name, attributes, edit, bin);
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
-                AdminManager.removeCategory(category);
-                flowPane.getChildren().remove(hBox);
+                try {
+                    dataOutputStream.writeUTF("remove category " + category.getName());
+                    dataOutputStream.flush();
+                    flowPane.getChildren().remove(hBox);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+//                AdminManager.removeCategory(category);
+
             });
         }
 
@@ -654,8 +664,14 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 20, 0, 0));
             vBox.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
-                SellerManager.removeProduct(good.getId());
-                flowPane.getChildren().remove(vBox);
+                try {
+                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.flush();
+                    flowPane.getChildren().remove(vBox);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+//                SellerManager.removeProduct(good.getId());
             });
             flowPane.getChildren().add(vBox);
         }
@@ -855,7 +871,12 @@ public class AdminPanel {
         int percent = Integer.parseInt(this.percent.getText());
         long maxAmount = Long.parseLong(this.maxPrice.getText());
         int number = Integer.parseInt(this.number.getText());
-        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
+
+
+        dataOutputStream.writeUTF("create discount " + startDate + " " + endDate + " " + percent + " " + maxAmount + " "
+         + number + " " + new Gson().toJson(selectedBuyers));
+        dataOutputStream.flush();
+//        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
         fade(0.5, 10);
         adminScrollPane.setContent(null);
@@ -1004,7 +1025,14 @@ public class AdminPanel {
             hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
             flowPane.getChildren().add(hBox);
             deleteAccountImage.setOnMouseClicked(e -> {
-                AdminManager.deleteAccount(account);
+                try {
+                    dataOutputStream.writeUTF("remove account " + new Gson().toJson(account));
+                    dataOutputStream.flush();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+//                AdminManager.deleteAccount(account);
                 flowPane.getChildren().remove(hBox);
             });
         }
