@@ -208,7 +208,7 @@ public class SellerPanel {
         handelButtonOnMouseClick();
     }
 
-    public void changePane() {
+    private void changePane() {
         sellerPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
@@ -275,7 +275,7 @@ public class SellerPanel {
 
     }
 
-    public Button createButton(String text, String style) {
+    private Button createButton(String text, String style) {
         ImageView imageView = new ImageView(new Image("file:" + style + ".png"));
         ImageView imageViewHover = new ImageView(new Image("file:" + style + "Hover.png"));
         imageViewHover.setFitWidth(30);
@@ -875,7 +875,7 @@ public class SellerPanel {
         fade.play();
     }
 
-    public void popup(String input) throws IOException {
+    private void popup(String input) throws IOException {
         loginPane = new AnchorPane();
         error = new Label();
         popupWindow = new Stage();
@@ -1144,7 +1144,7 @@ public class SellerPanel {
         return flowPane;
     }
 
-    public void backToMainMenu() {
+    private void backToMainMenu() {
         main.updateFilters = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);

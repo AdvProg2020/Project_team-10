@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import controller.AccountManager;
+import controller.BuyerManager;
 import controller.FileHandler;
 import controller.SellerManager;
 import model.Account;
@@ -150,7 +151,17 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("register")) {
                     String[] info = request.split("\\s");
                     AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
-                } else if (request.startsWith("can login")) {
+                } else if (request.startsWith("get total price ")) {
+//                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice())); //TODO Add Account
+                    dataOutputStream.flush();
+                }else if (request.startsWith("get final price ")) {
+//                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff())); //TODO Add Account
+                    dataOutputStream.flush();
+                }else if (request.startsWith("get discount ")) {
+                    String discount = request.split("\\s")[1];
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
+                    dataOutputStream.flush();
+                }else if (request.startsWith("can login")) {
                     String[] info = request.split("\\s");
                     Account account = AccountManager.canLogin(info[2], info[3]);
                     if (account == null) {

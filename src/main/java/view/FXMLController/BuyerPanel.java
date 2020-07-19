@@ -20,7 +20,8 @@ import javafx.stage.Stage;
 import model.*;
 import view.NumberField;
 
-import java.io.File;
+import java.io.*;
+import java.net.Socket;
 
 public class BuyerPanel {
     public AnchorPane mainPane;
@@ -43,9 +44,13 @@ public class BuyerPanel {
     private AnchorPane mainMenu;
     private Button user;
     private Button btnLogin;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private Socket socket;
+    private Account onlineAccount;
 
 
-    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin) {
+    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -53,6 +58,10 @@ public class BuyerPanel {
         this.btnLogin = btnLogin;
         buyerPane = new AnchorPane();
         optionsPane = new AnchorPane();
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
         handelButtonOnMouseClick();
     }
 
@@ -65,7 +74,7 @@ public class BuyerPanel {
         //image profile
         HBox hBox = new HBox();
         Circle circle = new Circle(40);
-        ImagePattern pattern = new ImagePattern(new Image("file:" + AccountManager.getOnlineAccount().getImagePath()));
+        ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(4);
         circle.setStroke(Color.rgb(16, 137, 255));
@@ -79,7 +88,7 @@ public class BuyerPanel {
         ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
         credit.setFitHeight(20);
         credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + AccountManager.getOnlineAccount().getCredit());
+        Label creditLabel = new Label("$" + onlineAccount.getCredit());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00ff30");
 
@@ -88,7 +97,7 @@ public class BuyerPanel {
         hBox.setSpacing(10);
 
         VBox vBoxP = new VBox();
-        Label username = new Label("Hi " + AccountManager.getOnlineAccount().getUsername());
+        Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
         vBoxP.setSpacing(8);
         vBoxP.getChildren().addAll(username, hBox1);
@@ -158,7 +167,7 @@ public class BuyerPanel {
         buyerPaneScroll.getStyleClass().add("scroll-bar");
         buyerPaneScroll.setLayoutX(330);
         buyerPaneScroll.setLayoutY(35);
-        Account account = AccountManager.getOnlineAccount();
+        Account account = onlineAccount;
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -192,7 +201,7 @@ public class BuyerPanel {
                 buyerPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
                 break;
             case "Log out":
-                AccountManager.setOnlineAccount(new Buyer("temp"));
+                onlineAccount = new Buyer("temp");
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -218,17 +227,17 @@ public class BuyerPanel {
 
         if (name.equals("First name: ")) {
             label.setText(" First name: ");
-            field.setText(AccountManager.getOnlineAccount().getFirstName());
+            field.setText(onlineAccount.getFirstName());
         } else if (name.equals("Last name: ")) {
             label.setText(" Last name: ");
-            field.setText(AccountManager.getOnlineAccount().getLastName());
+            field.setText(onlineAccount.getLastName());
         } else if (name.equals("Email: ")) {
             label.setText(" Email: ");
-            field.setText(AccountManager.getOnlineAccount().getEmail());
+            field.setText(onlineAccount.getEmail());
         } else if (name.equals("Phone: ")) {
             NumberField numberField = new NumberField();
             numberField.setPrefSize(350, 40);
-            numberField.setText(AccountManager.getOnlineAccount().getPhoneNumber());
+            numberField.setText(onlineAccount.getPhoneNumber());
             label.setText(" Phone number: ");
             field = numberField;
         } else if (name.equals("password")) {
@@ -344,7 +353,7 @@ public class BuyerPanel {
         flowPane.getChildren().add(hBoxTitle);
 
 
-        for (Discount discount : ((Buyer) AccountManager.getOnlineAccount()).getDiscounts()) {
+        for (Discount discount : ((Buyer) onlineAccount).getDiscounts()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
@@ -427,7 +436,7 @@ public class BuyerPanel {
         hBoxTitle.getChildren().addAll(code, date, paid, discount, status);
         flowPane.getChildren().add(hBoxTitle);
 
-        for (BuyerLog log : ((Buyer) AccountManager.getOnlineAccount()).getBuyerLogs()) {
+        for (BuyerLog log : ((Buyer) onlineAccount).getBuyerLogs()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPadding(new Insets(0, 12, 0, 12));
@@ -522,7 +531,7 @@ public class BuyerPanel {
                 logoImage.setFitWidth(60);
                 Label name = new Label(good.getName());
                 Label price = new Label("$" + good.getPrice() + "");
-                Label number = new Label(good.getGoodsInBuyerCart().get(AccountManager.getOnlineAccount().getUsername()) + "x");
+                Label number = new Label(good.getGoodsInBuyerCart().get(onlineAccount.getUsername()) + "x");
                 name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 14px;" + "-fx-font-weight: bold;");
                 number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
@@ -555,10 +564,6 @@ public class BuyerPanel {
         Rectangle line = new Rectangle(2, 60);
         line.setStyle("-fx-fill: #d5d5d5");
         return line;
-    }
-
-    private void editPage() {
-
     }
 
 }
