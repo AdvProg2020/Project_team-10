@@ -36,6 +36,8 @@ import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javafx.scene.paint.Color.color;
 import static view.FXML.FXML.loginURL;
@@ -70,6 +72,7 @@ public class Login {
     private DataInputStream dataInputStream;
     private Account onlineAccount;
     private String token;
+    private final static List<String> fileNames = new ArrayList<>();
 
     public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
@@ -390,7 +393,8 @@ public class Login {
     }
 
     private void login(String response) {
-        String type = response.split("\\s")[2];
+        String[] splitResponse = response.split("_");
+        String type = splitResponse[2];
         Type accountType;
         if (type.equals("buyer")) {
             accountType = new TypeToken<Buyer>() {
@@ -402,8 +406,8 @@ public class Login {
             accountType = new TypeToken<Admin>() {
             }.getType();
         }
-        onlineAccount = new Gson().fromJson(response.split("\\s")[1], accountType);
-        token = response.split("\\s")[3];
+        onlineAccount = new Gson().fromJson(splitResponse[1], accountType);
+        token = splitResponse[3];
         main.token = this.token;
         System.out.println("token: " + token);
         AccountManager.setOnlineAccount(onlineAccount);
@@ -573,6 +577,19 @@ public class Login {
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
+    }
+
+    public static String createTokenForFiles() {
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz";
+        StringBuilder stringBuilder = new StringBuilder(4);
+        for (int i = 0; i < 4; i++) {
+            int index = (int)(AlphaNumericString.length() * Math.random());
+            stringBuilder.append(AlphaNumericString.charAt(index));
+        }
+        if (fileNames.contains(stringBuilder.toString())) {
+            return createTokenForFiles();
+        }
+        return stringBuilder.toString();
     }
 
 

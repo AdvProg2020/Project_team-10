@@ -5,6 +5,7 @@ import controller.*;
 import model.*;
 import view.CommandProcessor;
 import view.FXMLController.AdminPanel;
+import view.FXMLController.Login;
 import view.Purchase;
 
 import java.io.*;
@@ -50,6 +51,7 @@ class ClientHandler extends Thread {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private HashMap<String, String> onlineAccounts;
+    private Account account;
 
 
     public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts) throws IOException {
@@ -57,6 +59,7 @@ class ClientHandler extends Thread {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
+
     }
 
     @Override
@@ -71,46 +74,46 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("getAllGoods")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllGoods()));
                     dataOutputStream.flush();
-                } else if (request.startsWith("get off")) {
+                } else if (request.startsWith("get_off")) {
                     int id = Integer.parseInt(info[2]);
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getOffWithId(id)));
                     dataOutputStream.flush();
-                } else if (request.startsWith("get product")) {
+                } else if (request.startsWith("get_product")) {
                     int id = Integer.parseInt(info[2]);
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getProductWithId(id)));
                     dataOutputStream.flush();
-                } else if (request.startsWith("edit profile")) {
-                    AccountManager.editPersonalInfo(info[2], info[3], info[4], info[5], info[6], onlineAccounts.get(info[7]));
-                } else if (request.startsWith("remove off")) {
+                } else if (request.startsWith("edit_profile")) {
+                    AccountManager.editPersonalInfo(info[2], info[3], info[4], info[5], info[6], account.getUsername());
+                } else if (request.startsWith("remove_off")) {
                     int id = Integer.parseInt(info[2]);
-                    SellerManager.removeOff(onlineAccounts.get(info[3]), id);
-                } else if (request.startsWith("get category")) {
+                    SellerManager.removeOff(account.getUsername(), id);
+                } else if (request.startsWith("get_category")) {
                     String categoryName = info[2];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getCategoryByName(categoryName)));
                     dataOutputStream.flush();
-                } else if (request.startsWith("create product")) {
+                } else if (request.startsWith("create_product")) {
                     Type categoryAttributeType = new TypeToken<HashMap<String, String>>() {
                     }.getType();
                     HashMap<String, String> categoryAttribute = new Gson().fromJson(info[7], categoryAttributeType);
-                    SellerManager.addProduct(onlineAccounts.get(info[11]), info[2], info[3], Integer.parseInt(info[4]),
+                    SellerManager.addProduct(account.getUsername(), info[2], info[3], Integer.parseInt(info[4]),
                             Long.parseLong(info[5]), info[6], categoryAttribute, info[8], info[9], info[10]);
-                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAccountByUsername(onlineAccounts.get(info[11]))));
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAccountByUsername(account.getUsername())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("create off")) {
+                } else if (request.startsWith("create_off")) {
                     Type goodsIdType = new TypeToken<List<Integer>>() {
                     }.getType();
                     List<Integer> goodsId = new Gson().fromJson(info[2], goodsIdType);
                     Date startDate = AdminPanel.getDateByString(info[3] + " " + info[4]);
                     Date endDate = AdminPanel.getDateByString(info[5] + " " + info[6]);
-                    SellerManager.addOff(onlineAccounts.get(info[8]), goodsId, startDate, endDate, Integer.parseInt(info[7]));
-                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAccountByUsername(onlineAccounts.get(info[8]))));
+                    SellerManager.addOff(account.getUsername(), goodsId, startDate, endDate, Integer.parseInt(info[7]));
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAccountByUsername(account.getUsername())));
                 } else if (request.startsWith("getAllCategories")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllCategories()));
                     dataOutputStream.flush();
-                } else if (request.startsWith("remove product")) {
+                } else if (request.startsWith("remove_product")) {
                     int id = Integer.parseInt(info[2]);
                     SellerManager.removeProduct(id);
-                } else if (request.startsWith("can register")) {
+                } else if (request.startsWith("can_register")) {
                     String username = info[2];
                     if (Shop.getShop().getAccountByUsername(username) == null) {
                         dataOutputStream.writeUTF("true");
@@ -120,42 +123,43 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("register")) {
                     AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
-                } else if (request.startsWith("get total price ")) {
-                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(Shop.getShop().getAccountByUsername(onlineAccounts.get(info[3])))));
+                } else if (request.startsWith("get_total_price")) {
+                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
                     dataOutputStream.flush();
-                } else if (request.startsWith("get final price ")) {
-                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(Shop.getShop().getAccountByUsername(onlineAccounts.get(info[3])))));
+                } else if (request.startsWith("get_final_price")) {
+                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(account)));
                     dataOutputStream.flush();
-                } else if (request.startsWith("get discount ")) {
+                } else if (request.startsWith("get_discount")) {
                     String discount = request.split("\\s")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
-                } else if (request.startsWith("can login")) {
+                } else if (request.startsWith("can_login")) {
                     Account account = AccountManager.canLogin(info[2], info[3]);
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
                     } else {
                         String token = new Server().generateTokenForUser(account.getUsername());
                         if (account instanceof Buyer) {
-                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " buyer " + token);
+                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
-                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller " + token);
+                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_seller_" + token);
                         } else {
-                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " admin " + token);
+                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_admin_" + token);
                         }
                         onlineAccounts.put(token, account.getUsername());
+                        this.account = account;
                     }
                     dataOutputStream.flush();
-                } else if (request.startsWith("create category ")) {
+                } else if (request.startsWith("create_category")) {
                     Type categoryAttribute = new TypeToken<List<String>>() {
                     }.getType();
                     List<String> attributes = new Gson().fromJson(info[3], categoryAttribute);
                     AdminManager.addCategory(info[2], attributes);
 
-                } else if (request.startsWith("remove category ")) {
+                } else if (request.startsWith("remove_category")) {
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
-                } else if (request.startsWith("create discount ")) {
+                } else if (request.startsWith("create_discount")) {
                     Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
                     Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);
                     int percent = Integer.parseInt(info[6]);
@@ -167,17 +171,24 @@ class ClientHandler extends Thread {
                     AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
 
                 } else if (request.startsWith("exit")) {
-                    FileHandler.write();
-                    dataOutputStream.writeUTF("successfully logged out");
-                    dataOutputStream.flush();
-                    socket.close();
-                    System.out.println("connection closed!");
+                    disconnectClient();
                     break;
                 }
 
             }
         } catch (IOException e) {
             System.out.println("connection closed!");
+        }
+    }
+
+    private void disconnectClient() throws IOException {
+        FileHandler.write();
+        socket.close();
+        System.out.println("connection closed!");
+        for (String token : onlineAccounts.keySet()) {
+            if (account.getUsername().equals(onlineAccounts.get(token))) {
+                onlineAccounts.remove(token);
+            }
         }
     }
 
