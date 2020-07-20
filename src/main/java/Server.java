@@ -115,7 +115,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("remove product")) {
                     int id = Integer.parseInt(info[2]);
                     SellerManager.removeProduct(id);
-                } else if (request.startsWith("can register")) {
+                } else if (request.startsWith("can_register_")) {
                     String username = info[2];
                     if (Shop.getShop().getAccountByUsername(username) == null) {
                         dataOutputStream.writeUTF("true");
@@ -135,7 +135,7 @@ class ClientHandler extends Thread {
                     String discount = request.split("\\s")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
-                } else if (request.startsWith("can login")) {
+                } else if (request.startsWith("can_login_")) {
                     Account account = AccountManager.canLogin(info[2], info[3]);
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
@@ -145,9 +145,8 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " buyer " + token);
                         } else if (account instanceof Seller) {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller " + token);
-                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller");
                         } else if (account instanceof Supporter) {
-                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " supporter");
+                            dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " supporter " + token);
                         } else {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " admin " + token);
                         }
@@ -175,8 +174,6 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("getAllSupporter")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporter())));
                     dataOutputStream.flush();
-                }else if (request.startsWith("create discount ")) {
-                    String[] info = request.split("\\s");
                 } else if (request.startsWith("create discount ")) {
                     Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
                     Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);

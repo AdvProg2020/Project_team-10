@@ -527,6 +527,7 @@ public class AdminPanel {
                 break;
             case "Log out":
                 onlineAccount = new Buyer("temp");
+                main.onlineAccount = this.onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -681,6 +682,15 @@ public class AdminPanel {
         }
 
         return flowPane;
+    }
+
+    private Button typeOfSignUp(String text, int y) {
+        Button type = new Button(text);
+        type.setLayoutX(40);
+        type.setLayoutY(y);
+        type.setPrefWidth(90);
+        type.setPrefHeight(20);
+        return type;
     }
 
     private Button exitButton() {
@@ -956,11 +966,11 @@ public class AdminPanel {
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
-                        dataOutputStream.writeUTF("can register " + username);
+                        dataOutputStream.writeUTF("can_register_" + username);
                         dataOutputStream.flush();
                         if (dataInputStream.readUTF().equals("true")) {
-                            dataOutputStream.writeUTF("register " + username + " " + password + " " + type + " " + firstName
-                                    + " " + lastName + " " + email + " " + phoneNumber + " " + " " + " " + imagePath);
+                            dataOutputStream.writeUTF("register_" + username + "_" + password + "_" + type + "_" + firstName
+                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + " " + "_" + imagePath);
                             dataOutputStream.flush();
                             adminScrollPane.setContent(handelManageUsers());
                             popupWindow.close();
