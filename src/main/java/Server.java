@@ -59,7 +59,6 @@ class ClientHandler extends Thread {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
-
     }
 
     @Override
@@ -130,7 +129,7 @@ class ClientHandler extends Thread {
                     dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(account)));
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_discount")) {
-                    String discount = request.split("\\s")[1];
+                    String discount = request.split("_")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
                 } else if (request.startsWith("can_login")) {
@@ -143,6 +142,9 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_seller_" + token);
+                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_seller_" + token);
+                        } else if (account instanceof Supporter) {
+                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_supporter_" + token);
                         } else {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_admin_" + token);
                         }
@@ -159,6 +161,18 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("remove_category")) {
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
+                } else if (request.startsWith("getAllSeller")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
+                    dataOutputStream.flush();
+                }  else if (request.startsWith("getAllAdmin")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getAllBuyer")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllBuyers())));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getAllSupporter")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporter())));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("create_discount")) {
                     Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
                     Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);

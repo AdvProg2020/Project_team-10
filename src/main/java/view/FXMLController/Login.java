@@ -409,7 +409,6 @@ public class Login {
         onlineAccount = new Gson().fromJson(splitResponse[1], accountType);
         token = splitResponse[3];
         main.token = this.token;
-        System.out.println("token: " + token);
         AccountManager.setOnlineAccount(onlineAccount);
     }
 
@@ -428,7 +427,9 @@ public class Login {
             type = "buyer";
         }
         if (selectedFile != null) {
-            String imagePath = selectedFile.getAbsolutePath();
+            File dest = new File("src/main/java/view/databaseMedia/userImage/ssuu.jpg");
+            copyFileUsingStream(selectedFile , dest);
+            String imagePath = dest.getAbsolutePath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
@@ -455,6 +456,16 @@ public class Login {
             }
         } else {
             printErrorForRegister("you should select a photo");
+        }
+    }
+
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
         }
     }
 
@@ -548,7 +559,9 @@ public class Login {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
-        } else {
+        } else if (onlineAccount instanceof Supporter) {
+            new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
+        }  else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
         }
     }

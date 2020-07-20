@@ -837,9 +837,17 @@ public class SellerPanel {
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
 
+            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/ssluu.jpg"); //TODO add token
+            copyFileUsingStream(selectedImageFile , destImage);
+            String imagePath = destImage.getAbsolutePath();
+
+            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/sjjjuu.mp4"); //TODO add token
+            copyFileUsingStream(selectedVideoFile , destVideo);
+            String videoPath = destVideo.getAbsolutePath();
+
             dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
                     + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
-                    + "_" + selectedImageFile.getAbsolutePath() + "_" + selectedVideoFile.getAbsolutePath() + "_" + token);
+                    + "_" + imagePath + "_" + videoPath + "_" + token);
             dataOutputStream.flush();
             Type sellerType = new TypeToken<Seller>() {
             }.getType();
@@ -857,6 +865,16 @@ public class SellerPanel {
             sellerScrollPane.setContent(handelManageProduct());
         } else {
             error.setText("you should fill all the fields");
+        }
+    }
+
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
         }
     }
 

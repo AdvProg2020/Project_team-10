@@ -118,27 +118,37 @@ public class AccountManager {
 
     // logical methods
 
-//    private static boolean canRegister(String username) {
-//        return Shop.getShop().getAccountByUsername(username) == null;
-//    }
+    private static boolean canRegister(String username) {
+        return Shop.getShop().getAccountByUsername(username) == null;
+    }
 
     public static void register(String username, String password, String type, String firstName,
                                 String lastName, String email, String phoneNumber, String company, String imagePath) {
-        if (type.equals("buyer")) {
-            Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password, imagePath);
-            Shop.getShop().getAllAccounts().add(buyer);
-            Shop.getShop().getAllBuyers().add(buyer);
-        } else if (type.equals("seller")) {
-            //TODO
-            Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company, imagePath);
-            Shop.getShop().getAllAccounts().add(seller);
-            Shop.getShop().getAllSellers().add(seller);
-            Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
-                    firstName, lastName, email, phoneNumber, company, imagePath));
-        } else {
-            Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);
-            Shop.getShop().getAllAccounts().add(admin);
-            Shop.getShop().getAllAdmins().add(admin);
+        switch (type) {
+            case "buyer":
+                Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password, imagePath);
+                Shop.getShop().getAllAccounts().add(buyer);
+                Shop.getShop().getAllBuyers().add(buyer);
+                break;
+            case "seller":
+                //TODO
+                Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company, imagePath);
+                Shop.getShop().getAllAccounts().add(seller);
+                Shop.getShop().getAllSellers().add(seller);
+                Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
+                        firstName, lastName, email, phoneNumber, company, imagePath));
+                break;
+            case "supporter":
+                //TODO
+                Supporter supporter = new Supporter(username, firstName, lastName, email, phoneNumber, password, imagePath);
+                Shop.getShop().getAllAccounts().add(supporter);
+                Shop.getShop().getAllSupporter().add(supporter);
+                break;
+            default:
+                Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);
+                Shop.getShop().getAllAccounts().add(admin);
+                Shop.getShop().getAllAdmins().add(admin);
+                break;
         }
     }
 
