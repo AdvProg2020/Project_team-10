@@ -276,3 +276,43 @@
 .backStyle:hover{
     -fx-image: url("../image/backHover.png");
 }
+
+.buttonChat{
+    -fx-background-color: #1089ff;
+    -fx-font-size: 8pt;
+    -fx-text-fill: white;
+    -fx-font-family: sans-serif;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+}
+.buttonChat:hover{
+    -fx-background-color: #279dff;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.send{
+    -fx-background-color: #1089ff;
+    -fx-font-size: 9pt;
+    -fx-font-family: "Kozuka Gothic Pro H";
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.send:hover{
+    -fx-background-color: #2ea1ff;
+    -fx-text-fill: white;
+}
+
+
+.btnExitPop {
+    -fx-background-image: url("../image/exitpopupP.png");
+    -fx-background-color: none;
+    -fx-background-size: 20px 20px;
+    -fx-pref-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-background-repeat: no-repeat;
+}
+
+.btnExitPop:hover{
+    -fx-background-image: url("../image/exitpopupPP.png");
+}

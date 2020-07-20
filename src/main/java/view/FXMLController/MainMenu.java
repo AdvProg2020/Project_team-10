@@ -5,13 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
-import controller.AccountManager;
-import controller.FileHandler;
-import controller.GoodsManager;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,24 +15,29 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 import org.controlsfx.control.RangeSlider;
-import view.menus.GoodsMenu;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
+
+import static javafx.scene.paint.Color.color;
 
 public class MainMenu implements Initializable {
     public Button btnLogin;
@@ -59,6 +59,7 @@ public class MainMenu implements Initializable {
     public RangeSlider rangeSlider;
     public Label startPrice;
     public Label endPrice;
+    public Button btnOnlineSupport;
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
@@ -128,7 +129,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin,btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
     }
 
     public FlowPane createPage(int pageIndex) {
@@ -178,7 +179,8 @@ public class MainMenu implements Initializable {
                 try {
                     dataOutputStream.writeUTF("get_off_" + filteredGoods.get(i).getOffId());
                     dataOutputStream.flush();
-                    Type offType = new TypeToken<Off>() {}.getType();
+                    Type offType = new TypeToken<Off>() {
+                    }.getType();
                     Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
                     Label offLabel = new Label(off.getPercent() + "%");
                     offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
@@ -204,6 +206,13 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        if (onlineAccount instanceof Buyer && !onlineAccount.getUsername().equals("temp")) {
+            btnOnlineSupport.setVisible(true);
+        } else {
+            btnOnlineSupport.setVisible(false);
+        }
+
         rangeSlider.lowValueProperty().addListener(
                 (observable, oldValue, newValue) -> setValue(startPrice, newValue)
         );
@@ -425,7 +434,7 @@ public class MainMenu implements Initializable {
 
     public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu, socket, onlineAccount, token).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin,btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
@@ -537,6 +546,232 @@ public class MainMenu implements Initializable {
         filteredGoods.removeAll(shouldBeRemoved);
         updateFilters = false;
         initialize(location, resources);
+    }
+
+    AnchorPane paneForScroll = new AnchorPane();
+    ScrollPane scrollPaneForSelectChat = new ScrollPane();
+    FlowPane paneForChat = new FlowPane();
+
+    public void popupOnlineSupport(MouseEvent mouseEvent) throws IOException {
+        scrollPaneForSelectChat.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        scrollPaneForSelectChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        paneForScroll.getChildren().clear();
+        paneForScroll.setPrefSize(196, 210);
+        scrollPaneForSelectChat.setPrefSize(189, 200);
+        scrollPaneForSelectChat.getStyleClass().add("scroll-barInDiscount");
+        scrollPaneForSelectChat.setLayoutY(5);
+        scrollPaneForSelectChat.setLayoutX(5);
+        paneForScroll.setStyle("-fx-background-color: white;-fx-border-radius: 10;-fx-border-width: 1;-fx-border-color: #dadada;-fx-background-radius: 10");
+        paneForScroll.setLayoutY(145);
+        paneForScroll.setLayoutX(1150);
+        paneForScroll.getChildren().add(scrollPaneForSelectChat);
+        dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.flush();
+        Type allCategoriesType = new TypeToken<ArrayList<Buyer>>() {
+        }.getType();
+        ArrayList<Buyer> supporters = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
+//        Type allCategoriesType = new TypeToken<ArrayList<Supporter>>() {
+//        }.getType();
+//        ArrayList<Supporter> supporters = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
+        VBox boxOfOnlineSupport = new VBox(0);
+        boxOfOnlineSupport.setAlignment(Pos.CENTER);
+        boxOfOnlineSupport.setStyle("-fx-background-color: none");
+        for (Buyer supporter : supporters) {
+            HBox supporterBox = new HBox();
+            supporterBox.setPrefHeight(38);
+            supporterBox.setAlignment(Pos.CENTER);
+            supporterBox.setStyle("-fx-background-color: none;");
+            Button chat = new Button("Chat");
+            chat.setOnMouseClicked(event -> handelMouseClickChat(supporter));
+            chat.getStyleClass().add("buttonChat");
+            Label username = new Label(supporter.getUsername());
+            username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;-fx-font-size: 10pt");
+            username.setPrefWidth(109);
+            supporterBox.getChildren().addAll(username, chat);
+            boxOfOnlineSupport.getChildren().addAll(supporterBox, rectangle(189, 1));
+        }
+        scrollPaneForSelectChat.setContent(boxOfOnlineSupport);
+
+        if (!mainPane.getChildren().contains(paneForScroll)) {
+            mainPane.getChildren().add(paneForScroll);
+            paneForScroll.setOnMouseExited(event -> mainPane.getChildren().remove(paneForScroll));
+        }
+    }
+
+    private Rectangle rectangle(int x, int y) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(x);
+        rectangle.setHeight(y);
+        rectangle.setStyle("-fx-fill: #f5f5f5");
+        return rectangle;
+    }
+
+
+    private void handelMouseClickChat(Buyer supporter) {
+        paneForChat.setVgap(3);
+        paneForChat.setLayoutX(570);
+        paneForChat.setLayoutY(200);
+        paneForChat.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1200.0);
+        dropShadow.setHeight(1200);
+        dropShadow.setWidth(1200);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        paneForChat.setEffect(dropShadow);
+        paneForChat.setPrefSize(340, 390);
+        mainPane.getChildren().addAll(paneForChat);
+
+        //xxxxx
+
+        HBox boxOfSupporter = new HBox();
+        boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
+        boxOfSupporter.setPrefWidth(320);
+        Circle circle = new Circle(20);
+        ImagePattern pattern = new ImagePattern(new Image("file:" + supporter.getImagePath()));
+        circle.setFill(pattern);
+        circle.setStrokeWidth(2);
+        circle.setStroke(Color.rgb(16, 137, 255));
+
+        Label username = new Label(" " + supporter.getUsername());
+        username.setPrefWidth(250);
+        username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
+        boxOfSupporter.getChildren().addAll(circle, username, exitButton());
+
+        ScrollPane scrollPaneChat = new ScrollPane();
+        scrollPaneChat.setPrefSize(320, 290);
+        paneForChat.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        scrollPaneChat.getStyleClass().add("scroll-barInDiscount");
+
+        HBox sendAndChatField = new HBox();
+
+        TextField chatField = new TextField();
+        chatField.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 10pt");
+        chatField.setPromptText("Massage");
+        chatField.setPrefSize(260, 30);
+//        chatField.getStyleClass().add()
+
+        Button send = new Button("Send");
+        send.getStyleClass().add("send");
+        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+
+        VBox innerChat = new VBox(5);
+
+        scrollPaneChat.setContent(innerChat);
+
+        chatField.setOnKeyPressed(event -> {
+
+            if (event.getCode() == KeyCode.ENTER) {
+                scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+                int a = chatField.getText().length() / 40;
+                String string = chatField.getText();
+                if (a != 0) {
+                    for (int i = 0; i < a; i++) {
+                        string = insertString(string, "\n", (i + 1) * 40);
+                    }
+                }
+                VBox vBox = new VBox(3);
+                Label label = new Label(string);
+                label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
+                vBox.setPadding(new Insets(5, 5, 5, 5));
+                Date date = new Date();
+                Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
+                time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
+                vBox.setStyle("-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
+                vBox.getChildren().addAll(label, time);
+                innerChat.getChildren().add(vBox);
+                chatField.clear();
+            }
+        });
+
+        send.setOnAction(event -> {
+
+            scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+            int a = chatField.getText().length() / 40;
+            String string = chatField.getText();
+            if (a != 0) {
+                for (int i = 0; i < a; i++) {
+                    string = insertString(string, "\n", (i + 1) * 40);
+                }
+            }
+            VBox vBox = new VBox(3);
+            Label label = new Label(string);
+            label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
+            vBox.setPadding(new Insets(5, 5, 5, 5));
+            Date date = new Date();
+            Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
+            time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
+            vBox.setStyle("-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
+            vBox.getChildren().addAll(label, time);
+            innerChat.getChildren().add(vBox);
+            chatField.clear();
+        });
+
+//javab
+        String answer = "dsvsdvsdvdsvsdvdvdssdvsdvdssdvdsvdsddsvdsvdsdsvsdvsdvsd";
+        int a = answer.length() / 40;
+        if (a != 0) {
+            for (int i = 0; i < a; i++) {
+                answer = insertString(answer, "\n", (i + 1) * 40);
+            }
+        }
+        VBox vBox = new VBox(3);
+        Label label = new Label(answer);
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
+        vBox.setPadding(new Insets(5, 5, 5, 5));
+        Date date = new Date();
+        Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
+        time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
+        vBox.setStyle("-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;");
+        vBox.getChildren().addAll(label, time);
+        innerChat.getChildren().add(vBox);
+
+        //--------------------------------
+
+
+        send.setPrefSize(60, 30);
+        sendAndChatField.getChildren().addAll(chatField, send);
+
+        paneForChat.setAlignment(Pos.CENTER);
+
+
+        paneForChat.getChildren().addAll(boxOfSupporter, rectangle(320, 2), scrollPaneChat, sendAndChatField);
+
+    }
+
+    public static String insertString(
+            String originalString,
+            String stringToBeInserted,
+            int index) {
+
+        // Create a new string
+        String newString = "";
+
+        for (int i = 0; i < originalString.length(); i++) {
+
+            // Insert the original string character
+            // into the new string
+            newString += originalString.charAt(i);
+
+            if (i == index) {
+
+                // Insert the string to be inserted
+                // into the new string
+                newString += stringToBeInserted;
+            }
+        }
+
+        // return the modified String
+        return newString;
+    }
+
+    private Button exitButton() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExitPop");
+        exitButton.setOnAction(event -> {
+            mainPane.getChildren().remove(paneForChat);
+            paneForChat.getChildren().clear();
+        });
+        return exitButton;
     }
 
 }

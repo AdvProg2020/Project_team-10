@@ -17,16 +17,17 @@
 
     <AnchorPane fx:id="mainMenu" layoutY="165">
 
-<!--        <ScrollPane pannable="true" prefHeight="650" prefWidth="1200" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">-->
+        <!--        <ScrollPane pannable="true" prefHeight="650" prefWidth="1200" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">-->
 
 
-<!--&lt;!&ndash;            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">&ndash;&gt;-->
+        <!--&lt;!&ndash;            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">&ndash;&gt;-->
 
-<!--&lt;!&ndash;            </FlowPane>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </FlowPane>&ndash;&gt;-->
 
-<!--        </ScrollPane>-->
+        <!--        </ScrollPane>-->
 
-        <Pagination fx:id="pagi" layoutX="30" layoutY="25" style="-fx-background-color: white;-fx-background-radius: 10;"/>
+        <Pagination fx:id="pagi" layoutX="30" layoutY="25"
+                    style="-fx-background-color: white;-fx-background-radius: 10;"/>
 
 
         <VBox layoutY="25" layoutX="1250" prefWidth="260" prefHeight="200" styleClass="vboxForFilter"
@@ -67,7 +68,6 @@
         </VBox>
 
 
-
         <VBox layoutY="525" layoutX="1250" prefWidth="260" prefHeight="150" styleClass="vboxForFilter"
               style="-fx-padding: 10 10 10 10;">
 
@@ -86,7 +86,8 @@
                         snapToTicks="true">
                 </RangeSlider>
                 <HBox prefHeight="20">
-                    <Label text="Start price: $ " style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
+                    <Label text="Start price: $ "
+                           style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
                     <Label style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6E6E6E;"
                            fx:id="startPrice"
                            prefWidth="150"
@@ -94,55 +95,60 @@
                     </Label>
                 </HBox>
                 <HBox>
-                    <Label text="End price: $" style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
-                <Label
-                        style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6e6e6e;"
-                        fx:id="endPrice"
-                        prefWidth="150.0"
-                        text="50000">
+                    <Label text="End price: $"
+                           style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;"/>
+                    <Label
+                            style="-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14;-fx-text-fill: #6e6e6e;"
+                            fx:id="endPrice"
+                            prefWidth="150.0"
+                            text="50000">
 
-                </Label>
+                    </Label>
                 </HBox>
 
-            <!--                <JFXTextField promptText="Start price" styleClass="filterTextPrice"/>-->
-            <!--                <JFXTextField promptText="End price" styleClass="filterTextPrice"/>-->
+                <!--                <JFXTextField promptText="Start price" styleClass="filterTextPrice"/>-->
+                <!--                <JFXTextField promptText="End price" styleClass="filterTextPrice"/>-->
+            </VBox>
         </VBox>
-    </VBox>
 
-</AnchorPane>
+    </AnchorPane>
 
-<Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
+    <Rectangle height="165" width="1560" fx:id="header" styleClass="header" fill="#ffff"/>
 
 
     <ImageView fx:id="gif" layoutY="40" layoutX="160" fitHeight="100" fitWidth="133.4">
 
     </ImageView>
 
-<Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
-<tooltip>
-    <Tooltip text="Close"/>
-</tooltip>
-</Button>
+    <Button layoutX="1507" layoutY="10" mnemonicParsing="false" styleClass="buttonExit" onMouseClicked="#exit">
+        <tooltip>
+            <Tooltip text="Close"/>
+        </tooltip>
+    </Button>
 
-<Button layoutX="1483" layoutY="10" mnemonicParsing="false" styleClass="buttonMinimize" onMouseClicked="#minimize">
-<tooltip>
-    <Tooltip text="Minimize"/>
-</tooltip>
-</Button>
+    <Button layoutX="1483" layoutY="10" mnemonicParsing="false" styleClass="buttonMinimize" onMouseClicked="#minimize">
+        <tooltip>
+            <Tooltip text="Minimize"/>
+        </tooltip>
+    </Button>
 
-<Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount"
-        onMouseClicked="#popupLogin">
+    <Button layoutX="1350" layoutY="105" fx:id="btnLogin" mnemonicParsing="false" styleClass="buttonAccount"
+            onMouseClicked="#popupLogin">
+    </Button>
 
-</Button>
+    <Button layoutX="1150" layoutY="105" fx:id="btnOnlineSupport" mnemonicParsing="false" styleClass="buttonSupport" onMouseEntered="#popupOnlineSupport" text="▽ ONLINE SUPPORT">
 
-<Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart"
-        onMouseClicked="#cartMenu">
-
-</Button>
-
-<ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"
-           onMouseClicked="#backToMainMenu"/>
+    </Button>
 
 
-        </AnchorPane>
+    <Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart"
+            onMouseClicked="#cartMenu">
+
+    </Button>
+
+    <ImageView fitHeight="130" fitWidth="130" layoutX="18" layoutY="18" styleClass="logo"
+               onMouseClicked="#backToMainMenu"/>
+
+
+</AnchorPane>
 
