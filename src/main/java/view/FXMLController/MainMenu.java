@@ -63,6 +63,7 @@ public class MainMenu implements Initializable {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     public Account onlineAccount = new Buyer("temp");
+    public String token;
 
     public ArrayList<Good> filteredGoods;
     private String kindOfSort = "visit number";
@@ -175,7 +176,7 @@ public class MainMenu implements Initializable {
             visitAndOff.getChildren().add(visit);
             if (filteredGoods.get(i).getOffId() != 0) {
                 try {
-                    dataOutputStream.writeUTF("get off " + filteredGoods.get(i).getOffId());
+                    dataOutputStream.writeUTF("get_off_" + filteredGoods.get(i).getOffId());
                     dataOutputStream.flush();
                     Type offType = new TypeToken<Off>() {}.getType();
                     Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
@@ -424,7 +425,7 @@ public class MainMenu implements Initializable {
 
     public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu, socket, onlineAccount).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin, main, mainMenu, socket, onlineAccount, token).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {

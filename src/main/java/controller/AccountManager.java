@@ -167,7 +167,8 @@ public class AccountManager {
     }
 
     public static void editPersonalInfo(String password, String firstName, String lastName, String phoneNumber
-            , String email, Account account) {
+            , String email, String username) {
+        Account account = Shop.getShop().getAccountByUsername(username);
         account.setPassword(password);
         account.setFirstName(firstName);
         account.setLastName(lastName);

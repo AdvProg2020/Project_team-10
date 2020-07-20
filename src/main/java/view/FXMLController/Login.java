@@ -69,6 +69,7 @@ public class Login {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private Account onlineAccount;
+    private String token;
 
     public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
@@ -358,8 +359,9 @@ public class Login {
     private void processLogin() throws IOException {
         String username = usernameField.getText();
         String password = passwordFieldForSignIn.getText();
+        //TODO check user & pass in not empty
         Buyer temp = ((Buyer) onlineAccount);
-        dataOutputStream.writeUTF("can login " + username + " " + password);
+        dataOutputStream.writeUTF("can_login_" + username + "_" + password);
         dataOutputStream.flush();
         String response = dataInputStream.readUTF();
         if (response.startsWith("true")) {
@@ -401,6 +403,10 @@ public class Login {
             }.getType();
         }
         onlineAccount = new Gson().fromJson(response.split("\\s")[1], accountType);
+        token = response.split("\\s")[3];
+        main.token = this.token;
+        System.out.println("token: " + token);
+        AccountManager.setOnlineAccount(onlineAccount);
     }
 
     private void processRegister() throws IOException {
@@ -422,14 +428,12 @@ public class Login {
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
-                        dataOutputStream.writeUTF("can register " + username);
+                        dataOutputStream.writeUTF("can_register_" + username);
                         dataOutputStream.flush();
                         if (dataInputStream.readUTF().equals("true")) {
-                            dataOutputStream.writeUTF("register " + username + " " + password + " " + type + " " + firstName
-                                    + " " + lastName + " " + email + " " + phoneNumber + " " + company + " " + imagePath);
+                            dataOutputStream.writeUTF("register_" + username + "_" + password + "_" + type + "_" + firstName
+                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + company + "_" + imagePath);
                             dataOutputStream.flush();
-//                            AccountManager.register(username, password, type, firstName, lastName, email, phoneNumber
-//                                    , company, imagePath);
                             popupWindow.close();
                             fade(0.5, 10);
                         } else {
@@ -475,6 +479,7 @@ public class Login {
 
         HBox hBox = new HBox();
         Circle circle = new Circle(20);
+        System.out.println("path: " + onlineAccount.getImagePath());
         ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(1.5);
@@ -539,10 +544,8 @@ public class Login {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
-        } else if (onlineAccount instanceof Supporter) {
-            new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
-            new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
+            new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
         }
     }
 

@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import model.*;
 import model.requests.Request;
 import view.CommandProcessor;
@@ -76,6 +77,7 @@ public class AdminManager {
 
     public static void addCategory(String name, List<String> attributes) {
         Shop.getShop().getAllCategories().add(new Category(name, attributes));
+        System.out.println(new Gson().toJson(Shop.getShop().getAllCategories()));
     }
 
     public static void removeCategory(Category category) {

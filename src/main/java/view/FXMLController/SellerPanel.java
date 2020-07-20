@@ -71,7 +71,8 @@ public class SellerPanel {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
-    private Account onlineAccount = new Buyer("temp");
+    private Account onlineAccount;
+    private String token;
 
     private JFXDatePicker startDate;
     private JFXTimePicker startTime;
@@ -91,7 +92,7 @@ public class SellerPanel {
     private Stage popupWindow;
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
-            , Socket socket, Account onlineAccount) throws IOException {
+            , Socket socket, Account onlineAccount, String token) throws IOException {
         this.mainPane = mainPane;
         this.main = main;
         this.mainMenu = mainMenu;
@@ -101,6 +102,7 @@ public class SellerPanel {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
+        this.token = token;
         sellerPane = new AnchorPane();
         optionsPane = new AnchorPane();
         sellerScrollPane = new ScrollPane();
@@ -199,14 +201,14 @@ public class SellerPanel {
     }
 
     private void processEdit() throws IOException {
-        dataOutputStream.writeUTF("edit profile " + password.getText() + " " + firstName.getText() + " " +
-                lastName.getText() + " " + phoneNumber.getText() + " " + email.getText());
+        dataOutputStream.writeUTF("edit_profile_" + password.getText() + "_" + firstName.getText() + "_" +
+                lastName.getText() + "_" + phoneNumber.getText() + "_" + email.getText() + "_" + token);
         dataOutputStream.flush();
 
         handelButtonOnMouseClick();
     }
 
-    void changePane() {
+    public void changePane() {
         sellerPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
@@ -361,7 +363,6 @@ public class SellerPanel {
                 break;
             case "Log out":
                 onlineAccount = new Buyer("temp");
-                main.onlineAccount = onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -396,7 +397,7 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, attributesTitle);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.writeUTF("getAllCategories_" + token);
         dataOutputStream.flush();
         Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
         }.getType();
@@ -522,7 +523,7 @@ public class SellerPanel {
             for (Integer goodId : off.getGoodsId()) {
                 HBox goodPack = new HBox(1);
                 goodPack.setPadding(new Insets(5, 5, 5, 5));
-                dataOutputStream.writeUTF("get product " + goodId);
+                dataOutputStream.writeUTF("get_product_" + goodId + "_" + token);
                 dataOutputStream.flush();
                 Type productType = new TypeToken<Good>() {
                 }.getType();
@@ -568,7 +569,7 @@ public class SellerPanel {
             bin.setFitHeight(25);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove off " + off.getId());
+                    dataOutputStream.writeUTF("remove_off " + off.getId() + "_" + token);
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -612,7 +613,7 @@ public class SellerPanel {
         return vBox;
     }
 
-    private void addGood() throws  IOException {
+    private void addGood() throws IOException {
         error.setText("");
         loginPane.getChildren().clear();
 
@@ -735,12 +736,11 @@ public class SellerPanel {
         categoryRadioButtonBox.setPrefSize(110, 95);
         //showCategory
 
-        dataOutputStream.writeUTF("getAllCategories");
+        dataOutputStream.writeUTF("getAllCategories_" + token);
         dataOutputStream.flush();
         Type allCategoriesType = new TypeToken<ArrayList<Category>>() {
         }.getType();
         ArrayList<Category> allCategories = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
-
         for (Category category : allCategories) {
             JFXRadioButton radioButton = new JFXRadioButton(category.getName());
             categoryRadioButtonBox.getChildren().add(radioButton);
@@ -750,7 +750,7 @@ public class SellerPanel {
             radioButton.setOnMouseClicked(event -> {
                 try {
                     selectedCategory = radioButton;
-                    dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+                    dataOutputStream.writeUTF("get_category_" + selectedCategory.getText() + "_" + token);
                     dataOutputStream.flush();
                     Type categoryType = new TypeToken<Category>() {
                     }.getType();
@@ -825,7 +825,7 @@ public class SellerPanel {
 
     private void processAddProduct() throws IOException {
         if (isAllFieldsFilled()) {
-            dataOutputStream.writeUTF("get category " + selectedCategory.getText());
+            dataOutputStream.writeUTF("get_category_" + selectedCategory.getText() + "_" + token);
             dataOutputStream.flush();
             Type categoryType = new TypeToken<Category>() {
             }.getType();
@@ -837,16 +837,23 @@ public class SellerPanel {
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
 
-            dataOutputStream.writeUTF("create product " + goodName.getText() + " " + company.getText() + " " + number
-                    + " " + price + " " + selectedCategory.getName() + " " + new Gson().toJson(hashMap) + " " + description.getText()
-                    + " " + selectedImageFile.getAbsolutePath() + " " + selectedVideoFile.getAbsolutePath());
+            dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
+                    + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
+                    + "_" + selectedImageFile.getAbsolutePath() + "_" + selectedVideoFile.getAbsolutePath() + "_" + token);
             dataOutputStream.flush();
+            Type sellerType = new TypeToken<Seller>() {
+            }.getType();
+            onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), sellerType);
+            main.onlineAccount = this.onlineAccount;
 //            SellerManager.addProduct(goodName.getText(), company.getText(), number, price, selectedCategory.getName(),
 //                    hashMap, description.getText(), selectedImageFile.getAbsolutePath(), selectedVideoFile.getAbsolutePath());
-
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             popupWindow.close();
             fade(0.5, 10);
-            sellerScrollPane.setContent(null);
             sellerScrollPane.setContent(handelManageProduct());
         } else {
             error.setText("you should fill all the fields");
@@ -956,7 +963,6 @@ public class SellerPanel {
         startTime.setLayoutX(300);
         startTime.setOnAction(event -> {
             LocalTime date = startTime.getValue();
-            System.out.println("Selected date: " + date);
         });
 
         endDate = new JFXDatePicker();
@@ -967,7 +973,6 @@ public class SellerPanel {
         endDate.setLayoutX(40);
         endDate.setOnAction(event -> {
             LocalDate date = endDate.getValue();
-            System.out.println("Selected date: " + date);
         });
 
         endTime = new JFXTimePicker();
@@ -978,7 +983,6 @@ public class SellerPanel {
         endTime.setLayoutX(300);
         endTime.setOnAction(event -> {
             LocalTime date = endTime.getValue();
-            System.out.println("Selected date: " + date);
         });
 
         percent = new NumberField();
@@ -1056,10 +1060,13 @@ public class SellerPanel {
         String endDate = (endMonth + "/" + endDay + "/" + endYear + " " + this.endTime.getValue());
         int percent = Integer.parseInt(this.percent.getText());
 
-        dataOutputStream.writeUTF("create off " + new Gson().toJson(selectedGoodsId) + " " +
-                startDate + " " + endDate + " " + percent);
+        dataOutputStream.writeUTF("create_off_" + new Gson().toJson(selectedGoodsId) + "_" + startDate + "_"
+                + endDate + "_" + percent + "_" + token);
         dataOutputStream.flush();
-//        SellerManager.addOff(selectedGoodsId, AdminPanel.getDateByString(startDate), AdminPanel.getDateByString(endDate), percent);
+        Type sellerType = new TypeToken<Seller>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), sellerType);
+        main.onlineAccount = this.onlineAccount;
         popupWindow.close();
         fade(0.5, 10);
         sellerScrollPane.setContent(handelManageOff());
@@ -1092,7 +1099,6 @@ public class SellerPanel {
         addGoodBox.getChildren().add(plus);
         addGoodBox.setAlignment(Pos.CENTER);
         flowPane.getChildren().add(addGoodBox);
-
         for (Good good : ((Seller) onlineAccount).getGoods()) {
             VBox goodPack = new VBox();
             goodPack.setPrefWidth(225);
@@ -1130,7 +1136,7 @@ public class SellerPanel {
             goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.writeUTF("remove product " + good.getId() + "_" + token);
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();

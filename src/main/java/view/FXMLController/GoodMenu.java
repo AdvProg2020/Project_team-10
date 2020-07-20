@@ -373,7 +373,7 @@ public class GoodMenu {
     private void similarProducts(AnchorPane innerPane) {
         HBox goods = new HBox();
         try {
-            dataOutputStream.writeUTF("get category " + currentGood.getCategory());
+            dataOutputStream.writeUTF("get_category_" + currentGood.getCategory());
             dataOutputStream.flush();
             Type categoryType = new TypeToken<Category>() {
             }.getType();

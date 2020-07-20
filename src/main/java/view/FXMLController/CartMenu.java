@@ -70,9 +70,9 @@ public class CartMenu {
     private DataInputStream dataInputStream;
     private Socket socket;
     private Account onlineAccount;
-
+    private String token;
     public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu
-            , Socket socket, Account onlineAccount) throws IOException {
+            , Socket socket, Account onlineAccount, String token) throws IOException {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
         this.btnLogin = btnLogin;
@@ -82,6 +82,7 @@ public class CartMenu {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
+        this.token = token;
     }
 
     public long totalPrice;
@@ -106,7 +107,7 @@ public class CartMenu {
 
         //--------
 
-        dataOutputStream.writeUTF("get total price ");
+        dataOutputStream.writeUTF("get_total_price_" + token);
         dataOutputStream.flush();
         Type totalPriceType = new TypeToken<Long>() {
         }.getType();
@@ -114,7 +115,7 @@ public class CartMenu {
         Label totalPriceLabel = new Label("Total price: $" + totalPrice);
         totalPriceLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
 
-        dataOutputStream.writeUTF("get final price ");
+        dataOutputStream.writeUTF("get_final_price_" + token);
         dataOutputStream.flush();
         Type finalPriceType = new TypeToken<Long>() {
         }.getType();
@@ -468,7 +469,7 @@ public class CartMenu {
             error.setText("you must fill all the fields");
         } else if (existenceOfDiscount.isSelected()) {
             try {
-                dataOutputStream.writeUTF("get discount " + ((int) Long.parseLong(discountCode.getText())));
+                dataOutputStream.writeUTF("get_discount_" + ((int) Long.parseLong(discountCode.getText())));
                 dataOutputStream.flush();
                 Type discountType = new TypeToken<Discount>() {
                 }.getType();
