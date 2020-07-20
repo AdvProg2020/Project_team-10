@@ -962,10 +962,9 @@ public class AdminPanel {
             type = "admin";
         }
         if (selectedFile != null) {
-
-            File dest = new File("src/main/java/view/databaseMedia/userImage/ssuu.jpg"); //TODO add token
+            File dest = new File("src/main/java/view/databaseMedia/userImage/" + Login.createTokenForFiles() + ".jpg");
             copyFileUsingStream(selectedFile , dest);
-            String imagePath = dest.getAbsolutePath();
+            String imagePath = dest.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {

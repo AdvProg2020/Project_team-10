@@ -1,15 +1,7 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import model.*;
 import model.requests.RegisterOfSellerRequest;
-import view.menus.Menu;
-import view.menus.UserMenu;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class AccountManager {
     private static Account onlineAccount = new Buyer("temp");
@@ -142,7 +134,7 @@ public class AccountManager {
                 //TODO
                 Supporter supporter = new Supporter(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(supporter);
-                Shop.getShop().getAllSupporter().add(supporter);
+                Shop.getShop().getAllSupporters().add(supporter);
                 break;
             default:
                 Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);

@@ -427,9 +427,9 @@ public class Login {
             type = "buyer";
         }
         if (selectedFile != null) {
-            File dest = new File("src/main/java/view/databaseMedia/userImage/ssuu.jpg");
+            File dest = new File("src/main/java/view/databaseMedia/userImage/" + createTokenForFiles() + ".jpg");
             copyFileUsingStream(selectedFile , dest);
-            String imagePath = dest.getAbsolutePath();
+            String imagePath = dest.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
@@ -494,7 +494,6 @@ public class Login {
 
         HBox hBox = new HBox();
         Circle circle = new Circle(20);
-        System.out.println("path: " + onlineAccount.getImagePath());
         ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
         circle.setFill(pattern);
         circle.setStrokeWidth(1.5);
@@ -602,6 +601,7 @@ public class Login {
         if (fileNames.contains(stringBuilder.toString())) {
             return createTokenForFiles();
         }
+        fileNames.add(stringBuilder.toString());
         return stringBuilder.toString();
     }
 

@@ -1,12 +1,8 @@
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import controller.*;
 import model.*;
-import view.CommandProcessor;
 import view.FXMLController.AdminPanel;
-import view.FXMLController.Login;
-import view.Purchase;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -171,7 +167,7 @@ class ClientHandler extends Thread {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllBuyers())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("getAllSupporter")) {
-                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporter())));
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporters())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("create_discount")) {
                     Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
@@ -183,7 +179,6 @@ class ClientHandler extends Thread {
                     }.getType();
                     List<String> selectedBuyers = new Gson().fromJson(info[9], selectedBuyersType);
                     AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
-
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

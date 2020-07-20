@@ -363,6 +363,7 @@ public class SellerPanel {
                 break;
             case "Log out":
                 onlineAccount = new Buyer("temp");
+                main.onlineAccount = this.onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -837,13 +838,15 @@ public class SellerPanel {
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
 
-            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/ssluu.jpg"); //TODO add token
+            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
+                    Login.createTokenForFiles() + ".jpg");
             copyFileUsingStream(selectedImageFile , destImage);
-            String imagePath = destImage.getAbsolutePath();
+            String imagePath = destImage.getPath();
 
-            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/sjjjuu.mp4"); //TODO add token
+            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
+                    Login.createTokenForFiles() + ".mp4");
             copyFileUsingStream(selectedVideoFile , destVideo);
-            String videoPath = destVideo.getAbsolutePath();
+            String videoPath = destVideo.getPath();
 
             dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
                     + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()

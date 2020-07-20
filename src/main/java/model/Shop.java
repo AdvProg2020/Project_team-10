@@ -9,21 +9,21 @@ public class Shop {
     private List<Seller> allSellers = new ArrayList<>();
     private List<Buyer> allBuyers = new ArrayList<>();
     private List<Admin> allAdmins = new ArrayList<>();
+    private List<Supporter> allSupporters = new ArrayList<>();
     private List<Off> allOffs = new ArrayList<>();
     private List<Good> allGoods = new ArrayList<>();
     private List<Category> allCategories = new ArrayList<>();
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
-    private List<Supporter> allSupporter = new ArrayList<>();
 
     private Shop() {
         allAccounts.add(new Admin("javads", "Abdossamad", "Haghiri", "haghiri@gmail.com",
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
     }
 
-    public List<Supporter> getAllSupporter() {
-        return allSupporter;
+    public List<Supporter> getAllSupporters() {
+        return allSupporters;
     }
 
     public List<Comment> getAllComments() {

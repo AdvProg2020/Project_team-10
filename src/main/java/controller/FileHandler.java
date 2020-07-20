@@ -17,6 +17,7 @@ public class FileHandler {
         writeSeller();
         writeBuyer();
         writeAdmin();
+        writeSupporter();
         writeCategories();
         writeComments();
         writeLastProductId();
@@ -73,6 +74,16 @@ public class FileHandler {
         try {
             FileWriter fileWriter = new FileWriter("database/allAdmins.txt");
             fileWriter.write(new Gson().toJson(Shop.getShop().getAllAdmins()));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeSupporter() {
+        try {
+            FileWriter fileWriter = new FileWriter("database/allSupporters.txt");
+            fileWriter.write(new Gson().toJson(Shop.getShop().getAllSupporters()));
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -206,6 +217,7 @@ public class FileHandler {
     //read
     private static void readAllAccounts() throws Exception {
         readAllAdmins();
+        readAllSupporters();
         readAllBuyers();
         readAllSellers();
     }
@@ -248,6 +260,20 @@ public class FileHandler {
         allAdmins = gson.fromJson(allAdminsJson, adminListType);
         Shop.getShop().getAllAdmins().addAll(allAdmins);
         Shop.getShop().getAllAccounts().addAll(allAdmins);
+        bufferedReader.close();
+        fileReader.close();
+    }
+
+    private static void readAllSupporters() throws Exception {
+        FileReader fileReader = new FileReader("database/allSupporters.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String allSupportersJson = bufferedReader.readLine().trim();
+        Gson gson = new Gson();
+        ArrayList<Supporter> allSupporters;
+        Type supporterListType = new TypeToken<ArrayList<Supporter>>() {}.getType();
+        allSupporters = gson.fromJson(allSupportersJson, supporterListType);
+        Shop.getShop().getAllSupporters().addAll(allSupporters);
+        Shop.getShop().getAllAccounts().addAll(allSupporters);
         bufferedReader.close();
         fileReader.close();
     }
