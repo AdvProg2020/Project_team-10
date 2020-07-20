@@ -202,6 +202,7 @@ public class BuyerPanel {
                 break;
             case "Log out":
                 onlineAccount = new Buyer("temp");
+                main.onlineAccount = onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();

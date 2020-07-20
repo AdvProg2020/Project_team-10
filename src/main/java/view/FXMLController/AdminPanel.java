@@ -190,7 +190,7 @@ public class AdminPanel {
 
     }
 
-    private AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+    AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -205,7 +205,7 @@ public class AdminPanel {
         handelButtonOnMouseClick();
     }
 
-    private void changePane() {
+    void changePane() {
         adminPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
@@ -527,6 +527,7 @@ public class AdminPanel {
                 break;
             case "Log out":
                 onlineAccount = new Buyer("temp");
+                main.onlineAccount = onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -699,7 +700,7 @@ public class AdminPanel {
         Button type = new Button(text);
         type.setLayoutX(40);
         type.setLayoutY(y);
-        type.setPrefWidth(60);
+        type.setPrefWidth(90);
         type.setPrefHeight(20);
         return type;
     }
@@ -711,9 +712,9 @@ public class AdminPanel {
 
         JFXButton signUp = new JFXButton("Sign Up");
         signUp.setLayoutY(445);
-        signUp.setLayoutX(40);
+        signUp.setLayoutX(140);
         signUp.setPrefHeight(40);
-        signUp.setPrefWidth(400);
+        signUp.setPrefWidth(300);
         signUp.getStyleClass().add("signUp");
         firstNameText = textFieldForSignUp("First name", 40, 140);
         lastNameText = textFieldForSignUp("Last name", 40, 190);
@@ -992,6 +993,16 @@ public class AdminPanel {
         }
     }
 
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        }
+    }
+
     private void fade(double fromValue, double toValue) {
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(600));
@@ -1039,12 +1050,35 @@ public class AdminPanel {
         hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllAccounts");
+        dataOutputStream.writeUTF("getAllSeller");
         dataOutputStream.flush();
-        Type allAccountsType = new TypeToken<ArrayList<Account>>() {
+        Type allSellerType = new TypeToken<ArrayList<Seller>>() {
         }.getType();
-        ArrayList<Account> accounts = new Gson().fromJson(dataInputStream.readUTF(), allAccountsType);
+        ArrayList<Account> sellers = new Gson().fromJson(dataInputStream.readUTF(), allSellerType);
 
+        dataOutputStream.writeUTF("getAllAdmin");
+        dataOutputStream.flush();
+        Type allAdminType = new TypeToken<ArrayList<Admin>>() {
+        }.getType();
+        ArrayList<Account> admins = new Gson().fromJson(dataInputStream.readUTF(), allAdminType);
+
+        dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.flush();
+        Type allBuyerType = new TypeToken<ArrayList<Buyer>>() {
+        }.getType();
+        ArrayList<Account> buyer = new Gson().fromJson(dataInputStream.readUTF(), allBuyerType);
+
+        dataOutputStream.writeUTF("getAllSupporter");
+        dataOutputStream.flush();
+        Type allSupporterType = new TypeToken<ArrayList<Supporter>>() {
+        }.getType();
+        ArrayList<Account> supporters = new Gson().fromJson(dataInputStream.readUTF(), allSupporterType);
+
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.addAll(buyer);
+        accounts.addAll(admins);
+        accounts.addAll(sellers);
+        accounts.addAll(supporters);
         for (Account account : accounts) {
             HBox hBox = new HBox(100);
             hBox.setAlignment(Pos.CENTER_LEFT);
@@ -1222,7 +1256,7 @@ public class AdminPanel {
     }
 
     private void imageViewForSignUp() {
-        Label titleOFSignUp = new Label("+ SIGN UP Admin");
+        Label titleOFSignUp = new Label("+SIGN UP");
         titleOFSignUp.setLayoutY(90);
         titleOFSignUp.setLayoutX(40);
         titleOFSignUp.getStyleClass().add("labelForLoginTitle");

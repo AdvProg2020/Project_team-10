@@ -132,14 +132,14 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("get total price ")) {
 //                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice())); //TODO Add Account
                     dataOutputStream.flush();
-                }else if (request.startsWith("get final price ")) {
+                } else if (request.startsWith("get final price ")) {
 //                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff())); //TODO Add Account
                     dataOutputStream.flush();
-                }else if (request.startsWith("get discount ")) {
+                } else if (request.startsWith("get discount ")) {
                     String discount = request.split("\\s")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
-                }else if (request.startsWith("can login")) {
+                } else if (request.startsWith("can login")) {
                     String[] info = request.split("\\s");
                     Account account = AccountManager.canLogin(info[2], info[3]);
                     if (account == null) {
@@ -149,9 +149,9 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " buyer");
                         } else if (account instanceof Seller) {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " seller");
-                        }  else if (account instanceof Supporter) {
+                        } else if (account instanceof Supporter) {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " supporter");
-                        }else {
+                        } else {
                             dataOutputStream.writeUTF("true " + new Gson().toJson(account) + " admin");
                         }
                         //TODO add to hashMap
@@ -168,7 +168,19 @@ class ClientHandler extends Thread {
                     String[] info = request.split("\\s");
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
-                } else if (request.startsWith("create discount ")) {
+                } else if (request.startsWith("getAllSeller")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
+                    dataOutputStream.flush();
+                }  else if (request.startsWith("getAllAdmin")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getAllBuyer")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllBuyers())));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getAllSupporter")) {
+                    dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporter())));
+                    dataOutputStream.flush();
+                }else if (request.startsWith("create discount ")) {
                     String[] info = request.split("\\s");
                     Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
                     Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);
@@ -180,7 +192,7 @@ class ClientHandler extends Thread {
                     List<String> selectedBuyers = new Gson().fromJson(info[9], selectedBuyersType);
                     AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
 
-                }else if (request.equals("exit")) {
+                } else if (request.equals("exit")) {
                     FileHandler.write();
                     dataOutputStream.writeUTF("successfully logged out");
                     dataOutputStream.flush();

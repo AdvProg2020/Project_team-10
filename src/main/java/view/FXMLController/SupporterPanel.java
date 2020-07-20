@@ -499,7 +499,8 @@ public class SupporterPanel {
                 adminPane.getChildren().add(adminScrollPane);
                 break;
             case "Log out":
-                AccountManager.setOnlineAccount(new Buyer("temp"));
+                onlineAccount = (new Buyer("temp"));
+                main.onlineAccount = onlineAccount;
                 user.setVisible(false);
                 btnLogin.setVisible(true);
                 backToMainMenu();
@@ -531,20 +532,7 @@ public class SupporterPanel {
         attributesTitle.setPrefWidth(700);
         attributesTitle.getStyleClass().add("labelForDiscount");
 
-        ImageView imageViewPlus = new ImageView();
-        imageViewPlus.setOnMouseClicked(event -> {
-            try {
-                popup("category");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        imageViewPlus.getStyleClass().add("imageViewPlus");
-        imageViewPlus.setFitWidth(35);
-        imageViewPlus.setFitHeight(35);
-
-        hBoxTitle.getChildren().addAll(categoryName, attributesTitle, imageViewPlus);
+        hBoxTitle.getChildren().addAll(categoryName, attributesTitle);
         flowPane.getChildren().add(hBoxTitle);
 
 
@@ -916,20 +904,8 @@ public class SupporterPanel {
         labelEmail.setGraphic(rectangleTitle);
         labelEmail.setPrefWidth(596);
         labelEmail.getStyleClass().add("labelUsernameInProfile");
-        ImageView imageViewPlus = new ImageView();
-        imageViewPlus.setOnMouseClicked(event -> {
-            try {
-                popup("signUp");
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        imageViewPlus.getStyleClass().add("imageViewPlus");
-        imageViewPlus.setFitWidth(35);
-        imageViewPlus.setFitHeight(35);
-
-        hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
+        hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail);
         flowPane.getChildren().add(hBoxTitle);
 
 
@@ -1008,22 +984,8 @@ public class SupporterPanel {
         people.setPrefWidth(274);
         people.getStyleClass().add("labelForDiscount");
 
-        ImageView imageViewPlus = new ImageView();
-        imageViewPlus.setOnMouseClicked(event -> {
-            try {
-                popup("discount");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        imageViewPlus.getStyleClass().add("imageViewPlus");
-        imageViewPlus.setFitWidth(35);
-        imageViewPlus.setFitHeight(35);
-
-        hBoxTitle.getChildren().addAll(discountCode, startDate, endDate, percent, people, imageViewPlus);
+        hBoxTitle.getChildren().addAll(discountCode, startDate, endDate, percent, people);
         flowPane.getChildren().add(hBoxTitle);
-
 
         for (Discount discount : Shop.getShop().getAllDiscounts()) {
             HBox hBox = new HBox(0);
