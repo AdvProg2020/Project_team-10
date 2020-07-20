@@ -92,7 +92,22 @@ public class AdminPanel {
     private DataInputStream dataInputStream;
     private Socket socket;
     private Account onlineAccount;
+    private boolean isSeller;
 
+    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+        this.main = main;
+        this.mainMenu = mainMenu;
+        this.mainPane = mainPane;
+        this.btnLogin = btnLogin;
+        this.user = user;
+        this.socket = socket;
+        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        this.onlineAccount = onlineAccount;
+        adminPane = new AnchorPane();
+        optionsPane = new AnchorPane();
+        handelButtonOnMouseClick();
+    }
 
     private VBox boxForEdit(String name) {
         VBox boxFirstName = new VBox(2);
@@ -188,21 +203,6 @@ public class AdminPanel {
                 boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
 
 
-    }
-
-    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
-        this.main = main;
-        this.mainMenu = mainMenu;
-        this.mainPane = mainPane;
-        this.btnLogin = btnLogin;
-        this.user = user;
-        this.socket = socket;
-        this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-        this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        this.onlineAccount = onlineAccount;
-        adminPane = new AnchorPane();
-        optionsPane = new AnchorPane();
-        handelButtonOnMouseClick();
     }
 
     public void changePane() {
@@ -947,7 +947,7 @@ public class AdminPanel {
         matcher.find();
         return matcher;
     }
-    private boolean isSeller;
+
     private void processRegister() throws IOException {
         String firstName = firstNameText.getText();
         String lastName = lastNameText.getText();
@@ -962,7 +962,10 @@ public class AdminPanel {
             type = "admin";
         }
         if (selectedFile != null) {
-            String imagePath = selectedFile.getAbsolutePath();
+
+            File dest = new File("src/main/java/view/databaseMedia/userImage/ssuu.jpg"); //TODO add token
+            copyFileUsingStream(selectedFile , dest);
+            String imagePath = dest.getAbsolutePath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {

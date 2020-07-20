@@ -390,7 +390,7 @@ public class Login {
     }
 
     private void login(String response) {
-        String type = response.split("\\s")[2];
+        String type = response.split("_")[2];
         Type accountType;
         if (type.equals("buyer")) {
             accountType = new TypeToken<Buyer>() {
@@ -402,10 +402,9 @@ public class Login {
             accountType = new TypeToken<Admin>() {
             }.getType();
         }
-        onlineAccount = new Gson().fromJson(response.split("\\s")[1], accountType);
-        token = response.split("\\s")[3];
+        onlineAccount = new Gson().fromJson(response.split("_")[1], accountType);
+        token = response.split("_")[3];
         main.token = this.token;
-        System.out.println("token: " + token);
         AccountManager.setOnlineAccount(onlineAccount);
     }
 
@@ -424,7 +423,9 @@ public class Login {
             type = "buyer";
         }
         if (selectedFile != null) {
-            String imagePath = selectedFile.getAbsolutePath();
+            File dest = new File("src/main/java/view/databaseMedia/userImage/ssuu.jpg");
+            copyFileUsingStream(selectedFile , dest);
+            String imagePath = dest.getAbsolutePath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
@@ -451,6 +452,16 @@ public class Login {
             }
         } else {
             printErrorForRegister("you should select a photo");
+        }
+    }
+
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
         }
     }
 
