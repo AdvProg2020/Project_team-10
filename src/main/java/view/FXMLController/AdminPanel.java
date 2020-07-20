@@ -190,7 +190,7 @@ public class AdminPanel {
 
     }
 
-    private AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+    public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -205,7 +205,7 @@ public class AdminPanel {
         handelButtonOnMouseClick();
     }
 
-    private void changePane() {
+    public void changePane() {
         adminPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
@@ -413,7 +413,7 @@ public class AdminPanel {
             attributes.add(textField.getText());
         }
 //        AdminManager.addCategory(categoryName.getText(), attributes);
-        dataOutputStream.writeUTF("create category " + categoryName.getText() + " " + new Gson().toJson(attributes));
+        dataOutputStream.writeUTF("create_category_" + categoryName.getText() + "_" + new Gson().toJson(attributes));
         dataOutputStream.flush();
 
         popupWindow.close();
@@ -607,7 +607,7 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove category " + category.getName());
+                    dataOutputStream.writeUTF("remove_category_" + category.getName());
                     dataOutputStream.flush();
                     flowPane.getChildren().remove(hBox);
                 } catch (IOException ex) {
@@ -665,7 +665,7 @@ public class AdminPanel {
             vBox.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove product " + good.getId());
+                    dataOutputStream.writeUTF("remove_product_" + good.getId());
                     dataOutputStream.flush();
                     flowPane.getChildren().remove(vBox);
                 } catch (IOException ex) {
@@ -873,8 +873,8 @@ public class AdminPanel {
         int number = Integer.parseInt(this.number.getText());
 
 
-        dataOutputStream.writeUTF("create discount " + startDate + " " + endDate + " " + percent + " " + maxAmount + " "
-         + number + " " + new Gson().toJson(selectedBuyers));
+        dataOutputStream.writeUTF("create_discount_" + startDate + "_" + endDate + "_" + percent + "_" + maxAmount + "_"
+         + number + "_" + new Gson().toJson(selectedBuyers));
         dataOutputStream.flush();
 //        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
@@ -1026,7 +1026,7 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             deleteAccountImage.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove account " + new Gson().toJson(account));
+                    dataOutputStream.writeUTF("remove_account_" + new Gson().toJson(account));
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -1153,7 +1153,7 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove discount " + discount.getCode());
+                    dataOutputStream.writeUTF("remove_discount_" + discount.getCode());
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();

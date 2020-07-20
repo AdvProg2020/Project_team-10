@@ -15,10 +15,10 @@ public class SellerManager {
         //TODO
         Account account = Shop.getShop().getAccountByUsername(username);
         Good good = new Good(AccountManager.getLastGoodId() + 1, name, company, number, price, account.getUsername(), category, categoryAttribute, description, imagePath);
+        good.setVideoPath(videoPath);
         ((Seller) account).getGoods().add(good);
         Shop.getShop().getAllGoods().add(good);
         Shop.getShop().getCategoryByName(category).getGoods().add(good);
-        good.setVideoPath(videoPath);
         Shop.getShop().getAllRequests().add(new AddProductRequest(account, AccountManager.getLastRequestId() + 1,
                 AccountManager.getLastGoodId() + 1, name, company, number, price, category, categoryAttribute, description, imagePath));
     }
@@ -26,13 +26,13 @@ public class SellerManager {
     public static void editProduct(Account account, int id, String name, String company, int number, long price, String category,
                                    HashMap<String, String> categoryAttribute, String description) {
         //TODO
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setName(name);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setCompany(company);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setNumber(number);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setPrice(price);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setCategory(category);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setCategoryAttribute(categoryAttribute);
-//        ((Seller) AccountManager.getOnlineAccount()).getProductWithId(id).setDescription(description);
+        ((Seller) account).getProductWithId(id).setName(name);
+        ((Seller) account).getProductWithId(id).setCompany(company);
+        ((Seller) account).getProductWithId(id).setNumber(number);
+        ((Seller) account).getProductWithId(id).setPrice(price);
+        ((Seller) account).getProductWithId(id).setCategory(category);
+        ((Seller) account).getProductWithId(id).setCategoryAttribute(categoryAttribute);
+        ((Seller) account).getProductWithId(id).setDescription(description);
 
         Shop.getShop().getAllRequests().add(new EditProductRequest(account,
                 AccountManager.getLastRequestId() + 1, id, name, company, number, price, category, categoryAttribute, description));
