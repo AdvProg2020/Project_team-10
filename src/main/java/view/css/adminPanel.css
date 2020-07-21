@@ -227,15 +227,15 @@
 }
 
 .text-fieldForCategory {
-     -fx-background-color: none;
-     -fx-border-color: white;
-     -fx-border-width: 2px;
-     -fx-border-radius: 10;
-     -fx-prompt-text-fill: #64a7ff;
-     -fx-text-fill: white;
-     -fx-font-family: "sans-serif";
-     -fx-font-size: 14pt;
- }
+    -fx-background-color: none;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: #64a7ff;
+    -fx-text-fill: white;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt;
+}
 
 .text-fieldForEdit {
     -fx-background-color: #f1f1f1;
@@ -258,26 +258,28 @@
     -fx-cursor: hand;
 }
 
-.buttonSubmit{
+.buttonSubmit {
     -fx-background-color: #0084FF;
     -fx-background-radius: 15;
     -fx-text-fill: white;
     -fx-font-family: "Franklin Gothic Medium Cond";
     -fx-font-weight: bold;
 }
-.buttonSubmit:hover{
+
+.buttonSubmit:hover {
     -fx-background-color: #2db9ff;
     -fx-text-fill: white;
 }
 
-.backStyle{
+.backStyle {
     -fx-image: url("../image/back.png");
 }
-.backStyle:hover{
+
+.backStyle:hover {
     -fx-image: url("../image/backHover.png");
 }
 
-.buttonChat{
+.buttonChat {
     -fx-background-color: #1089ff;
     -fx-font-size: 8pt;
     -fx-text-fill: white;
@@ -285,20 +287,22 @@
     -fx-background-radius: 8;
     -fx-font-weight: bold;
 }
-.buttonChat:hover{
+
+.buttonChat:hover {
     -fx-background-color: #279dff;
     -fx-text-fill: white;
     -fx-cursor: hand;
 }
 
-.send{
+.send {
     -fx-background-color: #1089ff;
     -fx-font-size: 9pt;
     -fx-font-family: "Kozuka Gothic Pro H";
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
-.send:hover{
+
+.send:hover {
     -fx-background-color: #2ea1ff;
     -fx-text-fill: white;
 }
@@ -313,6 +317,68 @@
     -fx-background-repeat: no-repeat;
 }
 
-.btnExitPop:hover{
+.btnExitPop:hover {
     -fx-background-image: url("../image/exitpopupPP.png");
+}
+
+
+.scroll-barInD .increment-arrow,
+.scroll-barInD .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0.0;
+    -fx-pref-width: 1px;
+}
+
+.scroll-barInD:vertical .increment-arrow,
+.scroll-barInD:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.15em;
+    -fx-pref-width: 1px;
+}
+
+.scroll-barInD:horizontal .thumb,
+.scroll-barInD:vertical .thumb {
+    -fx-background-color: #dddddd;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
+    -fx-pref-width: 1px;
+}
+
+.scroll-barInD:horizontal .thumb:hover,
+.scroll-barInD:vertical .thumb:hover {
+    -fx-background-color: #9e9e9e;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
+    -fx-pref-width: 1px;
+}
+
+.scroll-barInD {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-background-radius: 2em;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-barInD:vertical:focused {
+    -fx-background-color: transparent;
+}
+
+
+.chatField {
+    -fx-font-family: 'Franklin Gothic Medium Cond';
+    -fx-font-size: 10pt;
+    -fx-border-width: 1;
+    -fx-border-color: #f0f0f0;
+    -fx-border-radius: 5;
+    -fx-background-color: none;
+
+}
+.chatField:focused{
+    -fx-border-color: #28beff;
+}
+
+.boxChat:hover{
+    -fx-background-color: #f0f0f0;
+    -fx-cursor: hand;
 }

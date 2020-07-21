@@ -1,4 +1,7 @@
 package view.FXMLController;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.*;
 import controller.AccountManager;
 import controller.AdminManager;
@@ -8,9 +11,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
@@ -29,15 +34,13 @@ import view.CommandProcessor;
 import view.NumberField;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -147,7 +150,7 @@ public class SupporterPanel {
         flowPane.setVgap(12);
 
         VBox backBox = new VBox();
-        backBox.setPrefSize(800 , 40);
+        backBox.setPrefSize(800, 40);
         ImageView back = new ImageView();
         back.getStyleClass().add("backStyle");
         back.setFitWidth(30);
@@ -160,10 +163,10 @@ public class SupporterPanel {
         VBox newPass = boxForEdit("newPass");
 
         VBox submitBox = new VBox();
-        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        submitBox.setPadding(new Insets(20, 0, 0, 0));
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
-        submit.setPrefSize(780 , 40);
+        submit.setPrefSize(780, 40);
         submit.setOnMouseClicked(event -> {
             processEdit();
             handelButtonOnMouseClick();
@@ -171,7 +174,7 @@ public class SupporterPanel {
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass, submitBox);
 
 
     }
@@ -328,7 +331,7 @@ public class SupporterPanel {
         ScrollPane containAttribute = new ScrollPane();
         containAttribute.setLayoutX(40);
         containAttribute.setLayoutY(135);
-        containAttribute.setPrefSize(400 , 300);
+        containAttribute.setPrefSize(400, 300);
         containAttribute.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         containAttribute.getStyleClass().add("scroll-barInDiscount");
         containAttribute.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -380,7 +383,7 @@ public class SupporterPanel {
         containAttribute.setContent(categoryPane);
 
 
-        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, submit,containAttribute , error);
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, submit, containAttribute, error);
     }
 
     private TextField textFieldForAddCategory() {
@@ -477,7 +480,7 @@ public class SupporterPanel {
                 flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
                         createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
                         createItemOfProfile("Phone number:", account.getPhoneNumber()),
-                        createItemOfProfile("Email:", account.getEmail()) ,hyperLink);
+                        createItemOfProfile("Email:", account.getEmail()), hyperLink);
                 adminScrollPane.setContent(flowPane);
                 adminPane.getChildren().add(adminScrollPane);
                 adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -499,7 +502,10 @@ public class SupporterPanel {
                 adminPane.getChildren().add(adminScrollPane);
                 break;
             case "Manage chats":
-                //TODO کار خودته جواد :)
+                adminScrollPane.setContent(handelManageChat());
+                adminPane.getChildren().add(adminScrollPane);
+                adminScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                break;
             case "Log out":
                 onlineAccount = (new Buyer("temp"));
                 main.onlineAccount = onlineAccount;
@@ -509,6 +515,202 @@ public class SupporterPanel {
                 break;
         }
         adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private Map<Buyer, FlowPane> nodes = new HashMap<>();
+    private HBox selectedBox;
+
+    private Node handelManageChat() {
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(50, 0, 10, 70));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("scroll-barInD");
+        scrollPane.setPrefSize(300, 540);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        VBox buyerItemBox = new VBox();
+        buyerItemBox.setPrefSize(200, 530);
+        buyerItemBox.setStyle("-fx-border-width: 1;-fx-border-color: #eeeeee");
+
+        scrollPane.setContent(buyerItemBox);
+        flowPane.getChildren().addAll(scrollPane);
+
+        try {
+//            dataOutputStream.writeUTF("getConnectedBuyer");
+            dataOutputStream.writeUTF("getAllBuyer");
+            dataOutputStream.flush();
+            Type connectedBuyerType = new TypeToken<ArrayList<Buyer>>() {
+            }.getType();
+            ArrayList<Buyer> connectedBuyer = new Gson().fromJson(dataInputStream.readUTF(), connectedBuyerType);
+
+            for (Buyer buyer : connectedBuyer) {
+                HBox buyerBox = new HBox(3);
+                buyerBox.getStyleClass().add("boxChat");
+                buyerBox.setAlignment(Pos.CENTER_LEFT);
+                buyerBox.setPadding(new Insets(6, 6, 6, 6));
+
+                Circle circle = new Circle(20);
+                ImagePattern pattern = new ImagePattern(new Image("file:" + buyer.getImagePath()));
+                circle.setFill(pattern);
+                circle.setStrokeWidth(2);
+                circle.setStroke(Color.rgb(16, 137, 255));
+
+                Label username = new Label(" " + buyer.getUsername());
+                username.setPrefWidth(285);
+                username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14pt;-fx-text-fill: #1089FF");
+
+                buyerBox.setOnMouseClicked(event -> {
+                    if (selectedBox != null) {
+                        selectedBox.setStyle("-fx-background-color: white");
+                    }
+                    buyerBox.setStyle("-fx-background-color: #f0f0f0");
+                    selectedBox = buyerBox;
+                    try {
+                        for (Buyer buyer1 : nodes.keySet()) {
+                            flowPane.getChildren().remove(nodes.get(buyer1));
+                        }
+                        FlowPane paneForChat;
+                        if (nodes.containsKey(buyer)) {
+                            paneForChat = nodes.get(buyer);
+                            flowPane.getChildren().add(paneForChat);
+                        } else {
+
+                            paneForChat = new FlowPane();
+                            nodes.put(buyer, paneForChat);
+                            handelMouseClickChat(buyer, flowPane, paneForChat);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                buyerBox.getChildren().addAll(circle, username);
+                buyerItemBox.getChildren().addAll(buyerBox, rectangle(285, 1));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return flowPane;
+    }
+
+    private void handelMouseClickChat(Buyer buyer, FlowPane flowPane, FlowPane paneForChat) throws IOException {
+
+        paneForChat.setVgap(3);
+        paneForChat.setStyle("-fx-background-color: white;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
+
+        paneForChat.setPrefSize(700, 540);
+        flowPane.getChildren().addAll(paneForChat);
+        paneForChat.setPadding(new Insets(15, 15, 15, 15));
+
+//        Socket socket = new Socket("localhost", 9090);
+//        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+
+
+        HBox boxOfSupporter = new HBox();
+        boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
+        boxOfSupporter.setPrefWidth(690);
+        Circle circle = new Circle(20);
+        ImagePattern pattern = new ImagePattern(new Image("file:" + buyer.getImagePath()));
+        circle.setFill(pattern);
+        circle.setStrokeWidth(2);
+        circle.setStroke(Color.rgb(16, 137, 255));
+
+        Label username = new Label(" " + buyer.getUsername());
+        username.setPrefWidth(250);
+        username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
+        boxOfSupporter.getChildren().addAll(circle, username);
+
+        ScrollPane scrollPaneChat = new ScrollPane();
+        scrollPaneChat.setPrefSize(690, 430);
+        paneForChat.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        scrollPaneChat.getStyleClass().add("scroll-barInDiscount");
+
+        HBox sendAndChatField = new HBox();
+        TextField chatField = new TextField();
+        chatField.getStyleClass().add("chatField");
+        chatField.setPromptText("Massage");
+        chatField.setPrefSize(600, 30);
+        Button send = new Button("Send");
+        send.getStyleClass().add("send");
+        VBox innerChat = new VBox(5);
+        send.setPrefSize(90, 30);
+        send.setOnAction(event -> {
+            try {
+                sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        chatField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+//        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+        scrollPaneChat.setContent(innerChat);
+
+        sendAndChatField.getChildren().addAll(chatField, send);
+
+        paneForChat.setAlignment(Pos.CENTER);
+        paneForChat.getChildren().addAll(boxOfSupporter, rectangle(690, 1), scrollPaneChat, sendAndChatField);
+
+//        new Receiver(socket, innerChat, scrollPaneChat, this).start();
+    }
+
+    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, DataOutputStream dataOutputStream) throws IOException {
+        String message = chatField.getText();
+        dataOutputStream.writeUTF(message);
+        dataOutputStream.flush();
+        showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
+        chatField.clear();
+        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+    }
+
+    public void showMessage(VBox innerChat, String message, String style) {
+        int a = message.length() / 80;
+        if (a != 0) {
+            for (int i = 0; i < a; i++) {
+                message = insertString(message, "\n", (i + 1) * 80);
+            }
+        }
+        VBox messageBox = new VBox(3);
+        Label label = new Label(message);
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
+        messageBox.setPadding(new Insets(5, 5, 5, 5));
+        Date date = new Date();
+        Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
+        time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
+        messageBox.setStyle(style);
+        messageBox.getChildren().addAll(label, time);
+        innerChat.getChildren().add(messageBox);
+    }
+
+    public static String insertString(String originalString, String stringToBeInserted, int index) {
+        StringBuilder newString = new StringBuilder();
+        for (int i = 0; i < originalString.length(); i++) {
+            newString.append(originalString.charAt(i));
+            if (i == index) {
+                newString.append(stringToBeInserted);
+            }
+        }
+        return newString.toString();
+    }
+
+    private Rectangle rectangle(int x, int y) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setHeight(y);
+        rectangle.setWidth(x);
+        rectangle.setStyle("-fx-fill: #dadada");
+        return rectangle;
     }
 
     private FlowPane handelCategory() {

@@ -613,7 +613,8 @@ public class MainMenu implements Initializable {
         paneForChat.setVgap(3);
         paneForChat.setLayoutX(570);
         paneForChat.setLayoutY(200);
-        paneForChat.setStyle("-fx-background-color: white;-fx-background-radius: 10;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
+        paneForChat.setStyle("-fx-background-color: white;-fx-background-radius: 10;" +
+                "-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(1200.0);
         dropShadow.setHeight(1200);
