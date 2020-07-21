@@ -1,13 +1,18 @@
 package view.FXMLController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import controller.AccountManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -21,7 +26,12 @@ import model.*;
 import view.NumberField;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static javafx.scene.paint.Color.color;
 
 public class BuyerPanel {
     public AnchorPane mainPane;
@@ -48,9 +58,10 @@ public class BuyerPanel {
     private DataInputStream dataInputStream;
     private Socket socket;
     private Account onlineAccount;
+    public Button btnOnlineSupport;
 
 
-    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -62,10 +73,12 @@ public class BuyerPanel {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
+        this.btnOnlineSupport = btnSupporter;
         handelButtonOnMouseClick();
     }
 
     public void changePane() {
+
         buyerPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
         optionsPane.setLayoutX(30);
@@ -162,6 +175,7 @@ public class BuyerPanel {
     }
 
     private void handelButtonOnMouseClick() {
+        btnOnlineSupport.setVisible(true);
         buyerPane.getChildren().remove(buyerPaneScroll);
         buyerPaneScroll.setPrefSize(1150, 620);
         buyerPaneScroll.getStyleClass().add("scroll-bar");
@@ -266,7 +280,7 @@ public class BuyerPanel {
         flowPane.setVgap(12);
 
         VBox backBox = new VBox();
-        backBox.setPrefSize(800 , 40);
+        backBox.setPrefSize(800, 40);
         ImageView back = new ImageView();
         back.getStyleClass().add("backStyle");
         back.setFitWidth(30);
@@ -279,14 +293,14 @@ public class BuyerPanel {
         VBox newPass = boxForEdit("newPass");
 
         VBox submitBox = new VBox();
-        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        submitBox.setPadding(new Insets(20, 0, 0, 0));
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
-        submit.setPrefSize(780 , 40);
+        submit.setPrefSize(780, 40);
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass, submitBox);
 
 
     }

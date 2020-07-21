@@ -48,6 +48,20 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0)
 }
 
+.buttonSupport {
+    -fx-font-family: "Adobe Gothic Std B";
+    -fx-font-size: 13pt;
+    -fx-text-fill: #00ee00;
+    -fx-background-radius: 10;
+    -fx-pref-height: 40px;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+
+}
+.buttonSupport:hover{
+    -fx-background-color: #f3f3f3;
+}
+
 .buttonAccount {
     -fx-background-image: url("../image/accountLogin.png");
     -fx-background-color: none;
@@ -186,21 +200,18 @@
 }
 
 
-
-
-
 .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-    -fx-background-color :transparent;
-    -fx-border-color :transparent;
-    -fx-background-radius : 2.0em;
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 2.0em;
 }
 
-.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .increment-button,
 .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
 
 }
 
@@ -211,41 +222,41 @@
     -fx-background-radius: 2em;
 }
 
-.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .increment-button,
 .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
 
 }
 
 .scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.15em 0.0;
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0.0;
 }
 
 .scroll-bar:vertical .increment-arrow,
-.scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.15em;
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.15em;
 }
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color : #dddddd;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #dddddd;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color : #9e9e9e;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #9e9e9e;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
-.scroll-bar{
+.scroll-bar {
     -fx-background-color: transparent;
     -fx-background-radius: 2em;
     -fx-focus-color: transparent;
@@ -256,7 +267,7 @@
     -fx-background-color: transparent;
 }
 
-.vboxForFilter{
+.vboxForFilter {
     -fx-background-color: white;
     -fx-background-radius: 10;
     -fx-border-color: #e3e3e3;
@@ -275,13 +286,13 @@
     -jfx-disable-visual-focus: false;
 }
 
-.filterText{
+.filterText {
     -fx-font-family: "Franklin Gothic Medium Cond";
     -fx-font-size: 14pt;
     -fx-text-fill: black;
 }
 
-.goodImage:hover{
+.goodImage:hover {
     -fx-cursor: hand;
 }
 
@@ -296,12 +307,13 @@
     -fx-cursor: hand;
 }
 
-.btnSlid{
+.btnSlid {
     -fx-background-color: #f8f8f8;
     -fx-text-fill: #bbbbbb;
     -fx-background-radius: 10;
 }
-.btnSlid:hover{
+
+.btnSlid:hover {
     -fx-text-fill: #808080;
     -fx-cursor: hand;
 }

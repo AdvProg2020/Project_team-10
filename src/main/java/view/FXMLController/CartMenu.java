@@ -71,7 +71,9 @@ public class CartMenu {
     private Socket socket;
     private Account onlineAccount;
     private String token;
-    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, MainMenu main, AnchorPane mainMenu
+    public Button btnOnlineSupport;
+
+    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin,Button btnSupporter, MainMenu main, AnchorPane mainMenu
             , Socket socket, Account onlineAccount, String token) throws IOException {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
@@ -83,6 +85,7 @@ public class CartMenu {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
         this.token = token;
+        this.btnOnlineSupport = btnSupporter;
     }
 
     public long totalPrice;
@@ -136,7 +139,7 @@ public class CartMenu {
         purchase.setOnMouseClicked(event -> {
             try {
                 if (onlineAccount.getUsername().equals("temp")) {
-                    new Login(mainPane, btnLogin, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
+                    new Login(mainPane, btnLogin,btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
                 } else {
                     paymentPopup();
                 }

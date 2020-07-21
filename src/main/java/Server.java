@@ -128,6 +128,9 @@ class ClientHandler extends Thread {
                     String discount = request.split("_")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
+                }  else if (request.startsWith("getAllDiscount")) {
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllDiscounts()));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("can_login")) {
                     Account account = AccountManager.canLogin(info[2], info[3]);
                     if (account == null) {

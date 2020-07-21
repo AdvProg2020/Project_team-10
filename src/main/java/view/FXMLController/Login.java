@@ -73,8 +73,9 @@ public class Login {
     private Account onlineAccount;
     private String token;
     private final static List<String> fileNames = new ArrayList<>();
+    public Button btnOnlineSupport;
 
-    public Login(AnchorPane mainPane, Button btnLogin, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
@@ -85,6 +86,7 @@ public class Login {
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
+        this.btnOnlineSupport = btnSupport;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -399,6 +401,7 @@ public class Login {
         if (type.equals("buyer")) {
             accountType = new TypeToken<Buyer>() {
             }.getType();
+            btnOnlineSupport.setVisible(true);
         } else if (type.equals("seller")) {
             accountType = new TypeToken<Seller>() {
             }.getType();
@@ -428,7 +431,7 @@ public class Login {
         }
         if (selectedFile != null) {
             File dest = new File("src/main/java/view/databaseMedia/userImage/" + createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedFile , dest);
+            copyFileUsingStream(selectedFile, dest);
             String imagePath = dest.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
@@ -557,10 +560,10 @@ public class Login {
         if (onlineAccount instanceof Admin) {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
-            new BuyerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
+            new BuyerPanel(mainPane, main, mainMenu, user, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
             new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
-        }  else {
+        } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
         }
     }
@@ -595,7 +598,7 @@ public class Login {
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz";
         StringBuilder stringBuilder = new StringBuilder(4);
         for (int i = 0; i < 4; i++) {
-            int index = (int)(AlphaNumericString.length() * Math.random());
+            int index = (int) (AlphaNumericString.length() * Math.random());
             stringBuilder.append(AlphaNumericString.charAt(index));
         }
         if (fileNames.contains(stringBuilder.toString())) {
