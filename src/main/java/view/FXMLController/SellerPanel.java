@@ -362,6 +362,8 @@ public class SellerPanel {
                 sellerPane.getChildren().add(sellerScrollPane);
                 break;
             case "Log out":
+                dataOutputStream.writeUTF("logout");
+                dataOutputStream.flush();
                 onlineAccount = new Buyer("temp");
                 main.onlineAccount = this.onlineAccount;
                 user.setVisible(false);

@@ -1,1 +1,1 @@
-[]
+[{"company":"sdf","goods":[],"offs":[],"sellerLogs":[],"username":"seller","firstName":"s","lastName":"s","email":"fsof@fsj.sdf","phoneNumber":"09123123435","password":"seller111","credit":0,"imagePath":"src\\main\\java\\view\\databaseMedia\\userImage\\VTEZ.jpg"}]

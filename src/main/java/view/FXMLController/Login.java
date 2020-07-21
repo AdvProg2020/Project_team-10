@@ -405,6 +405,9 @@ public class Login {
         } else if (type.equals("seller")) {
             accountType = new TypeToken<Seller>() {
             }.getType();
+        } else if (type.equals("supporter")) {
+            accountType = new TypeToken<Supporter>() {
+            }.getType();
         } else {
             accountType = new TypeToken<Admin>() {
             }.getType();
@@ -538,7 +541,13 @@ public class Login {
         logout.setPrefHeight(40);
         logout.setPrefWidth(170);
         logout.setAlignment(Pos.BASELINE_LEFT);
-        logout.setOnMouseClicked(event -> logout());
+        logout.setOnMouseClicked(event -> {
+            try {
+                logout();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         popupUser.getChildren().addAll(hBox, rectangle2, accountPage, rectangle, logout);
 
@@ -558,17 +567,21 @@ public class Login {
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (onlineAccount instanceof Admin) {
+            System.out.println("Admin");
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
+            System.out.println("Supporter");
             new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
         }
     }
 
-    private void logout() {
+    private void logout() throws IOException {
+        dataOutputStream.writeUTF("logout_" + token);
+        dataOutputStream.flush();
         onlineAccount = new Buyer("temp");
         main.onlineAccount = this.onlineAccount;
         user.setVisible(false);
@@ -610,3 +623,4 @@ public class Login {
 
 
 }
+

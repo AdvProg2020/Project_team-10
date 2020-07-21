@@ -241,7 +241,7 @@ public class SupporterPanel {
         vBox.getChildren().addAll(hBox, rectangleTop, createButton("Profile", "src/main/java/view/image/AdminPanel/userAdmin"),
                 createButton("Manage users", "src/main/java/view/image/AdminPanel/users"),
                 createButton("Manage products", "src/main/java/view/image/AdminPanel/product"),
-                createButton("Manage requests", "src/main/java/view/image/AdminPanel/request"),
+                createButton("Manage chats", "src/main/java/view/image/AdminPanel/request"),
                 createButton("Discounts", "src/main/java/view/image/AdminPanel/discount"),
                 createButton("Category", "src/main/java/view/image/AdminPanel/category"),
                 rectangleDown,
@@ -498,6 +498,8 @@ public class SupporterPanel {
                 adminScrollPane.setContent(handelCategory());
                 adminPane.getChildren().add(adminScrollPane);
                 break;
+            case "Manage chats":
+                //TODO کار خودته جواد :)
             case "Log out":
                 onlineAccount = (new Buyer("temp"));
                 main.onlineAccount = onlineAccount;

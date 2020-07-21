@@ -141,7 +141,6 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_seller_" + token);
-                            dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_seller_" + token);
                         } else if (account instanceof Supporter) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_supporter_" + token);
                         } else {
@@ -182,6 +181,19 @@ class ClientHandler extends Thread {
                     }.getType();
                     List<String> selectedBuyers = new Gson().fromJson(info[9], selectedBuyersType);
                     AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
+                } else if (request.startsWith("logout")) {
+                    offlineAccount();
+                    account = new Buyer("temp");
+                } else if (request.startsWith("getOnlineSupporters")) {
+                   ArrayList<Supporter> onlineSupporters = new ArrayList<>();
+                    for (String username : onlineAccounts.values()) {
+                        Account account = Shop.getShop().getAccountByUsername(username);
+                        if (account instanceof Supporter) {
+                            onlineSupporters.add(((Supporter) account));
+                        }
+                    }
+                    dataOutputStream.writeUTF(new Gson().toJson(onlineSupporters));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -190,6 +202,7 @@ class ClientHandler extends Thread {
             }
         } catch (IOException e) {
             System.out.println("connection closed!");
+            offlineAccount();
         }
     }
 
@@ -197,6 +210,10 @@ class ClientHandler extends Thread {
         FileHandler.write();
         socket.close();
         System.out.println("connection closed!");
+        offlineAccount();
+    }
+
+    private void offlineAccount() {
         for (String token : onlineAccounts.keySet()) {
             if (account.getUsername().equals(onlineAccounts.get(token))) {
                 onlineAccounts.remove(token);

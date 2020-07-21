@@ -74,17 +74,21 @@ public class MainMenu implements Initializable {
     public Pagination pagi;
     public ImageView gif;
     private List<String> list = new ArrayList<>();
-    int j = 0;
+    private int j = 0;
     double orgCliskSceneX, orgReleaseSceneX;
-    Button lbutton, rButton;
-    ImageView imageView;
-    EventHandler<MouseEvent> circleOnMousePressedEventHandler = new EventHandler<MouseEvent>() {
+    private Button lbutton, rButton;
+    private ImageView imageView;
+    private EventHandler<MouseEvent> circleOnMousePressedEventHandler = new EventHandler<MouseEvent>() {
 
         @Override
         public void handle(MouseEvent t) {
             orgCliskSceneX = t.getSceneX();
         }
     };
+
+    private AnchorPane paneForScroll = new AnchorPane();
+    private ScrollPane scrollPaneForSelectChat = new ScrollPane();
+    private FlowPane paneForChat = new FlowPane();
 
 
     public MainMenu() throws IOException {
@@ -108,7 +112,7 @@ public class MainMenu implements Initializable {
         label.setText(v);
     }
 
-    public void exit(MouseEvent mouseEvent) throws IOException {
+    public void exit() throws IOException {
         dataOutputStream.writeUTF("exit");
         dataOutputStream.flush();
         Platform.exit();
@@ -129,7 +133,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin,btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
     }
 
     public FlowPane createPage(int pageIndex) {
@@ -434,7 +438,7 @@ public class MainMenu implements Initializable {
 
     public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin,btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin, btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
@@ -548,11 +552,7 @@ public class MainMenu implements Initializable {
         initialize(location, resources);
     }
 
-    AnchorPane paneForScroll = new AnchorPane();
-    ScrollPane scrollPaneForSelectChat = new ScrollPane();
-    FlowPane paneForChat = new FlowPane();
-
-    public void popupOnlineSupport(MouseEvent mouseEvent) throws IOException {
+    public void popupOnlineSupport() throws IOException {
         scrollPaneForSelectChat.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         scrollPaneForSelectChat.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         paneForScroll.getChildren().clear();
@@ -565,24 +565,27 @@ public class MainMenu implements Initializable {
         paneForScroll.setLayoutY(145);
         paneForScroll.setLayoutX(1150);
         paneForScroll.getChildren().add(scrollPaneForSelectChat);
-        dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.writeUTF("getOnlineSupporters");
         dataOutputStream.flush();
-        Type allCategoriesType = new TypeToken<ArrayList<Buyer>>() {
+        Type onlineSupportersType = new TypeToken<ArrayList<Supporter>>() {
         }.getType();
-        ArrayList<Buyer> supporters = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
-//        Type allCategoriesType = new TypeToken<ArrayList<Supporter>>() {
-//        }.getType();
-//        ArrayList<Supporter> supporters = new Gson().fromJson(dataInputStream.readUTF(), allCategoriesType);
+        ArrayList<Supporter> supporters = new Gson().fromJson(dataInputStream.readUTF(), onlineSupportersType);
         VBox boxOfOnlineSupport = new VBox(0);
         boxOfOnlineSupport.setAlignment(Pos.CENTER);
         boxOfOnlineSupport.setStyle("-fx-background-color: none");
-        for (Buyer supporter : supporters) {
+        for (Supporter supporter : supporters) {
             HBox supporterBox = new HBox();
             supporterBox.setPrefHeight(38);
             supporterBox.setAlignment(Pos.CENTER);
             supporterBox.setStyle("-fx-background-color: none;");
             Button chat = new Button("Chat");
-            chat.setOnMouseClicked(event -> handelMouseClickChat(supporter));
+            chat.setOnMouseClicked(event -> {
+                try {
+                    handelMouseClickChat(supporter);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             chat.getStyleClass().add("buttonChat");
             Label username = new Label(supporter.getUsername());
             username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;-fx-font-size: 10pt");
@@ -606,8 +609,7 @@ public class MainMenu implements Initializable {
         return rectangle;
     }
 
-
-    private void handelMouseClickChat(Buyer supporter) {
+    private void handelMouseClickChat(Supporter supporter) throws IOException {
         paneForChat.setVgap(3);
         paneForChat.setLayoutX(570);
         paneForChat.setLayoutY(200);
@@ -621,7 +623,9 @@ public class MainMenu implements Initializable {
         paneForChat.setPrefSize(340, 390);
         mainPane.getChildren().addAll(paneForChat);
 
-        //xxxxx
+        Socket socket = new Socket("localhost", 9090);
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+
 
         HBox boxOfSupporter = new HBox();
         boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
@@ -635,7 +639,7 @@ public class MainMenu implements Initializable {
         Label username = new Label(" " + supporter.getUsername());
         username.setPrefWidth(250);
         username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
-        boxOfSupporter.getChildren().addAll(circle, username, exitButton());
+        boxOfSupporter.getChildren().addAll(circle, username, exitButton(dataOutputStream));
 
         ScrollPane scrollPaneChat = new ScrollPane();
         scrollPaneChat.setPrefSize(320, 290);
@@ -643,128 +647,83 @@ public class MainMenu implements Initializable {
         scrollPaneChat.getStyleClass().add("scroll-barInDiscount");
 
         HBox sendAndChatField = new HBox();
-
         TextField chatField = new TextField();
         chatField.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 10pt");
         chatField.setPromptText("Massage");
         chatField.setPrefSize(260, 30);
-//        chatField.getStyleClass().add()
-
         Button send = new Button("Send");
         send.getStyleClass().add("send");
-        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
-
         VBox innerChat = new VBox(5);
-
+        send.setPrefSize(60, 30);
+        send.setOnAction(event -> {
+            try {
+                sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        chatField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+//        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
         scrollPaneChat.setContent(innerChat);
 
-        chatField.setOnKeyPressed(event -> {
-
-            if (event.getCode() == KeyCode.ENTER) {
-                scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
-                int a = chatField.getText().length() / 40;
-                String string = chatField.getText();
-                if (a != 0) {
-                    for (int i = 0; i < a; i++) {
-                        string = insertString(string, "\n", (i + 1) * 40);
-                    }
-                }
-                VBox vBox = new VBox(3);
-                Label label = new Label(string);
-                label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
-                vBox.setPadding(new Insets(5, 5, 5, 5));
-                Date date = new Date();
-                Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
-                time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
-                vBox.setStyle("-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
-                vBox.getChildren().addAll(label, time);
-                innerChat.getChildren().add(vBox);
-                chatField.clear();
-            }
-        });
-
-        send.setOnAction(event -> {
-
-            scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
-            int a = chatField.getText().length() / 40;
-            String string = chatField.getText();
-            if (a != 0) {
-                for (int i = 0; i < a; i++) {
-                    string = insertString(string, "\n", (i + 1) * 40);
-                }
-            }
-            VBox vBox = new VBox(3);
-            Label label = new Label(string);
-            label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
-            vBox.setPadding(new Insets(5, 5, 5, 5));
-            Date date = new Date();
-            Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
-            time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
-            vBox.setStyle("-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
-            vBox.getChildren().addAll(label, time);
-            innerChat.getChildren().add(vBox);
-            chatField.clear();
-        });
-
-//javab
-        String answer = "dsvsdvsdvdsvsdvdvdssdvsdvdssdvdsvdsddsvdsvdsdsvsdvsdvsd";
-        int a = answer.length() / 40;
-        if (a != 0) {
-            for (int i = 0; i < a; i++) {
-                answer = insertString(answer, "\n", (i + 1) * 40);
-            }
-        }
-        VBox vBox = new VBox(3);
-        Label label = new Label(answer);
-        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
-        vBox.setPadding(new Insets(5, 5, 5, 5));
-        Date date = new Date();
-        Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
-        time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
-        vBox.setStyle("-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;");
-        vBox.getChildren().addAll(label, time);
-        innerChat.getChildren().add(vBox);
-
-        //--------------------------------
-
-
-        send.setPrefSize(60, 30);
         sendAndChatField.getChildren().addAll(chatField, send);
 
         paneForChat.setAlignment(Pos.CENTER);
-
-
         paneForChat.getChildren().addAll(boxOfSupporter, rectangle(320, 2), scrollPaneChat, sendAndChatField);
 
+        new Receiver(socket, innerChat, scrollPaneChat, this).start();
     }
 
-    public static String insertString(
-            String originalString,
-            String stringToBeInserted,
-            int index) {
+    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, DataOutputStream dataOutputStream) throws IOException {
+        String message = chatField.getText();
+        dataOutputStream.writeUTF(message);
+        dataOutputStream.flush();
+        showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
+        chatField.clear();
+        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+    }
 
-        // Create a new string
-        String newString = "";
-
-        for (int i = 0; i < originalString.length(); i++) {
-
-            // Insert the original string character
-            // into the new string
-            newString += originalString.charAt(i);
-
-            if (i == index) {
-
-                // Insert the string to be inserted
-                // into the new string
-                newString += stringToBeInserted;
+    public void showMessage(VBox innerChat, String message, String style) {
+        int a = message.length() / 40;
+        if (a != 0) {
+            for (int i = 0; i < a; i++) {
+                message = insertString(message, "\n", (i + 1) * 40);
             }
         }
-
-        // return the modified String
-        return newString;
+        VBox messageBox = new VBox(3);
+        Label label = new Label(message);
+        label.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black;");
+        messageBox.setPadding(new Insets(5, 5, 5, 5));
+        Date date = new Date();
+        Label time = new Label(date.getHours() + ":" + date.getMinutes() + "");
+        time.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: #9f9f9f;-fx-font-size: 6pt");
+        messageBox.setStyle(style);
+        messageBox.getChildren().addAll(label, time);
+        innerChat.getChildren().add(messageBox);
     }
 
-    private Button exitButton() {
+    public static String insertString(String originalString, String stringToBeInserted, int index) {
+        StringBuilder newString = new StringBuilder();
+        for (int i = 0; i < originalString.length(); i++) {
+            newString.append(originalString.charAt(i));
+            if (i == index) {
+                newString.append(stringToBeInserted);
+            }
+        }
+        return newString.toString();
+    }
+
+    private Button exitButton(DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeUTF("exit");
+        dataOutputStream.flush();
         Button exitButton = new Button();
         exitButton.getStyleClass().add("btnExitPop");
         exitButton.setOnAction(event -> {

@@ -132,11 +132,13 @@ public class AccountManager {
                 break;
             case "supporter":
                 //TODO
+                System.out.println("a supporter added");
                 Supporter supporter = new Supporter(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(supporter);
                 Shop.getShop().getAllSupporters().add(supporter);
                 break;
             default:
+                System.out.println("an admin added");
                 Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(admin);
                 Shop.getShop().getAllAdmins().add(admin);

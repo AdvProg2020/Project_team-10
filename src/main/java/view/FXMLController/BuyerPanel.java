@@ -169,12 +169,16 @@ public class BuyerPanel {
             imageViewSelectedButton = imageView;
             selectedButton = button;
             button.setGraphic(imageViewHover);
-            handelButtonOnMouseClick();
+            try {
+                handelButtonOnMouseClick();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
         return button;
     }
 
-    private void handelButtonOnMouseClick() {
+    private void handelButtonOnMouseClick() throws IOException {
         btnOnlineSupport.setVisible(true);
         buyerPane.getChildren().remove(buyerPaneScroll);
         buyerPaneScroll.setPrefSize(1150, 620);
@@ -215,6 +219,8 @@ public class BuyerPanel {
                 buyerPaneScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
                 break;
             case "Log out":
+                dataOutputStream.writeUTF("logout");
+                dataOutputStream.flush();
                 onlineAccount = new Buyer("temp");
                 main.onlineAccount = onlineAccount;
                 user.setVisible(false);
@@ -286,7 +292,13 @@ public class BuyerPanel {
         back.setFitWidth(30);
         back.setFitHeight(30);
         backBox.getChildren().add(back);
-        back.setOnMouseClicked(event -> handelButtonOnMouseClick());
+        back.setOnMouseClicked(event -> {
+            try {
+                handelButtonOnMouseClick();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         VBox currentPass = boxForEdit("password");
         currentPass.setDisable(true);
