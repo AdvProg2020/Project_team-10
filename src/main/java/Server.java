@@ -159,16 +159,16 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("remove_category")) {
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
-                } else if (request.startsWith("getAllSeller")) {
+                } else if (request.startsWith("getAllSellers")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
                     dataOutputStream.flush();
-                }  else if (request.startsWith("getAllAdmin")) {
+                }  else if (request.startsWith("getAllAdmins")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("getAllBuyer")) {
+                } else if (request.startsWith("getAllBuyers")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllBuyers())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("getAllSupporter")) {
+                } else if (request.startsWith("getAllSupporters")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporters())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("create_discount")) {

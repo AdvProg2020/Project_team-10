@@ -156,7 +156,6 @@ public class AdminPanel {
     }
 
     private void processEdit() throws IOException {
-//        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
         handelButtonOnMouseClick();
     }
 
@@ -916,7 +915,6 @@ public class AdminPanel {
 //        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
         fade(0.5, 10);
-        adminScrollPane.setContent(null);
         adminScrollPane.setContent(handelDiscounts());
 
     }
@@ -1054,25 +1052,25 @@ public class AdminPanel {
         hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllSeller");
+        dataOutputStream.writeUTF("getAllSellers");
         dataOutputStream.flush();
         Type allSellerType = new TypeToken<ArrayList<Seller>>() {
         }.getType();
         ArrayList<Account> sellers = new Gson().fromJson(dataInputStream.readUTF(), allSellerType);
 
-        dataOutputStream.writeUTF("getAllAdmin");
+        dataOutputStream.writeUTF("getAllAdmins");
         dataOutputStream.flush();
         Type allAdminType = new TypeToken<ArrayList<Admin>>() {
         }.getType();
         ArrayList<Account> admins = new Gson().fromJson(dataInputStream.readUTF(), allAdminType);
 
-        dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.writeUTF("getAllBuyers");
         dataOutputStream.flush();
         Type allBuyerType = new TypeToken<ArrayList<Buyer>>() {
         }.getType();
         ArrayList<Account> buyer = new Gson().fromJson(dataInputStream.readUTF(), allBuyerType);
 
-        dataOutputStream.writeUTF("getAllSupporter");
+        dataOutputStream.writeUTF("getAllSupporters");
         dataOutputStream.flush();
         Type allSupporterType = new TypeToken<ArrayList<Supporter>>() {
         }.getType();
@@ -1372,12 +1370,4 @@ public class AdminPanel {
     }
 
 
-//    private void loadDialog() {
-////        JFXDialogLayout jfxDialogLayout = new JFXDialogLayout();
-////        jfxDialogLayout.setHeading(new Text("Remove"));
-////        jfxDialogLayout.setBody(new Text("Is it safe to delete this user?"));
-//        JFXDialog jfxDialog = new JFXDialog(stackPane, new Label("holelsnvdsjvlsdjlsjdljvlds"), JFXDialog.DialogTransition.CENTER);
-//
-//        jfxDialog.show();
-//    }
 }
