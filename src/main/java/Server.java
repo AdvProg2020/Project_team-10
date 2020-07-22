@@ -119,7 +119,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("register")) {
                     AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
                 } else if (request.startsWith("get_total_price")) {
-                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
+                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_final_price")) {
                     dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(account)));
@@ -128,7 +128,7 @@ class ClientHandler extends Thread {
                     String discount = request.split("_")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
-                }  else if (request.startsWith("getAllDiscount")) {
+                } else if (request.startsWith("getAllDiscount")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllDiscounts()));
                     dataOutputStream.flush();
                 } else if (request.startsWith("can_login")) {
@@ -162,7 +162,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("getAllSeller")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
                     dataOutputStream.flush();
-                }  else if (request.startsWith("getAllAdmin")) {
+                } else if (request.startsWith("getAllAdmin")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("getAllBuyer")) {
@@ -184,8 +184,17 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("logout")) {
                     offlineAccount();
                     account = new Buyer("temp");
+                } else if (request.startsWith("isOnlineAccount_")) {
+                    String isOnline;
+                    if (onlineAccounts.containsValue(info[1])) {
+                        isOnline = "true";
+                    } else {
+                        isOnline = "false";
+                    }
+                    dataOutputStream.writeUTF(isOnline);
+                    dataOutputStream.flush();
                 } else if (request.startsWith("getOnlineSupporters")) {
-                   ArrayList<Supporter> onlineSupporters = new ArrayList<>();
+                    ArrayList<Supporter> onlineSupporters = new ArrayList<>();
                     for (String username : onlineAccounts.values()) {
                         Account account = Shop.getShop().getAccountByUsername(username);
                         if (account instanceof Supporter) {

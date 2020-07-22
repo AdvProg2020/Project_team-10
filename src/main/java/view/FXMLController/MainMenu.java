@@ -60,6 +60,8 @@ public class MainMenu implements Initializable {
     public Label startPrice;
     public Label endPrice;
     public Button btnOnlineSupport;
+    public ScrollPane mainMenuScrollPane;
+    public FlowPane flowPaneForBoxOfGoods;
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
@@ -138,14 +140,15 @@ public class MainMenu implements Initializable {
 
     public FlowPane createPage(int pageIndex) {
         FlowPane box = new FlowPane();
-        int page = pageIndex * 4;
-        for (int i = page; i < page + 4; i++) {
+        int page = pageIndex * 12;
+        for (int i = page; i < page + 12; i++) {
             if (i >= filteredGoods.size()) {
                 break;
             }
             VBox vBox = new VBox();
-            vBox.setPrefWidth(297);
-            vBox.setPrefHeight(500);
+            vBox.setPadding(new Insets(20,5,10,5));
+            vBox.setPrefWidth(295);
+            vBox.setPrefHeight(320);
             vBox.getStyleClass().add("vBoxInMainMenu");
             ImageView logoImage = new ImageView(new Image("file:" + filteredGoods.get(i).getImagePath()));
             logoImage.setFitHeight(190);
@@ -286,8 +289,8 @@ public class MainMenu implements Initializable {
         gif.setImage(new Image("file:src/main/java/view/image/shopGif.gif"));
 
 //        flowPane.setPrefSize(1100 , 600);
-        pagi.setPadding(new Insets(50, 5, 5, 5));
-        pagi.setPrefSize(1200, 650);
+        pagi.setPadding(new Insets(45, 5, 0, 0));
+        pagi.setPrefSize(1200, 1200);
         rangeSlider.lowValueProperty().addListener(
                 (observable, oldValue, newValue) -> setValue(startPrice, newValue)
         );
@@ -323,24 +326,30 @@ public class MainMenu implements Initializable {
                 buttonForSort("Price(Descending)", location, resources),
                 buttonForSort("The most visited", location, resources));
         hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(10, 580, 10, 15));
+        hBox.setPadding(new Insets(10, 10, 10, 8));
+        hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setSpacing(10);
-        hBox.setLayoutY(190);
-        hBox.setLayoutX(35);
-        mainPane.getChildren().add(hBox);
+        hBox.setStyle("-fx-background-color: white;-fx-background-radius: 10");
+        hBox.setPrefWidth(1180);
+        hBox.setLayoutY(27);
+        hBox.setLayoutX(32.1);
+        mainMenu.getChildren().add(hBox);
 //        filter();
         pagi.setPageCount(21);
         pagi.setCurrentPageIndex(0);
         pagi.setMaxPageIndicatorCount(3);
         Collections.sort(filteredGoods);
         pagi.setPageFactory(this::createPage);
+        flowPaneForBoxOfGoods.setPadding(new Insets(10,0,0,0));
 
+        //Speed For ScrollPane
+        final double SPEED = 0.006;
+        mainMenuScrollPane.getContent().setOnScroll(scrollEvent -> {
+            double deltaY = scrollEvent.getDeltaY() * SPEED;
+            mainMenuScrollPane.setVvalue(mainMenuScrollPane.getVvalue() - deltaY);
+        });
 
-//        mainMenuScrollPane.setContent(pagi);
-
-//        mainMenuScrollPane.getStyleClass().add("scroll-bar");
         flowPane.setStyle("-fx-background-color: white;");
-//        mainMenuScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         Login.currentPane = mainMenu;
         main = this;
     }

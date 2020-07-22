@@ -166,7 +166,7 @@ public class AdminPanel {
         flowPane.setVgap(12);
 
         VBox backBox = new VBox();
-        backBox.setPrefSize(800 , 40);
+        backBox.setPrefSize(800, 40);
         ImageView back = new ImageView();
         back.getStyleClass().add("backStyle");
         back.setFitWidth(30);
@@ -185,10 +185,10 @@ public class AdminPanel {
         VBox newPass = boxForEdit("newPass");
 
         VBox submitBox = new VBox();
-        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        submitBox.setPadding(new Insets(20, 0, 0, 0));
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
-        submit.setPrefSize(780 , 40);
+        submit.setPrefSize(780, 40);
         submit.setOnMouseClicked(event -> {
             try {
                 processEdit();
@@ -200,7 +200,7 @@ public class AdminPanel {
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass, submitBox);
 
 
     }
@@ -348,7 +348,7 @@ public class AdminPanel {
         ScrollPane containAttribute = new ScrollPane();
         containAttribute.setLayoutX(40);
         containAttribute.setLayoutY(135);
-        containAttribute.setPrefSize(400 , 300);
+        containAttribute.setPrefSize(400, 300);
         containAttribute.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         containAttribute.getStyleClass().add("scroll-barInDiscount");
         containAttribute.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -400,7 +400,7 @@ public class AdminPanel {
         containAttribute.setContent(categoryPane);
 
 
-        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, submit,containAttribute , error);
+        loginPane.getChildren().addAll(exitButton(), titleOFSignUp, submit, containAttribute, error);
     }
 
     private TextField textFieldForAddCategory() {
@@ -504,7 +504,7 @@ public class AdminPanel {
                 flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
                         createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
                         createItemOfProfile("Phone number:", account.getPhoneNumber()),
-                        createItemOfProfile("Email:", account.getEmail()) ,hyperLink);
+                        createItemOfProfile("Email:", account.getEmail()), hyperLink);
                 adminScrollPane.setContent(flowPane);
                 adminPane.getChildren().add(adminScrollPane);
                 adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -738,7 +738,7 @@ public class AdminPanel {
 
         loginPane.getChildren().addAll(exitButton(), firstNameText,
                 lastNameText, usernameForSignUp(),
-                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp,adminType,supporterType, error);
+                passwordFieldSignUp(), emailFieldSignUp(), phoneNumberFiledSignUp(), signUp, adminType, supporterType, error);
 
         signUp.setOnMouseClicked(event -> {
             try {
@@ -911,7 +911,7 @@ public class AdminPanel {
 
 
         dataOutputStream.writeUTF("create_discount_" + startDate + "_" + endDate + "_" + percent + "_" + maxAmount + "_"
-         + number + "_" + new Gson().toJson(selectedBuyers));
+                + number + "_" + new Gson().toJson(selectedBuyers));
         dataOutputStream.flush();
 //        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
@@ -965,7 +965,7 @@ public class AdminPanel {
         }
         if (selectedFile != null) {
             File dest = new File("src/main/java/view/databaseMedia/userImage/" + Login.createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedFile , dest);
+            copyFileUsingStream(selectedFile, dest);
             String imagePath = dest.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
@@ -1014,6 +1014,29 @@ public class AdminPanel {
         fade.setToValue(toValue);
         fade.setNode(mainPane);
         fade.play();
+    }
+
+    private Label typeOfAccount(Account account) {
+        Label type = new Label();
+        type.setPrefSize(19, 16);
+        type.setAlignment(Pos.CENTER);
+        String style = ";-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: white;" +
+                "-fx-border-width: 1;-fx-border-radius: 5;-fx-border-color: #f0f0f0; -fx-background-radius: 5;" +
+                "-fx-font-size: 8pt;-fx-font-weight: bold";
+        if (account instanceof Admin) {
+            type.setText(" AD ");
+            type.setStyle("-fx-background-color: #279dff;" + style);
+        } else if (account instanceof Buyer) {
+            type.setText(" BU ");
+            type.setStyle("-fx-background-color: #ff0009;" + style);
+        } else if (account instanceof Seller) {
+            type.setText(" SE ");
+            type.setStyle("-fx-background-color: #00fb00;" + style);
+        } else {
+            type.setText(" SU ");
+            type.setStyle("-fx-background-color: #ff9039;" + style);
+        }
+        return type;
     }
 
     private FlowPane handelManageUsers() throws IOException {
@@ -1089,21 +1112,37 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 12, 0, 12));
             hBox.getStyleClass().add("hbox");
             hBox.setPrefHeight(60);
-            Label usernameLabel = new Label(account.getUsername());
+            Label usernameLabel = new Label(" "+account.getUsername());
+            usernameLabel.setGraphic(typeOfAccount(account));
             usernameLabel.setPrefWidth(150);
             usernameLabel.getStyleClass().add("labelUsernameInProfile");
             Label emailLabel = new Label("  " + account.getEmail());
             Rectangle rectangle = new Rectangle(2, 60);
             rectangle.setStyle("-fx-fill: #d5d5d5");
             emailLabel.setGraphic(rectangle);
-            emailLabel.setPrefWidth(600);
+            emailLabel.setPrefWidth(450);
             emailLabel.getStyleClass().add("labelUsernameInProfile");
+
+            Label onAndOffLine = new Label();
+            dataOutputStream.writeUTF("isOnlineAccount_" + account.getUsername());
+            dataOutputStream.flush();
+            Type isOnlineType = new TypeToken<String>() {
+            }.getType();
+            String isOnline = new Gson().fromJson(dataInputStream.readUTF(), isOnlineType);
+            if (isOnline.equals("true")){
+                onAndOffLine.setStyle("-fx-text-fill: #2fa3ff;-fx-font-size: 12pt;-fx-font-family: sans-serif");
+                onAndOffLine.setText("Online ");
+            }else {
+                onAndOffLine.setStyle("-fx-text-fill: #cccccc;-fx-font-size: 12pt;-fx-font-family: sans-serif");
+                onAndOffLine.setText("Offline ");
+            }
+
             ImageView deleteAccountImage = new ImageView();
             deleteAccountImage.getStyleClass().add("binImage");
             deleteAccountImage.setFitWidth(31);
             deleteAccountImage.setFitHeight(25);
 
-            hBox.getChildren().addAll(usernameLabel, emailLabel, deleteAccountImage);
+            hBox.getChildren().addAll(usernameLabel, emailLabel,onAndOffLine, deleteAccountImage);
             flowPane.getChildren().add(hBox);
             deleteAccountImage.setOnMouseClicked(e -> {
                 try {
