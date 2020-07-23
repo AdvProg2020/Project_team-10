@@ -19,7 +19,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -90,9 +89,8 @@ public class MainMenu implements Initializable {
     private ScrollPane scrollPaneForSelectChat = new ScrollPane();
     private FlowPane paneForChat = new FlowPane();
 
-
     public MainMenu() throws IOException {
-        socket = new Socket("localhost", 8080);
+        this.socket = new Socket("localhost", 8080);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -610,6 +608,7 @@ public class MainMenu implements Initializable {
     }
 
     private void handelMouseClickChat(Supporter supporter) throws IOException {
+
         paneForChat.setVgap(3);
         paneForChat.setLayoutX(570);
         paneForChat.setLayoutY(200);
@@ -624,9 +623,14 @@ public class MainMenu implements Initializable {
         paneForChat.setPrefSize(340, 390);
         mainPane.getChildren().addAll(paneForChat);
 
-        Socket socket = new Socket("localhost", 9090);
-        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        dataOutputStream.writeUTF("get_supporter_" + supporter.getUsername());
+        dataOutputStream.flush();
+        Type supporterType = new TypeToken<Supporter>() {
+        }.getType();
+        supporter = new Gson().fromJson(dataInputStream.readUTF(), supporterType);
 
+        this.dataOutputStream.writeUTF("add_to_buyers_" + supporter.getUsername() + "_" + onlineAccount.getUsername());
+        this.dataOutputStream.flush();
 
         HBox boxOfSupporter = new HBox();
         boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
@@ -640,7 +644,7 @@ public class MainMenu implements Initializable {
         Label username = new Label(" " + supporter.getUsername());
         username.setPrefWidth(250);
         username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
-        boxOfSupporter.getChildren().addAll(circle, username, exitButton(dataOutputStream));
+        boxOfSupporter.getChildren().addAll(circle, username, exitButton());
 
         ScrollPane scrollPaneChat = new ScrollPane();
         scrollPaneChat.setPrefSize(320, 290);
@@ -656,9 +660,10 @@ public class MainMenu implements Initializable {
         send.getStyleClass().add("send");
         VBox innerChat = new VBox(5);
         send.setPrefSize(60, 30);
+        Supporter finalSupporter = supporter;
         send.setOnAction(event -> {
             try {
-                sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                sendMessage(scrollPaneChat, chatField, innerChat, finalSupporter.getUsername());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -666,7 +671,7 @@ public class MainMenu implements Initializable {
         chatField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                    sendMessage(scrollPaneChat, chatField, innerChat, finalSupporter.getUsername());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -680,12 +685,15 @@ public class MainMenu implements Initializable {
         paneForChat.setAlignment(Pos.CENTER);
         paneForChat.getChildren().addAll(boxOfSupporter, rectangle(320, 2), scrollPaneChat, sendAndChatField);
 
-        new Receiver(socket, innerChat, scrollPaneChat, this).start();
+        new BuyerReceiver(dataInputStream, innerChat, scrollPaneChat, this).start();
+//        Platform.runLater(buyerReceiver);
     }
 
-    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, DataOutputStream dataOutputStream) throws IOException {
+    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, String supporterUsername) throws IOException {
         String message = chatField.getText();
-        dataOutputStream.writeUTF(message);
+        dataOutputStream.writeUTF("from_buyer_to_" + supporterUsername + "_" + message);
+        dataOutputStream.flush();
+        dataOutputStream.writeUTF("update_messages_of_" + supporterUsername + "_" + onlineAccount.getUsername() + "_" + message);
         dataOutputStream.flush();
         showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
         chatField.clear();
@@ -722,8 +730,8 @@ public class MainMenu implements Initializable {
         return newString.toString();
     }
 
-    private Button exitButton(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF("exit");
+    private Button exitButton() throws IOException {
+        dataOutputStream.writeUTF("disconnect_buyer");
         dataOutputStream.flush();
         Button exitButton = new Button();
         exitButton.getStyleClass().add("btnExitPop");

@@ -33,6 +33,7 @@ import view.NumberField;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -75,6 +76,8 @@ public class Login {
     private final static List<String> fileNames = new ArrayList<>();
     public Button btnOnlineSupport;
 
+    private Socket buyerSocket;
+
     public Login(AnchorPane mainPane, Button btnLogin, Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
@@ -87,6 +90,7 @@ public class Login {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
         this.btnOnlineSupport = btnSupport;
+        this.buyerSocket = buyerSocket;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -416,6 +420,9 @@ public class Login {
         token = splitResponse[3];
         main.token = this.token;
         AccountManager.setOnlineAccount(onlineAccount);
+//        if (onlineAccount instanceof Supporter) {
+//            new SupporterServer(((Supporter) onlineAccount), dataOutputStream, dataInputStream).start();
+//        }
     }
 
     private void processRegister() throws IOException {
@@ -567,12 +574,10 @@ public class Login {
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (onlineAccount instanceof Admin) {
-            System.out.println("Admin");
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
             new BuyerPanel(mainPane, main, mainMenu, user, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
-            System.out.println("Supporter");
             new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();
@@ -624,3 +629,36 @@ public class Login {
 
 }
 
+class SupporterServer extends Thread {
+    private Supporter supporter;
+    private DataOutputStream shopDataOutputStream;
+    private DataInputStream shopDataInputStream;
+
+    private Socket buyerSocket;
+
+    public SupporterServer(Supporter supporter, DataOutputStream shopDataOutputStream, DataInputStream shopDataInputStream) {
+        this.supporter = supporter;
+        this.shopDataOutputStream = shopDataOutputStream;
+        this.shopDataInputStream = shopDataInputStream;
+    }
+
+    @Override
+    public void run() {
+        //            ServerSocket serverSocket = new ServerSocket(9595);
+        while (true) {
+            System.out.println("* Waiting for buyer...");
+
+//                shopDataOutputStream.writeUTF("set_port_" + supporter.getUsername() + "_9" + Supporter.createNumberForPort());
+//                shopDataOutputStream.flush();
+//                shopDataOutputStream.writeUTF("get_supporter_" + supporter.getUsername());
+//                shopDataOutputStream.flush();
+//                System.out.println(shopDataInputStream.readUTF());
+//                Type supporterType = new TypeToken<Supporter>() {
+//                }.getType();
+//                supporter = new Gson().fromJson(shopDataInputStream.readUTF(), supporterType);
+//                serverSocket.accept();
+            System.out.println("* a buyer connected");
+        }
+    }
+
+}

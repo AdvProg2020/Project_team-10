@@ -415,7 +415,6 @@ public class AdminPanel {
         for (TextField textField : attributesTextField) {
             attributes.add(textField.getText());
         }
-//        AdminManager.addCategory(categoryName.getText(), attributes);
         dataOutputStream.writeUTF("create_category_" + categoryName.getText() + "_" + new Gson().toJson(attributes));
         dataOutputStream.flush();
 
@@ -475,7 +474,6 @@ public class AdminPanel {
         adminScrollPane.getStyleClass().add("scroll-bar");
         adminScrollPane.setLayoutX(330);
         adminScrollPane.setLayoutY(35);
-//        adminPaneScroll.;
         Account account = onlineAccount;
 
         switch (selectedButton.getText()) {

@@ -1,5 +1,6 @@
 package model;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ public class Buyer extends Account {
     private List<Good> cart;
     private List<Discount> discounts;
     private List<BuyerLog> buyerLogs;
+//    private Socket socket;
 
 
     public Buyer(String username, String firstName, String lastName, String email, String phoneNumber
@@ -80,4 +82,11 @@ public class Buyer extends Account {
         return null;
     }
 
+//    public Socket getSocket() {
+//        return socket;
+//    }
+//
+//    public void setSocket(Socket socket) {
+//        this.socket = socket;
+//    }
 }

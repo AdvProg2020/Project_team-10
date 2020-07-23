@@ -15,6 +15,7 @@ public class Server {
     private SecureRandom secureRandom = new SecureRandom();
     private Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private static HashMap<String, String> onlineAccounts = new HashMap<>();
+    private static HashMap<String, DataOutputStream> accountsToSockets = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
@@ -23,7 +24,7 @@ public class Server {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("a client connected");
-            new ClientHandler(clientSocket, onlineAccounts).start();
+            new ClientHandler(clientSocket, onlineAccounts, accountsToSockets).start();
         }
     }
 
@@ -47,14 +48,16 @@ class ClientHandler extends Thread {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private HashMap<String, String> onlineAccounts;
+    private HashMap<String, DataOutputStream> accountsToOutPuts;
     private Account account;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts) throws IOException {
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts, HashMap<String, DataOutputStream> accountsToSockets) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
+        this.accountsToOutPuts = accountsToSockets;
     }
 
     @Override
@@ -119,7 +122,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("register")) {
                     AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
                 } else if (request.startsWith("get_total_price")) {
-                   dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
+                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_final_price")) {
                     dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(account)));
@@ -128,7 +131,7 @@ class ClientHandler extends Thread {
                     String discount = request.split("_")[1];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
                     dataOutputStream.flush();
-                }  else if (request.startsWith("getAllDiscount")) {
+                } else if (request.startsWith("getAllDiscount")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllDiscounts()));
                     dataOutputStream.flush();
                 } else if (request.startsWith("can_login")) {
@@ -147,6 +150,7 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_admin_" + token);
                         }
                         onlineAccounts.put(token, account.getUsername());
+                        accountsToOutPuts.put(account.getUsername(), dataOutputStream);
                         this.account = account;
                     }
                     dataOutputStream.flush();
@@ -162,7 +166,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("getAllSellers")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
                     dataOutputStream.flush();
-                }  else if (request.startsWith("getAllAdmins")) {
+                } else if (request.startsWith("getAllAdmins")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("getAllBuyers")) {
@@ -185,7 +189,7 @@ class ClientHandler extends Thread {
                     offlineAccount();
                     account = new Buyer("temp");
                 } else if (request.startsWith("getOnlineSupporters")) {
-                   ArrayList<Supporter> onlineSupporters = new ArrayList<>();
+                    ArrayList<Supporter> onlineSupporters = new ArrayList<>();
                     for (String username : onlineAccounts.values()) {
                         Account account = Shop.getShop().getAccountByUsername(username);
                         if (account instanceof Supporter) {
@@ -194,6 +198,33 @@ class ClientHandler extends Thread {
                     }
                     dataOutputStream.writeUTF(new Gson().toJson(onlineSupporters));
                     dataOutputStream.flush();
+                } else if (request.startsWith("get_supporter")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[2]));
+//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
+                    dataOutputStream.writeUTF(new Gson().toJson(supporter));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("get_buyer")) {
+                    Buyer buyer = ((Buyer) Shop.getShop().getAccountByUsername(info[2]));
+//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
+                    dataOutputStream.writeUTF(new Gson().toJson(buyer));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("add_to_buyers")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
+                    supporter.getBuyersToMessages().put(info[4], new ArrayList<>());
+                } else if (request.startsWith("from_buyer")) {
+                    System.out.println("from buyer to " + info[3] + " : " + info[4]);
+                    DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
+                    dataOutputStream.writeUTF(info[4]);
+                    dataOutputStream.flush();
+                } else if (request.startsWith("from_supporter")) {
+                    System.out.println("from supporter to " + info[3] + " : " + info[4]);
+                    DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
+                    dataOutputStream.writeUTF(info[4]);
+                    dataOutputStream.flush();
+                } else if (request.startsWith("update_messages_of_")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
+                    supporter.getBuyersToMessages().get(info[4]).add(info[5]);
+                    System.out.println("message: " + info[5] + "added to map of " + supporter.getUsername() + "and buyer: " + info[4]);
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

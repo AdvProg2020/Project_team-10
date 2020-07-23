@@ -1,21 +1,13 @@
 package view.FXMLController;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jfoenix.controls.*;
 import controller.AccountManager;
-import controller.AdminManager;
-import controller.SellerManager;
-import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,28 +15,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import model.*;
-import view.CommandProcessor;
 import view.NumberField;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static javafx.scene.paint.Color.color;
-import static view.FXML.FXML.adminPopupURL;
 import static view.FXMLController.MainMenu.fadeEffect;
 
 public class SupporterPanel {
@@ -58,18 +36,23 @@ public class SupporterPanel {
     private AnchorPane mainMenu;
     private Button user;
     private Button btnLogin;
-
+    //edit
     private TextField firstName;
     private TextField lastName;
     private TextField email;
     private TextField phoneNumber;
     private PasswordField password;
+    //network
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private Socket socket;
     private Account onlineAccount;
+    //chat
+    private Map<Buyer, FlowPane> nodes = new HashMap<>();
+    private HBox selectedBox;
 
-    public SupporterPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+    public SupporterPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
+            , Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -208,7 +191,7 @@ public class SupporterPanel {
         flowPane.setVgap(12);
 
         VBox backBox = new VBox();
-        backBox.setPrefSize(800 , 40);
+        backBox.setPrefSize(800, 40);
         ImageView back = new ImageView();
         back.getStyleClass().add("backStyle");
         back.setFitWidth(30);
@@ -227,10 +210,10 @@ public class SupporterPanel {
         VBox newPass = boxForEdit("newPass");
 
         VBox submitBox = new VBox();
-        submitBox.setPadding(new Insets(20, 0 ,0,0));
+        submitBox.setPadding(new Insets(20, 0, 0, 0));
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
-        submit.setPrefSize(780 , 40);
+        submit.setPrefSize(780, 40);
         submit.setOnMouseClicked(event -> {
             try {
                 processEdit();
@@ -242,7 +225,7 @@ public class SupporterPanel {
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
-                boxForEdit("Email: "), boxForEdit("Phone: "), newPass ,submitBox);
+                boxForEdit("Email: "), boxForEdit("Phone: "), newPass, submitBox);
 
 
     }
@@ -284,7 +267,6 @@ public class SupporterPanel {
     }
 
     private void handelButtonOnMouseClick() throws IOException {
-
         adminPane.getChildren().remove(adminScrollPane);
         adminScrollPane.setPrefSize(1150, 620);
         adminScrollPane.getStyleClass().add("scroll-bar");
@@ -295,8 +277,7 @@ public class SupporterPanel {
         adminScrollPane.getStyleClass().add("scroll-bar");
         adminScrollPane.setLayoutX(330);
         adminScrollPane.setLayoutY(35);
-//        adminPaneScroll.;
-        Account account = AccountManager.getOnlineAccount();
+        Account account = onlineAccount;
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -362,10 +343,7 @@ public class SupporterPanel {
         adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
-    private Map<Buyer, FlowPane> nodes = new HashMap<>();
-    private HBox selectedBox;
-
-    private Node handelManageChat() {
+    private Node handelManageChat() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
@@ -385,76 +363,70 @@ public class SupporterPanel {
         scrollPane.setContent(buyerItemBox);
         flowPane.getChildren().addAll(scrollPane);
 
-        try {
-//            dataOutputStream.writeUTF("getConnectedBuyer");
-            dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.writeUTF("get_supporter_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type supporterType = new TypeToken<Supporter>() {
+        }.getType();
+        String json = dataInputStream.readUTF();
+        System.out.println("json: " + json);
+//        System.out.println(dataInputStream.readUTF());
+//        System.out.println("ok");
+        Supporter supporter = new Gson().fromJson(json, supporterType);
+        this.onlineAccount = supporter;
+        for (String buyerUsername : supporter.getBuyersToMessages().keySet()) {
+            dataOutputStream.writeUTF("get_buyer_" + buyerUsername);
             dataOutputStream.flush();
-            Type connectedBuyerType = new TypeToken<ArrayList<Buyer>>() {
+            Type buyerType = new TypeToken<Buyer>() {
             }.getType();
-            ArrayList<Buyer> connectedBuyer = new Gson().fromJson(dataInputStream.readUTF(), connectedBuyerType);
+            Buyer buyer = new Gson().fromJson(dataInputStream.readUTF(), buyerType);
 
-            for (Buyer buyer : connectedBuyer) {
-                HBox buyerBox = new HBox(3);
-                buyerBox.getStyleClass().add("boxChat");
-                buyerBox.setAlignment(Pos.CENTER_LEFT);
-                buyerBox.setPadding(new Insets(6, 6, 6, 6));
+            HBox buyerBox = new HBox(3);
+            buyerBox.getStyleClass().add("boxChat");
+            buyerBox.setAlignment(Pos.CENTER_LEFT);
+            buyerBox.setPadding(new Insets(6, 6, 6, 6));
 
-                Circle circle = new Circle(20);
-                ImagePattern pattern = new ImagePattern(new Image("file:" + buyer.getImagePath()));
-                circle.setFill(pattern);
-                circle.setStrokeWidth(2);
-                circle.setStroke(Color.rgb(16, 137, 255));
+            Circle circle = new Circle(20);
+            ImagePattern pattern = new ImagePattern(new Image("file:" + buyer.getImagePath()));
+            circle.setFill(pattern);
+            circle.setStrokeWidth(2);
+            circle.setStroke(Color.rgb(16, 137, 255));
 
-                Label username = new Label(" " + buyer.getUsername());
-                username.setPrefWidth(285);
-                username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14pt;-fx-text-fill: #1089FF");
+            Label username = new Label(" " + buyer.getUsername());
+            username.setPrefWidth(285);
+            username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14pt;-fx-text-fill: #1089FF");
 
-                buyerBox.setOnMouseClicked(event -> {
-                    if (selectedBox != null) {
-                        selectedBox.setStyle("-fx-background-color: white");
-                    }
-                    buyerBox.setStyle("-fx-background-color: #f0f0f0");
-                    selectedBox = buyerBox;
-                    try {
-                        for (Buyer buyer1 : nodes.keySet()) {
-                            flowPane.getChildren().remove(nodes.get(buyer1));
-                        }
-                        FlowPane paneForChat;
-                        if (nodes.containsKey(buyer)) {
-                            paneForChat = nodes.get(buyer);
-                            flowPane.getChildren().add(paneForChat);
-                        } else {
-
-                            paneForChat = new FlowPane();
-                            nodes.put(buyer, paneForChat);
-                            handelMouseClickChat(buyer, flowPane, paneForChat);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                buyerBox.getChildren().addAll(circle, username);
-                buyerItemBox.getChildren().addAll(buyerBox, rectangle(285, 1));
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            buyerBox.setOnMouseClicked(event -> {
+                if (selectedBox != null) {
+                    selectedBox.setStyle("-fx-background-color: white");
+                }
+                buyerBox.setStyle("-fx-background-color: #f0f0f0");
+                selectedBox = buyerBox;
+                for (Buyer buyer1 : nodes.keySet()) {
+                    flowPane.getChildren().remove(nodes.get(buyer1));
+                }
+                FlowPane paneForChat;
+                if (nodes.containsKey(buyer)) {
+                    paneForChat = nodes.get(buyer);
+                    flowPane.getChildren().add(paneForChat);
+                } else {
+                    paneForChat = new FlowPane();
+                    nodes.put(buyer, paneForChat);
+                    handelMouseClickChat(buyer, flowPane, paneForChat);
+                }
+            });
+            buyerBox.getChildren().addAll(circle, username);
+            buyerItemBox.getChildren().addAll(buyerBox, rectangle(285, 1));
         }
 
         return flowPane;
     }
 
-    private void handelMouseClickChat(Buyer buyer, FlowPane flowPane, FlowPane paneForChat) throws IOException {
-
+    private void handelMouseClickChat(Buyer buyer, FlowPane flowPane, FlowPane paneForChat) {
         paneForChat.setVgap(3);
         paneForChat.setStyle("-fx-background-color: white;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
-
         paneForChat.setPrefSize(700, 540);
         flowPane.getChildren().addAll(paneForChat);
         paneForChat.setPadding(new Insets(15, 15, 15, 15));
-
-//        Socket socket = new Socket("localhost", 9090);
-//        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-
 
         HBox boxOfSupporter = new HBox();
         boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
@@ -484,9 +456,10 @@ public class SupporterPanel {
         send.getStyleClass().add("send");
         VBox innerChat = new VBox(5);
         send.setPrefSize(90, 30);
+
         send.setOnAction(event -> {
             try {
-                sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -494,26 +467,26 @@ public class SupporterPanel {
         chatField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                    sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
 //        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+//        showOldMessages(buyer, innerChat, scrollPaneChat);
         scrollPaneChat.setContent(innerChat);
-
         sendAndChatField.getChildren().addAll(chatField, send);
 
         paneForChat.setAlignment(Pos.CENTER);
         paneForChat.getChildren().addAll(boxOfSupporter, rectangle(690, 1), scrollPaneChat, sendAndChatField);
 
-//        new Receiver(socket, innerChat, scrollPaneChat, this).start();
+        new SupporterReceiver(dataInputStream, innerChat, scrollPaneChat, this).start();
     }
 
-    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, DataOutputStream dataOutputStream) throws IOException {
+    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, String buyerUsername) throws IOException {
         String message = chatField.getText();
-        dataOutputStream.writeUTF(message);
+        dataOutputStream.writeUTF("from_supporter_to_" + buyerUsername + "_" + message);
         dataOutputStream.flush();
         showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
         chatField.clear();
@@ -550,6 +523,13 @@ public class SupporterPanel {
         return newString.toString();
     }
 
+    private void showOldMessages(Buyer buyer, VBox innerChat, ScrollPane scrollPaneChat) {
+        for (String message : ((Supporter) onlineAccount).getBuyersToMessages().get(buyer.getUsername())) {
+            showMessage(innerChat, message, "-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;");
+            scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+        }
+    }
+
     private Rectangle rectangle(int x, int y) {
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(y);
@@ -558,7 +538,7 @@ public class SupporterPanel {
         return rectangle;
     }
 
-    private FlowPane handelCategory() throws IOException{
+    private FlowPane handelCategory() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
