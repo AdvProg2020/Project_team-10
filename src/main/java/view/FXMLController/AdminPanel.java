@@ -923,7 +923,7 @@ public class AdminPanel {
 
     public static Date getDateByString(String dateInput) {
         Calendar calendar = Calendar.getInstance();
-        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
+        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)_(\\d\\d):(\\d\\d)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(dateInput);
         int[] dateSplit = new int[5];

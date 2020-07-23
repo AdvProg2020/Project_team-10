@@ -15,6 +15,8 @@ public class Server {
     private SecureRandom secureRandom = new SecureRandom();
     private Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private static HashMap<String, String> onlineAccounts = new HashMap<>();
+    private static ArrayList<Auction> auctionGoods = new ArrayList<>();
+
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
@@ -23,7 +25,7 @@ public class Server {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("a client connected");
-            new ClientHandler(clientSocket, onlineAccounts).start();
+            new ClientHandler(clientSocket, onlineAccounts, auctionGoods).start();
         }
     }
 
@@ -40,6 +42,10 @@ public class Server {
         }
     }
 
+    public void addToAuctionGoods(Good good, Date start , Date end){
+        auctionGoods.add(new Auction(good , start , end));
+    }
+
 }
 
 class ClientHandler extends Thread {
@@ -48,13 +54,17 @@ class ClientHandler extends Thread {
     private DataInputStream dataInputStream;
     private HashMap<String, String> onlineAccounts;
     private Account account;
+    private Server server;
+    private ArrayList<Auction> auctionGoods;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts) throws IOException {
+
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts , ArrayList<Auction> auctionGoods) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
+        this.auctionGoods = auctionGoods;
     }
 
     @Override
@@ -136,7 +146,8 @@ class ClientHandler extends Thread {
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
                     } else {
-                        String token = new Server().generateTokenForUser(account.getUsername());
+                        server = new Server();
+                        String token = server.generateTokenForUser(account.getUsername());
                         if (account instanceof Buyer) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
@@ -184,6 +195,15 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("logout")) {
                     offlineAccount();
                     account = new Buyer("temp");
+                } else if (request.startsWith("setAuction_")) {
+                    Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
+                    Date startDate = new Date();
+                    Date endDate = AdminPanel.getDateByString(info[2] + "_" + info[3]);
+                    server.addToAuctionGoods(good , startDate , endDate);
+                } else if (request.startsWith("getAllAuction")) {
+                    System.out.println(auctionGoods.size());
+                    dataOutputStream.writeUTF(new Gson().toJson(auctionGoods));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("isOnlineAccount_")) {
                     String isOnline;
                     if (onlineAccounts.containsValue(info[1])) {

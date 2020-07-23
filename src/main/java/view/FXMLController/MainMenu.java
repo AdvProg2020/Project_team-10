@@ -9,35 +9,41 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.*;
 import org.controlsfx.control.RangeSlider;
+import view.NumberField;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static javafx.scene.paint.Color.color;
+import static view.FXML.FXML.adminPopupURL;
 
 public class MainMenu implements Initializable {
     public Button btnLogin;
@@ -62,6 +68,7 @@ public class MainMenu implements Initializable {
     public Button btnOnlineSupport;
     public ScrollPane mainMenuScrollPane;
     public FlowPane flowPaneForBoxOfGoods;
+    public Button btnAuction;
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
@@ -135,7 +142,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnAuction, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
     }
 
     public FlowPane createPage(int pageIndex) {
@@ -146,7 +153,7 @@ public class MainMenu implements Initializable {
                 break;
             }
             VBox vBox = new VBox();
-            vBox.setPadding(new Insets(20,5,10,5));
+            vBox.setPadding(new Insets(20, 5, 10, 5));
             vBox.setPrefWidth(295);
             vBox.setPrefHeight(320);
             vBox.getStyleClass().add("vBoxInMainMenu");
@@ -216,8 +223,10 @@ public class MainMenu implements Initializable {
 
         if (onlineAccount instanceof Buyer && !onlineAccount.getUsername().equals("temp")) {
             btnOnlineSupport.setVisible(true);
+            btnAuction.setVisible(true);
         } else {
             btnOnlineSupport.setVisible(false);
+            btnAuction.setVisible(false);
         }
 
         rangeSlider.lowValueProperty().addListener(
@@ -340,7 +349,7 @@ public class MainMenu implements Initializable {
         pagi.setMaxPageIndicatorCount(3);
         Collections.sort(filteredGoods);
         pagi.setPageFactory(this::createPage);
-        flowPaneForBoxOfGoods.setPadding(new Insets(10,0,0,0));
+        flowPaneForBoxOfGoods.setPadding(new Insets(10, 0, 0, 0));
 
         //Speed For ScrollPane
         final double SPEED = 0.006;
@@ -447,7 +456,7 @@ public class MainMenu implements Initializable {
 
     public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin, btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin, btnAuction, btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
@@ -743,4 +752,160 @@ public class MainMenu implements Initializable {
         return exitButton;
     }
 
+    private AnchorPane auctionPane;
+    private Stage popupWindow;
+
+    private void fade(double fromValue, double toValue) {
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(600));
+        fade.setFromValue(fromValue);
+        fade.setToValue(toValue);
+        fade.setNode(mainPane);
+        fade.play();
+    }
+
+    public void popupAuctions(MouseEvent mouseEvent) throws IOException {
+        auctionPane = new AnchorPane();
+        auctionPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        popupWindow = new Stage();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+
+        URL url = Paths.get(adminPopupURL).toUri().toURL();
+        AnchorPane layout = FXMLLoader.load(url);
+        Scene scene1 = new Scene(layout);
+        popupWindow.setMaximized(true);
+
+        layout.setStyle("-fx-background-color: none;");
+        auctionPane.setStyle("-fx-background-color: #fbfffb;" + "-fx-background-radius: 30px;");
+        auctionPane.setPrefWidth(680);
+        auctionPane.setPrefHeight(580);
+
+        fade(10, 0.5);
+
+        layout.setLayoutX(360);
+        layout.setLayoutY(150);
+
+        layout.getChildren().add(auctionPane);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1500.0);
+        dropShadow.setHeight(1500);
+        dropShadow.setWidth(1500);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        layout.setEffect(dropShadow);
+
+        showAuction();
+
+        popupWindow.setScene(scene1);
+        popupWindow.initStyle(StageStyle.TRANSPARENT);
+        popupWindow.getScene().setFill(Color.TRANSPARENT);
+        popupWindow.showAndWait();
+    }
+
+    private void showAuction() throws IOException {
+        auctionPane.getChildren().clear();
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefSize(650, 550);
+        scrollPane.setLayoutX(15);
+        scrollPane.setLayoutY(15);
+        scrollPane.getStyleClass().add("scroll-barInD");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        FlowPane flowPane = new FlowPane();
+        flowPane.setPrefSize(650 , 550);
+        scrollPane.setContent(flowPane);
+
+        dataOutputStream.writeUTF("getAllAuctions");
+        dataOutputStream.flush();
+        Type productsListType = new TypeToken<ArrayList<Auction>>() {
+        }.getType();
+        ArrayList<Auction> allAuctions = new Gson().fromJson(dataInputStream.readUTF(), productsListType);
+
+        for (Auction auction : allAuctions) {
+            VBox boxTextAndImage = new VBox(8);
+            boxTextAndImage.setAlignment(Pos.CENTER);
+            boxTextAndImage.setPadding(new Insets(8, 8, 8, 8));
+            boxTextAndImage.setStyle("-fx-border-color: #e1e1e1;-fx-border-width: 1");
+            ImageView imageView = new ImageView(new Image("file:" + auction.getGood().getImagePath()));
+            imageView.setFitWidth(195);
+            imageView.setFitHeight(195);
+            Label label = new Label(auction.getGood().getName());
+            label.setStyle("-fx-text-fill: black;-fx-font-size: 14pt;-fx-font-family: 'Franklin Gothic Medium Cond'");
+            Button button = new Button("Participate in the auction");
+            button.getStyleClass().add("auctionButton");
+            button.setPrefSize(195, 30);
+            button.setOnMouseClicked(event -> handelAuction(auction));
+
+            boxTextAndImage.getChildren().addAll(imageView, label, button);
+            flowPane.getChildren().add(boxTextAndImage);
+        }
+
+        auctionPane.getChildren().addAll(exitButtonPop(), scrollPane);
+    }
+
+    private Button exitButtonPop() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExit");
+        exitButton.setLayoutY(5);
+        exitButton.setLayoutX(555);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
+    }
+
+    private void handelAuction(Auction auction) {
+        auctionPane.getChildren().clear();
+        ImageView back = new ImageView();
+        back.setFitHeight(25);
+        back.setFitWidth(25);
+        back.setLayoutX(10);
+        back.setLayoutY(10);
+        back.getStyleClass().add("imageViewBack");
+        back.setOnMouseClicked(event -> {
+            try {
+                showAuction();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        VBox boxOfImageAndPrice = new VBox(5);
+        boxOfImageAndPrice.setLayoutX(35);
+        boxOfImageAndPrice.setLayoutY(50);
+        boxOfImageAndPrice.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView("file:" + auction.getGood().getImagePath());
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
+
+        Label name = new Label(auction.getGood().getName());
+        name.setStyle("-fx-font-size: 16pt;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black");
+
+        Label currentPrice = new Label("$ CurrentPrice");
+        currentPrice.setStyle("-fx-text-fill: #0069ff;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15pt");
+        currentPrice.setPadding(new Insets(0,0,150,0));
+
+        NumberField price = new NumberField();
+        price.setPrefSize(200 , 40);
+        price.setPromptText("Proposed price");
+        price.setStyle("-fx-background-color: none;-fx-text-fill: black;-fx-border-width: 2;" +
+                "-fx-border-color: #0069ff;-fx-border-radius: 8;" +
+                "-fx-prompt-text-fill: #e6e6e6;-fx-font-family: sans-serif;-fx-font-weight: bold;-fx-font-size: 12pt");
+
+        Button suggest = new Button("Suggest");
+        suggest.setPrefSize(200, 25);
+        suggest.getStyleClass().add("suggestBtn");
+        suggest.setOnMouseClicked(event ->{
+            currentPrice.setText("$"+price.getText());
+            price.clear();
+        });
+
+        boxOfImageAndPrice.getChildren().addAll(imageView , name , currentPrice, price, suggest);
+
+        auctionPane.getChildren().addAll(boxOfImageAndPrice , back);
+
+
+    }
 }

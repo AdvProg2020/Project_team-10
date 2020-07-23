@@ -72,8 +72,9 @@ public class CartMenu {
     private Account onlineAccount;
     private String token;
     public Button btnOnlineSupport;
+    public Button btnAuction;
 
-    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin,Button btnSupporter, MainMenu main, AnchorPane mainMenu
+    public CartMenu(AnchorPane mainPane, Button btnCartMenu, Button btnLogin, Button btnAuction, Button btnSupporter, MainMenu main, AnchorPane mainMenu
             , Socket socket, Account onlineAccount, String token) throws IOException {
         this.mainPane = mainPane;
         this.btnCartMenu = btnCartMenu;
@@ -86,6 +87,7 @@ public class CartMenu {
         this.onlineAccount = onlineAccount;
         this.token = token;
         this.btnOnlineSupport = btnSupporter;
+        this.btnAuction = btnAuction;
     }
 
     public long totalPrice;
@@ -139,7 +141,7 @@ public class CartMenu {
         purchase.setOnMouseClicked(event -> {
             try {
                 if (onlineAccount.getUsername().equals("temp")) {
-                    new Login(mainPane, btnLogin,btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
+                    new Login(mainPane, btnLogin, btnAuction, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
                 } else {
                     paymentPopup();
                 }

@@ -3,11 +3,7 @@ package view.FXMLController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.*;
-import controller.AccountManager;
-import controller.GoodsManager;
-import controller.SellerManager;
 import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -90,6 +85,9 @@ public class SellerPanel {
     private AnchorPane loginPane;
     private Label error;
     private Stage popupWindow;
+
+    Button auctionSelected = new Button();
+    int auctionGoodId;
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
             , Socket socket, Account onlineAccount, String token) throws IOException {
@@ -362,7 +360,7 @@ public class SellerPanel {
                 sellerPane.getChildren().add(sellerScrollPane);
                 break;
             case "Log out":
-                dataOutputStream.writeUTF("logout");
+                dataOutputStream.writeUTF("logout_" + token);
                 dataOutputStream.flush();
                 onlineAccount = new Buyer("temp");
                 main.onlineAccount = this.onlineAccount;
@@ -842,12 +840,12 @@ public class SellerPanel {
 
             File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
                     Login.createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedImageFile , destImage);
+            copyFileUsingStream(selectedImageFile, destImage);
             String imagePath = destImage.getPath();
 
             File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
                     Login.createTokenForFiles() + ".mp4");
-            copyFileUsingStream(selectedVideoFile , destVideo);
+            copyFileUsingStream(selectedVideoFile, destVideo);
             String videoPath = destVideo.getPath();
 
             dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
@@ -940,6 +938,8 @@ public class SellerPanel {
             addGood();
         } else if (input.equals("Manage Offs")) {
             addOff();
+        } else if (input.equals("Auction")) {
+            handelAuctionPop();
         }
         popupWindow.showAndWait();
 
@@ -1148,14 +1148,37 @@ public class SellerPanel {
                 goodMenu.changePane();
             });
             goodPack.setAlignment(Pos.CENTER);
+
+            Button auction = new Button();
+            auction.setPrefSize(150, 31);
+            if (auctionGoodsId.contains(good.getId())){
+                auctionSelected.getStyleClass().clear();
+                auctionSelected.getStyleClass().add("auctionButtonNext");
+                auction.setText("Went to auction");
+            }else {
+                auction.setText("Auction");
+                auction.getStyleClass().add("auctionButton");
+            }
+
+            auction.setOnMouseClicked(event -> {
+                try {
+                    auctionGoodId = good.getId();
+                    auctionSelected = auction;
+                    popup("Auction");
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+
             ImageView bin = new ImageView();
             bin.getStyleClass().add("imageViewRecy");
             bin.setFitWidth(31);
             bin.setFitHeight(31);
-            HBox hBox = new HBox(bin);
+            HBox hBox = new HBox(auction, bin);
+            hBox.setSpacing(5);
             hBox.setAlignment(Pos.CENTER_RIGHT);
             hBox.setPrefWidth(230);
-            hBox.setPadding(new Insets(0, 20, 0, 0));
+            hBox.setPadding(new Insets(8, 20, 0, 0));
             goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
                 try {
@@ -1171,6 +1194,100 @@ public class SellerPanel {
 
         return flowPane;
     }
+
+    private void handelAuctionPop() {
+        error.setText("");
+        loginPane.getChildren().clear();
+
+        Label title = new Label("Duration Auction");
+        title.setLayoutY(80);
+        title.setLayoutX(40);
+        title.getStyleClass().add("labelForLoginTitle");
+
+        JFXButton submit = new JFXButton("Submit");
+        submit.setLayoutY(445);
+        submit.setLayoutX(40);
+        submit.setPrefSize(400, 40);
+        submit.getStyleClass().add("signUp");
+        submit.setOnMouseClicked(event -> {
+            processAddAuction();
+        });
+
+        startDate = new JFXDatePicker();
+        startDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startDate.setDefaultColor(Color.rgb(244, 218, 0));
+        startDate.setLayoutY(150);
+        startDate.setLayoutX(40);
+        startDate.setPrefSize(240, 40);
+        startDate.setOnAction(event -> {
+            LocalDate date = startDate.getValue();
+        });
+
+        startTime = new JFXTimePicker();
+        startTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        startTime.setDefaultColor(Color.rgb(244, 218, 0));
+        startTime.setPrefSize(140, 40);
+        startTime.setLayoutY(150);
+        startTime.setLayoutX(300);
+        startTime.setOnAction(event -> {
+            LocalTime date = startTime.getValue();
+        });
+
+        endDate = new JFXDatePicker();
+        endDate.setDefaultColor(Color.rgb(244, 218, 0));
+        endDate.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endDate.setPrefSize(240, 40);
+        endDate.setLayoutY(220);
+        endDate.setLayoutX(40);
+        endDate.setOnAction(event -> {
+            LocalDate date = endDate.getValue();
+        });
+
+        endTime = new JFXTimePicker();
+        endTime.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + "-fx-text-fill: white;" + "-fx-font-size: 12pt");
+        endTime.setDefaultColor(Color.rgb(244, 218, 0));
+        endTime.setPrefSize(140, 40);
+        endTime.setLayoutY(220);
+        endTime.setLayoutX(300);
+        endTime.setOnAction(event -> {
+            LocalTime date = endTime.getValue();
+        });
+
+        loginPane.getChildren().addAll(exitButton(), title, endDate, endTime, submit, error);
+    }
+
+    private void processAddAuction() {
+        auctionSelected.setText("Went to auction");
+        auctionSelected.getStyleClass().clear();
+        auctionSelected.getStyleClass().add("auctionButtonNext");
+        auctionSelected.setAlignment(Pos.CENTER);
+        auctionSelected.setOnMouseClicked(null);
+
+        try {
+            String endYear = "" + endDate.getValue().getYear();
+            String endMonth = "" + endDate.getValue().getMonthValue();
+            if (endMonth.length() == 1) {
+                endMonth = "0" + endMonth;
+            }
+            String endDay = "" + endDate.getValue().getDayOfMonth();
+            if (endDay.length() == 1) {
+                endDay = "0" + endDay;
+            }
+            String endDate = (endMonth + "/" + endDay + "/" + endYear + "_" + this.endTime.getValue());
+
+            dataOutputStream.writeUTF("setAuction_" + auctionGoodId + "_" + endDate);
+            dataOutputStream.flush();
+            auctionGoodsId.add(auctionGoodId);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        popupWindow.close();
+        fade(0.5, 10);
+
+    }
+
+    private ArrayList<Integer> auctionGoodsId = new ArrayList<>();
 
     private void backToMainMenu() {
         main.updateFilters = true;
