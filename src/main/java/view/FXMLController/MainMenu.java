@@ -6,7 +6,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -855,6 +860,43 @@ public class MainMenu implements Initializable {
         return exitButton;
     }
 
+    private static final Integer STARTTIME = 15;
+    private Timeline timeline;
+    private Label timerLabel = new Label();
+    private Integer timeSeconds = STARTTIME;
+
+
+//    private void timer(){
+//        timerLabel.textProperty().bind(timeSeconds.asString());
+//        timerLabel.setTextFill(Color.RED);
+//        timerLabel.setStyle("-fx-font-size: 4em;");
+//
+//        Button button = new Button();
+//        button.setText("Start Timer");
+//        button.setOnAction(new EventHandler<ActionEvent>() {
+//
+//            public void handle(ActionEvent event) {
+//                if (timeline != null) {
+//                    timeline.stop();
+//                }
+//                timeSeconds.set(STARTTIME);
+//                timeline = new Timeline();
+//                timeline.getKeyFrames().add(
+//                        new KeyFrame(Duration.seconds(STARTTIME+1),
+//                                new KeyValue(timeSeconds, 0)));
+//                timeline.playFromStart();
+//            }
+//        });
+//
+//        VBox vb = new VBox(20);             // gap between components is 20
+//        vb.setAlignment(Pos.CENTER);        // center the components within VBox
+//
+//        vb.getChildren().addAll(button, timerLabel);
+//        vb.setLayoutY(30);
+//        vb.setLayoutX(300);
+//        auctionPane.getChildren().add(vb);
+//    }
+
     private void handelAuction(Auction auction) {
         auctionPane.getChildren().clear();
         ImageView back = new ImageView();
@@ -894,11 +936,18 @@ public class MainMenu implements Initializable {
                 "-fx-border-color: #0069ff;-fx-border-radius: 8;" +
                 "-fx-prompt-text-fill: #e6e6e6;-fx-font-family: sans-serif;-fx-font-weight: bold;-fx-font-size: 12pt");
 
+//        timer();
         Button suggest = new Button("Suggest");
         suggest.setPrefSize(200, 25);
         suggest.getStyleClass().add("suggestBtn");
         suggest.setOnMouseClicked(event ->{
             currentPrice.setText("$"+price.getText());
+            try {
+                dataOutputStream.writeUTF("setAuctionPrice_" + price.getText());
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             price.clear();
         });
 
