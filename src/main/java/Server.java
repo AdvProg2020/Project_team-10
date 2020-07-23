@@ -26,8 +26,7 @@ public class Server {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("a client connected");
-            new ClientHandler(clientSocket, onlineAccounts, accountsToSockets).start();
-            new ClientHandler(clientSocket, onlineAccounts, auctionGoods).start();
+            new ClientHandler(clientSocket, onlineAccounts, auctionGoods, accountsToSockets).start();
         }
     }
 
@@ -61,9 +60,8 @@ class ClientHandler extends Thread {
     private ArrayList<Auction> auctionGoods;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts, HashMap<String, DataOutputStream> accountsToSockets) throws IOException {
-
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts , ArrayList<Auction> auctionGoods) throws IOException {
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts , ArrayList<Auction> auctionGoods,
+                         HashMap<String, DataOutputStream> accountsToSockets ) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
@@ -172,7 +170,6 @@ class ClientHandler extends Thread {
                     }.getType();
                     List<String> attributes = new Gson().fromJson(info[3], categoryAttribute);
                     AdminManager.addCategory(info[2], attributes);
-
                 } else if (request.startsWith("remove_category")) {
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
