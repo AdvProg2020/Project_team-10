@@ -17,17 +17,17 @@
 
     <AnchorPane fx:id="mainMenu" layoutY="165">
 
-        <!--        <ScrollPane pannable="true" prefHeight="650" prefWidth="1200" fx:id="mainMenuScrollPane" layoutY="25" layoutX="30">-->
+        <FlowPane prefHeight="650" prefWidth="1200" layoutY="25" layoutX="30" fx:id="flowPaneForBoxOfGoods"
+                  styleClass="flowForGood">
 
+            <ScrollPane pannable="true" styleClass="scroll-bar" hbarPolicy="NEVER" prefHeight="630" prefWidth="1196"
+                        fx:id="mainMenuScrollPane">
 
-        <!--&lt;!&ndash;            <FlowPane prefHeight="650" prefWidth="1200" fx:id="flowPane">&ndash;&gt;-->
+                <Pagination fx:id="pagi" styleClass="pagination"
+                            style="-fx-background-color: white;-fx-background-radius: 10;"/>
 
-        <!--&lt;!&ndash;            </FlowPane>&ndash;&gt;-->
-
-        <!--        </ScrollPane>-->
-
-        <Pagination fx:id="pagi" layoutX="30" layoutY="25"
-                    style="-fx-background-color: white;-fx-background-radius: 10;"/>
+            </ScrollPane>
+        </FlowPane>
 
 
         <VBox layoutY="25" layoutX="1250" prefWidth="260" prefHeight="200" styleClass="vboxForFilter"
@@ -136,7 +136,14 @@
             onMouseClicked="#popupLogin">
     </Button>
 
-    <Button layoutX="1150" layoutY="105" fx:id="btnOnlineSupport" mnemonicParsing="false" styleClass="buttonSupport" onMouseEntered="#popupOnlineSupport" text="▽ ONLINE SUPPORT">
+    <Button layoutX="1150" layoutY="105" fx:id="btnOnlineSupport" mnemonicParsing="false" styleClass="buttonSupport"
+            onMouseEntered="#popupOnlineSupport" text="▽ ONLINE SUPPORT">
+
+    </Button>
+
+
+    <Button layoutX="1050" layoutY="105" fx:id="btnAuction" mnemonicParsing="false" styleClass="buttonSupport"
+            onMouseClicked="#popupAuctions" text="Auctions">
 
     </Button>
 

@@ -33,7 +33,6 @@ import view.NumberField;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -75,10 +74,9 @@ public class Login {
     private String token;
     private final static List<String> fileNames = new ArrayList<>();
     public Button btnOnlineSupport;
+    public Button btnAuction;
 
-    private Socket buyerSocket;
-
-    public Login(AnchorPane mainPane, Button btnLogin, Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnAuction , Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
@@ -90,7 +88,7 @@ public class Login {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
         this.btnOnlineSupport = btnSupport;
-        this.buyerSocket = buyerSocket;
+        this.btnAuction = btnAuction;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -406,6 +404,7 @@ public class Login {
             accountType = new TypeToken<Buyer>() {
             }.getType();
             btnOnlineSupport.setVisible(true);
+            btnAuction.setVisible(true);
         } else if (type.equals("seller")) {
             accountType = new TypeToken<Seller>() {
             }.getType();
@@ -420,9 +419,6 @@ public class Login {
         token = splitResponse[3];
         main.token = this.token;
         AccountManager.setOnlineAccount(onlineAccount);
-//        if (onlineAccount instanceof Supporter) {
-//            new SupporterServer(((Supporter) onlineAccount), dataOutputStream, dataInputStream).start();
-//        }
     }
 
     private void processRegister() throws IOException {
@@ -576,7 +572,7 @@ public class Login {
         if (onlineAccount instanceof Admin) {
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
-            new BuyerPanel(mainPane, main, mainMenu, user, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
+            new BuyerPanel(mainPane, main, mainMenu, user,btnAuction, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
             new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
@@ -629,36 +625,3 @@ public class Login {
 
 }
 
-class SupporterServer extends Thread {
-    private Supporter supporter;
-    private DataOutputStream shopDataOutputStream;
-    private DataInputStream shopDataInputStream;
-
-    private Socket buyerSocket;
-
-    public SupporterServer(Supporter supporter, DataOutputStream shopDataOutputStream, DataInputStream shopDataInputStream) {
-        this.supporter = supporter;
-        this.shopDataOutputStream = shopDataOutputStream;
-        this.shopDataInputStream = shopDataInputStream;
-    }
-
-    @Override
-    public void run() {
-        //            ServerSocket serverSocket = new ServerSocket(9595);
-        while (true) {
-            System.out.println("* Waiting for buyer...");
-
-//                shopDataOutputStream.writeUTF("set_port_" + supporter.getUsername() + "_9" + Supporter.createNumberForPort());
-//                shopDataOutputStream.flush();
-//                shopDataOutputStream.writeUTF("get_supporter_" + supporter.getUsername());
-//                shopDataOutputStream.flush();
-//                System.out.println(shopDataInputStream.readUTF());
-//                Type supporterType = new TypeToken<Supporter>() {
-//                }.getType();
-//                supporter = new Gson().fromJson(shopDataInputStream.readUTF(), supporterType);
-//                serverSocket.accept();
-            System.out.println("* a buyer connected");
-        }
-    }
-
-}

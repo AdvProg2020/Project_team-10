@@ -333,7 +333,7 @@
 .scroll-barInD:vertical .decrement-arrow {
     -fx-shape: " ";
     -fx-padding: 0.0 0.15em;
-    -fx-pref-width: 1px;
+    -fx-pref-width: 2px;
 }
 
 .scroll-barInD:horizontal .thumb,
@@ -341,7 +341,7 @@
     -fx-background-color: #dddddd;
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
-    -fx-pref-width: 1px;
+    -fx-pref-width: 2px;
 }
 
 .scroll-barInD:horizontal .thumb:hover,
@@ -349,7 +349,7 @@
     -fx-background-color: #9e9e9e;
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
-    -fx-pref-width: 1px;
+    -fx-pref-width: 2px;
 }
 
 .scroll-barInD {
@@ -381,4 +381,39 @@
 .boxChat:hover{
     -fx-background-color: #f0f0f0;
     -fx-cursor: hand;
+}
+
+.auctionButton{
+    -fx-background-color: #ff0000;
+    -fx-background-radius: 5;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 12pt;
+    -fx-text-fill: white;
+}
+
+.auctionButton:hover{
+    -fx-background-color: #ff444d;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.auctionButtonNext{
+    -fx-background-color: #22ff37;
+    -fx-background-radius: 5;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+    -fx-font-size: 12pt;
+    -fx-text-fill: white;
+}
+
+.suggestBtn{
+    -fx-background-color: #0069ff;
+    -fx-font-size: 12pt;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+}
+
+.suggestBtn:hover{
+    -fx-background-color: #25a8e3;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
 }
