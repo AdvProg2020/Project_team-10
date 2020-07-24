@@ -244,20 +244,6 @@ class ClientHandlerForBank extends Thread {
     }
 }
 
-class BankClient {
-    public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 9090);
-        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        Scanner scanner = new Scanner(System.in);
-        new InputHandler(socket).start();
-        while (true) {
-            String request = scanner.nextLine();
-            dataOutputStream.writeUTF(request);
-            dataOutputStream.flush();
-        }
-    }
-}
-
 
 class InputHandler extends Thread {
     private Socket socket;

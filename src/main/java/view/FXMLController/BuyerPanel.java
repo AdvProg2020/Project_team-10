@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import controller.AccountManager;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -61,8 +62,14 @@ public class BuyerPanel {
     public Button btnOnlineSupport;
     public Button btnAuction;
 
+    private TextField firstName;
+    private TextField lastName;
+    private TextField email;
+    private TextField phoneNumber;
+    private PasswordField password;
 
-    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnAuction,  Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+
+    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnAuction, Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -79,7 +86,7 @@ public class BuyerPanel {
         handelButtonOnMouseClick();
     }
 
-    public void changePane() {
+    public void changePane() throws IOException {
 
         buyerPane.setLayoutY(165);
         optionsPane.setLayoutY(35);
@@ -105,7 +112,9 @@ public class BuyerPanel {
         credit.setStyle("-fx-background-color: blue");
         credit.setFitWidth(25);
 
-        Label creditLabel = new Label(" $" + onlineAccount.getCredit());
+        dataOutputStream.writeUTF("get_credit");
+        dataOutputStream.flush();
+        Label creditLabel = new Label(" $" + dataInputStream.readUTF());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00e429");
 
@@ -115,12 +124,12 @@ public class BuyerPanel {
 
         Label increase = new Label(" ➕ Credit ");
         increase.getStyleClass().add("creditStyle");
-        increase.setPadding(new Insets(5,5,5,5));
+        increase.setPadding(new Insets(5, 5, 5, 5));
         increase.setOnMouseClicked(event -> {
             try {
                 dataOutputStream.writeUTF("runBankClient");
                 dataOutputStream.flush();
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         });
@@ -129,7 +138,7 @@ public class BuyerPanel {
         Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
         vBoxP.setSpacing(5);
-        vBoxP.getChildren().addAll(username, hBox1 , increase);
+        vBoxP.getChildren().addAll(username, hBox1, increase);
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, vBoxP);
@@ -266,22 +275,27 @@ public class BuyerPanel {
         if (name.equals("First name: ")) {
             label.setText(" First name: ");
             field.setText(onlineAccount.getFirstName());
+            firstName = field;
         } else if (name.equals("Last name: ")) {
             label.setText(" Last name: ");
+            lastName = field;
             field.setText(onlineAccount.getLastName());
         } else if (name.equals("Email: ")) {
             label.setText(" Email: ");
+            email = field;
             field.setText(onlineAccount.getEmail());
         } else if (name.equals("Phone: ")) {
             NumberField numberField = new NumberField();
             numberField.setPrefSize(350, 40);
             numberField.setText(onlineAccount.getPhoneNumber());
             label.setText(" Phone number: ");
+            phoneNumber = field;
             field = numberField;
         } else if (name.equals("password")) {
             PasswordField passwordField = new PasswordField();
             passwordField.setPromptText("Current password");
             passwordField.setPrefSize(350, 40);
+            password = passwordField;
             field = passwordField;
         } else if (name.equals("newPass")) {
             PasswordField passwordField = new PasswordField();
@@ -326,6 +340,13 @@ public class BuyerPanel {
         Button submit = new Button("Submit");
         submit.getStyleClass().add("buttonSubmit");
         submit.setPrefSize(780, 40);
+        submit.setOnMouseClicked(event -> {
+            try {
+                processEdit();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         submitBox.getChildren().add(submit);
 
         flowPane.getChildren().addAll(backBox, boxForEdit("First name: "), boxForEdit("Last name: "),
@@ -333,6 +354,14 @@ public class BuyerPanel {
 
 
     }
+
+    private void processEdit() throws IOException {
+        dataOutputStream.writeUTF("edit_profile_" + password.getText() + "_" + firstName.getText() + "_" +
+                lastName.getText() + "_" + phoneNumber.getText() + "_" + email.getText());
+        dataOutputStream.flush();
+        handelButtonOnMouseClick();
+    }
+
 
     private VBox createItemOfProfile(String text, String account) {
         VBox vBox = new VBox(2);
@@ -354,7 +383,7 @@ public class BuyerPanel {
         mainPane.getChildren().add(mainMenu);
     }
 
-    private FlowPane showDiscounts() {
+    private FlowPane showDiscounts() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
@@ -396,6 +425,12 @@ public class BuyerPanel {
         hBoxTitle.getChildren().addAll(discountCode, startDate, endDate, percent, amount);
         flowPane.getChildren().add(hBoxTitle);
 
+        dataOutputStream.writeUTF("get_buyer_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type buyerType = new TypeToken<Buyer>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), buyerType);
+        main.onlineAccount = this.onlineAccount;
 
         for (Discount discount : ((Buyer) onlineAccount).getDiscounts()) {
             HBox hBox = new HBox(0);
@@ -438,7 +473,7 @@ public class BuyerPanel {
         return flowPane;
     }
 
-    private FlowPane showOrders() {
+    private FlowPane showOrders() throws IOException {
 
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
@@ -479,6 +514,13 @@ public class BuyerPanel {
 
         hBoxTitle.getChildren().addAll(code, date, paid, discount, status);
         flowPane.getChildren().add(hBoxTitle);
+
+        dataOutputStream.writeUTF("get_buyer_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type buyerType = new TypeToken<Buyer>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), buyerType);
+        main.onlineAccount = this.onlineAccount;
 
         for (BuyerLog log : ((Buyer) onlineAccount).getBuyerLogs()) {
             HBox hBox = new HBox(0);
@@ -595,7 +637,11 @@ public class BuyerPanel {
         ImageView imageViewBack = new ImageView();
         imageViewBack.setOnMouseClicked(event -> {
             flowPane.getChildren().clear();
-            buyerPaneScroll.setContent(showOrders());
+            try {
+                buyerPaneScroll.setContent(showOrders());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         imageViewBack.getStyleClass().add("imageViewBack");
         imageViewBack.setFitWidth(45);

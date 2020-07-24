@@ -481,7 +481,13 @@ public class CartMenu {
         paymentButton.setLayoutX(90);
         paymentButton.setLayoutY(470);
         paymentButton.getStyleClass().add("confirm");
-        paymentButton.setOnMouseClicked(event -> processPayment(discount));
+        paymentButton.setOnMouseClicked(event -> {
+            try {
+                processPayment(discount);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         paymentButton.setVisible(false);
         return paymentButton;
     }
@@ -493,12 +499,18 @@ public class CartMenu {
         increaseCreditButton.setLayoutY(470);
         increaseCreditButton.getStyleClass().add("confirm");
         increaseCreditButton.setStyle("-fx-font-size: 17");
-        increaseCreditButton.setOnMouseClicked(event -> processIncreaseCredit());
+        increaseCreditButton.setOnMouseClicked(event -> {
+            try {
+                processIncreaseCredit();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         increaseCreditButton.setVisible(false);
         return increaseCreditButton;
     }
 
-    private void processIncreaseCredit() {
+    private void processIncreaseCredit() throws IOException {
         if (paymentButton.isVisible()) {
             paymentButton.setVisible(false);
             creditField = new ZipCode();
@@ -509,7 +521,9 @@ public class CartMenu {
             creditField.getStyleClass().add("paymentFields");
             paymentPane.getChildren().add(creditField);
         } else {
-            onlineAccount.increaseCredit(Long.parseLong(creditField.getText()));
+            dataOutputStream.writeUTF("increase_credit_" + creditField.getText());
+            dataOutputStream.flush();
+//            onlineAccount.increaseCredit(Long.parseLong(creditField.getText()));
             error.setText("your credit increased");
             creditField.setVisible(false);
             paymentButton.setVisible(true);
@@ -556,9 +570,17 @@ public class CartMenu {
         }
     }
 
-    private void processPayment(Discount discount) {
-        if (Purchase.canPay(finalTotalPrice)) {
-            Purchase.pay(finalTotalPrice, discount);
+    private void processPayment(Discount discount) throws IOException {
+        dataOutputStream.writeUTF("can_pay_" + finalTotalPrice);
+        dataOutputStream.flush();
+        String response = dataInputStream.readUTF();
+        if (response.equals("true")) {
+            if (discount == null) {
+                dataOutputStream.writeUTF("pay_" + finalTotalPrice + "_" + 0);
+            } else {
+                dataOutputStream.writeUTF("pay_" + finalTotalPrice + "_" + discount.getCode());
+            }
+            dataOutputStream.flush();
             paymentPopup.close();
             fade(0.5, 10);
             backToMainMenu();

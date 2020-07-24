@@ -156,8 +156,12 @@ public class AdminPanel {
     }
 
     private void processEdit() throws IOException {
+        dataOutputStream.writeUTF("edit_profile_" + password.getText() + "_" + firstName.getText() + "_" +
+                lastName.getText() + "_" + phoneNumber.getText() + "_" + email.getText());
+        dataOutputStream.flush();
         handelButtonOnMouseClick();
     }
+
 
     private void editProfilePain(FlowPane flowPane) {
         flowPane.getChildren().clear();

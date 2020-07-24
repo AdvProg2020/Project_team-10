@@ -111,11 +111,11 @@ public class Purchase {
         System.out.println("1: confirm\n2: increase credit\n3: back");
         int selected = Integer.parseInt(Menu.scanner.nextLine());
         if (selected == 1) {
-            if (canPay(finalPrice)) {
-                pay(finalPrice, discount);
-            } else {
-                System.out.println("your credit is not enough");
-            }
+//            if (canPay(finalPrice)) {
+////                pay(finalPrice, discount);
+//            } else {
+//                System.out.println("your credit is not enough");
+//            }
         } else if (selected == 2) {
             CommandProcessor.processIncreaseCredit();
             payment(finalPrice, discount);
@@ -125,35 +125,31 @@ public class Purchase {
         }
     }
 
-    public static boolean canPay(double finalPrice) {
-        return finalPrice <= (AccountManager.getOnlineAccount()).getCredit();
-    }
 
-    public static void pay(double finalPrice, Discount currentDiscount) {
-        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
-        currentBuyer.subtractCredit(finalPrice);
-        Set<Seller> sellers = new HashSet<>();
-        for (Good good : currentBuyer.getCart()) {
-//            good.subtractNumber();
-            good.getBuyersUsername().add(currentBuyer.getUsername());
-            sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
-        }
-        for (Integer discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
-            if (currentDiscount != null && discountCode == currentDiscount.getCode()) {
-                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
-                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
-                if (number == 1) {
-                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discountCode);
-                }
-            }
-        }
-        makeLogs(sellers, finalPrice);
-        currentBuyer.getGoods().addAll(currentBuyer.getCart());
-        currentBuyer.getCart().clear();
-    }
+//    public static void pay(double finalPrice, Discount currentDiscount) {
+//        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
+//        currentBuyer.subtractCredit(finalPrice);
+//        Set<Seller> sellers = new HashSet<>();
+//        for (Good good : currentBuyer.getCart()) {
+////            good.subtractNumber();
+//            good.getBuyersUsername().add(currentBuyer.getUsername());
+//            sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
+//        }
+//        for (Integer discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+//            if (currentDiscount != null && discountCode == currentDiscount.getCode()) {
+//                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
+//                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
+//                if (number == 1) {
+//                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discountCode);
+//                }
+//            }
+//        }
+//        makeLogs(sellers, finalPrice);
+//        currentBuyer.getGoods().addAll(currentBuyer.getCart());
+//        currentBuyer.getCart().clear();
+//    }
 
-    private static void makeLogs(Set<Seller> sellers, double finalPrice) {
-        //TODO
+//    private static void makeLogs(Set<Seller> sellers, double finalPrice) {
 //        Buyer currentBuyer = ((Buyer) AccountManager.getOnlineAccount());
 //        Map<String, List<Good>> sellersToHisGoods = new HashMap<>();
 //        for (Seller seller : sellers) {
@@ -164,14 +160,13 @@ public class Purchase {
 //                }
 //            }
 //            sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
-//            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(goodsOfOneSeller));
+//            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(currentBuyer));
 //            seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
-//                    BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(currentBuyer.getCart()), sellersToHisGoods.get(seller),
-//                    currentBuyer.getUsername(), "received"));
+//                    BuyerManager.getTotalPrice(currentBuyer) - BuyerManager.getPriceAfterApplyOff(currentBuyer)
+//                    , sellersToHisGoods.get(seller.getUsername()), currentBuyer.getUsername(), "received"));
 //        }
 //        currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
-//                ((long) (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - finalPrice)), sellersToHisGoods, "paid"));
-//
-    }
+//                ((long) (BuyerManager.getPriceAfterApplyOff(currentBuyer) - finalPrice)), sellersToHisGoods, "paid"));
+//    }
 
 }

@@ -284,9 +284,23 @@ class ClientHandler extends Thread {
                     ((Buyer) account).getCart().remove(Shop.getShop().getProductWithId(Integer.parseInt(info[1])));
                 } else if (request.startsWith("putInMapGoodsInBuyerCart_")) {
                     Shop.getShop().getProductWithId(Integer.parseInt(info[2])).getGoodsInBuyerCart().put(account.getUsername(), Integer.valueOf(info[1]));
-                }  else if (request.startsWith("runBankClient")) {
-                    String[] arguments = new String[] {"123"};
+                } else if (request.startsWith("runBankClient")) {
+                    String[] arguments = new String[]{"123"};
                     BankClient.main(arguments);
+                } else if (request.startsWith("can_pay")) {
+                    if (BuyerManager.canPay(Double.parseDouble(info[2]), account)) {
+                        dataOutputStream.writeUTF("true");
+                    } else {
+                        dataOutputStream.writeUTF("false");
+                    }
+                    dataOutputStream.flush();
+                } else if (request.startsWith("pay")) {
+                   BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
+                } else if (request.startsWith("increase_credit")) {
+                   account.increaseCredit(Long.parseLong(info[2]));
+                } else if (request.startsWith("get_credit")) {
+                   dataOutputStream.writeUTF("" + account.getCredit());
+                   dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -313,6 +327,5 @@ class ClientHandler extends Thread {
             }
         }
     }
-
 
 }

@@ -2,7 +2,7 @@ package controller;
 
 import model.*;
 
-import java.util.List;
+import java.util.*;
 
 public class BuyerManager {
 
@@ -52,14 +52,65 @@ public class BuyerManager {
     public static void purchase() {
     }
 
-    public static boolean rateProduct(int id, int rate, Account account) {
-        Buyer buyer = (Buyer) account;
-        for (Good good : buyer.getGoods()) {
-            if (good.getId() == id) {
-                good.getAllScores().add(rate);
-                return true;
+//    public static boolean rateProduct(int id, int rate, Account account) {
+//        Buyer buyer = (Buyer) account;
+//        for (Good good : buyer.getGoods()) {
+//            if (good.getId() == id) {
+//                good.getAllScores().add(rate);
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    public static boolean canPay(double finalPrice, Account account) {
+        return finalPrice <= account.getCredit();
+    }
+
+    public static void pay(double finalPrice, int code, Buyer currentBuyer) {
+        Discount currentDiscount = Shop.getShop().getDiscountWithCode(code);
+        currentBuyer.subtractCredit(finalPrice);
+        Set<Seller> sellers = new HashSet<>();
+        for (Good good : currentBuyer.getCart()) {
+            good.getBuyersUsername().add(currentBuyer.getUsername());
+            System.out.println(good.getSellerUsername());
+            System.out.println(Shop.getShop().getAccountByUsername(good.getSellerUsername()));
+            sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
+        }
+        for (Integer discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
+            if (currentDiscount != null && discountCode == currentDiscount.getCode()) {
+                int number = currentBuyer.getDiscountAndNumberOfAvailableDiscount().get(discountCode);
+                currentBuyer.getDiscountAndNumberOfAvailableDiscount().put(discountCode, number - 1);
+                if (number == 1) {
+                    currentBuyer.getDiscountAndNumberOfAvailableDiscount().remove(discountCode);
+                }
             }
         }
-        return false;
+        makeLogs(sellers, finalPrice, currentBuyer);
+        currentBuyer.getGoods().addAll(currentBuyer.getCart());
+        currentBuyer.getCart().clear();
     }
+
+    private static void makeLogs(Set<Seller> sellers, double finalPrice, Buyer currentBuyer) {
+        Map<String, List<Good>> sellersToHisGoods = new HashMap<>();
+        for (Seller seller : sellers) {
+            ArrayList<Good> goodsOfOneSeller = new ArrayList<>();
+            for (Good good : currentBuyer.getCart()) {
+                if (good.getSellerUsername().equals(seller.getUsername())) {
+                    goodsOfOneSeller.add(good);
+                }
+            }
+            System.out.println(sellersToHisGoods);
+            System.out.println(seller.getUsername());
+            System.out.println(goodsOfOneSeller);
+            sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
+            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(currentBuyer));
+            seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
+                    BuyerManager.getTotalPrice(currentBuyer) - BuyerManager.getPriceAfterApplyOff(currentBuyer)
+                    , sellersToHisGoods.get(seller.getUsername()), currentBuyer.getUsername(), "received"));
+        }
+        currentBuyer.getBuyerLogs().add(new BuyerLog(AccountManager.getLastBuyerLogId() + 1, new Date(), ((long) finalPrice),
+                ((long) (BuyerManager.getPriceAfterApplyOff(currentBuyer) - finalPrice)), sellersToHisGoods, "paid"));
+    }
+
 }

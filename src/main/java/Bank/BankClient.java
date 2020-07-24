@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class BankClient {
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 8888);
+        Socket socket = new Socket("2.tcp.ngrok.io", 10748);
         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         Scanner scanner = new Scanner(System.in);
         new InputHandler(socket).start();
