@@ -22,6 +22,8 @@ public class Server {
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
         ServerSocket serverSocket = new ServerSocket(8080);
+        ((Supporter) Shop.getShop().getAccountByUsername("supporter111")).getBuyersToMessages().clear();
+
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -43,8 +45,8 @@ public class Server {
         }
     }
 
-    public void addToAuctionGoods(Good good, Date start , Date end){
-        auctionGoods.add(new Auction(good , start , end));
+    public void addToAuctionGoods(Good good, Date start, Date end) {
+        auctionGoods.add(new Auction(good, start, end));
     }
 
 }
@@ -60,8 +62,8 @@ class ClientHandler extends Thread {
     private ArrayList<Auction> auctionGoods;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts , ArrayList<Auction> auctionGoods,
-                         HashMap<String, DataOutputStream> accountsToSockets ) throws IOException {
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts, ArrayList<Auction> auctionGoods,
+                         HashMap<String, DataOutputStream> accountsToSockets) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
@@ -202,7 +204,7 @@ class ClientHandler extends Thread {
                     Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
                     Date startDate = new Date();
                     Date endDate = AdminPanel.getDateByString(info[2] + "_" + info[3]);
-                    server.addToAuctionGoods(good , startDate , endDate);
+                    server.addToAuctionGoods(good, startDate, endDate);
                 } else if (request.startsWith("getAllAuction")) {
                     System.out.println(auctionGoods.size());
                     dataOutputStream.writeUTF(new Gson().toJson(auctionGoods));
@@ -233,26 +235,39 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_buyer")) {
                     Buyer buyer = ((Buyer) Shop.getShop().getAccountByUsername(info[2]));
-//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
                     dataOutputStream.writeUTF(new Gson().toJson(buyer));
                     dataOutputStream.flush();
                 } else if (request.startsWith("add_to_buyers")) {
                     Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
                     supporter.getBuyersToMessages().put(info[4], new ArrayList<>());
                 } else if (request.startsWith("from_buyer")) {
-                    System.out.println("from buyer to " + info[3] + " : " + info[4]);
-                    DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
-                    dataOutputStream.writeUTF(info[4]);
-                    dataOutputStream.flush();
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[4]));
+                    if (supporter.getBuyersOnPage().contains(info[2])) {
+                        DataOutputStream dataOutputStream = accountsToOutPuts.get(info[4]);
+                        dataOutputStream.writeUTF(info[2] + "_" + info[5]);
+                        dataOutputStream.flush();
+                        System.out.println("message: " + info[5] + " from " + account.getUsername() + " to " + info[4] + " sent.");
+                    } else {
+                        supporter.getBuyersToMessages().get(info[2]).add(info[5]);
+                    }
                 } else if (request.startsWith("from_supporter")) {
                     System.out.println("from supporter to " + info[3] + " : " + info[4]);
                     DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
                     dataOutputStream.writeUTF(info[4]);
                     dataOutputStream.flush();
-                } else if (request.startsWith("update_messages_of_")) {
-                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
-                    supporter.getBuyersToMessages().get(info[4]).add(info[5]);
-                    System.out.println("message: " + info[5] + "added to map of " + supporter.getUsername() + "and buyer: " + info[4]);
+                } else if (request.startsWith("disconnect_buyer")) {
+                    dataOutputStream.writeUTF("disconnect_buyer");
+                    dataOutputStream.flush();
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[2]));
+                    supporter.getBuyersToMessages().remove(account.getUsername());
+                    System.out.println("buyer: " + account.getUsername() + " disconnected to supporter: " + supporter.getUsername());
+                } else if (request.startsWith("disconnect_supporter")) {
+                    dataOutputStream.writeUTF("disconnect_supporter");
+                    dataOutputStream.flush();
+                } else if (request.startsWith("clear_messages_of")) {
+                    ((Supporter) account).getBuyersToMessages().get(info[3]).clear();
+                } else if (request.startsWith("page_")) {
+                    ((Supporter) account).getBuyersOnPage().add(info[1]);
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

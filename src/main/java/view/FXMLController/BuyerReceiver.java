@@ -1,10 +1,13 @@
 package view.FXMLController;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.*;
+import java.util.Map;
 
 public class BuyerReceiver extends Thread {
     private DataInputStream dataInputStream;
@@ -23,14 +26,14 @@ public class BuyerReceiver extends Thread {
     public void run() {
         String answer = "";
         try {
-            while (!answer.equals("exit")) {
-                answer = dataInputStream.readUTF();
+            while (!(answer = dataInputStream.readUTF()).equals("disconnect_buyer")) {
                 System.out.println("from supporter: " + answer);
                 String finalAnswer = answer;
                 Platform.runLater(() -> main.showMessage(innerChat, finalAnswer, "-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;"));
                 scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
                 System.out.println("show done!");
             }
+            System.out.println("the buyer disconnected");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -39,30 +42,36 @@ public class BuyerReceiver extends Thread {
 
 class SupporterReceiver extends Thread {
     private DataInputStream dataInputStream;
-    private VBox innerChat;
-    private ScrollPane scrollPaneChat;
     private SupporterPanel supporterPanel;
+    private Map<String, FlowPane> buyerToChatPane;
 
-    public SupporterReceiver(DataInputStream dataInputStream, VBox innerChat, ScrollPane scrollPaneChat, SupporterPanel supporterPanel) {
+    public SupporterReceiver(DataInputStream dataInputStream, SupporterPanel supporterPanel, Map<String, FlowPane> buyerToChatPane) {
         this.dataInputStream = dataInputStream;
-        this.innerChat = innerChat;
-        this.scrollPaneChat = scrollPaneChat;
         this.supporterPanel = supporterPanel;
+        this.buyerToChatPane = buyerToChatPane;
     }
 
     @Override
     public void run() {
         String answer = "";
         try {
-            while (!answer.equals("exit")) {
-                answer = dataInputStream.readUTF();
+            while (!(answer = dataInputStream.readUTF()).equals("disconnect_supporter")) {
+                System.out.println("Waiting for message from buyer...");
+                System.out.println("answer: " + answer);
+                ScrollPane scrollPaneChat = ((ScrollPane) buyerToChatPane.get(answer.split("_")[0]).getChildren().get(2));
                 System.out.println("from buyer: " + answer);
-                String finalAnswer = answer;
-                Platform.runLater(() -> supporterPanel.showMessage(innerChat, finalAnswer, "-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;"));
+                String finalAnswer = answer.split("_")[1];
+                Platform.runLater(() -> supporterPanel.showMessage(((VBox) scrollPaneChat.getContent()), finalAnswer,
+                        "-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;"));
                 scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
             }
+            System.out.println("the supporter disconnected.");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void setBuyerToChatPane(Map<String, FlowPane> buyerToChatPane) {
+        this.buyerToChatPane = buyerToChatPane;
     }
 }
