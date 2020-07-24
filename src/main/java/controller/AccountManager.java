@@ -12,9 +12,26 @@ public class AccountManager {
     private static int lastSellerLogId;
     private static int lastDiscountCode;
     private static int lastOffId;
+    private static int lastAccountNumber;
+    private static int lastReceiptId;
 
     // getters & setters
 
+    public static int getLastReceiptId() {
+        return lastReceiptId;
+    }
+
+    public static void setLastReceiptId(int lastReceiptId) {
+        AccountManager.lastReceiptId = lastReceiptId;
+    }
+
+    public static void setLastAccountNumber(int lastAccountNumber) {
+        AccountManager.lastAccountNumber = lastAccountNumber;
+    }
+
+    public static int getLastAccountNumber() {
+        return lastAccountNumber;
+    }
 
     public static void setLastRequestId(int lastRequestId) {
         AccountManager.lastRequestId = lastRequestId;
@@ -56,6 +73,10 @@ public class AccountManager {
         return lastOffId;
     }
 
+    public static void increaseLastAccountNumber() {
+        lastAccountNumber += 1;
+    }
+
     public static void increaseLastRequestId() {
         lastRequestId += 1;
     }
@@ -82,6 +103,10 @@ public class AccountManager {
 
     public static void increaseLastSellerLogId() {
         lastSellerLogId += 1;
+    }
+
+    public static void increaseLastReceiptId() {
+        lastReceiptId += 1;
     }
 
     public static int getLastGoodId() {

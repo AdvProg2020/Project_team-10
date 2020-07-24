@@ -16,10 +16,21 @@ public class Shop {
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
+    private List<BankAccount> allBankAccounts = new ArrayList<>();
+    private List<Receipt> allReceipts = new ArrayList<>();
+
+
+    public List<BankAccount> getAllBankAccounts() {
+        return allBankAccounts;
+    }
 
     private Shop() {
         allAccounts.add(new Admin("javads", "Abdossamad", "Haghiri", "haghiri@gmail.com",
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
+    }
+
+    public List<Receipt> getAllReceipts() {
+        return allReceipts;
     }
 
     public List<Supporter> getAllSupporters() {
