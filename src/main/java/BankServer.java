@@ -24,7 +24,7 @@ public class BankServer {
 
     public static void main(String[] args) throws IOException {
 
-        ServerSocket serverSocket = new ServerSocket(8888);
+        ServerSocket serverSocket = new ServerSocket(9090);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -87,13 +87,13 @@ class ClientHandlerForBank extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("create_receipt")) {
-                    if (!(info.length == 7)){
+                    if (!(info.length == 7)) {
                         dataOutputStream.writeUTF("invalid parameters passed");
-                    } else if (Long.parseLong(info[3]) < 1){
+                    } else if (Long.parseLong(info[3]) < 1) {
                         dataOutputStream.writeUTF("invalid money");
                     } else if (BankManager.checkExpiration(info[1])) {
                         dataOutputStream.writeUTF("token expired");
-                    } else{
+                    } else {
                         if (info[2].equals("deposit")) {
                             if (info[4].equals("-1")) {
                                 if (BankManager.isExistBankAccount(Integer.parseInt(info[5]))) {
@@ -226,7 +226,7 @@ class ClientHandlerForBank extends Thread {
                 } else if (request.startsWith("get_balance")) {
                     if (BankManager.getAccountIdByToken(info[1]) == -1) {
                         dataOutputStream.writeUTF("token is invalid");
-                    } else if (BankManager.checkExpiration(info[1])){
+                    } else if (BankManager.checkExpiration(info[1])) {
                         dataOutputStream.writeUTF("token expired");
                     } else {
                         dataOutputStream.writeUTF(String.valueOf(BankManager.getBankAccountById(BankManager.getAccountIdByToken(info[1])).getMoney()));
@@ -245,9 +245,9 @@ class ClientHandlerForBank extends Thread {
     }
 }
 
-class client {
+class BankClient {
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 8888);
+        Socket socket = new Socket("localhost", 9090);
         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         Scanner scanner = new Scanner(System.in);
         new InputHandler(socket).start();

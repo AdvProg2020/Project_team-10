@@ -1,7 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import controller.AccountManager;
-import controller.FileHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

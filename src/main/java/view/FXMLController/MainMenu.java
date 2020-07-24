@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static javafx.scene.paint.Color.color;
@@ -104,8 +105,11 @@ public class MainMenu implements Initializable {
     private ScrollPane scrollPaneForSelectChat = new ScrollPane();
     private FlowPane paneForChat = new FlowPane();
 
+    private AnchorPane auctionPane;
+    private Stage popupWindow;
+
     public MainMenu() throws IOException {
-        this.socket = new Socket("localhost", 6060);
+        this.socket = new Socket("localhost", 8000);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -769,9 +773,6 @@ public class MainMenu implements Initializable {
         return exitButton;
     }
 
-    private AnchorPane auctionPane;
-    private Stage popupWindow;
-
     private void fade(double fromValue, double toValue) {
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(600));
@@ -834,9 +835,9 @@ public class MainMenu implements Initializable {
 
         dataOutputStream.writeUTF("getAllAuctions");
         dataOutputStream.flush();
-        Type productsListType = new TypeToken<ArrayList<Auction>>() {
+        Type auctionsListType = new TypeToken<ArrayList<Auction>>() {
         }.getType();
-        ArrayList<Auction> allAuctions = new Gson().fromJson(dataInputStream.readUTF(), productsListType);
+        ArrayList<Auction> allAuctions = new Gson().fromJson(dataInputStream.readUTF(), auctionsListType);
 
         for (Auction auction : allAuctions) {
             VBox boxTextAndImage = new VBox(8);
@@ -852,7 +853,6 @@ public class MainMenu implements Initializable {
             button.getStyleClass().add("auctionButton");
             button.setPrefSize(195, 30);
             button.setOnMouseClicked(event -> handelAuction(auction));
-
             boxTextAndImage.getChildren().addAll(imageView, label, button);
             flowPane.getChildren().add(boxTextAndImage);
         }
@@ -922,19 +922,23 @@ public class MainMenu implements Initializable {
         try {
             dataOutputStream.writeUTF("getAuctionPrice_" + auction.getId());
             dataOutputStream.flush();
-            Type priceType = new TypeToken<String>() {
-            }.getType();
-            String priceString = new Gson().fromJson(dataInputStream.readUTF(), priceType);
+            String priceString = dataInputStream.readUTF();
             currentPrice.setText("$" + priceString);
             suggest.setOnMouseClicked(event -> {
-                currentPrice.setText("$" + price.getText());
-                try {
-                    dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
-                    dataOutputStream.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (auction.getEndDate().isBefore(LocalDateTime.now())) {
+                    suggest.setDisable(true);
+                } else {
+                    if (Integer.parseInt(price.getText()) > Integer.parseInt(priceString)) {
+                        currentPrice.setText("$" + price.getText());
+                        try {
+                            dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
+                            dataOutputStream.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        price.clear();
+                    }
                 }
-                price.clear();
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -1000,7 +1004,7 @@ public class MainMenu implements Initializable {
         paneForChatInAuction.getChildren().addAll(boxOfSupporter, rectangle(357, 1), scrollPaneChat, sendAndChatField);
 
 
-        auctionPane.getChildren().addAll(boxOfImageAndPrice,paneForChatInAuction, back);
+        auctionPane.getChildren().addAll(boxOfImageAndPrice, paneForChatInAuction, back);
 
 
     }

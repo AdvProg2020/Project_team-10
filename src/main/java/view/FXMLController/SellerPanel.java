@@ -86,8 +86,10 @@ public class SellerPanel {
     private Label error;
     private Stage popupWindow;
 
-    Button auctionSelected = new Button();
-    int auctionGoodId;
+    private Button auctionSelected = new Button();
+    private int auctionGoodId;
+    private ArrayList<Integer> auctionGoodsId = new ArrayList<>();
+
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
             , Socket socket, Account onlineAccount, String token) throws IOException {
@@ -1262,7 +1264,6 @@ public class SellerPanel {
         auctionSelected.getStyleClass().add("auctionButtonNext");
         auctionSelected.setAlignment(Pos.CENTER);
         auctionSelected.setOnMouseClicked(null);
-
         try {
             String endYear = "" + endDate.getValue().getYear();
             String endMonth = "" + endDate.getValue().getMonthValue();
@@ -1290,7 +1291,6 @@ public class SellerPanel {
 
     }
 
-    private ArrayList<Integer> auctionGoodsId = new ArrayList<>();
 
     private void backToMainMenu() {
         main.updateFilters = true;

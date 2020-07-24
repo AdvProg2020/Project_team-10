@@ -14,6 +14,8 @@ public class FileHandler {
         writeProducts();
         writeOffs();
         writeDiscounts();
+        writeReceipts();
+        writeBankAccounts();
         writeSeller();
         writeBuyer();
         writeAdmin();
@@ -34,6 +36,8 @@ public class FileHandler {
             readAllCategories();
             readAllProducts();
             readAllAccounts();
+            readAllBankAccounts();
+            readAllReceipts();
             readAllDiscounts();
             readAllOffs();
             readAllComments();
@@ -94,6 +98,28 @@ public class FileHandler {
         try {
             FileWriter fileWriter = new FileWriter("database/allProducts.txt");
             fileWriter.write(new Gson().toJson(Shop.getShop().getAllGoods()));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void writeBankAccounts() {
+        try {
+            FileWriter fileWriter = new FileWriter("database/allBankAccounts.txt");
+            fileWriter.write(new Gson().toJson(Shop.getShop().getAllBankAccounts()));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void writeReceipts() {
+        try {
+            FileWriter fileWriter = new FileWriter("database/allReceipts.txt");
+            fileWriter.write(new Gson().toJson(Shop.getShop().getAllReceipts()));
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -228,7 +254,8 @@ public class FileHandler {
         String allSellersJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Seller> allSellers;
-        Type sellerListType = new TypeToken<ArrayList<Seller>>() {}.getType();
+        Type sellerListType = new TypeToken<ArrayList<Seller>>() {
+        }.getType();
         allSellers = gson.fromJson(allSellersJson, sellerListType);
         Shop.getShop().getAllSellers().addAll(allSellers);
         Shop.getShop().getAllAccounts().addAll(allSellers);
@@ -242,7 +269,8 @@ public class FileHandler {
         String allBuyerJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Buyer> allBuyers;
-        Type buyerListType = new TypeToken<ArrayList<Buyer>>() {}.getType();
+        Type buyerListType = new TypeToken<ArrayList<Buyer>>() {
+        }.getType();
         allBuyers = gson.fromJson(allBuyerJson, buyerListType);
         Shop.getShop().getAllBuyers().addAll(allBuyers);
         Shop.getShop().getAllAccounts().addAll(allBuyers);
@@ -256,10 +284,25 @@ public class FileHandler {
         String allAdminsJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Admin> allAdmins;
-        Type adminListType = new TypeToken<ArrayList<Admin>>() {}.getType();
+        Type adminListType = new TypeToken<ArrayList<Admin>>() {
+        }.getType();
         allAdmins = gson.fromJson(allAdminsJson, adminListType);
         Shop.getShop().getAllAdmins().addAll(allAdmins);
         Shop.getShop().getAllAccounts().addAll(allAdmins);
+        bufferedReader.close();
+        fileReader.close();
+    }
+
+    private static void readAllReceipts() throws Exception {
+        FileReader fileReader = new FileReader("database/allReceipts.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String allSupportersJson = bufferedReader.readLine().trim();
+        Gson gson = new Gson();
+        ArrayList<Receipt> allReceipts;
+        Type supporterListType = new TypeToken<ArrayList<Receipt>>() {
+        }.getType();
+        allReceipts = gson.fromJson(allSupportersJson, supporterListType);
+        Shop.getShop().getAllReceipts().addAll(allReceipts);
         bufferedReader.close();
         fileReader.close();
     }
@@ -270,10 +313,25 @@ public class FileHandler {
         String allSupportersJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Supporter> allSupporters;
-        Type supporterListType = new TypeToken<ArrayList<Supporter>>() {}.getType();
+        Type supporterListType = new TypeToken<ArrayList<Supporter>>() {
+        }.getType();
         allSupporters = gson.fromJson(allSupportersJson, supporterListType);
         Shop.getShop().getAllSupporters().addAll(allSupporters);
         Shop.getShop().getAllAccounts().addAll(allSupporters);
+        bufferedReader.close();
+        fileReader.close();
+    }
+
+    private static void readAllBankAccounts() throws Exception {
+        FileReader fileReader = new FileReader("database/allBankAccounts.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String allSupportersJson = bufferedReader.readLine().trim();
+        Gson gson = new Gson();
+        ArrayList<BankAccount> allBankAccounts;
+        Type supporterListType = new TypeToken<ArrayList<BankAccount>>() {
+        }.getType();
+        allBankAccounts = gson.fromJson(allSupportersJson, supporterListType);
+        Shop.getShop().getAllBankAccounts().addAll(allBankAccounts);
         bufferedReader.close();
         fileReader.close();
     }
@@ -284,7 +342,8 @@ public class FileHandler {
         String allProductsJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Good> allProducts;
-        Type productsListType = new TypeToken<ArrayList<Good>>() {}.getType();
+        Type productsListType = new TypeToken<ArrayList<Good>>() {
+        }.getType();
         allProducts = gson.fromJson(allProductsJson, productsListType);
         Shop.getShop().getAllGoods().addAll(allProducts);
         bufferedReader.close();
@@ -300,7 +359,8 @@ public class FileHandler {
         String allCategoriesJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Category> allCategories;
-        Type categoriesListType = new TypeToken<ArrayList<Category>>() {}.getType();
+        Type categoriesListType = new TypeToken<ArrayList<Category>>() {
+        }.getType();
         allCategories = gson.fromJson(allCategoriesJson, categoriesListType);
         Shop.getShop().getAllCategories().addAll(allCategories);
         bufferedReader.close();
@@ -313,7 +373,8 @@ public class FileHandler {
         String allOffsJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Off> allOffs;
-        Type offsListType = new TypeToken<ArrayList<Off>>() {}.getType();
+        Type offsListType = new TypeToken<ArrayList<Off>>() {
+        }.getType();
         allOffs = gson.fromJson(allOffsJson, offsListType);
         Shop.getShop().getAllOffs().addAll(allOffs);
         bufferedReader.close();
@@ -326,7 +387,8 @@ public class FileHandler {
         String allDiscountsJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Discount> allDiscounts;
-        Type discountListType = new TypeToken<ArrayList<Discount>>() {}.getType();
+        Type discountListType = new TypeToken<ArrayList<Discount>>() {
+        }.getType();
         allDiscounts = gson.fromJson(allDiscountsJson, discountListType);
         Shop.getShop().getAllDiscounts().addAll(allDiscounts);
         bufferedReader.close();
@@ -339,7 +401,8 @@ public class FileHandler {
         String allCommentsJson = bufferedReader.readLine().trim();
         Gson gson = new Gson();
         ArrayList<Comment> allComments;
-        Type commentListType = new TypeToken<ArrayList<Comment>>() {}.getType();
+        Type commentListType = new TypeToken<ArrayList<Comment>>() {
+        }.getType();
         allComments = gson.fromJson(allCommentsJson, commentListType);
         Shop.getShop().getAllComments().addAll(allComments);
         bufferedReader.close();

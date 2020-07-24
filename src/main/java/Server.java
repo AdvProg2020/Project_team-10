@@ -23,7 +23,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(8080);
+        ServerSocket serverSocket = new ServerSocket(8000);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -195,12 +195,10 @@ class ClientHandler extends Thread {
                     account = new Buyer("temp");
                 } else if (request.startsWith("setAuction_")) {
                     Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
-                    LocalDate date
-                            = LocalDate.of(Integer.parseInt(info[4]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
+                    LocalDate date = LocalDate.of(Integer.parseInt(info[4]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
 
                     LocalTime time = LocalTime.of(Integer.parseInt(info[5]), Integer.parseInt(info[6]));
-                    LocalDateTime localdatetime
-                            = LocalDateTime.of(date, time);
+                    LocalDateTime localdatetime = LocalDateTime.of(date, time);
                     System.out.println(localdatetime);
                     SellerManager.createAuction(good, localdatetime);
                 } else if (request.startsWith("getAllAuction")) {
@@ -227,7 +225,6 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_supporter")) {
                     Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[2]));
-//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
                     dataOutputStream.writeUTF(new Gson().toJson(supporter));
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_buyer")) {
@@ -252,10 +249,6 @@ class ClientHandler extends Thread {
                     DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
                     dataOutputStream.writeUTF(info[4]);
                     dataOutputStream.flush();
-                } else if (request.startsWith("update_messages_of_")) {
-                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
-                    supporter.getBuyersToMessages().get(info[4]).add(info[5]);
-                    System.out.println("message: " + info[5] + "added to map of " + supporter.getUsername() + "and buyer: " + info[4]);
                 } else if (request.startsWith("getAuctionPrice_")) {
                     dataOutputStream.writeUTF("" + Shop.getShop().getAuctionWithId(Integer.parseInt(info[1])).getPrice());
                     dataOutputStream.flush();
