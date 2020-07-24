@@ -51,7 +51,7 @@
 .buttonSupport {
     -fx-font-family: "Adobe Gothic Std B";
     -fx-font-size: 13pt;
-    -fx-text-fill: #00ee00;
+    -fx-text-fill: #3f3f3f;
     -fx-background-radius: 10;
     -fx-pref-height: 40px;
     -fx-background-color: transparent;
@@ -61,6 +61,7 @@
 
 .buttonSupport:hover {
     -fx-background-color: #f3f3f3;
+    -fx-cursor: hand;
 }
 
 .buttonAccount {

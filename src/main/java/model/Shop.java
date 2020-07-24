@@ -16,10 +16,28 @@ public class Shop {
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
+    private List<BankAccount> allBankAccounts = new ArrayList<>();
+    private List<Receipt> allReceipts = new ArrayList<>();
+
+
+    public List<BankAccount> getAllBankAccounts() {
+        return allBankAccounts;
+    }
+    private List<Auction> auctionGoods = new ArrayList<>();
+
+    private static Shop shop;
 
     private Shop() {
         allAccounts.add(new Admin("javads", "Abdossamad", "Haghiri", "haghiri@gmail.com",
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
+    }
+
+    public List<Receipt> getAllReceipts() {
+        return allReceipts;
+    }
+
+    public List<Auction> getAuctionGoods() {
+        return auctionGoods;
     }
 
     public List<Supporter> getAllSupporters() {
@@ -65,8 +83,6 @@ public class Shop {
     public List<Request> getAllRequests() {
         return allRequests;
     }
-
-    private static Shop shop;
 
     public static Shop getShop() {
         if (shop == null) {
@@ -115,6 +131,15 @@ public class Shop {
         for (Off off : allOffs) {
             if (off.getId() == id) {
                 return off;
+            }
+        }
+        return null;
+    }
+
+    public Auction getAuctionWithId(int id) {
+        for (Auction auction : auctionGoods) {
+            if (auction.getId() == id) {
+                return auction;
             }
         }
         return null;

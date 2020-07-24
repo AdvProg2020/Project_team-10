@@ -1273,7 +1273,10 @@ public class SellerPanel {
             if (endDay.length() == 1) {
                 endDay = "0" + endDay;
             }
-            String endDate = (endMonth + "/" + endDay + "/" + endYear + "_" + this.endTime.getValue());
+            String timeH = this.endTime.getValue().toString().split(":")[0];
+            String timeM = this.endTime.getValue().toString().split(":")[1];
+            String endDate = (endMonth + "_" + endDay + "_" + endYear + "_" +
+                    timeH + "_" + timeM);
 
             dataOutputStream.writeUTF("setAuction_" + auctionGoodId + "_" + endDate);
             dataOutputStream.flush();

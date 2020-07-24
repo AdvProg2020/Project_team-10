@@ -523,7 +523,7 @@ public class AdminPanel {
                 adminPane.getChildren().add(adminScrollPane);
                 break;
             case "Log out":
-                dataOutputStream.writeUTF("logout");
+                dataOutputStream.writeUTF("logout_");
                 dataOutputStream.flush();
                 onlineAccount = new Buyer("temp");
                 main.onlineAccount = this.onlineAccount;
