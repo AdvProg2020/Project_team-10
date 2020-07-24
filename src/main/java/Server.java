@@ -1,3 +1,5 @@
+
+import Bank.BankClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import controller.*;
@@ -23,7 +25,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(6060);
+        ServerSocket serverSocket = new ServerSocket(7777);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -53,7 +55,7 @@ class ClientHandler extends Thread {
     private DataInputStream dataInputStream;
     private HashMap<String, String> onlineAccounts;
     private HashMap<String, DataOutputStream> accountsToOutPuts;
-    private Account account;
+    private Account account = new Buyer("temp");
 
 
     public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts,
@@ -127,10 +129,11 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("register")) {
                     AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
                 } else if (request.startsWith("get_total_price")) {
-                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getTotalPrice(account)));
+                    System.out.println((BuyerManager.getTotalPrice(account)));
+                    dataOutputStream.writeUTF(BuyerManager.getTotalPrice(account) + "");
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_final_price")) {
-                    dataOutputStream.writeUTF(new Gson().toJson(BuyerManager.getPriceAfterApplyOff(account)));
+                    dataOutputStream.writeUTF(BuyerManager.getPriceAfterApplyOff(account) + "");
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_discount")) {
                     String discount = request.split("_")[1];
@@ -258,11 +261,26 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("setAuctionPrice_")) {
                     Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[2]));
                     auction.setPrice(Long.parseLong(info[1]));
+                } else if (request.startsWith("addToCart_")) {
+                    Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
+                    ((Buyer) account).getCart().add(good);
+                    good.getGoodsInBuyerCart().put(account.getUsername(), 1);
+                } else if (request.startsWith("getGoodInCart")) {
+                    dataOutputStream.writeUTF(new Gson().toJson(((Buyer) account).getCart()));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("removeInMapGoodsInBuyerCart_")) {
+                    Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getGoodsInBuyerCart().remove(account.getUsername());
+                } else if (request.startsWith("removeInBuyerCart_")) {
+                    ((Buyer) account).getCart().remove(Shop.getShop().getProductWithId(Integer.parseInt(info[1])));
+                } else if (request.startsWith("putInMapGoodsInBuyerCart_")) {
+                    Shop.getShop().getProductWithId(Integer.parseInt(info[2])).getGoodsInBuyerCart().put(account.getUsername(), Integer.valueOf(info[1]));
+                }  else if (request.startsWith("runBankClient")) {
+                    String[] arguments = new String[] {"123"};
+                    BankClient.main(arguments);
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
                 }
-
             }
         } catch (IOException e) {
             System.out.println("connection closed!");

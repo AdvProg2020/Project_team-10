@@ -105,7 +105,7 @@ public class MainMenu implements Initializable {
     private FlowPane paneForChat = new FlowPane();
 
     public MainMenu() throws IOException {
-        this.socket = new Socket("localhost", 6060);
+        this.socket = new Socket("localhost", 7777);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();

@@ -85,23 +85,11 @@ public class SupporterPanel {
         hBox.setSpacing(5);
         hBox.setPrefWidth(170);
 
-        ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
-        credit.setFitHeight(20);
-        credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + AccountManager.getOnlineAccount().getCredit());
-        creditLabel.getStyleClass().add("labelUsername");
-        creditLabel.setStyle("-fx-text-fill: #00ff30");
-
-        HBox hBox1 = new HBox();
-        hBox1.getChildren().addAll(credit, creditLabel);
-        hBox.setSpacing(10);
-
-
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + AccountManager.getOnlineAccount().getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
         vBoxP.setSpacing(8);
-        vBoxP.getChildren().addAll(username, hBox1);
+        vBoxP.getChildren().addAll(username);
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, vBoxP);
