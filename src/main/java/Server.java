@@ -9,6 +9,9 @@ import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 public class Server {
@@ -16,17 +19,16 @@ public class Server {
     private Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private static HashMap<String, String> onlineAccounts = new HashMap<>();
     private static HashMap<String, DataOutputStream> accountsToSockets = new HashMap<>();
-    private static ArrayList<Auction> auctionGoods = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(8080);
+        ServerSocket serverSocket = new ServerSocket(6060);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("a client connected");
-            new ClientHandler(clientSocket, onlineAccounts, auctionGoods, accountsToSockets).start();
+            new ClientHandler(clientSocket, onlineAccounts, accountsToSockets).start();
         }
     }
 
@@ -43,10 +45,6 @@ public class Server {
         }
     }
 
-    public void addToAuctionGoods(Good good, Date start , Date end){
-        auctionGoods.add(new Auction(good , start , end));
-    }
-
 }
 
 class ClientHandler extends Thread {
@@ -56,18 +54,15 @@ class ClientHandler extends Thread {
     private HashMap<String, String> onlineAccounts;
     private HashMap<String, DataOutputStream> accountsToOutPuts;
     private Account account;
-    private Server server;
-    private ArrayList<Auction> auctionGoods;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts , ArrayList<Auction> auctionGoods,
-                         HashMap<String, DataOutputStream> accountsToSockets ) throws IOException {
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts,
+                         HashMap<String, DataOutputStream> accountsToSockets) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
         this.accountsToOutPuts = accountsToSockets;
-        this.auctionGoods = auctionGoods;
     }
 
     @Override
@@ -149,7 +144,7 @@ class ClientHandler extends Thread {
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
                     } else {
-                        server = new Server();
+                        Server server = new Server();
                         String token = server.generateTokenForUser(account.getUsername());
                         if (account instanceof Buyer) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
@@ -200,12 +195,16 @@ class ClientHandler extends Thread {
                     account = new Buyer("temp");
                 } else if (request.startsWith("setAuction_")) {
                     Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
-                    Date startDate = new Date();
-                    Date endDate = AdminPanel.getDateByString(info[2] + "_" + info[3]);
-                    server.addToAuctionGoods(good , startDate , endDate);
+                    LocalDate date
+                            = LocalDate.of(Integer.parseInt(info[4]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
+
+                    LocalTime time = LocalTime.of(Integer.parseInt(info[5]), Integer.parseInt(info[6]));
+                    LocalDateTime localdatetime
+                            = LocalDateTime.of(date, time);
+                    System.out.println(localdatetime);
+                    SellerManager.createAuction(good, localdatetime);
                 } else if (request.startsWith("getAllAuction")) {
-                    System.out.println(auctionGoods.size());
-                    dataOutputStream.writeUTF(new Gson().toJson(auctionGoods));
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAuctionGoods()));
                     dataOutputStream.flush();
                 } else if (request.startsWith("isOnlineAccount_")) {
                     String isOnline;
@@ -253,6 +252,12 @@ class ClientHandler extends Thread {
                     Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
                     supporter.getBuyersToMessages().get(info[4]).add(info[5]);
                     System.out.println("message: " + info[5] + "added to map of " + supporter.getUsername() + "and buyer: " + info[4]);
+                } else if (request.startsWith("getAuctionPrice_")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getAuctionWithId(Integer.parseInt(info[1])).getPrice());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setAuctionPrice_")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[2]));
+                    auction.setPrice(Long.parseLong(info[1]));
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -276,6 +281,7 @@ class ClientHandler extends Thread {
         for (String token : onlineAccounts.keySet()) {
             if (account.getUsername().equals(onlineAccounts.get(token))) {
                 onlineAccounts.remove(token);
+                break;
             }
         }
     }

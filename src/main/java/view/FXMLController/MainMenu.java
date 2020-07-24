@@ -105,7 +105,7 @@ public class MainMenu implements Initializable {
     private FlowPane paneForChat = new FlowPane();
 
     public MainMenu() throws IOException {
-        this.socket = new Socket("localhost", 8080);
+        this.socket = new Socket("localhost", 6060);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -584,8 +584,8 @@ public class MainMenu implements Initializable {
         scrollPaneForSelectChat.setLayoutY(5);
         scrollPaneForSelectChat.setLayoutX(5);
         paneForScroll.setStyle("-fx-background-color: white;-fx-border-radius: 10;-fx-border-width: 1;-fx-border-color: #dadada;-fx-background-radius: 10");
-        paneForScroll.setLayoutY(145);
-        paneForScroll.setLayoutX(1150);
+        paneForScroll.setLayoutY(148);
+        paneForScroll.setLayoutX(1175);
         paneForScroll.getChildren().add(scrollPaneForSelectChat);
         dataOutputStream.writeUTF("getOnlineSupporters");
         dataOutputStream.flush();
@@ -818,15 +818,15 @@ public class MainMenu implements Initializable {
     private void showAuction() throws IOException {
         auctionPane.getChildren().clear();
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPrefSize(650, 550);
+        scrollPane.setPrefSize(650, 538);
         scrollPane.setLayoutX(15);
-        scrollPane.setLayoutY(15);
+        scrollPane.setLayoutY(32);
         scrollPane.getStyleClass().add("scroll-barInD");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         FlowPane flowPane = new FlowPane();
-        flowPane.setPrefSize(650 , 550);
+        flowPane.setPrefSize(650, 550);
         scrollPane.setContent(flowPane);
 
         dataOutputStream.writeUTF("getAllAuctions");
@@ -859,52 +859,15 @@ public class MainMenu implements Initializable {
 
     private Button exitButtonPop() {
         Button exitButton = new Button();
-        exitButton.getStyleClass().add("btnExit");
-        exitButton.setLayoutY(5);
-        exitButton.setLayoutX(555);
+        exitButton.getStyleClass().add("btnExitPop");
+        exitButton.setLayoutY(15);
+        exitButton.setLayoutX(645);
         exitButton.setOnAction(event -> {
             popupWindow.close();
             fade(0.5, 10);
         });
         return exitButton;
     }
-
-    private static final Integer STARTTIME = 15;
-    private Timeline timeline;
-    private Label timerLabel = new Label();
-    private Integer timeSeconds = STARTTIME;
-
-
-//    private void timer(){
-//        timerLabel.textProperty().bind(timeSeconds.asString());
-//        timerLabel.setTextFill(Color.RED);
-//        timerLabel.setStyle("-fx-font-size: 4em;");
-//
-//        Button button = new Button();
-//        button.setText("Start Timer");
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//
-//            public void handle(ActionEvent event) {
-//                if (timeline != null) {
-//                    timeline.stop();
-//                }
-//                timeSeconds.set(STARTTIME);
-//                timeline = new Timeline();
-//                timeline.getKeyFrames().add(
-//                        new KeyFrame(Duration.seconds(STARTTIME+1),
-//                                new KeyValue(timeSeconds, 0)));
-//                timeline.playFromStart();
-//            }
-//        });
-//
-//        VBox vb = new VBox(20);             // gap between components is 20
-//        vb.setAlignment(Pos.CENTER);        // center the components within VBox
-//
-//        vb.getChildren().addAll(button, timerLabel);
-//        vb.setLayoutY(30);
-//        vb.setLayoutX(300);
-//        auctionPane.getChildren().add(vb);
-//    }
 
     private void handelAuction(Auction auction) {
         auctionPane.getChildren().clear();
@@ -934,12 +897,15 @@ public class MainMenu implements Initializable {
         Label name = new Label(auction.getGood().getName());
         name.setStyle("-fx-font-size: 16pt;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black");
 
-        Label currentPrice = new Label("$ CurrentPrice");
+        Label currentPrice = new Label();
         currentPrice.setStyle("-fx-text-fill: #0069ff;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15pt");
-        currentPrice.setPadding(new Insets(0,0,150,0));
+
+        Label time = new Label("end time: " + auction.getEndDate());
+        time.setStyle("-fx-text-fill: #3f3f3f;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 10pt");
+        time.setPadding(new Insets(0, 0, 130, 0));
 
         NumberField price = new NumberField();
-        price.setPrefSize(200 , 40);
+        price.setPrefSize(200, 40);
         price.setPromptText("Proposed price");
         price.setStyle("-fx-background-color: none;-fx-text-fill: black;-fx-border-width: 2;" +
                 "-fx-border-color: #0069ff;-fx-border-radius: 8;" +
@@ -949,20 +915,89 @@ public class MainMenu implements Initializable {
         Button suggest = new Button("Suggest");
         suggest.setPrefSize(200, 25);
         suggest.getStyleClass().add("suggestBtn");
-        suggest.setOnMouseClicked(event ->{
-            currentPrice.setText("$"+price.getText());
-            try {
-                dataOutputStream.writeUTF("setAuctionPrice_" + price.getText());
-                dataOutputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            price.clear();
+
+        try {
+            dataOutputStream.writeUTF("getAuctionPrice_" + auction.getId());
+            dataOutputStream.flush();
+            Type priceType = new TypeToken<String>() {
+            }.getType();
+            String priceString = new Gson().fromJson(dataInputStream.readUTF(), priceType);
+            currentPrice.setText("$" + priceString);
+            suggest.setOnMouseClicked(event -> {
+                currentPrice.setText("$" + price.getText());
+                try {
+                    dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
+                    dataOutputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                price.clear();
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        boxOfImageAndPrice.getChildren().addAll(imageView, name, currentPrice, time, price, suggest);
+
+        FlowPane paneForChatInAuction = new FlowPane();
+        paneForChatInAuction.setVgap(3);
+        paneForChatInAuction.setStyle("-fx-background-color: white;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
+        paneForChatInAuction.setPrefSize(360, 400);
+        paneForChatInAuction.setLayoutX(260);
+        paneForChatInAuction.setLayoutY(50);
+        paneForChatInAuction.setPadding(new Insets(15, 15, 15, 15));
+
+        HBox boxOfSupporter = new HBox();
+        boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
+        boxOfSupporter.setPrefWidth(360);
+
+        Label username = new Label("Group Chat...");
+        username.setPrefWidth(250);
+        username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
+        boxOfSupporter.getChildren().addAll(username);
+
+        ScrollPane scrollPaneChat = new ScrollPane();
+        scrollPaneChat.setPrefSize(360, 395);
+        paneForChatInAuction.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        scrollPaneChat.getStyleClass().add("scroll-barInDiscount");
+
+        HBox sendAndChatField = new HBox();
+        TextField chatField = new TextField();
+        chatField.getStyleClass().add("chatField");
+        chatField.setPromptText("Massage");
+        chatField.setPrefSize(280, 30);
+        Button send = new Button("Send");
+        send.getStyleClass().add("send");
+        VBox innerChat = new VBox(5);
+        send.setPrefSize(80, 30);
+
+        send.setOnAction(event -> {
+//            try {
+////                sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         });
+        chatField.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER) {
+//                try {
+//                    sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        });
+//        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+//        showOldMessages(buyer, innerChat, scrollPaneChat);
+        scrollPaneChat.setContent(innerChat);
+        sendAndChatField.getChildren().addAll(chatField, send);
 
-        boxOfImageAndPrice.getChildren().addAll(imageView , name , currentPrice, price, suggest);
+        paneForChatInAuction.setAlignment(Pos.CENTER);
+        paneForChatInAuction.getChildren().addAll(boxOfSupporter, rectangle(357, 1), scrollPaneChat, sendAndChatField);
 
-        auctionPane.getChildren().addAll(boxOfImageAndPrice , back);
+
+        auctionPane.getChildren().addAll(boxOfImageAndPrice,paneForChatInAuction, back);
 
 
     }

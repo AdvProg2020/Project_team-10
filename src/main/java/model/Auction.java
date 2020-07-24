@@ -1,27 +1,37 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Auction {
+    private int id;
     private Good good;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime endDate;
+    private long price;
 
-    public Auction(Good good, Date startDate, Date endDate) {
+    public Auction(int id, Good good, LocalDateTime endDate, long price) {
+        this.id = id;
         this.good = good;
-        this.startDate = startDate;
         this.endDate = endDate;
+        this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
     }
 
     public Good getGood() {
         return good;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 }

@@ -136,19 +136,19 @@
             onMouseClicked="#popupLogin">
     </Button>
 
-    <Button layoutX="1150" layoutY="105" fx:id="btnOnlineSupport" mnemonicParsing="false" styleClass="buttonSupport"
+    <Button layoutX="1175" layoutY="110" fx:id="btnOnlineSupport" mnemonicParsing="false" styleClass="buttonSupport"
             onMouseEntered="#popupOnlineSupport" text="▽ ONLINE SUPPORT">
 
     </Button>
 
 
-    <Button layoutX="1050" layoutY="105" fx:id="btnAuction" mnemonicParsing="false" styleClass="buttonSupport"
+    <Button layoutX="1075" layoutY="110" fx:id="btnAuction" mnemonicParsing="false" styleClass="buttonSupport"
             onMouseClicked="#popupAuctions" text="Auctions">
 
     </Button>
 
 
-    <Button fx:id="btnCartMenu" layoutX="1450" layoutY="105" mnemonicParsing="false" styleClass="buttonCart"
+    <Button fx:id="btnCartMenu" layoutX="1450" layoutY="108" mnemonicParsing="false" styleClass="buttonCart"
             onMouseClicked="#cartMenu">
 
     </Button>

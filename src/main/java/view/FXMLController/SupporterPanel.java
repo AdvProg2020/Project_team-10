@@ -376,6 +376,7 @@ public class SupporterPanel {
         for (String buyerUsername : supporter.getBuyersToMessages().keySet()) {
             dataOutputStream.writeUTF("get_buyer_" + buyerUsername);
             dataOutputStream.flush();
+            System.out.println(buyerUsername);
             Type buyerType = new TypeToken<Buyer>() {
             }.getType();
             Buyer buyer = new Gson().fromJson(dataInputStream.readUTF(), buyerType);

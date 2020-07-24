@@ -12,9 +12,18 @@ public class AccountManager {
     private static int lastSellerLogId;
     private static int lastDiscountCode;
     private static int lastOffId;
+    private static int lastAuctionId=0;
 
     // getters & setters
 
+
+    public static int getLastAuctionId() {
+        return lastAuctionId;
+    }
+
+    public static void setLastAuctionId(int lastAuctionId) {
+        AccountManager.lastAuctionId = lastAuctionId;
+    }
 
     public static void setLastRequestId(int lastRequestId) {
         AccountManager.lastRequestId = lastRequestId;
@@ -54,6 +63,10 @@ public class AccountManager {
 
     public static int getLastOffId() {
         return lastOffId;
+    }
+
+    public static void increaseLastAuctionId() {
+        lastRequestId += 1;
     }
 
     public static void increaseLastRequestId() {
