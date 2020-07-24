@@ -156,7 +156,6 @@ public class AdminPanel {
     }
 
     private void processEdit() throws IOException {
-//        AccountManager.editPersonalInfo(password.getText(), firstName.getText(), lastName.getText(), phoneNumber.getText(), email.getText());
         handelButtonOnMouseClick();
     }
 
@@ -416,7 +415,6 @@ public class AdminPanel {
         for (TextField textField : attributesTextField) {
             attributes.add(textField.getText());
         }
-//        AdminManager.addCategory(categoryName.getText(), attributes);
         dataOutputStream.writeUTF("create_category_" + categoryName.getText() + "_" + new Gson().toJson(attributes));
         dataOutputStream.flush();
 
@@ -476,7 +474,6 @@ public class AdminPanel {
         adminScrollPane.getStyleClass().add("scroll-bar");
         adminScrollPane.setLayoutX(330);
         adminScrollPane.setLayoutY(35);
-//        adminPaneScroll.;
         Account account = onlineAccount;
 
         switch (selectedButton.getText()) {
@@ -526,7 +523,7 @@ public class AdminPanel {
                 adminPane.getChildren().add(adminScrollPane);
                 break;
             case "Log out":
-                dataOutputStream.writeUTF("logout");
+                dataOutputStream.writeUTF("logout_");
                 dataOutputStream.flush();
                 onlineAccount = new Buyer("temp");
                 main.onlineAccount = this.onlineAccount;
@@ -916,14 +913,13 @@ public class AdminPanel {
 //        AdminManager.createDiscount(getDateByString(startDate), getDateByString(endDate), percent, maxAmount, number, selectedBuyers);
         popupWindow.close();
         fade(0.5, 10);
-        adminScrollPane.setContent(null);
         adminScrollPane.setContent(handelDiscounts());
 
     }
 
     public static Date getDateByString(String dateInput) {
         Calendar calendar = Calendar.getInstance();
-        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d) (\\d\\d):(\\d\\d)";
+        String regex = "(\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)_(\\d\\d):(\\d\\d)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(dateInput);
         int[] dateSplit = new int[5];
@@ -1077,25 +1073,25 @@ public class AdminPanel {
         hBoxTitle.getChildren().addAll(labelUser, rectangleTitle, labelEmail, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
-        dataOutputStream.writeUTF("getAllSeller");
+        dataOutputStream.writeUTF("getAllSellers");
         dataOutputStream.flush();
         Type allSellerType = new TypeToken<ArrayList<Seller>>() {
         }.getType();
         ArrayList<Account> sellers = new Gson().fromJson(dataInputStream.readUTF(), allSellerType);
 
-        dataOutputStream.writeUTF("getAllAdmin");
+        dataOutputStream.writeUTF("getAllAdmins");
         dataOutputStream.flush();
         Type allAdminType = new TypeToken<ArrayList<Admin>>() {
         }.getType();
         ArrayList<Account> admins = new Gson().fromJson(dataInputStream.readUTF(), allAdminType);
 
-        dataOutputStream.writeUTF("getAllBuyer");
+        dataOutputStream.writeUTF("getAllBuyers");
         dataOutputStream.flush();
         Type allBuyerType = new TypeToken<ArrayList<Buyer>>() {
         }.getType();
         ArrayList<Account> buyer = new Gson().fromJson(dataInputStream.readUTF(), allBuyerType);
 
-        dataOutputStream.writeUTF("getAllSupporter");
+        dataOutputStream.writeUTF("getAllSupporters");
         dataOutputStream.flush();
         Type allSupporterType = new TypeToken<ArrayList<Supporter>>() {
         }.getType();
@@ -1411,12 +1407,4 @@ public class AdminPanel {
     }
 
 
-//    private void loadDialog() {
-////        JFXDialogLayout jfxDialogLayout = new JFXDialogLayout();
-////        jfxDialogLayout.setHeading(new Text("Remove"));
-////        jfxDialogLayout.setBody(new Text("Is it safe to delete this user?"));
-//        JFXDialog jfxDialog = new JFXDialog(stackPane, new Label("holelsnvdsjvlsdjlsjdljvlds"), JFXDialog.DialogTransition.CENTER);
-//
-//        jfxDialog.show();
-//    }
 }

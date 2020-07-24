@@ -6,38 +6,49 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.*;
 import org.controlsfx.control.RangeSlider;
+import view.NumberField;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static javafx.scene.paint.Color.color;
+import static view.FXML.FXML.adminPopupURL;
 
 public class MainMenu implements Initializable {
     public Button btnLogin;
@@ -62,6 +73,7 @@ public class MainMenu implements Initializable {
     public Button btnOnlineSupport;
     public ScrollPane mainMenuScrollPane;
     public FlowPane flowPaneForBoxOfGoods;
+    public Button btnAuction;
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
@@ -92,9 +104,8 @@ public class MainMenu implements Initializable {
     private ScrollPane scrollPaneForSelectChat = new ScrollPane();
     private FlowPane paneForChat = new FlowPane();
 
-
     public MainMenu() throws IOException {
-        socket = new Socket("localhost", 8080);
+        this.socket = new Socket("localhost", 6060);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -135,7 +146,7 @@ public class MainMenu implements Initializable {
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
-        new Login(mainPane, btnLogin, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
+        new Login(mainPane, btnLogin, btnAuction, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(mouseEvent);
     }
 
     public FlowPane createPage(int pageIndex) {
@@ -146,7 +157,7 @@ public class MainMenu implements Initializable {
                 break;
             }
             VBox vBox = new VBox();
-            vBox.setPadding(new Insets(20,5,10,5));
+            vBox.setPadding(new Insets(20, 5, 10, 5));
             vBox.setPrefWidth(295);
             vBox.setPrefHeight(320);
             vBox.getStyleClass().add("vBoxInMainMenu");
@@ -216,8 +227,10 @@ public class MainMenu implements Initializable {
 
         if (onlineAccount instanceof Buyer && !onlineAccount.getUsername().equals("temp")) {
             btnOnlineSupport.setVisible(true);
+            btnAuction.setVisible(true);
         } else {
             btnOnlineSupport.setVisible(false);
+            btnAuction.setVisible(false);
         }
 
         rangeSlider.lowValueProperty().addListener(
@@ -340,7 +353,7 @@ public class MainMenu implements Initializable {
         pagi.setMaxPageIndicatorCount(3);
         Collections.sort(filteredGoods);
         pagi.setPageFactory(this::createPage);
-        flowPaneForBoxOfGoods.setPadding(new Insets(10,0,0,0));
+        flowPaneForBoxOfGoods.setPadding(new Insets(10, 0, 0, 0));
 
         //Speed For ScrollPane
         final double SPEED = 0.006;
@@ -447,7 +460,7 @@ public class MainMenu implements Initializable {
 
     public void cartMenu(MouseEvent mouseEvent) throws IOException {
         mainPane.getChildren().remove(Login.currentPane);
-        new CartMenu(mainPane, btnCartMenu, btnLogin, btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
+        new CartMenu(mainPane, btnCartMenu, btnLogin, btnAuction, btnOnlineSupport, main, mainMenu, socket, onlineAccount, token).changePane();
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) {
@@ -571,8 +584,8 @@ public class MainMenu implements Initializable {
         scrollPaneForSelectChat.setLayoutY(5);
         scrollPaneForSelectChat.setLayoutX(5);
         paneForScroll.setStyle("-fx-background-color: white;-fx-border-radius: 10;-fx-border-width: 1;-fx-border-color: #dadada;-fx-background-radius: 10");
-        paneForScroll.setLayoutY(145);
-        paneForScroll.setLayoutX(1150);
+        paneForScroll.setLayoutY(148);
+        paneForScroll.setLayoutX(1175);
         paneForScroll.getChildren().add(scrollPaneForSelectChat);
         dataOutputStream.writeUTF("getOnlineSupporters");
         dataOutputStream.flush();
@@ -619,6 +632,7 @@ public class MainMenu implements Initializable {
     }
 
     private void handelMouseClickChat(Supporter supporter) throws IOException {
+
         paneForChat.setVgap(3);
         paneForChat.setLayoutX(570);
         paneForChat.setLayoutY(200);
@@ -633,9 +647,14 @@ public class MainMenu implements Initializable {
         paneForChat.setPrefSize(340, 390);
         mainPane.getChildren().addAll(paneForChat);
 
-        Socket socket = new Socket("localhost", 9090);
-        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        dataOutputStream.writeUTF("get_supporter_" + supporter.getUsername());
+        dataOutputStream.flush();
+        Type supporterType = new TypeToken<Supporter>() {
+        }.getType();
+        supporter = new Gson().fromJson(dataInputStream.readUTF(), supporterType);
 
+        this.dataOutputStream.writeUTF("add_to_buyers_" + supporter.getUsername() + "_" + onlineAccount.getUsername());
+        this.dataOutputStream.flush();
 
         HBox boxOfSupporter = new HBox();
         boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
@@ -649,7 +668,7 @@ public class MainMenu implements Initializable {
         Label username = new Label(" " + supporter.getUsername());
         username.setPrefWidth(250);
         username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
-        boxOfSupporter.getChildren().addAll(circle, username, exitButton(dataOutputStream));
+        boxOfSupporter.getChildren().addAll(circle, username, exitButton());
 
         ScrollPane scrollPaneChat = new ScrollPane();
         scrollPaneChat.setPrefSize(320, 290);
@@ -665,9 +684,10 @@ public class MainMenu implements Initializable {
         send.getStyleClass().add("send");
         VBox innerChat = new VBox(5);
         send.setPrefSize(60, 30);
+        Supporter finalSupporter = supporter;
         send.setOnAction(event -> {
             try {
-                sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                sendMessage(scrollPaneChat, chatField, innerChat, finalSupporter.getUsername());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -675,7 +695,7 @@ public class MainMenu implements Initializable {
         chatField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    sendMessage(scrollPaneChat, chatField, innerChat, dataOutputStream);
+                    sendMessage(scrollPaneChat, chatField, innerChat, finalSupporter.getUsername());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -689,12 +709,15 @@ public class MainMenu implements Initializable {
         paneForChat.setAlignment(Pos.CENTER);
         paneForChat.getChildren().addAll(boxOfSupporter, rectangle(320, 2), scrollPaneChat, sendAndChatField);
 
-        new Receiver(socket, innerChat, scrollPaneChat, this).start();
+        new BuyerReceiver(dataInputStream, innerChat, scrollPaneChat, this).start();
+//        Platform.runLater(buyerReceiver);
     }
 
-    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, DataOutputStream dataOutputStream) throws IOException {
+    private void sendMessage(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, String supporterUsername) throws IOException {
         String message = chatField.getText();
-        dataOutputStream.writeUTF(message);
+        dataOutputStream.writeUTF("from_buyer_to_" + supporterUsername + "_" + message);
+        dataOutputStream.flush();
+        dataOutputStream.writeUTF("update_messages_of_" + supporterUsername + "_" + onlineAccount.getUsername() + "_" + message);
         dataOutputStream.flush();
         showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
         chatField.clear();
@@ -731,8 +754,8 @@ public class MainMenu implements Initializable {
         return newString.toString();
     }
 
-    private Button exitButton(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF("exit");
+    private Button exitButton() throws IOException {
+        dataOutputStream.writeUTF("disconnect_buyer");
         dataOutputStream.flush();
         Button exitButton = new Button();
         exitButton.getStyleClass().add("btnExitPop");
@@ -743,4 +766,239 @@ public class MainMenu implements Initializable {
         return exitButton;
     }
 
+    private AnchorPane auctionPane;
+    private Stage popupWindow;
+
+    private void fade(double fromValue, double toValue) {
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(600));
+        fade.setFromValue(fromValue);
+        fade.setToValue(toValue);
+        fade.setNode(mainPane);
+        fade.play();
+    }
+
+    public void popupAuctions(MouseEvent mouseEvent) throws IOException {
+        auctionPane = new AnchorPane();
+        auctionPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        popupWindow = new Stage();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+
+        URL url = Paths.get(adminPopupURL).toUri().toURL();
+        AnchorPane layout = FXMLLoader.load(url);
+        Scene scene1 = new Scene(layout);
+        popupWindow.setMaximized(true);
+
+        layout.setStyle("-fx-background-color: none;");
+        auctionPane.setStyle("-fx-background-color: #fbfffb;" + "-fx-background-radius: 30px;");
+        auctionPane.setPrefWidth(680);
+        auctionPane.setPrefHeight(580);
+
+        fade(10, 0.5);
+
+        layout.setLayoutX(360);
+        layout.setLayoutY(150);
+
+        layout.getChildren().add(auctionPane);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1500.0);
+        dropShadow.setHeight(1500);
+        dropShadow.setWidth(1500);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        layout.setEffect(dropShadow);
+
+        showAuction();
+
+        popupWindow.setScene(scene1);
+        popupWindow.initStyle(StageStyle.TRANSPARENT);
+        popupWindow.getScene().setFill(Color.TRANSPARENT);
+        popupWindow.showAndWait();
+    }
+
+    private void showAuction() throws IOException {
+        auctionPane.getChildren().clear();
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefSize(650, 538);
+        scrollPane.setLayoutX(15);
+        scrollPane.setLayoutY(32);
+        scrollPane.getStyleClass().add("scroll-barInD");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        FlowPane flowPane = new FlowPane();
+        flowPane.setPrefSize(650, 550);
+        scrollPane.setContent(flowPane);
+
+        dataOutputStream.writeUTF("getAllAuctions");
+        dataOutputStream.flush();
+        Type productsListType = new TypeToken<ArrayList<Auction>>() {
+        }.getType();
+        ArrayList<Auction> allAuctions = new Gson().fromJson(dataInputStream.readUTF(), productsListType);
+
+        for (Auction auction : allAuctions) {
+            VBox boxTextAndImage = new VBox(8);
+            boxTextAndImage.setAlignment(Pos.CENTER);
+            boxTextAndImage.setPadding(new Insets(8, 8, 8, 8));
+            boxTextAndImage.setStyle("-fx-border-color: #e1e1e1;-fx-border-width: 1");
+            ImageView imageView = new ImageView(new Image("file:" + auction.getGood().getImagePath()));
+            imageView.setFitWidth(195);
+            imageView.setFitHeight(195);
+            Label label = new Label(auction.getGood().getName());
+            label.setStyle("-fx-text-fill: black;-fx-font-size: 14pt;-fx-font-family: 'Franklin Gothic Medium Cond'");
+            Button button = new Button("Participate in the auction");
+            button.getStyleClass().add("auctionButton");
+            button.setPrefSize(195, 30);
+            button.setOnMouseClicked(event -> handelAuction(auction));
+
+            boxTextAndImage.getChildren().addAll(imageView, label, button);
+            flowPane.getChildren().add(boxTextAndImage);
+        }
+
+        auctionPane.getChildren().addAll(exitButtonPop(), scrollPane);
+    }
+
+    private Button exitButtonPop() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExitPop");
+        exitButton.setLayoutY(15);
+        exitButton.setLayoutX(645);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
+    }
+
+    private void handelAuction(Auction auction) {
+        auctionPane.getChildren().clear();
+        ImageView back = new ImageView();
+        back.setFitHeight(25);
+        back.setFitWidth(25);
+        back.setLayoutX(10);
+        back.setLayoutY(10);
+        back.getStyleClass().add("imageViewBack");
+        back.setOnMouseClicked(event -> {
+            try {
+                showAuction();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        VBox boxOfImageAndPrice = new VBox(5);
+        boxOfImageAndPrice.setLayoutX(35);
+        boxOfImageAndPrice.setLayoutY(50);
+        boxOfImageAndPrice.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView("file:" + auction.getGood().getImagePath());
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
+
+        Label name = new Label(auction.getGood().getName());
+        name.setStyle("-fx-font-size: 16pt;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-text-fill: black");
+
+        Label currentPrice = new Label();
+        currentPrice.setStyle("-fx-text-fill: #0069ff;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 15pt");
+
+        Label time = new Label("end time: " + auction.getEndDate());
+        time.setStyle("-fx-text-fill: #3f3f3f;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 10pt");
+        time.setPadding(new Insets(0, 0, 130, 0));
+
+        NumberField price = new NumberField();
+        price.setPrefSize(200, 40);
+        price.setPromptText("Proposed price");
+        price.setStyle("-fx-background-color: none;-fx-text-fill: black;-fx-border-width: 2;" +
+                "-fx-border-color: #0069ff;-fx-border-radius: 8;" +
+                "-fx-prompt-text-fill: #e6e6e6;-fx-font-family: sans-serif;-fx-font-weight: bold;-fx-font-size: 12pt");
+
+//        timer();
+        Button suggest = new Button("Suggest");
+        suggest.setPrefSize(200, 25);
+        suggest.getStyleClass().add("suggestBtn");
+
+        try {
+            dataOutputStream.writeUTF("getAuctionPrice_" + auction.getId());
+            dataOutputStream.flush();
+            Type priceType = new TypeToken<String>() {
+            }.getType();
+            String priceString = new Gson().fromJson(dataInputStream.readUTF(), priceType);
+            currentPrice.setText("$" + priceString);
+            suggest.setOnMouseClicked(event -> {
+                currentPrice.setText("$" + price.getText());
+                try {
+                    dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
+                    dataOutputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                price.clear();
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        boxOfImageAndPrice.getChildren().addAll(imageView, name, currentPrice, time, price, suggest);
+
+        FlowPane paneForChatInAuction = new FlowPane();
+        paneForChatInAuction.setVgap(3);
+        paneForChatInAuction.setStyle("-fx-background-color: white;-fx-border-width: 1;-fx-border-radius: 10;-fx-border-color: #eeeeee;");
+        paneForChatInAuction.setPrefSize(360, 400);
+        paneForChatInAuction.setLayoutX(260);
+        paneForChatInAuction.setLayoutY(50);
+        paneForChatInAuction.setPadding(new Insets(15, 15, 15, 15));
+
+        HBox boxOfSupporter = new HBox();
+        boxOfSupporter.setAlignment(Pos.CENTER_LEFT);
+        boxOfSupporter.setPrefWidth(360);
+
+        Label username = new Label("Group Chat...");
+        username.setPrefWidth(250);
+        username.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 17pt;-fx-text-fill: #1089FF");
+        boxOfSupporter.getChildren().addAll(username);
+
+        ScrollPane scrollPaneChat = new ScrollPane();
+        scrollPaneChat.setPrefSize(360, 395);
+        paneForChatInAuction.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        scrollPaneChat.getStyleClass().add("scroll-barInDiscount");
+
+        HBox sendAndChatField = new HBox();
+        TextField chatField = new TextField();
+        chatField.getStyleClass().add("chatField");
+        chatField.setPromptText("Massage");
+        chatField.setPrefSize(280, 30);
+        Button send = new Button("Send");
+        send.getStyleClass().add("send");
+        VBox innerChat = new VBox(5);
+        send.setPrefSize(80, 30);
+
+        send.setOnAction(event -> {
+//            try {
+////                sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        });
+        chatField.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER) {
+//                try {
+//                    sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        });
+//        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+//        showOldMessages(buyer, innerChat, scrollPaneChat);
+        scrollPaneChat.setContent(innerChat);
+        sendAndChatField.getChildren().addAll(chatField, send);
+
+        paneForChatInAuction.setAlignment(Pos.CENTER);
+        paneForChatInAuction.getChildren().addAll(boxOfSupporter, rectangle(357, 1), scrollPaneChat, sendAndChatField);
+
+
+        auctionPane.getChildren().addAll(boxOfImageAndPrice,paneForChatInAuction, back);
+
+
+    }
 }

@@ -14,6 +14,7 @@ public class AccountManager {
     private static int lastOffId;
     private static int lastAccountNumber;
     private static int lastReceiptId;
+    private static int lastAuctionId=0;
 
     // getters & setters
 
@@ -31,6 +32,14 @@ public class AccountManager {
 
     public static int getLastAccountNumber() {
         return lastAccountNumber;
+    }
+
+    public static int getLastAuctionId() {
+        return lastAuctionId;
+    }
+
+    public static void setLastAuctionId(int lastAuctionId) {
+        AccountManager.lastAuctionId = lastAuctionId;
     }
 
     public static void setLastRequestId(int lastRequestId) {
@@ -71,6 +80,10 @@ public class AccountManager {
 
     public static int getLastOffId() {
         return lastOffId;
+    }
+
+    public static void increaseLastAuctionId() {
+        lastRequestId += 1;
     }
 
     public static void increaseLastAccountNumber() {
@@ -157,7 +170,6 @@ public class AccountManager {
                 break;
             case "supporter":
                 //TODO
-                System.out.println("a supporter added");
                 Supporter supporter = new Supporter(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(supporter);
                 Shop.getShop().getAllSupporters().add(supporter);

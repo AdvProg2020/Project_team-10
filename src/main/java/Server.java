@@ -9,21 +9,26 @@ import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 public class Server {
     private SecureRandom secureRandom = new SecureRandom();
     private Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private static HashMap<String, String> onlineAccounts = new HashMap<>();
+    private static HashMap<String, DataOutputStream> accountsToSockets = new HashMap<>();
+
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(8080);
+        ServerSocket serverSocket = new ServerSocket(6060);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("a client connected");
-            new ClientHandler(clientSocket, onlineAccounts).start();
+            new ClientHandler(clientSocket, onlineAccounts, accountsToSockets).start();
         }
     }
 
@@ -47,14 +52,17 @@ class ClientHandler extends Thread {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private HashMap<String, String> onlineAccounts;
+    private HashMap<String, DataOutputStream> accountsToOutPuts;
     private Account account;
 
 
-    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts) throws IOException {
+    public ClientHandler(Socket socket, HashMap<String, String> onlineAccounts,
+                         HashMap<String, DataOutputStream> accountsToSockets) throws IOException {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         this.socket = socket;
         this.onlineAccounts = onlineAccounts;
+        this.accountsToOutPuts = accountsToSockets;
     }
 
     @Override
@@ -136,7 +144,8 @@ class ClientHandler extends Thread {
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
                     } else {
-                        String token = new Server().generateTokenForUser(account.getUsername());
+                        Server server = new Server();
+                        String token = server.generateTokenForUser(account.getUsername());
                         if (account instanceof Buyer) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
@@ -147,6 +156,7 @@ class ClientHandler extends Thread {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_admin_" + token);
                         }
                         onlineAccounts.put(token, account.getUsername());
+                        accountsToOutPuts.put(account.getUsername(), dataOutputStream);
                         this.account = account;
                     }
                     dataOutputStream.flush();
@@ -155,20 +165,19 @@ class ClientHandler extends Thread {
                     }.getType();
                     List<String> attributes = new Gson().fromJson(info[3], categoryAttribute);
                     AdminManager.addCategory(info[2], attributes);
-
                 } else if (request.startsWith("remove_category")) {
                     Category category = Shop.getShop().getCategoryByName(info[2]);
                     AdminManager.removeCategory(category);
-                } else if (request.startsWith("getAllSeller")) {
+                } else if (request.startsWith("getAllSellers")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSellers())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("getAllAdmin")) {
+                } else if (request.startsWith("getAllAdmins")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllAdmins())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("getAllBuyer")) {
+                } else if (request.startsWith("getAllBuyers")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllBuyers())));
                     dataOutputStream.flush();
-                } else if (request.startsWith("getAllSupporter")) {
+                } else if (request.startsWith("getAllSupporters")) {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporters())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("create_discount")) {
@@ -184,6 +193,19 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("logout")) {
                     offlineAccount();
                     account = new Buyer("temp");
+                } else if (request.startsWith("setAuction_")) {
+                    Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
+                    LocalDate date
+                            = LocalDate.of(Integer.parseInt(info[4]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
+
+                    LocalTime time = LocalTime.of(Integer.parseInt(info[5]), Integer.parseInt(info[6]));
+                    LocalDateTime localdatetime
+                            = LocalDateTime.of(date, time);
+                    System.out.println(localdatetime);
+                    SellerManager.createAuction(good, localdatetime);
+                } else if (request.startsWith("getAllAuction")) {
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAuctionGoods()));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("isOnlineAccount_")) {
                     String isOnline;
                     if (onlineAccounts.containsValue(info[1])) {
@@ -203,6 +225,39 @@ class ClientHandler extends Thread {
                     }
                     dataOutputStream.writeUTF(new Gson().toJson(onlineSupporters));
                     dataOutputStream.flush();
+                } else if (request.startsWith("get_supporter")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[2]));
+//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
+                    dataOutputStream.writeUTF(new Gson().toJson(supporter));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("get_buyer")) {
+                    Buyer buyer = ((Buyer) Shop.getShop().getAccountByUsername(info[2]));
+//                    System.out.println("json of supporter: " + new Gson().toJson(supporter));
+                    dataOutputStream.writeUTF(new Gson().toJson(buyer));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("add_to_buyers")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
+                    supporter.getBuyersToMessages().put(info[4], new ArrayList<>());
+                } else if (request.startsWith("from_buyer")) {
+                    System.out.println("from buyer to " + info[3] + " : " + info[4]);
+                    DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
+                    dataOutputStream.writeUTF(info[4]);
+                    dataOutputStream.flush();
+                } else if (request.startsWith("from_supporter")) {
+                    System.out.println("from supporter to " + info[3] + " : " + info[4]);
+                    DataOutputStream dataOutputStream = accountsToOutPuts.get(info[3]);
+                    dataOutputStream.writeUTF(info[4]);
+                    dataOutputStream.flush();
+                } else if (request.startsWith("update_messages_of_")) {
+                    Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
+                    supporter.getBuyersToMessages().get(info[4]).add(info[5]);
+                    System.out.println("message: " + info[5] + "added to map of " + supporter.getUsername() + "and buyer: " + info[4]);
+                } else if (request.startsWith("getAuctionPrice_")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getAuctionWithId(Integer.parseInt(info[1])).getPrice());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setAuctionPrice_")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[2]));
+                    auction.setPrice(Long.parseLong(info[1]));
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -226,6 +281,7 @@ class ClientHandler extends Thread {
         for (String token : onlineAccounts.keySet()) {
             if (account.getUsername().equals(onlineAccounts.get(token))) {
                 onlineAccounts.remove(token);
+                break;
             }
         }
     }

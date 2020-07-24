@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 import model.Good;
 import model.Seller;
 import model.Shop;
+import model.Supporter;
 import view.menus.MainMenu;
 import view.menus.Menu;
 
@@ -29,7 +30,6 @@ import static view.FXML.FXML.mainMenuURL;
 public class Client extends Application {
 
     public static void main(String[] args) {
-//        FileHandler.updateDatabase();
         launch(args);
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu mainMenu = new MainMenu();

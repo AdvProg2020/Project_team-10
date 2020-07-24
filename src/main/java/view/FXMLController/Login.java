@@ -74,8 +74,9 @@ public class Login {
     private String token;
     private final static List<String> fileNames = new ArrayList<>();
     public Button btnOnlineSupport;
+    public Button btnAuction;
 
-    public Login(AnchorPane mainPane, Button btnLogin, Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
+    public Login(AnchorPane mainPane, Button btnLogin, Button btnAuction , Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
         this.mainPane = mainPane;
         this.btnLogin = btnLogin;
@@ -87,6 +88,7 @@ public class Login {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
         this.btnOnlineSupport = btnSupport;
+        this.btnAuction = btnAuction;
     }
 
     public void popupLogin(MouseEvent mouseEvent) throws IOException {
@@ -402,6 +404,7 @@ public class Login {
             accountType = new TypeToken<Buyer>() {
             }.getType();
             btnOnlineSupport.setVisible(true);
+            btnAuction.setVisible(true);
         } else if (type.equals("seller")) {
             accountType = new TypeToken<Seller>() {
             }.getType();
@@ -567,12 +570,10 @@ public class Login {
         mainPane.getChildren().remove(popupUser);
         mainPane.getChildren().remove(currentPane);
         if (onlineAccount instanceof Admin) {
-            System.out.println("Admin");
             new AdminPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Buyer) {
-            new BuyerPanel(mainPane, main, mainMenu, user, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
+            new BuyerPanel(mainPane, main, mainMenu, user,btnAuction, btnOnlineSupport, btnLogin, socket, onlineAccount).changePane();
         } else if (onlineAccount instanceof Supporter) {
-            System.out.println("Supporter");
             new SupporterPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount).changePane();
         } else {
             new SellerPanel(mainPane, main, mainMenu, user, btnLogin, socket, onlineAccount, token).changePane();

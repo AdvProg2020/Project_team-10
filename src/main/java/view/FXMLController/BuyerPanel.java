@@ -59,9 +59,10 @@ public class BuyerPanel {
     private Socket socket;
     private Account onlineAccount;
     public Button btnOnlineSupport;
+    public Button btnAuction;
 
 
-    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
+    public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnAuction,  Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
         this.mainMenu = mainMenu;
         this.mainPane = mainPane;
@@ -74,6 +75,7 @@ public class BuyerPanel {
         this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         this.onlineAccount = onlineAccount;
         this.btnOnlineSupport = btnSupporter;
+        this.btnAuction = btnAuction;
         handelButtonOnMouseClick();
     }
 
@@ -180,6 +182,7 @@ public class BuyerPanel {
 
     private void handelButtonOnMouseClick() throws IOException {
         btnOnlineSupport.setVisible(true);
+        btnAuction.setVisible(true);
         buyerPane.getChildren().remove(buyerPaneScroll);
         buyerPaneScroll.setPrefSize(1150, 620);
         buyerPaneScroll.getStyleClass().add("scroll-bar");

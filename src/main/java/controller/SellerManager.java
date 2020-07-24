@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import model.requests.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,11 @@ public class SellerManager {
         }
         ((Seller) account).getOffs().remove(off);
         Shop.getShop().getAllOffs().remove(off);
+    }
+
+    public static void createAuction(Good good, LocalDateTime localdatetime){
+        Shop.getShop().getAuctionGoods().add(new Auction(AccountManager.getLastAuctionId() +1 ,
+                good , localdatetime , good.getPrice()));
     }
 
 

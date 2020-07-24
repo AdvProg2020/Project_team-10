@@ -14,7 +14,6 @@ public class AdminManager {
 
     //Admin
 
-
     public static void deleteAccount(Account account) {
         Shop.getShop().getAllAccounts().remove(account);
         if (account instanceof Buyer) {
