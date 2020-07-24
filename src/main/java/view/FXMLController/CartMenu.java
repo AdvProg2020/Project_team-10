@@ -37,6 +37,7 @@ import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static javafx.scene.paint.Color.WHITE;
@@ -92,6 +93,7 @@ public class CartMenu {
 
     public long totalPrice;
     public long finalPrice;
+    public JFXButton purchase;
 
     public void changePane() throws IOException {
         btnCartMenu.setVisible(false);
@@ -114,17 +116,13 @@ public class CartMenu {
 
         dataOutputStream.writeUTF("get_total_price_" + token);
         dataOutputStream.flush();
-        Type totalPriceType = new TypeToken<Long>() {
-        }.getType();
-        totalPrice = new Gson().fromJson(dataInputStream.readUTF(), totalPriceType);
+        totalPrice = Long.parseLong(dataInputStream.readUTF());
         Label totalPriceLabel = new Label("Total price: $" + totalPrice);
         totalPriceLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: #353535");
 
         dataOutputStream.writeUTF("get_final_price_" + token);
         dataOutputStream.flush();
-        Type finalPriceType = new TypeToken<Long>() {
-        }.getType();
-        finalPrice = new Gson().fromJson(dataInputStream.readUTF(), finalPriceType);
+        finalPrice = Long.parseLong(dataInputStream.readUTF());
         Label finaTotalPriceLabel = new Label("Total price: $" + finalPrice);
 //        Label finaTotalPrice = new Label("Total price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
         finaTotalPriceLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: green");
@@ -133,7 +131,7 @@ public class CartMenu {
 //        Label offPrice = new Label("Off price: $" + (BuyerManager.getTotalPrice() - BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart())));
         offPrice.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 18;-fx-text-fill: red");
 
-        JFXButton purchase = new JFXButton("Purchase");
+        purchase = new JFXButton("Purchase");
         if (totalPrice == 0) {
             purchase.setDisable(true);
         }
@@ -171,7 +169,13 @@ public class CartMenu {
         VBox products = new VBox();
         products.setSpacing(0);
 
-        for (Good good : ((Buyer) onlineAccount).getCart()) {
+        dataOutputStream.writeUTF("getGoodInCart");
+        dataOutputStream.flush();
+        Type goodInCartType = new TypeToken<ArrayList<Good>>() {
+        }.getType();
+        ArrayList<Good> goodInCart = new Gson().fromJson(dataInputStream.readUTF(), goodInCartType);
+
+        for (Good good : goodInCart) {
             ImageView goodImage = new ImageView(new Image("file:" + good.getImagePath()));
             goodImage.setFitWidth(150);
             goodImage.setFitHeight(150);
@@ -232,14 +236,30 @@ public class CartMenu {
         plus.setFitWidth(30);
         ImageView minus = new ImageView();
         plus.setOnMouseClicked(event -> {
+
             if (count[0] < good.getNumber()) {
+
+
                 minus.getStyleClass().remove("minesCart2");
                 minus.getStyleClass().add("minesCart");
                 count[0] += 1;
                 number.setText("" + count[0]);
-                good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
-                totalPriceLabel.setText("Total price : " + totalPrice);
-                finalTotalPriceLabel.setText("Final price price: $" + finalPrice);
+                try {
+                    dataOutputStream.writeUTF("putInMapGoodsInBuyerCart_" + count[0] + "_" + good.getId());
+                    dataOutputStream.flush();
+
+                    dataOutputStream.writeUTF("get_total_price_" + token);
+                    dataOutputStream.flush();
+                    totalPrice = Long.parseLong(dataInputStream.readUTF());
+                    dataOutputStream.writeUTF("get_final_price_" + token);
+                    dataOutputStream.flush();
+                    finalPrice = Long.parseLong(dataInputStream.readUTF());
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+//                good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
+                totalPriceLabel.setText("Total price: " + totalPrice);
+                finalTotalPriceLabel.setText("Final price: $" + finalPrice);
                 offPrice.setText("Off price: $" + (totalPrice - finalPrice));
             }
 
@@ -254,17 +274,45 @@ public class CartMenu {
         minus.setOnMouseClicked(event -> {
             count[0] -= 1;
             number.setText("" + count[0]);
-            good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
+            try {
+                dataOutputStream.writeUTF("putInMapGoodsInBuyerCart_" + count[0] + "_" + good.getId());
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+//            good.getGoodsInBuyerCart().put(onlineAccount.getUsername(), count[0]);
             if (count[0] == 1) {
                 minus.getStyleClass().add("minesCart2");
             }
             if (count[0] == 0) {
-                good.getGoodsInBuyerCart().remove(onlineAccount.getUsername());
-                products.getChildren().remove(productBox);
-                ((Buyer) onlineAccount).getCart().remove(good);
+                try {
+                    dataOutputStream.writeUTF("removeInMapGoodsInBuyerCart_" + good.getId());
+                    dataOutputStream.flush();
+                    dataOutputStream.writeUTF("removeInBuyerCart_" + good.getId());
+                    products.getChildren().remove(productBox);
+
+//                    ((Buyer) onlineAccount).getCart().remove(good);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+//                good.getGoodsInBuyerCart().remove(onlineAccount.getUsername());
+
             }
-            totalPriceLabel.setText("Total price : " + totalPrice);
-            finalTotalPriceLabel.setText("Final price price: $" + finalPrice);
+            try {
+                dataOutputStream.writeUTF("get_total_price_" + token);
+                dataOutputStream.flush();
+                totalPrice = Long.parseLong(dataInputStream.readUTF());
+                dataOutputStream.writeUTF("get_final_price_" + token);
+                dataOutputStream.flush();
+                finalPrice = Long.parseLong(dataInputStream.readUTF());
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            if (totalPrice == 0) {
+                purchase.setDisable(true);
+            }
+            totalPriceLabel.setText("Total price: " + totalPrice);
+            finalTotalPriceLabel.setText("Final price: $" + finalPrice);
 //            finalTotalPriceLabel.setText("Final price price: $" + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
             offPrice.setText("Off price: $" + (totalPrice - finalPrice));
         });

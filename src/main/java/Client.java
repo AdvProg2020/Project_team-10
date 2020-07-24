@@ -26,6 +26,7 @@ import static view.FXML.FXML.mainMenuURL;
 public class Client extends Application {
 
     public static void main(String[] args) {
+        System.out.println("svs");
         launch(args);
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu mainMenu = new MainMenu();

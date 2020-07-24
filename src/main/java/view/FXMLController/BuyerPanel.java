@@ -102,20 +102,34 @@ public class BuyerPanel {
         //credit
         ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
         credit.setFitHeight(20);
+        credit.setStyle("-fx-background-color: blue");
         credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + onlineAccount.getCredit());
+
+        Label creditLabel = new Label(" $" + onlineAccount.getCredit());
         creditLabel.getStyleClass().add("labelUsername");
-        creditLabel.setStyle("-fx-text-fill: #00ff30");
+        creditLabel.setStyle("-fx-text-fill: #00e429");
 
         HBox hBox1 = new HBox();
         hBox1.getChildren().addAll(credit, creditLabel);
         hBox.setSpacing(10);
 
+        Label increase = new Label(" ➕ Credit ");
+        increase.getStyleClass().add("creditStyle");
+        increase.setPadding(new Insets(5,5,5,5));
+        increase.setOnMouseClicked(event -> {
+            try {
+                dataOutputStream.writeUTF("runBankClient");
+                dataOutputStream.flush();
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+        });
+
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
-        vBoxP.setSpacing(8);
-        vBoxP.getChildren().addAll(username, hBox1);
+        vBoxP.setSpacing(5);
+        vBoxP.getChildren().addAll(username, hBox1 , increase);
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, vBoxP);

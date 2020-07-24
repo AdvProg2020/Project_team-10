@@ -328,8 +328,14 @@ public class GoodMenu {
         addToCart.setLayoutY(430);
         addToCart.setOnMouseClicked(event -> {
             addToCart.setDisable(true);
-            ((Buyer) onlineAccount).getCart().add(currentGood);
-            currentGood.getGoodsInBuyerCart().put(onlineAccount.getUsername(), 1);
+            try {
+                dataOutputStream.writeUTF("addToCart_" + currentGood.getId());
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            ((Buyer) onlineAccount).getCart().add(currentGood);
+//            currentGood.getGoodsInBuyerCart().put(onlineAccount.getUsername(), 1);
         });
 
         ImageView rate = new ImageView();

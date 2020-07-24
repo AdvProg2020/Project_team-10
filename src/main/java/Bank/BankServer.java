@@ -1,3 +1,5 @@
+package Bank;
+
 import controller.AccountManager;
 import controller.BankManager;
 import model.Account;
@@ -9,9 +11,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class BankServer {
 
     public static void main(String[] args) throws IOException {
 
-        ServerSocket serverSocket = new ServerSocket(9090);
+        ServerSocket serverSocket = new ServerSocket(8888);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -258,6 +257,7 @@ class BankClient {
         }
     }
 }
+
 
 class InputHandler extends Thread {
     private Socket socket;
