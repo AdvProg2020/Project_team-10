@@ -275,3 +275,12 @@
     -fx-image: url("../image/zoomHover.png");
     -fx-cursor: hand;
 }
+
+.video{
+    -fx-image: url("../image/video.png");
+}
+
+.video:hover{
+    -fx-image: url("../image/videoHover.png");
+    -fx-cursor: hand;
+}

@@ -432,3 +432,18 @@
     -fx-background-color: #cfcfcf;
     -fx-cursor: hand;
 }
+
+.creditStyle1{
+    -fx-font-family: sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 9;
+    -fx-text-fill: #3c3c3c;
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 5;
+}
+
+.creditStyle1:hover{
+    -fx-text-fill: #3c3c3c;
+    -fx-background-color: #cfcfcf;
+    -fx-cursor: hand;
+}
