@@ -295,12 +295,22 @@ class ClientHandler extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("pay")) {
-                   BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
+                    BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
                 } else if (request.startsWith("increase_credit")) {
-                   account.increaseCredit(Long.parseLong(info[2]));
+                    account.increaseCredit(Long.parseLong(info[2]));
                 } else if (request.startsWith("get_credit")) {
-                   dataOutputStream.writeUTF("" + account.getCredit());
-                   dataOutputStream.flush();
+                    dataOutputStream.writeUTF("" + account.getCredit());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getWage")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getWage());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setWage")) {
+                    Shop.getShop().setWage(Integer.parseInt(info[1]));
+                } else if (request.startsWith("getBalanced")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getBuyerAccountBalanced());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setBalanced")) {
+                    Shop.getShop().setBuyerAccountBalanced(Integer.parseInt(info[1]));
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

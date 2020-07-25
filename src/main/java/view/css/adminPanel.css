@@ -447,3 +447,15 @@
     -fx-background-color: #cfcfcf;
     -fx-cursor: hand;
 }
+.submitButtonInAdmin{
+    -fx-background-color: #0069ff;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+}
+
+.submitButtonInAdmin:hover{
+    -fx-background-color: #3893ff;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}

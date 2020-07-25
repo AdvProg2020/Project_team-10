@@ -18,11 +18,14 @@ public class Shop {
     private List<Comment> allComments = new ArrayList<>();
     private List<BankAccount> allBankAccounts = new ArrayList<>();
     private List<Receipt> allReceipts = new ArrayList<>();
+    private int wage = 5;
+    private long buyerAccountBalanced = 2;
 
 
     public List<BankAccount> getAllBankAccounts() {
         return allBankAccounts;
     }
+
     private List<Auction> auctionGoods = new ArrayList<>();
 
     private static Shop shop;
@@ -30,6 +33,22 @@ public class Shop {
     private Shop() {
         allAccounts.add(new Admin("javads", "Abdossamad", "Haghiri", "haghiri@gmail.com",
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
+    }
+
+    public long getBuyerAccountBalanced() {
+        return buyerAccountBalanced;
+    }
+
+    public void setBuyerAccountBalanced(long buyerAccountBalanced) {
+        this.buyerAccountBalanced = buyerAccountBalanced;
+    }
+
+    public int getWage() {
+        return wage;
+    }
+
+    public void setWage(int wage) {
+        this.wage = wage;
     }
 
     public List<Receipt> getAllReceipts() {

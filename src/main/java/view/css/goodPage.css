@@ -10,7 +10,8 @@
     -fx-background-radius: 10;
     -fx-background-color: #e9e9e9;
 }
-.availableLabel:hover{
+
+.availableLabel:hover {
     -fx-background-color: #f1f1f1;
 }
 
@@ -145,9 +146,11 @@
     -fx-background-color: #0084ff;
     -fx-pref-width: 400;
 }
+
 .jfx-tab-pane .tab-header-background {
     -fx-background-color: #0084ff;
 }
+
 .jfx-tab-pane .tab-selected-line {
     -fx-stroke: #75bc1b;
     -fx-stroke-width: 3pt;
@@ -155,17 +158,17 @@
 
 
 .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-    -fx-background-color :transparent;
-    -fx-border-color :transparent;
-    -fx-background-radius : 2.0em;
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 2.0em;
 }
 
-.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .increment-button,
 .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
 
 }
 
@@ -176,41 +179,41 @@
     -fx-background-radius: 2em;
 }
 
-.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .increment-button,
 .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
 
 }
 
 .scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.15em 0.0;
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0.0;
 }
 
 .scroll-bar:vertical .increment-arrow,
-.scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.15em;
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.15em;
 }
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color : #dddddd;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #dddddd;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color : #9e9e9e;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #9e9e9e;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
-.scroll-bar{
+.scroll-bar {
     -fx-background-color: transparent;
     -fx-background-radius: 2em;
     -fx-focus-color: transparent;
@@ -221,36 +224,37 @@
     -fx-background-color: transparent;
 }
 
-.rate{
+.rate {
     -fx-image: url("../image/rate.png");
 }
-.rate:hover{
+
+.rate:hover {
     -fx-image: url("../image/rateHover.png");
     -fx-cursor: hand;
 }
 
-.labelForDiscount{
+.labelForDiscount {
     -fx-font-family: "Franklin Gothic Medium Cond";
     -fx-font-size: 27;
     -fx-text-fill: #868686;
 }
 
-.hbox{
+.hbox {
     -fx-border-width: 1px;
     -fx-border-color: #e2e2e2;
 }
 
-.hbox:hover{
+.hbox:hover {
     -fx-background-color: #f5f5f5;
 }
 
-.labelForComment{
+.labelForComment {
     -fx-font-family: "Franklin Gothic Medium Cond";
     -fx-font-size: 15;
     -fx-text-fill: #343434;
 }
 
-.buttonComment{
+.buttonComment {
     -fx-background-color: #f7f7f7;
     -fx-text-fill: #00ff00;
     -fx-font-family: 'Franklin Gothic Medium Cond';
@@ -259,7 +263,7 @@
     -fx-border-color: #F7F7F7;
 }
 
-.buttonComment:hover{
+.buttonComment:hover {
     -fx-background-color: #fcfcfc;
     -fx-text-fill: #00ff00;
     -fx-font-family: 'Franklin Gothic Medium Cond';
@@ -267,20 +271,21 @@
     -fx-border-color: #f7f7f7;
     -fx-cursor: hand;
 }
-.zoom{
+
+.zoom {
     -fx-image: url("../image/zoom.png");
 }
 
-.zoom:hover{
+.zoom:hover {
     -fx-image: url("../image/zoomHover.png");
     -fx-cursor: hand;
 }
 
-.video{
+.video {
     -fx-image: url("../image/video.png");
 }
 
-.video:hover{
+.video:hover {
     -fx-image: url("../image/videoHover.png");
     -fx-cursor: hand;
 }
