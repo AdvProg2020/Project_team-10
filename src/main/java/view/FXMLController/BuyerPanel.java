@@ -211,7 +211,12 @@ public class BuyerPanel {
         buyerPaneScroll.getStyleClass().add("scroll-bar");
         buyerPaneScroll.setLayoutX(330);
         buyerPaneScroll.setLayoutY(35);
-        Account account = onlineAccount;
+
+        dataOutputStream.writeUTF("get_buyer_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type buyerType = new TypeToken<Buyer>() {
+        }.getType();
+        onlineAccount = new Gson().<Buyer>fromJson(dataInputStream.readUTF(), buyerType);
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -235,10 +240,10 @@ public class BuyerPanel {
                 editProfile.setGraphic(edit);
                 hyperLink.getChildren().add(editProfile);
 
-                flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
-                        createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
-                        createItemOfProfile("Phone number:", account.getPhoneNumber()),
-                        createItemOfProfile("Email:", account.getEmail()),
+                flowPane.getChildren().addAll(createItemOfProfile("Username:", onlineAccount.getUsername()),
+                        createItemOfProfile("Full name:", onlineAccount.getFirstName() + " " + onlineAccount.getLastName()),
+                        createItemOfProfile("Phone number:", onlineAccount.getPhoneNumber()),
+                        createItemOfProfile("Email:", onlineAccount.getEmail()),
                         hyperLink);
                 buyerPaneScroll.setContent(flowPane);
                 buyerPane.getChildren().add(buyerPaneScroll);
@@ -289,7 +294,7 @@ public class BuyerPanel {
             numberField.setPrefSize(350, 40);
             numberField.setText(onlineAccount.getPhoneNumber());
             label.setText(" Phone number: ");
-            phoneNumber = field;
+            phoneNumber = numberField;
             field = numberField;
         } else if (name.equals("password")) {
             PasswordField passwordField = new PasswordField();

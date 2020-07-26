@@ -5,34 +5,14 @@ import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Good;
-import model.Seller;
-import model.Shop;
-import model.Supporter;
-import view.menus.MainMenu;
-import view.menus.Menu;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import static javafx.scene.media.MediaPlayer.INDEFINITE;
 import static view.FXML.FXML.mainMenuURL;
 
 public class Client extends Application {
 
     public static void main(String[] args) {
-        System.out.println("svs");
         launch(args);
-//        Scanner scanner = new Scanner(System.in);
-//        MainMenu mainMenu = new MainMenu();
-//        Menu.setScanner(scanner);
-//        mainMenu.show();
-//        mainMenu.execute();
     }
 
     @Override

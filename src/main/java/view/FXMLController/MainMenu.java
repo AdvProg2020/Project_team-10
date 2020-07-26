@@ -837,7 +837,9 @@ public class MainMenu implements Initializable {
         dataOutputStream.flush();
         Type auctionsListType = new TypeToken<ArrayList<Auction>>() {
         }.getType();
-        ArrayList<Auction> allAuctions = new Gson().fromJson(dataInputStream.readUTF(), auctionsListType);
+        String json = dataInputStream.readUTF();
+        System.out.println("json = " + json);
+        ArrayList<Auction> allAuctions = new Gson().fromJson(json, auctionsListType);
 
         for (Auction auction : allAuctions) {
             VBox boxTextAndImage = new VBox(8);
@@ -852,7 +854,13 @@ public class MainMenu implements Initializable {
             Button button = new Button("Participate in the auction");
             button.getStyleClass().add("auctionButton");
             button.setPrefSize(195, 30);
-            button.setOnMouseClicked(event -> handelAuction(auction));
+            button.setOnMouseClicked(event -> {
+                try {
+                    handelAuction(auction);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             boxTextAndImage.getChildren().addAll(imageView, label, button);
             flowPane.getChildren().add(boxTextAndImage);
         }
@@ -872,7 +880,9 @@ public class MainMenu implements Initializable {
         return exitButton;
     }
 
-    private void handelAuction(Auction auction) {
+    private void handelAuction(Auction auction) throws IOException {
+        dataOutputStream.writeUTF("add_to_auction_" + auction.getId());
+        dataOutputStream.flush();
         auctionPane.getChildren().clear();
         ImageView back = new ImageView();
         back.setFitHeight(25);
@@ -882,6 +892,8 @@ public class MainMenu implements Initializable {
         back.getStyleClass().add("imageViewBack");
         back.setOnMouseClicked(event -> {
             try {
+                dataOutputStream.writeUTF("disconnect_from_auction_" + auction.getId());
+                dataOutputStream.flush();
                 showAuction();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -979,21 +991,23 @@ public class MainMenu implements Initializable {
         VBox innerChat = new VBox(5);
         send.setPrefSize(80, 30);
 
+        new GroupChatReceiver(dataInputStream, innerChat, scrollPaneChat, main).start();
+
         send.setOnAction(event -> {
-//            try {
-////                sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                sendMessageInGroupChat(scrollPaneChat, chatField, innerChat, auction.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         chatField.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.ENTER) {
-//                try {
-//                    sendMessage(scrollPaneChat, chatField, innerChat, buyer.getUsername());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    sendMessageInGroupChat(scrollPaneChat, chatField, innerChat, auction.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 //        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
 //        showOldMessages(buyer, innerChat, scrollPaneChat);
@@ -1008,4 +1022,14 @@ public class MainMenu implements Initializable {
 
 
     }
+
+    private void sendMessageInGroupChat(ScrollPane scrollPaneChat, TextField chatField, VBox innerChat, int auctionId) throws IOException {
+        String message = chatField.getText();
+        dataOutputStream.writeUTF("send_" + message + "_for_auction_" + auctionId);
+        dataOutputStream.flush();
+        showMessage(innerChat, message, "-fx-background-color: #efefef;-fx-text-fill: black;-fx-background-radius: 5;");
+        chatField.clear();
+        scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+    }
+
 }

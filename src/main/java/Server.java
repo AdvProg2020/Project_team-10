@@ -234,6 +234,14 @@ class ClientHandler extends Thread {
                     Buyer buyer = ((Buyer) Shop.getShop().getAccountByUsername(info[2]));
                     dataOutputStream.writeUTF(new Gson().toJson(buyer));
                     dataOutputStream.flush();
+                } else if (request.startsWith("get_admin")) {
+                    Admin admin = ((Admin) Shop.getShop().getAccountByUsername(info[2]));
+                    dataOutputStream.writeUTF(new Gson().toJson(admin));
+                    dataOutputStream.flush();
+                } else if (request.startsWith("get_seller")) {
+                    Seller seller = ((Seller) Shop.getShop().getAccountByUsername(info[2]));
+                    dataOutputStream.writeUTF(new Gson().toJson(seller));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("add_to_buyers")) {
                     Supporter supporter = ((Supporter) Shop.getShop().getAccountByUsername(info[3]));
                     supporter.getBuyersToMessages().put(info[4], new ArrayList<>());
@@ -295,12 +303,29 @@ class ClientHandler extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("pay")) {
-                   BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
+                    BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
                 } else if (request.startsWith("increase_credit")) {
-                   account.increaseCredit(Long.parseLong(info[2]));
+                    account.increaseCredit(Long.parseLong(info[2]));
                 } else if (request.startsWith("get_credit")) {
-                   dataOutputStream.writeUTF("" + account.getCredit());
-                   dataOutputStream.flush();
+                    dataOutputStream.writeUTF("" + account.getCredit());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("add_to_auction")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[3]));
+                    auction.getBuyersInAuction().add(account.getUsername());
+                } else if (request.startsWith("send_")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[4]));
+                    for (String buyerUsername : auction.getBuyersInAuction()) {
+                        if (!buyerUsername.equals(account.getUsername())) {
+                            DataOutputStream dataOutputStream = accountsToOutPuts.get(buyerUsername);
+                            dataOutputStream.writeUTF(account.getUsername() + "_" + info[1]);
+                            dataOutputStream.flush();
+                        }
+                    }
+                } else if (request.startsWith("disconnect_from_auction_")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[3]));
+                    auction.getBuyersInAuction().remove(account.getUsername());
+                    dataOutputStream.writeUTF("disconnect_auction");
+                    dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

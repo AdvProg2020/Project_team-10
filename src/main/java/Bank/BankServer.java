@@ -63,8 +63,7 @@ class ClientHandlerForBank extends Thread {
     public void run() {
         try {
             while (true) {
-                String request = dataInputStream.readUTF();
-                request.trim();
+                String request = dataInputStream.readUTF().trim();
                 String[] info = request.split("\\s");
                 if (request.startsWith("create_account")) {
                     if (BankManager.canRegister(info[3], info[4], info[5]).equals("true")) {

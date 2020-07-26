@@ -478,7 +478,12 @@ public class AdminPanel {
         adminScrollPane.getStyleClass().add("scroll-bar");
         adminScrollPane.setLayoutX(330);
         adminScrollPane.setLayoutY(35);
-        Account account = onlineAccount;
+
+        dataOutputStream.writeUTF("get_admin_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type adminType = new TypeToken<Admin>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), adminType);
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -502,10 +507,10 @@ public class AdminPanel {
 
                 flowPane.setPadding(new Insets(50, 0, 10, 70));
                 flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
-                flowPane.getChildren().addAll(createItemOfProfile("Username:", account.getUsername()),
-                        createItemOfProfile("Full name:", account.getFirstName() + " " + account.getLastName()),
-                        createItemOfProfile("Phone number:", account.getPhoneNumber()),
-                        createItemOfProfile("Email:", account.getEmail()), hyperLink);
+                flowPane.getChildren().addAll(createItemOfProfile("Username:", onlineAccount.getUsername()),
+                        createItemOfProfile("Full name:", onlineAccount.getFirstName() + " " + onlineAccount.getLastName()),
+                        createItemOfProfile("Phone number:", onlineAccount.getPhoneNumber()),
+                        createItemOfProfile("Email:", onlineAccount.getEmail()), hyperLink);
                 adminScrollPane.setContent(flowPane);
                 adminPane.getChildren().add(adminScrollPane);
                 adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -1112,7 +1117,7 @@ public class AdminPanel {
             hBox.setPadding(new Insets(0, 12, 0, 12));
             hBox.getStyleClass().add("hbox");
             hBox.setPrefHeight(60);
-            Label usernameLabel = new Label(" "+account.getUsername());
+            Label usernameLabel = new Label(" " + account.getUsername());
             usernameLabel.setGraphic(typeOfAccount(account));
             usernameLabel.setPrefWidth(150);
             usernameLabel.getStyleClass().add("labelUsernameInProfile");
@@ -1129,10 +1134,10 @@ public class AdminPanel {
             Type isOnlineType = new TypeToken<String>() {
             }.getType();
             String isOnline = new Gson().fromJson(dataInputStream.readUTF(), isOnlineType);
-            if (isOnline.equals("true")){
+            if (isOnline.equals("true")) {
                 onAndOffLine.setStyle("-fx-text-fill: #2fa3ff;-fx-font-size: 12pt;-fx-font-family: sans-serif");
                 onAndOffLine.setText("Online ");
-            }else {
+            } else {
                 onAndOffLine.setStyle("-fx-text-fill: #cccccc;-fx-font-size: 12pt;-fx-font-family: sans-serif");
                 onAndOffLine.setText("Offline ");
             }
@@ -1142,7 +1147,7 @@ public class AdminPanel {
             deleteAccountImage.setFitWidth(31);
             deleteAccountImage.setFitHeight(25);
 
-            hBox.getChildren().addAll(usernameLabel, emailLabel,onAndOffLine, deleteAccountImage);
+            hBox.getChildren().addAll(usernameLabel, emailLabel, onAndOffLine, deleteAccountImage);
             flowPane.getChildren().add(hBox);
             deleteAccountImage.setOnMouseClicked(e -> {
                 try {

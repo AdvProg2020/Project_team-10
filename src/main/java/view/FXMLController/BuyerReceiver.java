@@ -1,7 +1,6 @@
 package view.FXMLController;
 
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +23,7 @@ public class BuyerReceiver extends Thread {
 
     @Override
     public void run() {
-        String answer = "";
+        String answer;
         try {
             while (!(answer = dataInputStream.readUTF()).equals("disconnect_buyer")) {
                 System.out.println("from supporter: " + answer);
@@ -53,7 +52,7 @@ class SupporterReceiver extends Thread {
 
     @Override
     public void run() {
-        String answer = "";
+        String answer;
         try {
             while (!(answer = dataInputStream.readUTF()).equals("disconnect_supporter")) {
                 System.out.println("Waiting for message from buyer...");
@@ -74,4 +73,36 @@ class SupporterReceiver extends Thread {
     public void setBuyerToChatPane(Map<String, FlowPane> buyerToChatPane) {
         this.buyerToChatPane = buyerToChatPane;
     }
+}
+
+class GroupChatReceiver extends Thread {
+    private DataInputStream dataInputStream;
+    private VBox innerChat;
+    private ScrollPane scrollPaneChat;
+    private MainMenu main;
+
+    public GroupChatReceiver(DataInputStream dataInputStream, VBox innerChat, ScrollPane scrollPaneChat, MainMenu main) {
+        this.dataInputStream = dataInputStream;
+        this.innerChat = innerChat;
+        this.scrollPaneChat = scrollPaneChat;
+        this.main = main;
+    }
+
+    @Override
+    public void run() {
+        String answer;
+        try {
+            while (!(answer = dataInputStream.readUTF()).equals("disconnect_auction")) {
+                String message = answer.split("_")[0] + " : " + answer.split("_")[1];
+                System.out.println("97-  " + message);
+                Platform.runLater(() -> main.showMessage(innerChat, message, "-fx-background-color: #b9ecff;-fx-text-fill: black;-fx-background-radius: 5;"));
+                scrollPaneChat.setVvalue(scrollPaneChat.getVmax());
+                System.out.println("show done!");
+            }
+            System.out.println("the buyer disconnected from the auction");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

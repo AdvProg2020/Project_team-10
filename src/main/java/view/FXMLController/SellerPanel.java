@@ -204,7 +204,6 @@ public class SellerPanel {
         dataOutputStream.writeUTF("edit_profile_" + password.getText() + "_" + firstName.getText() + "_" +
                 lastName.getText() + "_" + phoneNumber.getText() + "_" + email.getText() + "_" + token);
         dataOutputStream.flush();
-
         handelButtonOnMouseClick();
     }
 
@@ -315,7 +314,12 @@ public class SellerPanel {
         sellerScrollPane.getStyleClass().add("scroll-bar");
         sellerScrollPane.setLayoutX(330);
         sellerScrollPane.setLayoutY(35);
-        Seller currentAccount = ((Seller) onlineAccount);
+
+        dataOutputStream.writeUTF("get_seller_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type sellerType = new TypeToken<Seller>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), sellerType);
 
         switch (selectedButton.getText()) {
             case "Profile":
@@ -339,11 +343,11 @@ public class SellerPanel {
 
                 flowPane.setPadding(new Insets(50, 0, 10, 70));
                 flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
-                flowPane.getChildren().addAll(createItemOfProfile("Username:", currentAccount.getUsername()),
-                        createItemOfProfile("Full name:", currentAccount.getFirstName() + " " + currentAccount.getLastName()),
-                        createItemOfProfile("Phone number:", currentAccount.getPhoneNumber()),
-                        createItemOfProfile("Email:", currentAccount.getEmail()),
-                        createCompanyOfProfile(currentAccount.getCompany()), hyperLink);
+                flowPane.getChildren().addAll(createItemOfProfile("Username:", onlineAccount.getUsername()),
+                        createItemOfProfile("Full name:", onlineAccount.getFirstName() + " " + onlineAccount.getLastName()),
+                        createItemOfProfile("Phone number:", onlineAccount.getPhoneNumber()),
+                        createItemOfProfile("Email:", onlineAccount.getEmail()),
+                        createCompanyOfProfile(((Seller) onlineAccount).getCompany()), hyperLink);
                 sellerScrollPane.setContent(flowPane);
                 sellerPane.getChildren().add(sellerScrollPane);
                 sellerScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

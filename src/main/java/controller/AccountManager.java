@@ -14,7 +14,7 @@ public class AccountManager {
     private static int lastOffId;
     private static int lastAccountNumber;
     private static int lastReceiptId;
-    private static int lastAuctionId=0;
+    private static int lastAuctionId;
 
     // getters & setters
 
@@ -83,7 +83,7 @@ public class AccountManager {
     }
 
     public static void increaseLastAuctionId() {
-        lastRequestId += 1;
+        lastAuctionId += 1;
     }
 
     public static void increaseLastAccountNumber() {
