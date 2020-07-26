@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -226,23 +227,11 @@ public class AdminPanel {
         hBox.setSpacing(5);
         hBox.setPrefWidth(170);
 
-        ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
-        credit.setFitHeight(20);
-        credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + onlineAccount.getCredit());
-        creditLabel.getStyleClass().add("labelUsername");
-        creditLabel.setStyle("-fx-text-fill: #00ff30");
-
-        HBox hBox1 = new HBox();
-        hBox1.getChildren().addAll(credit, creditLabel);
-        hBox.setSpacing(10);
-
-
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
         vBoxP.setSpacing(8);
-        vBoxP.getChildren().addAll(username, hBox1);
+        vBoxP.getChildren().addAll(username);
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, vBoxP);
@@ -258,9 +247,9 @@ public class AdminPanel {
         vBox.getChildren().addAll(hBox, rectangleTop, createButton("Profile", "src/main/java/view/image/AdminPanel/userAdmin"),
                 createButton("Manage users", "src/main/java/view/image/AdminPanel/users"),
                 createButton("Manage products", "src/main/java/view/image/AdminPanel/product"),
-                createButton("Manage requests", "src/main/java/view/image/AdminPanel/request"),
                 createButton("Discounts", "src/main/java/view/image/AdminPanel/discount"),
                 createButton("Category", "src/main/java/view/image/AdminPanel/category"),
+                createButton("Store account", "src/main/java/view/image/AdminPanel/shop1"),
                 rectangleDown,
                 createButton("Log out", "src/main/java/view/image/AdminPanel/logout"));
         vBox.setStyle("-fx-background-color: none;");
@@ -527,6 +516,10 @@ public class AdminPanel {
                 adminScrollPane.setContent(handelDiscounts());
                 adminPane.getChildren().add(adminScrollPane);
                 break;
+            case "Store account":
+//                adminScrollPane.setContent();
+                adminPane.getChildren().add(handelStore());
+                break;
             case "Category":
                 adminScrollPane.setContent(handelCategory());
                 adminPane.getChildren().add(adminScrollPane);
@@ -542,6 +535,83 @@ public class AdminPanel {
                 break;
         }
         adminScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private Node handelStore() throws IOException {
+        FlowPane flowPane = new FlowPane(35 ,35);
+        flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
+        flowPane.setLayoutY(35);
+        flowPane.setLayoutX(330);
+        flowPane.setPrefWidth(1150);
+        flowPane.setPrefHeight(620);
+        flowPane.setPadding(new Insets(40, 0, 40, 40));
+        flowPane.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10");
+
+        VBox wageAndPrice = new VBox(5);
+        wageAndPrice.setPadding(new Insets(25, 40, 20, 40));
+        wageAndPrice.setPrefSize(300, 550);
+        wageAndPrice.setStyle("-fx-background-color: #ffffff;-fx-background-radius: 10;" +
+                "-fx-border-radius: 10;-fx-border-width: 1;-fx-border-color: #e7e7e7");
+
+        String filedStyle = "-fx-border-width: 2;-fx-border-color: #0069ff;-fx-border-radius: 4;;-fx-font-size: 13pt;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-weight: bold;";
+        String labelStyle = "-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12pt;-fx-text-fill: #0069ff;";
+
+        Label wage = new Label("Wage:");
+        wage.setStyle(labelStyle);
+
+        dataOutputStream.writeUTF("getWage");
+        dataOutputStream.flush();
+        NumberField wageFiled = new NumberField();
+        wageFiled.setPrefSize(220, 35);
+        wageFiled.setText(dataInputStream.readUTF());
+        wageFiled.setStyle(filedStyle);
+
+        Label buyerAccountBalanced = new Label("Buyer account balance:");
+        buyerAccountBalanced.setPadding(new Insets(10,0,0,0));
+        buyerAccountBalanced.setStyle(labelStyle);
+
+        dataOutputStream.writeUTF("getBalanced");
+        dataOutputStream.flush();
+        NumberField buyerAccountBalancedField = new NumberField();
+        buyerAccountBalancedField.setStyle(filedStyle);
+        buyerAccountBalancedField.setPrefSize(220, 35);
+        buyerAccountBalancedField.setText(dataInputStream.readUTF());
+
+        HBox box = new HBox();
+        box.setPadding(new Insets(300,0,0,0));
+        Button submit = new Button("Submit");
+        submit.setPadding(new Insets(5,5,5,5));
+        submit.setPrefSize(220,40);
+        submit.getStyleClass().add("submitButtonInAdmin");
+        submit.setOnMouseClicked(event -> {
+            try {
+                dataOutputStream.writeUTF("setWage_" + wageFiled.getText());
+                dataOutputStream.flush();
+                dataOutputStream.writeUTF("setBalanced_" + buyerAccountBalancedField.getText());
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        box.getChildren().add(submit);
+        wageAndPrice.getChildren().addAll(wage, wageFiled, buyerAccountBalanced, buyerAccountBalancedField,box);
+
+        ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/shop.png"));
+        imageView.setFitHeight(400);
+        imageView.setFitWidth(400);
+
+        Label shopPrice = new Label("$ Shop Price");
+        shopPrice.setStyle("-fx-text-fill: #00e429;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-weight: bold;-fx-font-size: 25pt");
+
+        VBox priceAndImage = new VBox(10);
+        priceAndImage.setPrefSize(700 , 550);
+        priceAndImage.setAlignment(Pos.CENTER);
+
+        priceAndImage.getChildren().addAll(imageView , shopPrice);
+
+
+        flowPane.getChildren().addAll(wageAndPrice , priceAndImage);
+        return flowPane;
     }
 
     private FlowPane handelCategory() throws IOException {

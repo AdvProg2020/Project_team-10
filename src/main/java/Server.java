@@ -326,6 +326,18 @@ class ClientHandler extends Thread {
                     auction.getBuyersInAuction().remove(account.getUsername());
                     dataOutputStream.writeUTF("disconnect_auction");
                     dataOutputStream.flush();
+                    dataOutputStream.writeUTF("" + account.getCredit());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("getWage")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getWage());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setWage")) {
+                    Shop.getShop().setWage(Integer.parseInt(info[1]));
+                } else if (request.startsWith("getBalanced")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getBuyerAccountBalanced());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("setBalanced")) {
+                    Shop.getShop().setBuyerAccountBalanced(Integer.parseInt(info[1]));
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

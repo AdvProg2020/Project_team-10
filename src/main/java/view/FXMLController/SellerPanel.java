@@ -222,26 +222,54 @@ public class SellerPanel {
 
         hBox.setPadding(new Insets(0, 0, 5, 9));
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setSpacing(5);
+        hBox.setSpacing(4);
         hBox.setPrefWidth(170);
 
         ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
         credit.setFitHeight(20);
         credit.setFitWidth(25);
-        Label creditLabel = new Label("$" + onlineAccount.getCredit());
+        Label creditLabel = new Label(" $" + onlineAccount.getCredit());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00ff30");
 
         HBox hBox1 = new HBox();
         hBox1.getChildren().addAll(credit, creditLabel);
-        hBox.setSpacing(10);
 
+        VBox boxIncreaseAndWith = new VBox(2);
+
+        Label increase = new Label("➕ Credit");
+        increase.getStyleClass().add("creditStyle1");
+        increase.setPadding(new Insets(4, 4, 4, 4));
+        increase.setOnMouseClicked(event -> {
+            try {
+                //todo
+                dataOutputStream.writeUTF("runBankClient");
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
+        Label withdrawal = new Label("➖ Withdrawal");
+        withdrawal.getStyleClass().add("creditStyle1");
+        withdrawal.setPadding(new Insets(4, 4, 4, 4));
+        withdrawal.setOnMouseClicked(event -> {
+            try {
+                //todo
+                dataOutputStream.writeUTF("runBankClient");
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
+        boxIncreaseAndWith.getChildren().addAll(increase, withdrawal);
 
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + onlineAccount.getUsername());
         vBoxP.setAlignment(Pos.CENTER_LEFT);
-        vBoxP.setSpacing(8);
-        vBoxP.getChildren().addAll(username, hBox1);
+        vBoxP.setSpacing(5);
+        vBoxP.getChildren().addAll(username, hBox1, boxIncreaseAndWith);
         username.getStyleClass().add("labelUsername");
 
         hBox.getChildren().addAll(circle, vBoxP);
@@ -1157,11 +1185,11 @@ public class SellerPanel {
 
             Button auction = new Button();
             auction.setPrefSize(150, 31);
-            if (auctionGoodsId.contains(good.getId())){
+            if (auctionGoodsId.contains(good.getId())) {
                 auctionSelected.getStyleClass().clear();
                 auctionSelected.getStyleClass().add("auctionButtonNext");
                 auction.setText("Went to auction");
-            }else {
+            } else {
                 auction.setText("Auction");
                 auction.getStyleClass().add("auctionButton");
             }
