@@ -109,6 +109,34 @@
     -fx-effect: dropshadow(three-pass-box, #292929, 5, 0.1, 0, 0);
 }
 
+.increase {
+    -fx-background-color: #3893ff;
+    -fx-text-fill: #fbfffb;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+}
+
+.increase:hover {
+    -fx-background-color: #53b4ff;
+    -fx-cursor: hand;
+}
+
+.ok {
+    -fx-background-color: #e6e6e6;
+    -fx-text-fill: #3f3f3f;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 16pt;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+}
+
+.ok:hover {
+    -fx-background-color: #dddddd;
+    -fx-cursor: hand;
+}
+
 .label {
     -fx-text-fill: white;
     -fx-font-size: 13pt;
@@ -281,7 +309,21 @@
     -fx-background-position: left center;
     -fx-font-family: "sans-serif";
     -fx-font-size: 16pt
+}
 
+.MoneyField{
+    -fx-background-color: none;
+    -fx-border-color: #3893ff;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10;
+    /*-fx-padding: 0 10 0 43;*/
+    -fx-prompt-text-fill: #dadada;
+    -fx-text-fill: #3c3c3c;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: left center;
+    -fx-font-family: "sans-serif";
+    -fx-font-size: 14pt
 }
 
 

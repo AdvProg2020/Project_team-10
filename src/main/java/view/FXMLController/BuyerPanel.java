@@ -5,9 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import controller.AccountManager;
+import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -22,7 +24,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import model.*;
 import view.NumberField;
 
@@ -125,14 +130,7 @@ public class BuyerPanel {
         Label increase = new Label(" ➕ Credit ");
         increase.getStyleClass().add("creditStyle");
         increase.setPadding(new Insets(5, 5, 5, 5));
-        increase.setOnMouseClicked(event -> {
-            try {
-                dataOutputStream.writeUTF("runBankClient");
-                dataOutputStream.flush();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        });
+        increase.setOnMouseClicked(event -> popupScore());
 
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + onlineAccount.getUsername());
@@ -168,6 +166,107 @@ public class BuyerPanel {
         optionsPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         Login.currentPane = buyerPane;
         mainPane.getChildren().add(buyerPane);
+    }
+
+    NumberField scoreField;
+    FlowPane scorePane;
+
+
+    private void popupScore() {
+        scorePane = new FlowPane(8, 8);
+
+        popupWindow = new Stage();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        AnchorPane layout = new AnchorPane();
+        Scene scene = new Scene(layout);
+        popupWindow.setMaximized(true);
+
+        layout.setStyle("-fx-background-color: none;");
+        layout.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
+        scorePane.setStyle("-fx-background-color: #eceff1;" + "-fx-background-radius: 30px;");
+        scorePane.setPrefWidth(370);
+        scorePane.setPrefHeight(250);
+        scorePane.setAlignment(Pos.CENTER);
+
+        fade(10, 0.5);
+
+        layout.setLayoutX(580);
+        layout.setLayoutY(300);
+        layout.getChildren().add(scorePane);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1500.0);
+        dropShadow.setHeight(1500);
+        dropShadow.setWidth(1500);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        layout.setEffect(dropShadow);
+
+        popupWindow.setScene(scene);
+        popupWindow.initStyle(StageStyle.TRANSPARENT);
+        popupWindow.getScene().setFill(Color.TRANSPARENT);
+        layout.getChildren().add(exitPopupScore());
+        scorePane.getChildren().addAll(scoreField(), confirmScore(), error());
+        popupWindow.showAndWait();
+    }
+
+    private Label error() {
+        error = new Label();
+        error.setLayoutX(110);
+        error.setLayoutY(185);
+        return error;
+    }
+
+    private NumberField scoreField() {
+        scoreField = new NumberField();
+        scoreField.setPromptText("$ Money");
+        scoreField.setPrefHeight(30);
+        scoreField.setPrefWidth(220);
+        scoreField.getStyleClass().add("MoneyField");
+        return scoreField;
+    }
+
+    private void fade(double fromValue, double toValue) {
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(600));
+        fade.setFromValue(fromValue);
+        fade.setToValue(toValue);
+        fade.setNode(mainPane);
+        fade.play();
+    }
+
+    private Button confirmScore() {
+        Button submit = new Button();
+        submit.setText("Increase");
+        submit.setPrefSize(220, 40);
+        submit.getStyleClass().add("increase");
+        submit.setOnMouseClicked(event -> {
+            scorePane.getChildren().clear();
+            ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
+            gif.setFitWidth(170);
+            gif.setFitHeight(170);
+            scorePane.setVgap(5);
+            Button ok = new Button();
+            ok.setText("Ok");
+            ok.setPrefSize(200, 25);
+            ok.getStyleClass().add("ok");
+            ok.setOnMouseClicked(event1 ->{
+                popupWindow.close();
+                fade(0.5, 10);
+            });
+            scorePane.getChildren().addAll(gif,ok);
+        });
+        return submit;
+    }
+
+    private Button exitPopupScore() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExit");
+        exitButton.setLayoutY(25);
+        exitButton.setLayoutX(335);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
     }
 
     public Button createButton(String text, String style) {
@@ -361,7 +460,6 @@ public class BuyerPanel {
         dataOutputStream.flush();
         handelButtonOnMouseClick();
     }
-
 
     private VBox createItemOfProfile(String text, String account) {
         VBox vBox = new VBox(2);
