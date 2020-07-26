@@ -240,15 +240,7 @@ public class SellerPanel {
         Label increase = new Label("➕ Credit");
         increase.getStyleClass().add("creditStyle1");
         increase.setPadding(new Insets(4, 4, 4, 4));
-        increase.setOnMouseClicked(event -> {
-            try {
-                //todo
-                dataOutputStream.writeUTF("runBankClient");
-                dataOutputStream.flush();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        });
+        increase.setOnMouseClicked(event -> popupMoney());
 
         Label withdrawal = new Label("➖ Withdrawal");
         withdrawal.getStyleClass().add("creditStyle1");
@@ -262,6 +254,7 @@ public class SellerPanel {
                 System.out.println(e.getMessage());
             }
         });
+        withdrawal.setOnMouseClicked(event -> popupMoney());
 
         boxIncreaseAndWith.getChildren().addAll(increase, withdrawal);
 
@@ -1323,12 +1316,95 @@ public class SellerPanel {
 
     }
 
-
     private void backToMainMenu() {
         main.updateFilters = true;
         mainPane.getChildren().remove(Login.currentPane);
         main.initialize(main.location, main.resources);
         mainPane.getChildren().add(mainMenu);
+    }
+
+    NumberField moneyField;
+    FlowPane moneyPane;
+
+    private void popupMoney() {
+        moneyPane = new FlowPane(8, 8);
+
+        popupWindow = new Stage();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        AnchorPane layout = new AnchorPane();
+        Scene scene = new Scene(layout);
+        popupWindow.setMaximized(true);
+
+        layout.setStyle("-fx-background-color: none;");
+        layout.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
+        moneyPane.setStyle("-fx-background-color: #eceff1;" + "-fx-background-radius: 30px;");
+        moneyPane.setPrefWidth(370);
+        moneyPane.setPrefHeight(250);
+        moneyPane.setAlignment(Pos.CENTER);
+
+        fade(10, 0.5);
+
+        layout.setLayoutX(580);
+        layout.setLayoutY(300);
+        layout.getChildren().add(moneyPane);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1500.0);
+        dropShadow.setHeight(1500);
+        dropShadow.setWidth(1500);
+        dropShadow.setColor(color(0.4, 0.5, 0.5));
+        layout.setEffect(dropShadow);
+
+        popupWindow.setScene(scene);
+        popupWindow.initStyle(StageStyle.TRANSPARENT);
+        popupWindow.getScene().setFill(Color.TRANSPARENT);
+        layout.getChildren().add(exitPopupMoney());
+        moneyPane.getChildren().addAll(moneyField(), confirmMoney());
+        popupWindow.showAndWait();
+    }
+
+    private NumberField moneyField() {
+        moneyField = new NumberField();
+        moneyField.setPromptText("$ Money");
+        moneyField.setPrefHeight(30);
+        moneyField.setPrefWidth(220);
+        moneyField.getStyleClass().add("MoneyField");
+        return moneyField;
+    }
+
+    private Button confirmMoney() {
+        Button submit = new Button();
+        submit.setText("Increase");
+        submit.setPrefSize(220, 40);
+        submit.getStyleClass().add("increase");
+        submit.setOnMouseClicked(event -> {
+            moneyPane.getChildren().clear();
+            ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
+            gif.setFitWidth(170);
+            gif.setFitHeight(170);
+            moneyPane.setVgap(5);
+            Button ok = new Button();
+            ok.setText("Ok");
+            ok.setPrefSize(200, 25);
+            ok.getStyleClass().add("ok");
+            ok.setOnMouseClicked(event1 ->{
+                popupWindow.close();
+                fade(0.5, 10);
+            });
+            moneyPane.getChildren().addAll(gif,ok);
+        });
+        return submit;
+    }
+
+    private Button exitPopupMoney() {
+        Button exitButton = new Button();
+        exitButton.getStyleClass().add("btnExit");
+        exitButton.setLayoutY(25);
+        exitButton.setLayoutX(335);
+        exitButton.setOnAction(event -> {
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        return exitButton;
     }
 
 }
