@@ -2,11 +2,7 @@ package view.FXMLController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import controller.AccountManager;
 import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,8 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -34,8 +28,6 @@ import view.NumberField;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Date;
 
 import static javafx.scene.paint.Color.color;
 
@@ -130,7 +122,7 @@ public class BuyerPanel {
         Label increase = new Label(" ➕ Credit ");
         increase.getStyleClass().add("creditStyle");
         increase.setPadding(new Insets(5, 5, 5, 5));
-        increase.setOnMouseClicked(event -> popupScore());
+        increase.setOnMouseClicked(event -> popupMoney());
 
         VBox vBoxP = new VBox();
         Label username = new Label("Hi " + onlineAccount.getUsername());
@@ -168,12 +160,12 @@ public class BuyerPanel {
         mainPane.getChildren().add(buyerPane);
     }
 
-    NumberField scoreField;
-    FlowPane scorePane;
 
+    NumberField moneyField;
+    FlowPane moneyPane;
 
-    private void popupScore() {
-        scorePane = new FlowPane(8, 8);
+    private void popupMoney() {
+        moneyPane = new FlowPane(8, 8);
 
         popupWindow = new Stage();
         popupWindow.initModality(Modality.APPLICATION_MODAL);
@@ -183,16 +175,16 @@ public class BuyerPanel {
 
         layout.setStyle("-fx-background-color: none;");
         layout.getStylesheets().add("file:src/main/java/view/css/loginMenu.css");
-        scorePane.setStyle("-fx-background-color: #eceff1;" + "-fx-background-radius: 30px;");
-        scorePane.setPrefWidth(370);
-        scorePane.setPrefHeight(250);
-        scorePane.setAlignment(Pos.CENTER);
+        moneyPane.setStyle("-fx-background-color: #eceff1;" + "-fx-background-radius: 30px;");
+        moneyPane.setPrefWidth(370);
+        moneyPane.setPrefHeight(250);
+        moneyPane.setAlignment(Pos.CENTER);
 
         fade(10, 0.5);
 
         layout.setLayoutX(580);
         layout.setLayoutY(300);
-        layout.getChildren().add(scorePane);
+        layout.getChildren().add(moneyPane);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(1500.0);
         dropShadow.setHeight(1500);
@@ -203,25 +195,18 @@ public class BuyerPanel {
         popupWindow.setScene(scene);
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
-        layout.getChildren().add(exitPopupScore());
-        scorePane.getChildren().addAll(scoreField(), confirmScore(), error());
+        layout.getChildren().add(exitPopupMoney());
+        moneyPane.getChildren().addAll(moneyField(), confirmMoney());
         popupWindow.showAndWait();
     }
 
-    private Label error() {
-        error = new Label();
-        error.setLayoutX(110);
-        error.setLayoutY(185);
-        return error;
-    }
-
-    private NumberField scoreField() {
-        scoreField = new NumberField();
-        scoreField.setPromptText("$ Money");
-        scoreField.setPrefHeight(30);
-        scoreField.setPrefWidth(220);
-        scoreField.getStyleClass().add("MoneyField");
-        return scoreField;
+    private NumberField moneyField() {
+        moneyField = new NumberField();
+        moneyField.setPromptText("$ Money");
+        moneyField.setPrefHeight(30);
+        moneyField.setPrefWidth(220);
+        moneyField.getStyleClass().add("MoneyField");
+        return moneyField;
     }
 
     private void fade(double fromValue, double toValue) {
@@ -233,17 +218,17 @@ public class BuyerPanel {
         fade.play();
     }
 
-    private Button confirmScore() {
+    private Button confirmMoney() {
         Button submit = new Button();
         submit.setText("Increase");
         submit.setPrefSize(220, 40);
         submit.getStyleClass().add("increase");
         submit.setOnMouseClicked(event -> {
-            scorePane.getChildren().clear();
+            moneyPane.getChildren().clear();
             ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
             gif.setFitWidth(170);
             gif.setFitHeight(170);
-            scorePane.setVgap(5);
+            moneyPane.setVgap(5);
             Button ok = new Button();
             ok.setText("Ok");
             ok.setPrefSize(200, 25);
@@ -252,12 +237,12 @@ public class BuyerPanel {
                 popupWindow.close();
                 fade(0.5, 10);
             });
-            scorePane.getChildren().addAll(gif,ok);
+            moneyPane.getChildren().addAll(gif,ok);
         });
         return submit;
     }
 
-    private Button exitPopupScore() {
+    private Button exitPopupMoney() {
         Button exitButton = new Button();
         exitButton.getStyleClass().add("btnExit");
         exitButton.setLayoutY(25);
