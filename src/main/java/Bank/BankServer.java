@@ -1,11 +1,7 @@
 package Bank;
 
 import controller.AccountManager;
-import controller.BankManager;
 import model.Account;
-import model.BankAccount;
-import model.Receipt;
-import model.Shop;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,7 +10,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class BankServer {
     private SecureRandom secureRandom = new SecureRandom();
@@ -68,7 +63,7 @@ class ClientHandlerForBank extends Thread {
                 if (request.startsWith("create_account")) {
                     if (BankManager.canRegister(info[3], info[4], info[5]).equals("true")) {
                         dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastAccountNumber()));
-                        Shop.getShop().getAllBankAccounts().add(new BankAccount(info[1], info[2], info[3], info[4], AccountManager.getLastAccountNumber()));
+                        Bank.getBank().getAllBankAccounts().add(new BankAccount(info[1], info[2], info[3], info[4], AccountManager.getLastAccountNumber()));
                     } else {
                         dataOutputStream.writeUTF(BankManager.canRegister(info[3], info[4], info[5]));
                     }
@@ -100,7 +95,7 @@ class ClientHandlerForBank extends Thread {
                                             dataOutputStream.writeUTF("your input contains invalid characters");
                                         } else {
                                             dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                            Shop.getShop().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                            Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                     Integer.parseInt(info[5]), info[6]));
                                         }
                                     } else {
@@ -120,7 +115,7 @@ class ClientHandlerForBank extends Thread {
                                             dataOutputStream.writeUTF("your input contains invalid characters");
                                         } else {
                                             dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                            Shop.getShop().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                            Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                     Integer.parseInt(info[5]), info[6]));
                                         }
                                     } else {
@@ -143,7 +138,7 @@ class ClientHandlerForBank extends Thread {
                                                 dataOutputStream.writeUTF("your input contains invalid characters");
                                             } else {
                                                 dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                                Shop.getShop().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                                Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                         Integer.parseInt(info[5]), info[6]));
                                             }
                                         } else {

@@ -127,7 +127,9 @@ class ClientHandler extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("register")) {
-                    AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
+                    Account account = AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
+                    String id = handleBankClient("create_account " + info[3] + " " + info[4] + " " + info[0] + " " + info[1] + " " + info[1]);
+                    account.setBankAccountId(id);
                 } else if (request.startsWith("get_total_price")) {
                     System.out.println((BuyerManager.getTotalPrice(account)));
                     dataOutputStream.writeUTF(BuyerManager.getTotalPrice(account) + "");
@@ -147,8 +149,7 @@ class ClientHandler extends Thread {
                     if (account == null) {
                         dataOutputStream.writeUTF("false");
                     } else {
-                        Server server = new Server();
-                        String token = server.generateTokenForUser(account.getUsername());
+                        String token = new Server().generateTokenForUser(account.getUsername());
                         if (account instanceof Buyer) {
                             dataOutputStream.writeUTF("true_" + new Gson().toJson(account) + "_buyer_" + token);
                         } else if (account instanceof Seller) {
@@ -305,6 +306,9 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("pay")) {
                     BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
                 } else if (request.startsWith("increase_credit")) {
+                    String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
+                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[2] + account.getBankAccountId() + " 0");
+                    System.out.println("pay: " + handleBankClient("pay " + receiptId));
                     account.increaseCredit(Long.parseLong(info[2]));
                 } else if (request.startsWith("get_credit")) {
                     dataOutputStream.writeUTF("" + account.getCredit());
@@ -363,6 +367,17 @@ class ClientHandler extends Thread {
                 break;
             }
         }
+    }
+
+    private String handleBankClient(String message) throws IOException {
+        Socket bankSocket = new Socket("localhost", 8888);
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(bankSocket.getOutputStream()));
+        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(bankSocket.getInputStream()));
+        dataOutputStream.writeUTF(message);
+        dataOutputStream.flush();
+        String response = dataInputStream.readUTF();
+        bankSocket.close();
+        return response;
     }
 
 }

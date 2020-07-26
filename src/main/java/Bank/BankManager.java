@@ -1,10 +1,5 @@
-package controller;
+package Bank;
 
-import model.BankAccount;
-import model.Receipt;
-import model.Shop;
-
-import java.time.LocalTime;
 import java.util.*;
 
 public class BankManager {
@@ -15,7 +10,7 @@ public class BankManager {
         if (!password.equals(repeatPassword)) {
             return "password do not match";
         }
-        for (BankAccount bankAccount : Shop.getShop().getAllBankAccounts()) {
+        for (BankAccount bankAccount : Bank.getBank().getAllBankAccounts()) {
             if (bankAccount.getUsername().equals(username)) {
                 return "username is not available";
             }
@@ -24,7 +19,7 @@ public class BankManager {
     }
 
     public static BankAccount canGetToken(String username, String password) {
-        for (BankAccount bankAccount : Shop.getShop().getAllBankAccounts()) {
+        for (BankAccount bankAccount : Bank.getBank().getAllBankAccounts()) {
             if (bankAccount.getUsername().equals(username)) {
                 if (bankAccount.getPassword().equals(password)) {
                     return bankAccount;
@@ -35,7 +30,7 @@ public class BankManager {
     }
 
     public static boolean isExistBankAccount(int accountId) {
-        for (BankAccount bankAccount : Shop.getShop().getAllBankAccounts()) {
+        for (BankAccount bankAccount : Bank.getBank().getAllBankAccounts()) {
             if (bankAccount.getAccountNumber() == accountId) {
                 return true;
             }
@@ -44,7 +39,7 @@ public class BankManager {
     }
 
     public static boolean isExistReceipt(int receiptId) {
-        for (Receipt receipt : Shop.getShop().getAllReceipts()) {
+        for (Receipt receipt : Bank.getBank().getAllReceipts()) {
             if (receipt.getReceiptId() == receiptId) {
                 return true;
             }
@@ -64,7 +59,7 @@ public class BankManager {
     }
 
     public static int getAccountIdByUsername(String username) {
-        for (BankAccount bankAccount : Shop.getShop().getAllBankAccounts()) {
+        for (BankAccount bankAccount : Bank.getBank().getAllBankAccounts()) {
             if (bankAccount.getUsername().equals(username)) {
                 return bankAccount.getAccountNumber();
             }
@@ -73,7 +68,7 @@ public class BankManager {
     }
 
     public static Receipt getReceiptById(int id) {
-        for (Receipt receipt : Shop.getShop().getAllReceipts()) {
+        for (Receipt receipt : Bank.getBank().getAllReceipts()) {
             if (receipt.getReceiptId() == id) {
                 return receipt;
             }
@@ -82,7 +77,7 @@ public class BankManager {
     }
 
     public static BankAccount getBankAccountById(int id){
-        for (BankAccount bankAccount : Shop.getShop().getAllBankAccounts()) {
+        for (BankAccount bankAccount : Bank.getBank().getAllBankAccounts()) {
             if (bankAccount.getAccountNumber() == id) {
                 return bankAccount;
             }
@@ -101,7 +96,7 @@ public class BankManager {
 
     public static String getDestinationById(int id) {
         String output = "";
-        for (Receipt receipt : Shop.getShop().getAllReceipts()) {
+        for (Receipt receipt : Bank.getBank().getAllReceipts()) {
             if (receipt.getDestId() == id) {
                 output += receipt.toString();
             }
@@ -111,7 +106,7 @@ public class BankManager {
 
     public static String getSourceById(int id) {
         String output = "";
-        for (Receipt receipt : Shop.getShop().getAllReceipts()) {
+        for (Receipt receipt : Bank.getBank().getAllReceipts()) {
             if (receipt.getSourceId() == id) {
                     output += receipt.toString();
             }
@@ -121,7 +116,7 @@ public class BankManager {
 
     public static String getAllTransactionsById(int id) {
         String output = "";
-        for (Receipt receipt : Shop.getShop().getAllReceipts()) {
+        for (Receipt receipt : Bank.getBank().getAllReceipts()) {
             if (receipt.getDestId() == id || receipt.getSourceId() == id) {
                     output += receipt.toString();
             }
@@ -130,10 +125,7 @@ public class BankManager {
     }
 
     public static boolean checkReceiptAndBankAccount(int receiptId, int bankAccountId) {
-        if (getReceiptById(receiptId).getSourceId() == bankAccountId || getReceiptById(receiptId).getDestId() == bankAccountId) {
-            return true;
-        }
-        return false;
+        return getReceiptById(receiptId).getSourceId() == bankAccountId || getReceiptById(receiptId).getDestId() == bankAccountId;
     }
 
     public static boolean checkExpiration(String currentToken) {

@@ -1,5 +1,7 @@
 package controller;
 
+import Bank.BankAccount;
+import Bank.Receipt;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;

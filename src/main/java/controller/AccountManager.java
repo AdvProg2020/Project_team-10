@@ -1,5 +1,6 @@
 package controller;
 
+import Bank.BankAccount;
 import model.*;
 import model.requests.RegisterOfSellerRequest;
 
@@ -12,7 +13,7 @@ public class AccountManager {
     private static int lastSellerLogId;
     private static int lastDiscountCode;
     private static int lastOffId;
-    private static int lastAccountNumber;
+    private static int lastAccountNumber = 1;
     private static int lastReceiptId;
     private static int lastAuctionId;
 
@@ -152,14 +153,14 @@ public class AccountManager {
         return Shop.getShop().getAccountByUsername(username) == null;
     }
 
-    public static void register(String username, String password, String type, String firstName,
+    public static Account register(String username, String password, String type, String firstName,
                                 String lastName, String email, String phoneNumber, String company, String imagePath) {
         switch (type) {
             case "buyer":
                 Buyer buyer = new Buyer(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(buyer);
                 Shop.getShop().getAllBuyers().add(buyer);
-                break;
+                return buyer;
             case "seller":
                 //TODO
                 Seller seller = new Seller(username, firstName, lastName, email, phoneNumber, password, company, imagePath);
@@ -167,19 +168,19 @@ public class AccountManager {
                 Shop.getShop().getAllSellers().add(seller);
                 Shop.getShop().getAllRequests().add(new RegisterOfSellerRequest(lastRequestId + 1, username, password,
                         firstName, lastName, email, phoneNumber, company, imagePath));
-                break;
+                return seller;
             case "supporter":
                 //TODO
                 Supporter supporter = new Supporter(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(supporter);
                 Shop.getShop().getAllSupporters().add(supporter);
-                break;
+                return supporter;
             default:
                 System.out.println("an admin added");
                 Admin admin = new Admin(username, firstName, lastName, email, phoneNumber, password, imagePath);
                 Shop.getShop().getAllAccounts().add(admin);
                 Shop.getShop().getAllAdmins().add(admin);
-                break;
+                return admin;
         }
     }
 

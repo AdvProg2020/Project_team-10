@@ -1,4 +1,4 @@
-package model;
+package Bank;
 
 public class Receipt {
     private String token;

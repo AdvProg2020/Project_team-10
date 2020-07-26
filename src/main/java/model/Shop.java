@@ -16,15 +16,10 @@ public class Shop {
     private List<Discount> allDiscounts = new ArrayList<>();
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
-    private List<BankAccount> allBankAccounts = new ArrayList<>();
-    private List<Receipt> allReceipts = new ArrayList<>();
     private int wage = 5;
     private long buyerAccountBalanced = 2;
 
 
-    public List<BankAccount> getAllBankAccounts() {
-        return allBankAccounts;
-    }
 
     private List<Auction> auctionGoods = new ArrayList<>();
 
@@ -47,14 +42,10 @@ public class Shop {
         return wage;
     }
 
+
     public void setWage(int wage) {
         this.wage = wage;
     }
-
-    public List<Receipt> getAllReceipts() {
-        return allReceipts;
-    }
-
     public List<Auction> getAuctionGoods() {
         return auctionGoods;
     }

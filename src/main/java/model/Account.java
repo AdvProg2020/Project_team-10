@@ -10,6 +10,7 @@ public abstract class Account {
     private String password;
     private long credit;
     private String imagePath;
+    private String bankAccountId;
 
     public Account(String username, String firstName, String lastName, String email, String phoneNumber
             , String password, String imagePath) {
@@ -98,5 +99,13 @@ public abstract class Account {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public void setBankAccountId(String bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    public String getBankAccountId() {
+        return bankAccountId;
     }
 }

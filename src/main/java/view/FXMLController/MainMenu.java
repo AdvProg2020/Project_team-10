@@ -109,7 +109,7 @@ public class MainMenu implements Initializable {
     private Stage popupWindow;
 
     public MainMenu() throws IOException {
-        this.socket = new Socket("localhost", 9444);
+        this.socket = new Socket("localhost", 8000);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();

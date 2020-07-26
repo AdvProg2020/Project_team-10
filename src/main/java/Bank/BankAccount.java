@@ -1,4 +1,4 @@
-package model;
+package Bank;
 
 import controller.AccountManager;
 
