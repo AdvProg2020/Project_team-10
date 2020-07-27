@@ -430,22 +430,23 @@ public class CartMenu {
 
     private Label totalPrice() {
 //        Label totalPrice = new Label("Total price: $ " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
-        Label totalPrice = new Label("Total price: $ " + finalPrice);
-        totalPrice.getStyleClass().add("totalPrice");
+        Label totalPrice = new Label("Total price: $" + finalPrice);
+        totalPrice.setStyle("-fx-text-fill: #ffdf00;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14pt");
         totalPrice.setLayoutX(90);
-        totalPrice.setLayoutY(385);
-        totalPrice.setAlignment(Pos.CENTER);
+        totalPrice.setLayoutY(389);
+//        totalPrice.setAlignment(Pos.CENTER);
         return totalPrice;
     }
 
     private Label payableAmount() {
 //        finalTotalPrice = BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart());
         finalTotalPrice = finalPrice;
-        payableAmount = new Label("payable amount: $ " + ((long) finalTotalPrice));
+        payableAmount = new Label("Payable amount: $" + ((long) finalTotalPrice));
+        payableAmount.setStyle("-fx-text-fill: #ffdf00;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 14pt");
         payableAmount.getStyleClass().add("totalPrice");
         payableAmount.setLayoutX(90);
-        payableAmount.setLayoutY(420);
-        payableAmount.setAlignment(Pos.CENTER);
+        payableAmount.setLayoutY(415);
+//        payableAmount.setAlignment(Pos.CENTER);
         return payableAmount;
     }
 
@@ -469,18 +470,24 @@ public class CartMenu {
         confirmButton = new Button("Confirm");
         confirmButton.setPrefSize(310, 55);
         confirmButton.setLayoutX(90);
-        confirmButton.setLayoutY(465);
+        confirmButton.setLayoutY(460);
         confirmButton.getStyleClass().add("confirm");
         confirmButton.setOnMouseClicked(event -> processPurchase());
         return confirmButton;
     }
 
     private Button paymentButton() {
-        paymentButton = new Button("Payment");
-        paymentButton.setPrefSize(150, 55);
+        paymentButton = new Button();
+        paymentButton.setAlignment(Pos.CENTER);
+        paymentButton.setPrefSize(150, 65);
+        ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/banklogo.png"));
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
+
         paymentButton.setLayoutX(90);
-        paymentButton.setLayoutY(470);
+        paymentButton.setLayoutY(450);
         paymentButton.getStyleClass().add("confirm");
+        paymentButton.setGraphic(imageView);
         paymentButton.setOnMouseClicked(event -> {
             try {
                 processPayment(discount);
@@ -493,12 +500,17 @@ public class CartMenu {
     }
 
     private Button increaseCreditButton() {
-        increaseCreditButton = new Button("increase credit");
-        increaseCreditButton.setPrefSize(150, 55);
+        increaseCreditButton = new Button();
+        increaseCreditButton.setPrefSize(150, 65);
         increaseCreditButton.setLayoutX(250);
-        increaseCreditButton.setLayoutY(470);
+        increaseCreditButton.setLayoutY(450);
+        increaseCreditButton.setAlignment(Pos.CENTER);
+        ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/creditlogo.png"));
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
+        increaseCreditButton.setGraphic(imageView);
+
         increaseCreditButton.getStyleClass().add("confirm");
-        increaseCreditButton.setStyle("-fx-font-size: 17");
         increaseCreditButton.setOnMouseClicked(event -> {
             try {
                 processIncreaseCredit();
