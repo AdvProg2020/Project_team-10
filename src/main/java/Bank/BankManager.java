@@ -40,7 +40,7 @@ public class BankManager {
 
     public static boolean isExistReceipt(int receiptId) {
         for (Receipt receipt : Bank.getBank().getAllReceipts()) {
-            if (receipt.getReceiptId() == receiptId) {
+            if (receipt.getId() == receiptId) {
                 return true;
             }
         }
@@ -69,7 +69,7 @@ public class BankManager {
 
     public static Receipt getReceiptById(int id) {
         for (Receipt receipt : Bank.getBank().getAllReceipts()) {
-            if (receipt.getReceiptId() == id) {
+            if (receipt.getId() == id) {
                 return receipt;
             }
         }

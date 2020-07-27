@@ -17,7 +17,7 @@ public class BankServer {
     private static HashMap<String, String> onlineAccounts = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-
+        FileHandler.updateDatabase();
         ServerSocket serverSocket = new ServerSocket(8888);
         while (true) {
             System.out.println("Waiting for client...");
@@ -55,6 +55,7 @@ class ClientHandlerForBank extends Thread {
 
     }
 
+    @Override
     public void run() {
         try {
             while (true) {
@@ -95,7 +96,8 @@ class ClientHandlerForBank extends Thread {
                                             dataOutputStream.writeUTF("your input contains invalid characters");
                                         } else {
                                             dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                            Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                            Bank.getBank().getAllReceipts().add(new Receipt(AccountManager.getLastReceiptId(),
+                                                    info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                     Integer.parseInt(info[5]), info[6]));
                                         }
                                     } else {
@@ -115,7 +117,8 @@ class ClientHandlerForBank extends Thread {
                                             dataOutputStream.writeUTF("your input contains invalid characters");
                                         } else {
                                             dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                            Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                            Bank.getBank().getAllReceipts().add(new Receipt(AccountManager.getLastReceiptId(),
+                                                    info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                     Integer.parseInt(info[5]), info[6]));
                                         }
                                     } else {
@@ -138,7 +141,8 @@ class ClientHandlerForBank extends Thread {
                                                 dataOutputStream.writeUTF("your input contains invalid characters");
                                             } else {
                                                 dataOutputStream.writeUTF(String.valueOf(AccountManager.getLastReceiptId()));
-                                                Bank.getBank().getAllReceipts().add(new Receipt(info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
+                                                Bank.getBank().getAllReceipts().add(new Receipt(AccountManager.getLastReceiptId(),
+                                                        info[1], info[2], Long.parseLong(info[3]), Integer.parseInt(info[4]),
                                                         Integer.parseInt(info[5]), info[6]));
                                             }
                                         } else {
@@ -226,7 +230,9 @@ class ClientHandlerForBank extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
+                    FileHandler.write();
                     socket.close();
+                    break;
                 } else {
                     dataOutputStream.writeUTF("invalid input");
                     dataOutputStream.flush();

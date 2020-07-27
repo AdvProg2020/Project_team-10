@@ -65,6 +65,9 @@ public class BuyerPanel {
     private TextField phoneNumber;
     private PasswordField password;
 
+    private NumberField moneyField;
+    private FlowPane moneyPane;
+    private Label creditLabel;
 
     public BuyerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnAuction, Button btnSupporter, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
@@ -111,7 +114,7 @@ public class BuyerPanel {
 
         dataOutputStream.writeUTF("get_credit");
         dataOutputStream.flush();
-        Label creditLabel = new Label(" $" + dataInputStream.readUTF());
+        creditLabel = new Label(" $" + dataInputStream.readUTF());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00e429");
 
@@ -160,9 +163,6 @@ public class BuyerPanel {
         mainPane.getChildren().add(buyerPane);
     }
 
-
-    NumberField moneyField;
-    FlowPane moneyPane;
 
     private void popupMoney() {
         moneyPane = new FlowPane(8, 8);
@@ -223,23 +223,32 @@ public class BuyerPanel {
         submit.setText("Increase");
         submit.setPrefSize(220, 40);
         submit.getStyleClass().add("increase");
-        submit.setOnMouseClicked(event -> {
-            moneyPane.getChildren().clear();
-            ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
-            gif.setFitWidth(170);
-            gif.setFitHeight(170);
-            moneyPane.setVgap(5);
-            Button ok = new Button();
-            ok.setText("Ok");
-            ok.setPrefSize(200, 25);
-            ok.getStyleClass().add("ok");
-            ok.setOnMouseClicked(event1 ->{
-                popupWindow.close();
-                fade(0.5, 10);
-            });
-            moneyPane.getChildren().addAll(gif,ok);
-        });
+        submit.setOnMouseClicked(event -> processIncreaseCredit());
         return submit;
+    }
+
+    private void processIncreaseCredit() {
+        try {
+            dataOutputStream.writeUTF("increase_credit_" + moneyField.getText());
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        moneyPane.getChildren().clear();
+        ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
+        gif.setFitWidth(170);
+        gif.setFitHeight(170);
+        moneyPane.setVgap(5);
+        Button ok = new Button();
+        ok.setText("Ok");
+        ok.setPrefSize(200, 25);
+        ok.getStyleClass().add("ok");
+        ok.setOnMouseClicked(event1 -> {
+            creditLabel.setText(" $" + moneyField.getText());
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        moneyPane.getChildren().addAll(gif, ok);
     }
 
     private Button exitPopupMoney() {

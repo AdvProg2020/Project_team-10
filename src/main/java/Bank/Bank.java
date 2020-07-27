@@ -10,7 +10,6 @@ public class Bank {
     private List<Receipt> allReceipts = new ArrayList<>();
 
     private Bank() {
-        allBankAccounts.add(new BankAccount("admins", "admins", "shop", "javad1379", 0));
     }
 
     public static Bank getBank() {

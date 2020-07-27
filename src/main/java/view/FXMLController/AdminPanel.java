@@ -570,7 +570,7 @@ public class AdminPanel {
         buyerAccountBalanced.setPadding(new Insets(10,0,0,0));
         buyerAccountBalanced.setStyle(labelStyle);
 
-        dataOutputStream.writeUTF("getBalanced");
+        dataOutputStream.writeUTF("getMinimumCredit");
         dataOutputStream.flush();
         NumberField buyerAccountBalancedField = new NumberField();
         buyerAccountBalancedField.setStyle(filedStyle);
@@ -587,7 +587,7 @@ public class AdminPanel {
             try {
                 dataOutputStream.writeUTF("setWage_" + wageFiled.getText());
                 dataOutputStream.flush();
-                dataOutputStream.writeUTF("setBalanced_" + buyerAccountBalancedField.getText());
+                dataOutputStream.writeUTF("setMinimumCredit_" + buyerAccountBalancedField.getText());
                 dataOutputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();

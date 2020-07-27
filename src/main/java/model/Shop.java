@@ -17,7 +17,7 @@ public class Shop {
     private List<Request> allRequests = new ArrayList<>();
     private List<Comment> allComments = new ArrayList<>();
     private int wage = 5;
-    private long buyerAccountBalanced = 2;
+    private long minimumCredit = 2;
 
 
 
@@ -30,12 +30,12 @@ public class Shop {
                 "09123123123", "javad1379", "src/main/java/view/image/usersamad.jpg"));
     }
 
-    public long getBuyerAccountBalanced() {
-        return buyerAccountBalanced;
+    public long getMinimumCredit() {
+        return minimumCredit;
     }
 
-    public void setBuyerAccountBalanced(long buyerAccountBalanced) {
-        this.buyerAccountBalanced = buyerAccountBalanced;
+    public void setMinimumCredit(long minimumCredit) {
+        this.minimumCredit = minimumCredit;
     }
 
     public int getWage() {

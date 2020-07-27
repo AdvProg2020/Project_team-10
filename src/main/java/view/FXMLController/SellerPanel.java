@@ -90,6 +90,10 @@ public class SellerPanel {
     private int auctionGoodId;
     private ArrayList<Integer> auctionGoodsId = new ArrayList<>();
 
+    private NumberField moneyField;
+    private FlowPane moneyPane;
+    private Label creditLabel;
+
 
     public SellerPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin
             , Socket socket, Account onlineAccount, String token) throws IOException {
@@ -228,7 +232,7 @@ public class SellerPanel {
         ImageView credit = new ImageView(new Image("file:src/main/java/view/image/AdminPanel/credit.png"));
         credit.setFitHeight(20);
         credit.setFitWidth(25);
-        Label creditLabel = new Label(" $" + onlineAccount.getCredit());
+        creditLabel = new Label(" $" + onlineAccount.getCredit());
         creditLabel.getStyleClass().add("labelUsername");
         creditLabel.setStyle("-fx-text-fill: #00ff30");
 
@@ -240,7 +244,7 @@ public class SellerPanel {
         Label increase = new Label("➕ Credit");
         increase.getStyleClass().add("creditStyle1");
         increase.setPadding(new Insets(4, 4, 4, 4));
-        increase.setOnMouseClicked(event -> popupMoney());
+        increase.setOnMouseClicked(event -> popupMoney(true));
 
         Label withdrawal = new Label("➖ Withdrawal");
         withdrawal.getStyleClass().add("creditStyle1");
@@ -254,7 +258,7 @@ public class SellerPanel {
                 System.out.println(e.getMessage());
             }
         });
-        withdrawal.setOnMouseClicked(event -> popupMoney());
+        withdrawal.setOnMouseClicked(event -> popupMoney(false));
 
         boxIncreaseAndWith.getChildren().addAll(increase, withdrawal);
 
@@ -1323,10 +1327,8 @@ public class SellerPanel {
         mainPane.getChildren().add(mainMenu);
     }
 
-    NumberField moneyField;
-    FlowPane moneyPane;
 
-    private void popupMoney() {
+    private void popupMoney(boolean increase) {
         moneyPane = new FlowPane(8, 8);
 
         popupWindow = new Stage();
@@ -1358,7 +1360,7 @@ public class SellerPanel {
         popupWindow.initStyle(StageStyle.TRANSPARENT);
         popupWindow.getScene().setFill(Color.TRANSPARENT);
         layout.getChildren().add(exitPopupMoney());
-        moneyPane.getChildren().addAll(moneyField(), confirmMoney());
+        moneyPane.getChildren().addAll(moneyField(), confirmMoney(increase));
         popupWindow.showAndWait();
     }
 
@@ -1371,12 +1373,64 @@ public class SellerPanel {
         return moneyField;
     }
 
-    private Button confirmMoney() {
+    private Button confirmMoney(boolean increase) {
         Button submit = new Button();
-        submit.setText("Increase");
+        submit.setText("Submit");
         submit.setPrefSize(220, 40);
         submit.getStyleClass().add("increase");
         submit.setOnMouseClicked(event -> {
+            try {
+                if (increase) {
+                    processIncreaseCredit();
+                } else {
+                    processWithdraw();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return submit;
+    }
+
+    private void processIncreaseCredit() {
+        long money = Long.parseLong(moneyField.getText());
+        long credit = Long.parseLong(creditLabel.getText().substring(2));
+        try {
+            dataOutputStream.writeUTF("increase_credit_" + money);
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        moneyPane.getChildren().clear();
+        ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
+        gif.setFitWidth(170);
+        gif.setFitHeight(170);
+        moneyPane.setVgap(5);
+        Button ok = new Button();
+        ok.setText("Ok");
+        ok.setPrefSize(200, 25);
+        ok.getStyleClass().add("ok");
+        ok.setOnMouseClicked(event1 -> {
+            creditLabel.setText(" $" + (credit + money));
+            popupWindow.close();
+            fade(0.5, 10);
+        });
+        moneyPane.getChildren().addAll(gif, ok);
+    }
+
+
+    private void processWithdraw() throws IOException {
+        long money = Long.parseLong(moneyField.getText());
+        long credit = Long.parseLong(creditLabel.getText().substring(2));
+        dataOutputStream.writeUTF("getMinimumCredit");
+        dataOutputStream.flush();
+        int minimumCredit = Integer.parseInt(dataInputStream.readUTF());
+        if (credit - money < minimumCredit) {
+            //todo  باید ارور بدی بگی حداقل فلان قدر باید بمونه تو کیف پول
+            System.out.println("hooooooooooooy!");
+        } else {
+            dataOutputStream.writeUTF("Withdraw_" + moneyField.getText());
+            dataOutputStream.flush();
             moneyPane.getChildren().clear();
             ImageView gif = new ImageView(new Image("file:src/main/java/view/image/checkgif.gif"));
             gif.setFitWidth(170);
@@ -1386,13 +1440,13 @@ public class SellerPanel {
             ok.setText("Ok");
             ok.setPrefSize(200, 25);
             ok.getStyleClass().add("ok");
-            ok.setOnMouseClicked(event1 ->{
+            ok.setOnMouseClicked(event1 -> {
+                creditLabel.setText(" $" + (credit - money));
                 popupWindow.close();
                 fade(0.5, 10);
             });
-            moneyPane.getChildren().addAll(gif,ok);
-        });
-        return submit;
+            moneyPane.getChildren().addAll(gif, ok);
+        }
     }
 
     private Button exitPopupMoney() {

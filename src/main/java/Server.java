@@ -128,8 +128,13 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("register")) {
                     Account account = AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
-                    String id = handleBankClient("create_account " + info[3] + " " + info[4] + " " + info[0] + " " + info[1] + " " + info[1]);
-                    account.setBankAccountId(id);
+                    if (account instanceof Buyer || account instanceof Seller) {
+                        String accountId = handleBankClient("create_account " + info[4] + " " + info[5] + " " + info[1] + " " + info[2] + " " + info[2]);
+                        account.setBankAccountId(accountId);
+                        String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
+                        String receiptId = handleBankClient("create_receipt " + token + " deposit 10000000 -1 " + accountId + " description");
+                        System.out.println(handleBankClient("pay " + receiptId));
+                    }
                 } else if (request.startsWith("get_total_price")) {
                     System.out.println((BuyerManager.getTotalPrice(account)));
                     dataOutputStream.writeUTF(BuyerManager.getTotalPrice(account) + "");
@@ -307,9 +312,18 @@ class ClientHandler extends Thread {
                     BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
                 } else if (request.startsWith("increase_credit")) {
                     String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
-                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[2] + account.getBankAccountId() + " 0");
+                    System.out.println("create_receipt " + token + " move " + info[2] + " " + account.getBankAccountId() + " 0 description");
+                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[2] + " " + account.getBankAccountId() + " 0 description");
+                    System.out.println(receiptId);
                     System.out.println("pay: " + handleBankClient("pay " + receiptId));
                     account.increaseCredit(Long.parseLong(info[2]));
+                } else if (request.startsWith("Withdraw")) {
+                    String token = handleBankClient("get_token shop javad1379");
+                    System.out.println("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
+                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
+                    System.out.println("receiptId = " + receiptId);
+                    System.out.println("pay: " + handleBankClient("pay " + receiptId));
+                    account.subtractCredit(Long.parseLong(info[1]));
                 } else if (request.startsWith("get_credit")) {
                     dataOutputStream.writeUTF("" + account.getCredit());
                     dataOutputStream.flush();
@@ -337,11 +351,11 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("setWage")) {
                     Shop.getShop().setWage(Integer.parseInt(info[1]));
-                } else if (request.startsWith("getBalanced")) {
-                    dataOutputStream.writeUTF("" + Shop.getShop().getBuyerAccountBalanced());
+                } else if (request.startsWith("getMinimumCredit")) {
+                    dataOutputStream.writeUTF("" + Shop.getShop().getMinimumCredit());
                     dataOutputStream.flush();
-                } else if (request.startsWith("setBalanced")) {
-                    Shop.getShop().setBuyerAccountBalanced(Integer.parseInt(info[1]));
+                } else if (request.startsWith("setMinimumCredit")) {
+                    Shop.getShop().setMinimumCredit(Integer.parseInt(info[1]));
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -376,6 +390,8 @@ class ClientHandler extends Thread {
         dataOutputStream.writeUTF(message);
         dataOutputStream.flush();
         String response = dataInputStream.readUTF();
+        dataOutputStream.writeUTF("exit");
+        dataOutputStream.flush();
         bankSocket.close();
         return response;
     }

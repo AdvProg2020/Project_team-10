@@ -1,5 +1,7 @@
 package Bank;
 
+import controller.AccountManager;
+
 public class Receipt {
     private String token;
     private String receiptType;
@@ -7,18 +9,19 @@ public class Receipt {
     private int sourceId;
     private int destId;
     private String description;
-    private int receiptId;
+    private int id;
     private boolean isPaid;
 
 
-
-    public Receipt(String token, String receiptType, long money, int sourceId, int destId, String description) {
+    public Receipt(int id, String token, String receiptType, long money, int sourceId, int destId, String description) {
+        this.id = id;
         this.token = token;
         this.receiptType = receiptType;
         this.money = money;
         this.sourceId = sourceId;
         this.destId = destId;
         this.description = description;
+        AccountManager.increaseLastReceiptId();
     }
 
     public String getToken() {
@@ -45,8 +48,8 @@ public class Receipt {
         return description;
     }
 
-    public int getReceiptId() {
-        return receiptId;
+    public int getId() {
+        return id;
     }
 
     public boolean isPaid() {
@@ -64,7 +67,7 @@ public class Receipt {
                 "sourceId:" + sourceId + "\n" +
                 "destId:" + destId + "\n" +
                 "description:" + description + "\n" +
-                "receiptId:" + receiptId + "\n" +
+                "receiptId:" + id + "\n" +
                 "isPaid:" + isPaid;
     }
 }
