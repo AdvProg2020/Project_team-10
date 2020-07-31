@@ -136,7 +136,7 @@ public class CartMenu {
         purchase.getStyleClass().add("purchase");
         purchase.setOnMouseClicked(event -> {
             try {
-                if (onlineAccount.getUsername().equals("temp")) {
+                if (main.onlineAccount.getUsername().equals("temp")) {
                     new Login(mainPane, btnLogin, btnAuction, btnOnlineSupport, btnCartMenu, mainMenu, main, socket, onlineAccount).popupLogin(null);
                 } else {
                     paymentPopup();
@@ -288,13 +288,9 @@ public class CartMenu {
                     dataOutputStream.flush();
                     dataOutputStream.writeUTF("removeInBuyerCart_" + good.getId());
                     products.getChildren().remove(productBox);
-
-//                    ((Buyer) onlineAccount).getCart().remove(good);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
-//                good.getGoodsInBuyerCart().remove(onlineAccount.getUsername());
-
             }
             try {
                 dataOutputStream.writeUTF("get_total_price_" + token);
@@ -474,7 +470,7 @@ public class CartMenu {
         return confirmButton;
     }
 
-    private Button  payWithBankAccount() {
+    private Button payWithBankAccount() {
         bankAccountButton = new Button();
         bankAccountButton.setAlignment(Pos.CENTER);
         bankAccountButton.setPrefSize(150, 65);

@@ -305,9 +305,6 @@ class ClientHandler extends Thread {
                     ((Buyer) account).getCart().remove(Shop.getShop().getProductWithId(Integer.parseInt(info[1])));
                 } else if (request.startsWith("putInMapGoodsInBuyerCart_")) {
                     Shop.getShop().getProductWithId(Integer.parseInt(info[2])).getGoodsInBuyerCart().put(account.getUsername(), Integer.valueOf(info[1]));
-                } else if (request.startsWith("runBankClient")) {
-                    String[] arguments = new String[]{"123"};
-                    BankClient.main(arguments);
                 } else if (request.startsWith("can_pay")) {
                     if (BuyerManager.canPay(Double.parseDouble(info[2]), account)) {
                         dataOutputStream.writeUTF("true");
@@ -380,6 +377,7 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("receiveGoodFile_")) {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
                 } else if (request.startsWith("exit")) {
+                    handleBankClient("exit");
                     disconnectClient();
                     break;
                 }
@@ -421,19 +419,19 @@ class ClientHandler extends Thread {
         try {
 
             File myFile = new File(fileName);  //handle file reading
-            byte[] mybytearray = new byte[(int) myFile.length()];
+            byte[] myByteArray = new byte[(int) myFile.length()];
 
             FileInputStream fis = new FileInputStream(myFile);
             BufferedInputStream bis = new BufferedInputStream(fis);
 
             DataInputStream dis = new DataInputStream(bis);
-            dis.readFully(mybytearray, 0, mybytearray.length);
+            dis.readFully(myByteArray, 0, myByteArray.length);
 
             dataOutputStream.writeUTF(myFile.getName());
-            dataOutputStream.writeLong(mybytearray.length);
-            dataOutputStream.write(mybytearray, 0, mybytearray.length);
+            dataOutputStream.writeLong(myByteArray.length);
+            dataOutputStream.write(myByteArray, 0, myByteArray.length);
             dataOutputStream.flush();
-            System.out.println("File "+fileName+" sent to client.");
+            System.out.println("File " + fileName + " sent to client.");
         } catch (Exception e) {
             System.err.println("File does not exist!");
         }
@@ -463,8 +461,6 @@ class ClientHandler extends Thread {
         dataOutputStream.writeUTF(message);
         dataOutputStream.flush();
         String response = dataInputStream.readUTF();
-        dataOutputStream.writeUTF("exit");
-        dataOutputStream.flush();
         bankSocket.close();
         return response;
     }

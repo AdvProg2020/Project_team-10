@@ -1,1 +1,1 @@
-[{"token":"-02rALzbvv4Q_e2M_d3J8mQPTOqPIiQn","receiptType":"deposit","money":10000000,"sourceId":-1,"destId":1,"description":"description","id":0,"isPaid":true},{"token":"MPLeobPLJq1kndKc7QtfXbXiqgCeczQo","receiptType":"deposit","money":10000000,"sourceId":-1,"destId":2,"description":"description","id":1,"isPaid":true}]
+[]

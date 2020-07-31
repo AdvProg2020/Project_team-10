@@ -184,8 +184,6 @@ class ClientHandlerForBank extends Thread {
                     }
                     dataOutputStream.flush();
                 } else if (request.startsWith("pay")) {
-                    System.out.println(info);
-                    System.out.println(info[1]);
                     Receipt receipt = BankManager.getReceiptById(Integer.parseInt(info[1]));
                     if (receipt != null) {
                         if (!receipt.isPaid()) {
@@ -233,6 +231,8 @@ class ClientHandlerForBank extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     FileHandler.write();
+                    dataOutputStream.writeUTF("ok");
+                    dataOutputStream.flush();
                     socket.close();
                     break;
                 } else {

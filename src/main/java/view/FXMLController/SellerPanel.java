@@ -249,15 +249,6 @@ public class SellerPanel {
         Label withdrawal = new Label("➖ Withdrawal");
         withdrawal.getStyleClass().add("creditStyle1");
         withdrawal.setPadding(new Insets(4, 4, 4, 4));
-        withdrawal.setOnMouseClicked(event -> {
-            try {
-                //todo
-                dataOutputStream.writeUTF("runBankClient");
-                dataOutputStream.flush();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        });
         withdrawal.setOnMouseClicked(event -> popupMoney(false));
 
         boxIncreaseAndWith.getChildren().addAll(increase, withdrawal);
