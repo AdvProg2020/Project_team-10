@@ -308,8 +308,16 @@ class ClientHandler extends Thread {
                         dataOutputStream.writeUTF("false");
                     }
                     dataOutputStream.flush();
-                } else if (request.startsWith("pay")) {
-                    BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account));
+                } else if (request.startsWith("payWithCredit")) {
+                    BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account), true);
+                } else if (request.startsWith("payWithBankAccount")) {
+                    BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account), false);
+                    String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
+                    System.out.println("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
+                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
+                    System.out.println("receiptId = " + receiptId);
+                    System.out.println("pay: " + handleBankClient("pay " + receiptId));
+
                 } else if (request.startsWith("increase_credit")) {
                     String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
                     System.out.println("create_receipt " + token + " move " + info[2] + " " + account.getBankAccountId() + " 0 description");
@@ -356,6 +364,10 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("setMinimumCredit")) {
                     Shop.getShop().setMinimumCredit(Integer.parseInt(info[1]));
+                } else if (request.startsWith("getFinalTotalPrice_")) {
+                    Discount discount = Shop.getShop().getDiscountWithCode(Integer.parseInt(info[1]));
+                    dataOutputStream.writeUTF("" + BuyerManager.getFinalTotalPrice(discount, ((Buyer) account)));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;

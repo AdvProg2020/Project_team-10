@@ -90,39 +90,30 @@ public class Purchase {
             giveDiscountCode();
         } else {
             System.out.println("Discount code applied");
-            payment(getFinalTotalPrice(discount), discount);
+//            payment(getFinalTotalPrice(discount), discount);
         }
     }
 
-    public static double getFinalTotalPrice(Discount discount) {
-        //TODO
-//        if (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
-//            return (BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) - discount.getMaxAmountOfDiscount());
-//        } else {
-//            return BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()) * ((100.0 - discount.getPercent()) / 100.0);
-//        }
-        return 0;
-    }
 
     public static void payment(double finalPrice, Discount discount) {
-        System.out.println("Payment page");
-//        System.out.println("total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
-        System.out.println("payable amount: " + ((long) finalPrice));
-        System.out.println("1: confirm\n2: increase credit\n3: back");
-        int selected = Integer.parseInt(Menu.scanner.nextLine());
-        if (selected == 1) {
-//            if (canPay(finalPrice)) {
-////                pay(finalPrice, discount);
-//            } else {
-//                System.out.println("your credit is not enough");
-//            }
-        } else if (selected == 2) {
-            CommandProcessor.processIncreaseCredit();
-            payment(finalPrice, discount);
-        } else if (selected != 3) {
-            System.out.println("you must choose one of following options");
-            payment(finalPrice, discount);
-        }
+//        System.out.println("Payment page");
+////        System.out.println("total price: " + BuyerManager.getPriceAfterApplyOff(((Buyer) AccountManager.getOnlineAccount()).getCart()));
+//        System.out.println("payable amount: " + ((long) finalPrice));
+//        System.out.println("1: confirm\n2: increase credit\n3: back");
+//        int selected = Integer.parseInt(Menu.scanner.nextLine());
+//        if (selected == 1) {
+////            if (canPay(finalPrice)) {
+//////                pay(finalPrice, discount);
+////            } else {
+////                System.out.println("your credit is not enough");
+////            }
+//        } else if (selected == 2) {
+//            CommandProcessor.processIncreaseCredit();
+//            payment(finalPrice, discount);
+//        } else if (selected != 3) {
+//            System.out.println("you must choose one of following options");
+//            payment(finalPrice, discount);
+//        }
     }
 
 

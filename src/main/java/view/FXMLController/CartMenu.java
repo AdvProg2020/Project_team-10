@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
-import controller.AccountManager;
-import controller.BuyerManager;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -60,8 +58,8 @@ public class CartMenu {
     private Label payableAmount;
     private JFXToggleButton existenceOfDiscount;
     private Button confirmButton;
-    private Button paymentButton;
-    private Button increaseCreditButton;
+    private Button bankAccountButton;
+    private Button creditButton;
     private double finalTotalPrice;
     private Discount discount;
     private ZipCode creditField;
@@ -366,7 +364,7 @@ public class CartMenu {
         paymentPopup.initStyle(StageStyle.TRANSPARENT);
         paymentPopup.getScene().setFill(Color.TRANSPARENT);
         paymentPane.getChildren().addAll(exitButton(), nameField(), phoneNumberField(), addressField(), zipCode(),
-                discountCode(), existenceOfDiscount(), payment, totalPrice(), confirmButton(), paymentButton(), increaseCreditButton(),
+                discountCode(), existenceOfDiscount(), payment, totalPrice(), confirmButton(), payWithBankAccount(), payWithCredit(),
                 payableAmount(), error);
         paymentPopup.showAndWait();
 
@@ -476,71 +474,70 @@ public class CartMenu {
         return confirmButton;
     }
 
-    private Button paymentButton() {
-        paymentButton = new Button();
-        paymentButton.setAlignment(Pos.CENTER);
-        paymentButton.setPrefSize(150, 65);
+    private Button  payWithBankAccount() {
+        bankAccountButton = new Button();
+        bankAccountButton.setAlignment(Pos.CENTER);
+        bankAccountButton.setPrefSize(150, 65);
         ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/banklogo.png"));
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
 
-        paymentButton.setLayoutX(90);
-        paymentButton.setLayoutY(450);
-        paymentButton.getStyleClass().add("confirm");
-        paymentButton.setGraphic(imageView);
-        paymentButton.setOnMouseClicked(event -> {
+        bankAccountButton.setLayoutX(90);
+        bankAccountButton.setLayoutY(450);
+        bankAccountButton.getStyleClass().add("confirm");
+        bankAccountButton.setGraphic(imageView);
+        bankAccountButton.setOnMouseClicked(event -> {
             try {
-                processPayment(discount);
+                processPaymentWithBankAccount(discount);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        paymentButton.setVisible(false);
-        return paymentButton;
+        bankAccountButton.setVisible(false);
+        return bankAccountButton;
     }
 
-    private Button increaseCreditButton() {
-        increaseCreditButton = new Button();
-        increaseCreditButton.setPrefSize(150, 65);
-        increaseCreditButton.setLayoutX(250);
-        increaseCreditButton.setLayoutY(450);
-        increaseCreditButton.setAlignment(Pos.CENTER);
+    private Button payWithCredit() {
+        creditButton = new Button();
+        creditButton.setPrefSize(150, 65);
+        creditButton.setLayoutX(250);
+        creditButton.setLayoutY(450);
+        creditButton.setAlignment(Pos.CENTER);
         ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/creditlogo.png"));
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
-        increaseCreditButton.setGraphic(imageView);
+        creditButton.setGraphic(imageView);
 
-        increaseCreditButton.getStyleClass().add("confirm");
-        increaseCreditButton.setOnMouseClicked(event -> {
+        creditButton.getStyleClass().add("confirm");
+        creditButton.setOnMouseClicked(event -> {
             try {
-                processIncreaseCredit();
+                processPaymentWithCredit(discount);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        increaseCreditButton.setVisible(false);
-        return increaseCreditButton;
+        creditButton.setVisible(false);
+        return creditButton;
     }
 
-    private void processIncreaseCredit() throws IOException {
-        if (paymentButton.isVisible()) {
-            paymentButton.setVisible(false);
-            creditField = new ZipCode();
-            creditField.setPromptText("credit");
-            creditField.setPrefSize(150, 55);
-            creditField.setLayoutX(90);
-            creditField.setLayoutY(470);
-            creditField.getStyleClass().add("paymentFields");
-            paymentPane.getChildren().add(creditField);
-        } else {
-            dataOutputStream.writeUTF("increase_credit_" + creditField.getText());
-            dataOutputStream.flush();
-//            onlineAccount.increaseCredit(Long.parseLong(creditField.getText()));
-            error.setText("your credit increased");
-            creditField.setVisible(false);
-            paymentButton.setVisible(true);
-        }
-    }
+//    private void processIncreaseCredit() throws IOException {
+//        if (bankAccountButton.isVisible()) {
+//            bankAccountButton.setVisible(false);
+//            creditField = new ZipCode();
+//            creditField.setPromptText("credit");
+//            creditField.setPrefSize(150, 55);
+//            creditField.setLayoutX(90);
+//            creditField.setLayoutY(470);
+//            creditField.getStyleClass().add("paymentFields");
+//            paymentPane.getChildren().add(creditField);
+//        } else {
+//            dataOutputStream.writeUTF("increase_credit_" + creditField.getText());
+//            dataOutputStream.flush();
+//            error.setText("your credit increased");
+//            creditField.setVisible(false);
+//            bankAccountButton.setVisible(true);
+//        }
+//    }
 
     private void processPurchase() {
         if ((discountCode.getText().length() == 0 && existenceOfDiscount.isSelected()) || zipCode.getText().length() == 0 || phoneNumberField.getText().length() == 0 ||
@@ -564,11 +561,13 @@ public class CartMenu {
                     error.setText("you cannot use the discount anymore");
                 } else {
                     error.setText("");
-                    finalTotalPrice = Purchase.getFinalTotalPrice(discount);
+                    dataOutputStream.writeUTF("getFinalTotalPrice_" + discount.getCode());
+                    dataOutputStream.flush();
+                    finalTotalPrice = Long.parseLong(dataInputStream.readUTF());
                     payableAmount.setText("payable amount: " + ((long) finalTotalPrice));
                     confirmButton.setVisible(false);
-                    paymentButton.setVisible(true);
-                    increaseCreditButton.setVisible(true);
+                    bankAccountButton.setVisible(true);
+                    creditButton.setVisible(true);
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
@@ -577,20 +576,20 @@ public class CartMenu {
             error.setText("");
             existenceOfDiscount.setDisable(true);
             confirmButton.setVisible(false);
-            paymentButton.setVisible(true);
-            increaseCreditButton.setVisible(true);
+            bankAccountButton.setVisible(true);
+            creditButton.setVisible(true);
         }
     }
 
-    private void processPayment(Discount discount) throws IOException {
+    private void processPaymentWithCredit(Discount discount) throws IOException {
         dataOutputStream.writeUTF("can_pay_" + finalTotalPrice);
         dataOutputStream.flush();
         String response = dataInputStream.readUTF();
         if (response.equals("true")) {
             if (discount == null) {
-                dataOutputStream.writeUTF("pay_" + finalTotalPrice + "_" + 0);
+                dataOutputStream.writeUTF("payWithCredit_" + ((long) finalTotalPrice) + "_" + 0);
             } else {
-                dataOutputStream.writeUTF("pay_" + finalTotalPrice + "_" + discount.getCode());
+                dataOutputStream.writeUTF("payWithCredit_" + ((long) finalTotalPrice) + "_" + discount.getCode());
             }
             dataOutputStream.flush();
             paymentPopup.close();
@@ -599,6 +598,18 @@ public class CartMenu {
         } else {
             error.setText("your credit is not enough");
         }
+    }
+
+    private void processPaymentWithBankAccount(Discount discount) throws IOException {
+        if (discount == null) {
+            dataOutputStream.writeUTF("payWithBankAccount_" + ((long) finalTotalPrice) + "_" + 0);
+        } else {
+            dataOutputStream.writeUTF("payWithBankAccount_" + ((long) finalTotalPrice) + "_" + discount.getCode());
+        }
+        dataOutputStream.flush();
+        paymentPopup.close();
+        fade(0.5, 10);
+        backToMainMenu();
     }
 
     private Button exitButton() {

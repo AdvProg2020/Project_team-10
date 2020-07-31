@@ -49,6 +49,15 @@ public class BuyerManager {
         return totalPrice;
     }
 
+    public static long getFinalTotalPrice(Discount discount, Buyer buyer) {
+        if (BuyerManager.getPriceAfterApplyOff(buyer) * (discount.getPercent() / 100.0) > discount.getMaxAmountOfDiscount()) {
+            return (BuyerManager.getPriceAfterApplyOff(buyer) - discount.getMaxAmountOfDiscount());
+        } else {
+            return (((long) (BuyerManager.getPriceAfterApplyOff(buyer) * ((100.0 - discount.getPercent()) / 100.0))));
+        }
+    }
+
+
     public static void purchase() {
     }
 
@@ -67,14 +76,14 @@ public class BuyerManager {
         return finalPrice <= account.getCredit();
     }
 
-    public static void pay(double finalPrice, int code, Buyer currentBuyer) {
+    public static void pay(double finalPrice, int code, Buyer currentBuyer, boolean payWithCredit) {
         Discount currentDiscount = Shop.getShop().getDiscountWithCode(code);
-        currentBuyer.subtractCredit(finalPrice);
+        if (payWithCredit) {
+            currentBuyer.subtractCredit(finalPrice);
+        }
         Set<Seller> sellers = new HashSet<>();
         for (Good good : currentBuyer.getCart()) {
             good.getBuyersUsername().add(currentBuyer.getUsername());
-            System.out.println(good.getSellerUsername());
-            System.out.println(Shop.getShop().getAccountByUsername(good.getSellerUsername()));
             sellers.add(((Seller) Shop.getShop().getAccountByUsername(good.getSellerUsername())));
         }
         for (Integer discountCode : currentBuyer.getDiscountAndNumberOfAvailableDiscount().keySet()) {
@@ -100,11 +109,9 @@ public class BuyerManager {
                     goodsOfOneSeller.add(good);
                 }
             }
-            System.out.println(sellersToHisGoods);
-            System.out.println(seller.getUsername());
-            System.out.println(goodsOfOneSeller);
             sellersToHisGoods.put(seller.getUsername(), goodsOfOneSeller);
-            seller.increaseCredit(BuyerManager.getPriceAfterApplyOff(currentBuyer));
+            int wage = Shop.getShop().getWage();
+            seller.increaseCredit(((long) (BuyerManager.getPriceAfterApplyOff(currentBuyer) * ((100 - wage) / 100.0))));
             seller.getSellerLogs().add(new SellerLog(AccountManager.getLastSellerLogId() + 1, new Date(), ((long) finalPrice),
                     BuyerManager.getTotalPrice(currentBuyer) - BuyerManager.getPriceAfterApplyOff(currentBuyer)
                     , sellersToHisGoods.get(seller.getUsername()), currentBuyer.getUsername(), "received"));
