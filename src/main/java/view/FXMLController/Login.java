@@ -34,6 +34,7 @@ import view.NumberField;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public class Login {
     private final static List<String> fileNames = new ArrayList<>();
     public Button btnOnlineSupport;
     public Button btnAuction;
+    private String fileName;
 
     public Login(AnchorPane mainPane, Button btnLogin, Button btnAuction , Button btnSupport, Button btnCartMenu, AnchorPane mainMenu, MainMenu main,
                  Socket socket, Account onlineAccount) throws IOException {
@@ -436,18 +438,21 @@ public class Login {
             type = "buyer";
         }
         if (selectedFile != null) {
-            File dest = new File("src/main/java/view/databaseMedia/userImage/" + createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedFile, dest);
-            String imagePath = dest.getPath();
+//            File dest = new File("src/main/java/view/databaseMedia/userImage/" + createTokenForFiles() + ".jpg");
+//            copyFileUsingStream(selectedFile, dest);
+            String imagePath = selectedFile.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
+                        fileName = imagePath;
                         dataOutputStream.writeUTF("can_register_" + username);
                         dataOutputStream.flush();
                         if (dataInputStream.readUTF().equals("true")) {
+
                             dataOutputStream.writeUTF("register_" + username + "_" + password + "_" + type + "_" + firstName
-                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + company + "_" + imagePath);
+                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + company + "_" + sendFile());
                             dataOutputStream.flush();
+
                             popupWindow.close();
                             fade(0.5, 10);
                         } else {
@@ -468,6 +473,29 @@ public class Login {
         }
     }
 
+    private String sendFile() throws IOException {
+        try {
+        File myFile = new File(fileName);
+        byte[] mybytearray = new byte[(int) myFile.length()];
+
+        FileInputStream fis = new FileInputStream(myFile);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+
+        DataInputStream dis = new DataInputStream(bis);
+        dis.readFully(mybytearray, 0, mybytearray.length);
+
+        //Sending file name and file size to the server
+        dataOutputStream.writeUTF("sendFile_"+myFile.getName());
+        dataOutputStream.writeLong(mybytearray.length);
+        dataOutputStream.write(mybytearray, 0, mybytearray.length);
+        dataOutputStream.flush();
+        System.out.println("File "+fileName+" sent to Server.");
+    } catch (Exception e) {
+        System.err.println("Exceptionnnn: "+e);
+    }
+        return dataInputStream.readUTF();
+    }
+
     private static void copyFileUsingStream(File source, File dest) throws IOException {
         try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
             byte[] buffer = new byte[1024];
@@ -485,7 +513,7 @@ public class Login {
         error.setTextFill(Color.RED);
     }
 
-    public void handleUserBtn() {
+    public void handleUserBtn() throws IOException {
 
         popupUser = new FlowPane();
         popupUser.setAlignment(Pos.CENTER_LEFT);
@@ -503,10 +531,19 @@ public class Login {
 
         HBox hBox = new HBox();
         Circle circle = new Circle(20);
-        ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
-        circle.setFill(pattern);
+        if (!(new File("file:"+onlineAccount.getImagePath()).exists())){
+            dataOutputStream.writeUTF("receiveFile_"+ onlineAccount.getUsername());
+            dataOutputStream.flush();
+            ImagePattern pattern = new ImagePattern(new Image("file:" +  receiveFile()));
+            circle.setFill(pattern);
+        }else {
+            System.out.println("exist");
+            ImagePattern pattern = new ImagePattern(new Image("file:" + onlineAccount.getImagePath()));
+            circle.setFill(pattern);
+        }
         circle.setStrokeWidth(1.5);
         circle.setStroke(Color.rgb(16, 137, 255));
+
 
         hBox.setPadding(new Insets(0, 0, 5, 9));
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -563,6 +600,28 @@ public class Login {
 
         });
         mainPane.getChildren().add(user);
+
+    }
+
+    public String receiveFile() {
+        try {
+            int bytesRead;
+
+            fileName = dataInputStream.readUTF();
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/"+fileName);
+            long size = dataInputStream.readLong();
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }
+
+            System.out.println("File "+fileName+" received from Server.");
+            return "src/main/java/view/fileSender/"+fileName;
+        } catch (IOException ex) {
+            System.out.println("Exception: "+ex);
+            return null;
+        }
 
     }
 

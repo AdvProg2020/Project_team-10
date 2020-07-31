@@ -869,20 +869,21 @@ public class SellerPanel {
             int number = Integer.parseInt(this.number.getText());
             long price = Long.parseLong(this.price.getText());
 
-            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
-                    Login.createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedImageFile, destImage);
-            String imagePath = destImage.getPath();
+//            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
+//                    Login.createTokenForFiles() + ".jpg");
+//            copyFileUsingStream(selectedImageFile, destImage);
+            String imagePath = selectedImageFile.getPath();
 
-            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
-                    Login.createTokenForFiles() + ".mp4");
-            copyFileUsingStream(selectedVideoFile, destVideo);
-            String videoPath = destVideo.getPath();
+//            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
+//                    Login.createTokenForFiles() + ".mp4");
+//            copyFileUsingStream(selectedVideoFile, destVideo);
+            String videoPath = selectedVideoFile.getPath();
 
             dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
                     + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
-                    + "_" + imagePath + "_" + videoPath + "_" + token);
+                    + "_" + sendFile(imagePath) + "_" + sendFile(videoPath) + "_" + token);
             dataOutputStream.flush();
+
             Type sellerType = new TypeToken<Seller>() {
             }.getType();
             onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), sellerType);
@@ -900,6 +901,51 @@ public class SellerPanel {
         } else {
             error.setText("you should fill all the fields");
         }
+    }
+
+    private String receiveFile() {
+        try {
+            int bytesRead;
+
+            String fileName = dataInputStream.readUTF();
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/"+fileName);
+            long size = dataInputStream.readLong();
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }
+
+            System.out.println("File "+fileName+" received from Server.");
+            return "src/main/java/view/fileSender/"+fileName;
+        } catch (IOException ex) {
+            System.out.println("Exception: "+ex);
+            return null;
+        }
+
+    }
+
+    private String sendFile(String path) throws IOException {
+        try {
+            File myFile = new File(path);
+            byte[] mybytearray = new byte[(int) myFile.length()];
+
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+
+            DataInputStream dis = new DataInputStream(bis);
+            dis.readFully(mybytearray, 0, mybytearray.length);
+
+            //Sending file name and file size to the server
+            dataOutputStream.writeUTF("sendFile_"+myFile.getName());
+            dataOutputStream.writeLong(mybytearray.length);
+            dataOutputStream.write(mybytearray, 0, mybytearray.length);
+            dataOutputStream.flush();
+            System.out.println("File "+path+" sent to Server.");
+        } catch (Exception e) {
+            System.err.println("Exceptionnnn: "+e);
+        }
+        return dataInputStream.readUTF();
     }
 
     private static void copyFileUsingStream(File source, File dest) throws IOException {
@@ -1127,7 +1173,7 @@ public class SellerPanel {
 
     }
 
-    private FlowPane handelManageProduct() {
+    private FlowPane handelManageProduct() throws IOException {
         FlowPane flowPane = new FlowPane();
         flowPane.getStylesheets().add("file:src/main/java/view/css/adminPanel.css");
         flowPane.setPrefWidth(1150);
@@ -1154,11 +1200,15 @@ public class SellerPanel {
         addGoodBox.setAlignment(Pos.CENTER);
         flowPane.getChildren().add(addGoodBox);
         for (Good good : ((Seller) onlineAccount).getGoods()) {
+
+            dataOutputStream.writeUTF("receiveGoodFile_"+ good.getId());
+            dataOutputStream.flush();
+
             VBox goodPack = new VBox();
             goodPack.setPrefWidth(225);
             goodPack.setPrefHeight(350);
             goodPack.getStyleClass().add("vBoxInMainMenu");
-            ImageView productImage = new ImageView(new Image("file:" + good.getImagePath()));
+            ImageView productImage = new ImageView(new Image("file:" + receiveFile()));
             productImage.setFitHeight(170);
             productImage.setFitWidth(170);
             Label name = new Label(good.getName());
