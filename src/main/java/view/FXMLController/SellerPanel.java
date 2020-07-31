@@ -903,7 +903,7 @@ public class SellerPanel {
         }
     }
 
-    public String receiveFile() {
+    private String receiveFile() {
         try {
             int bytesRead;
 

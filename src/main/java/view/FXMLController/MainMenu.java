@@ -165,7 +165,14 @@ public class MainMenu implements Initializable {
             vBox.setPrefWidth(295);
             vBox.setPrefHeight(320);
             vBox.getStyleClass().add("vBoxInMainMenu");
-            ImageView logoImage = new ImageView(new Image("file:" + filteredGoods.get(i).getImagePath()));
+
+            try {
+                dataOutputStream.writeUTF("receiveGoodFile_" + filteredGoods.get(i).getId());
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ImageView logoImage = new ImageView(new Image("file:" +receiveFile()));
             logoImage.setFitHeight(190);
             logoImage.setFitWidth(190);
             logoImage.getStyleClass().add("goodImage");
@@ -225,6 +232,28 @@ public class MainMenu implements Initializable {
         return box;
     }
 
+
+    private String receiveFile() {
+        try {
+            int bytesRead;
+
+            String fileName = dataInputStream.readUTF();
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/"+fileName);
+            long size = dataInputStream.readLong();
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }
+
+            System.out.println("File "+fileName+" received from Server.");
+            return "src/main/java/view/fileSender/"+fileName;
+        } catch (IOException ex) {
+            System.out.println("Exception: "+ex);
+            return null;
+        }
+
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
