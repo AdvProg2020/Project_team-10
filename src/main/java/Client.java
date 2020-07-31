@@ -17,7 +17,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        System.out.println("s");
         URL url = Paths.get(mainMenuURL).toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
