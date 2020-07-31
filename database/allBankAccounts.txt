@@ -1,1 +1,1 @@
-[{"firstName":"admins","lastName":"admins","username":"shop","password":"javad1379","accountNumber":0,"money":2},{"firstName":"sd","lastName":"sd","username":"seller111","password":"seller111","accountNumber":1,"money":9999998}]
+[{"firstName":"ds","lastName":"dsv","username":"ali","password":"javad1379","accountNumber":1,"money":10000000}]

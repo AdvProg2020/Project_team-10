@@ -1221,7 +1221,7 @@ public class AdminPanel {
             flowPane.getChildren().add(hBox);
             deleteAccountImage.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove_account_" + new Gson().toJson(account));
+                    dataOutputStream.writeUTF("remove_account_" + account.getUsername());
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();

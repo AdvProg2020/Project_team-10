@@ -92,6 +92,11 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("remove_off")) {
                     int id = Integer.parseInt(info[2]);
                     SellerManager.removeOff(account.getUsername(), id);
+                } else if (request.startsWith("remove_account")) {
+                    AdminManager.deleteAccount(Shop.getShop().getAccountByUsername(info[2]));
+                } else if (request.startsWith("sendFile_")) {
+                    dataOutputStream.writeUTF(receiveFile(request));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("get_category")) {
                     String categoryName = info[2];
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getCategoryByName(categoryName)));
@@ -128,11 +133,13 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("register")) {
                     Account account = AccountManager.register(info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9]);
+                    System.out.println(account.getUsername());
                     if (account instanceof Buyer || account instanceof Seller) {
                         String accountId = handleBankClient("create_account " + info[4] + " " + info[5] + " " + info[1] + " " + info[2] + " " + info[2]);
                         account.setBankAccountId(accountId);
                         String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
                         String receiptId = handleBankClient("create_receipt " + token + " deposit 10000000 -1 " + accountId + " description");
+                        System.out.println("create_receipt " + token + " deposit 10000000 -1 " + accountId + " description");
                         System.out.println(handleBankClient("pay " + receiptId));
                     }
                 } else if (request.startsWith("get_total_price")) {
@@ -356,6 +363,10 @@ class ClientHandler extends Thread {
                     dataOutputStream.flush();
                 } else if (request.startsWith("setMinimumCredit")) {
                     Shop.getShop().setMinimumCredit(Integer.parseInt(info[1]));
+                } else if (request.startsWith("receiveFile_")) {
+                    sendFile(account.getImagePath());
+                } else if (request.startsWith("receiveGoodFile_")) {
+                    sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
                 } else if (request.startsWith("exit")) {
                     disconnectClient();
                     break;
@@ -366,6 +377,56 @@ class ClientHandler extends Thread {
             offlineAccount();
         }
     }
+
+    public String receiveFile(String request) {
+        try {
+            int bytesRead;
+            System.out.println(request);
+            String fileName = request.split("_")[1];
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/" + fileName);
+            long size = dataInputStream.readLong();
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }
+
+//            output.close();
+//            dataInputStream.close();
+
+            System.out.println("File " + fileName + " received from client.");
+            return "src/main/java/view/fileSender/" + fileName;
+
+        } catch (IOException ex) {
+            System.err.println("Client error. Connection closed.");
+            return null;
+        }
+
+    }
+
+
+    public void sendFile(String fileName) {
+        try {
+
+            File myFile = new File(fileName);  //handle file reading
+            byte[] mybytearray = new byte[(int) myFile.length()];
+
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+
+            DataInputStream dis = new DataInputStream(bis);
+            dis.readFully(mybytearray, 0, mybytearray.length);
+
+            dataOutputStream.writeUTF(myFile.getName());
+            dataOutputStream.writeLong(mybytearray.length);
+            dataOutputStream.write(mybytearray, 0, mybytearray.length);
+            dataOutputStream.flush();
+            System.out.println("File "+fileName+" sent to client.");
+        } catch (Exception e) {
+            System.err.println("File does not exist!");
+        }
+    }
+
 
     private void disconnectClient() throws IOException {
         FileHandler.write();
