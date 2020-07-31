@@ -356,7 +356,7 @@ public class GoodMenu {
         productPrice.setText("$" + currentGood.getPrice());
         mainPane.getStylesheets().add("file:src/main/java/view/css/goodPage.css");
         tabPane(innerPane);
-        similarProducts(innerPane);
+//        similarProducts(innerPane);
         scrollPack.getChildren().add(goodPageScrollPane);
         mainPane.getChildren().add(scrollPack);
         innerPane.setPrefSize(1470, 640);
@@ -378,6 +378,7 @@ public class GoodMenu {
                 productBox.setPrefWidth(180);
                 productBox.setPrefHeight(200);
                 productBox.getStyleClass().add("vBoxInMainMenu");
+
                 ImageView logoImage = new ImageView(new Image("file:" + good.getImagePath()));
                 logoImage.setFitHeight(120);
                 logoImage.setFitWidth(120);

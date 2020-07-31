@@ -659,12 +659,34 @@ public class SellerPanel {
         selectAPhoto.setPrefWidth(100);
         selectAPhoto.getStyleClass().add("selectPhoto");
 
+        Button selectAVideo = new Button("Select a video");
+        selectAVideo.setLayoutX(340);
+        selectAVideo.setLayoutY(236);
+        selectAVideo.setPrefWidth(100);
+        selectAVideo.getStyleClass().add("selectPhoto");
+
+        Button selectAFile= new Button("Upload file");
+        selectAFile.setLayoutX(340);
+        selectAFile.setLayoutY(256);
+        selectAFile.setPrefWidth(100);
+        selectAFile.getStyleClass().add("selectPhoto");
+
         FileChooser imageFileChooser = new FileChooser();
         imageFileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG Files", "*.jpg")
                 , new FileChooser.ExtensionFilter("PNG Files", "*.png")
         );
         Stage windowImageFile = new Stage();
+
+        FileChooser fileChooser = new FileChooser();
+        Stage fileChooserWindow = new Stage();
+
+
+        selectAFile.setOnAction(event -> {
+            selectAPhoto.setDisable(true);
+            selectAVideo.setDisable(true);
+            selectedVideoFile = fileChooser.showOpenDialog(fileChooserWindow);
+        });
 
         loginPane.getChildren().addAll(selectAPhoto, rectangle);
         selectAPhoto.setOnAction(e -> {
@@ -726,12 +748,6 @@ public class SellerPanel {
                 e.printStackTrace();
             }
         });
-
-        Button selectAVideo = new Button("Select a video");
-        selectAVideo.setLayoutX(340);
-        selectAVideo.setLayoutY(256);
-        selectAVideo.setPrefWidth(100);
-        selectAVideo.getStyleClass().add("selectPhoto");
 
         ScrollPane categoryPack = new ScrollPane();
         categoryPack.setLayoutY(290);
@@ -829,7 +845,7 @@ public class SellerPanel {
 
 
         loginPane.getChildren().addAll(exitButton(), goodName, company,
-                number, price, description, categoryPack, attributePack, title, submit, error);
+                number, price, description, categoryPack, attributePack, title, submit, error,selectAFile);
     }
 
     private boolean isAllFieldsFilled() {
@@ -863,16 +879,23 @@ public class SellerPanel {
 //            File destImage = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
 //                    Login.createTokenForFiles() + ".jpg");
 //            copyFileUsingStream(selectedImageFile, destImage);
-            String imagePath = selectedImageFile.getPath();
+
 
 //            File destVideo = new File("src/main/java/view/databaseMedia/productImageAndVideo/" +
 //                    Login.createTokenForFiles() + ".mp4");
 //            copyFileUsingStream(selectedVideoFile, destVideo);
             String videoPath = selectedVideoFile.getPath();
 
-            dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
-                    + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
-                    + "_" + sendFile(imagePath) + "_" + sendFile(videoPath) + "_" + token);
+            if (selectedImageFile== null){
+                dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
+                        + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
+                        + "_" + sendFile("src/main/java/view/image/file.png") + "_" + sendFile(videoPath) + "_" + token);
+            } else {
+                String imagePath = selectedImageFile.getPath();
+                dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
+                        + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
+                        + "_" + sendFile(imagePath) + "_" + sendFile(videoPath) + "_" + token);
+            }
             dataOutputStream.flush();
 
             Type sellerType = new TypeToken<Seller>() {
@@ -1254,7 +1277,7 @@ public class SellerPanel {
             goodPack.getChildren().addAll(productImage, name, price, visit, hBox);
             bin.setOnMouseClicked(e -> {
                 try {
-                    dataOutputStream.writeUTF("remove product " + good.getId() + "_" + token);
+                    dataOutputStream.writeUTF("remove_product_" + good.getId() + "_" + token);
                     dataOutputStream.flush();
                 } catch (IOException ex) {
                     ex.printStackTrace();

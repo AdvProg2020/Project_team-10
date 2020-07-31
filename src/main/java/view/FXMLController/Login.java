@@ -475,24 +475,24 @@ public class Login {
 
     private String sendFile() throws IOException {
         try {
-        File myFile = new File(fileName);
-        byte[] mybytearray = new byte[(int) myFile.length()];
+            File myFile = new File(fileName);
+            byte[] mybytearray = new byte[(int) myFile.length()];
 
-        FileInputStream fis = new FileInputStream(myFile);
-        BufferedInputStream bis = new BufferedInputStream(fis);
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
 
-        DataInputStream dis = new DataInputStream(bis);
-        dis.readFully(mybytearray, 0, mybytearray.length);
+            DataInputStream dis = new DataInputStream(bis);
+            dis.readFully(mybytearray, 0, mybytearray.length);
 
-        //Sending file name and file size to the server
-        dataOutputStream.writeUTF("sendFile_"+myFile.getName());
-        dataOutputStream.writeLong(mybytearray.length);
-        dataOutputStream.write(mybytearray, 0, mybytearray.length);
-        dataOutputStream.flush();
-        System.out.println("File "+fileName+" sent to Server.");
-    } catch (Exception e) {
-        System.err.println("Exceptionnnn: "+e);
-    }
+            //Sending file name and file size to the server
+            dataOutputStream.writeUTF("sendFile_"+myFile.getName());
+            dataOutputStream.writeLong(mybytearray.length);
+            dataOutputStream.write(mybytearray, 0, mybytearray.length);
+            dataOutputStream.flush();
+            System.out.println("File "+fileName+" sent to Server.");
+        } catch (Exception e) {
+            System.err.println("Exceptionnnn: "+e);
+        }
         return dataInputStream.readUTF();
     }
 
@@ -683,4 +683,5 @@ public class Login {
 
 
 }
+
 

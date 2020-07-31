@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -719,13 +720,60 @@ public class BuyerPanel {
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 14px;" + "-fx-font-weight: bold;");
                 number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 productBox.setAlignment(Pos.CENTER);
+
+
                 productBox.getChildren().addAll(logoImage, name, price, number);
+
+                if (good.getImagePath().contains("file.png")){
+
+                    try {
+                        dataOutputStream.writeUTF("receiveVideoFile_"+ good.getId());
+                        dataOutputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    FileChooser fileChooser = new FileChooser();
+                    Stage fileChooserWindow = new Stage();
+                    Label don = new Label("Download");
+                    don.setPadding(new Insets(3,3,3,3));
+                    don.setStyle("-fx-background-color: #00b200;-fx-text-fill: white;");
+                    productBox.getChildren().add(don);
+                    don.setOnMouseClicked(event -> {
+                        File selectedVideoFile = fileChooser.showSaveDialog(fileChooserWindow);
+                        receiveFile(selectedVideoFile);
+                    });
+
+                }
+
                 goods.getChildren().add(productBox);
             }
 
 
             hBox.getChildren().addAll(sellerName, goodsScrollPane);
             flowPane.getChildren().add(hBox);
+        }
+
+    }
+
+    private String receiveFile(File selectedVideoFile) {
+        try {
+            int bytesRead;
+
+            String fileName = dataInputStream.readUTF();
+            OutputStream output = new FileOutputStream(selectedVideoFile);
+            long size = dataInputStream.readLong();
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }
+
+            System.out.println("File "+fileName+" received from Server.");
+            return "src/main/java/view/fileSender/"+fileName;
+        } catch (IOException ex) {
+            System.out.println("Exception: "+ex);
+            return null;
         }
 
     }

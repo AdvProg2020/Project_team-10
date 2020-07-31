@@ -154,82 +154,84 @@ public class MainMenu implements Initializable {
     }
 
     public FlowPane createPage(int pageIndex) {
-        FlowPane box = new FlowPane();
-        int page = pageIndex * 12;
-        for (int i = page; i < page + 12; i++) {
-            if (i >= filteredGoods.size()) {
-                break;
-            }
-            VBox vBox = new VBox();
-            vBox.setPadding(new Insets(20, 5, 10, 5));
-            vBox.setPrefWidth(295);
-            vBox.setPrefHeight(320);
-            vBox.getStyleClass().add("vBoxInMainMenu");
+        try {
+            FlowPane box = new FlowPane();
+            int page = pageIndex * 12;
+            for (int i = page; i < page + 12; i++) {
+                if (i >= filteredGoods.size()) {
+                    break;
+                }
+                VBox vBox = new VBox();
+                vBox.setPadding(new Insets(20, 5, 10, 5));
+                vBox.setPrefWidth(295);
+                vBox.setPrefHeight(320);
+                vBox.getStyleClass().add("vBoxInMainMenu");
 
-            try {
+                ImageView logoImage;
                 dataOutputStream.writeUTF("receiveGoodFile_" + filteredGoods.get(i).getId());
                 dataOutputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ImageView logoImage = new ImageView(new Image("file:" +receiveFile()));
-            logoImage.setFitHeight(190);
-            logoImage.setFitWidth(190);
-            logoImage.getStyleClass().add("goodImage");
-            Label name = new Label(filteredGoods.get(i).getName());
-            Label price = new Label("$" + filteredGoods.get(i).getPrice() + "");
-            Label visit = new Label(filteredGoods.get(i).getVisitNumber() + "");
-            visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
-            ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
-            eye.setFitHeight(15);
-            eye.setFitWidth(15);
-            visit.setGraphic(eye);
+                logoImage = new ImageView(new Image("file:" + receiveFile()));
+                logoImage.setFitHeight(190);
+                logoImage.setFitWidth(190);
+                logoImage.getStyleClass().add("goodImage");
+                Label name = new Label(filteredGoods.get(i).getName());
+                Label price = new Label("$" + filteredGoods.get(i).getPrice() + "");
+                Label visit = new Label(filteredGoods.get(i).getVisitNumber() + "");
+                visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
+                ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
+                eye.setFitHeight(15);
+                eye.setFitWidth(15);
+                visit.setGraphic(eye);
 
-            name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
-            price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
-            vBox.setOnMouseEntered(event -> fadeEffect(vBox));
-            int finalI = i;
-            logoImage.setOnMouseClicked(event -> {
-                GoodMenu goodMenu = null;
-                try {
-                    goodMenu = new GoodMenu(mainPane, socket, onlineAccount);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
+                price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 18px;" + "-fx-font-weight: bold;");
+                vBox.setOnMouseEntered(event -> fadeEffect(vBox));
+                int finalI = i;
+                logoImage.setOnMouseClicked(event -> {
+                    GoodMenu goodMenu = null;
+                    try {
+                        goodMenu = new GoodMenu(mainPane, socket, onlineAccount);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    goodMenu.setCurrentGood(filteredGoods.get(finalI));
+                    mainPane.getChildren().remove(mainMenu);
+                    goodMenu.changePane();
+                });
+
+                HBox visitAndOff = new HBox(5);
+                visitAndOff.setPadding(new Insets(45, 0, 0, 15));
+                visitAndOff.getChildren().add(visit);
+                if (filteredGoods.get(i).getOffId() != 0) {
+                    try {
+                        dataOutputStream.writeUTF("get_off_" + filteredGoods.get(i).getOffId());
+                        dataOutputStream.flush();
+                        Type offType = new TypeToken<Off>() {
+                        }.getType();
+                        Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
+                        Label offLabel = new Label(off.getPercent() + "%");
+                        offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
+                        ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
+                        offImage.setFitWidth(15);
+                        offImage.setFitHeight(15);
+                        offLabel.setGraphic(offImage);
+                        visitAndOff.getChildren().add(offLabel);
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
-                goodMenu.setCurrentGood(filteredGoods.get(finalI));
-                mainPane.getChildren().remove(mainMenu);
-                goodMenu.changePane();
-            });
 
-            HBox visitAndOff = new HBox(5);
-            visitAndOff.setPadding(new Insets(45, 0, 0, 15));
-            visitAndOff.getChildren().add(visit);
-            if (filteredGoods.get(i).getOffId() != 0) {
-                try {
-                    dataOutputStream.writeUTF("get_off_" + filteredGoods.get(i).getOffId());
-                    dataOutputStream.flush();
-                    Type offType = new TypeToken<Off>() {
-                    }.getType();
-                    Off off = new Gson().fromJson(dataInputStream.readUTF(), offType);
-                    Label offLabel = new Label(off.getPercent() + "%");
-                    offLabel.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: red;-fx-font-weight: bold;");
-                    ImageView offImage = new ImageView(new Image("file:src/main/java/view/image/off.png"));
-                    offImage.setFitWidth(15);
-                    offImage.setFitHeight(15);
-                    offLabel.setGraphic(offImage);
-                    visitAndOff.getChildren().add(offLabel);
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
+                vBox.setAlignment(Pos.CENTER);
+                vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) filteredGoods.get(i).calculateAverageRate()), visitAndOff);
+
+                box.getChildren().add(vBox);
             }
-
-
-            vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().addAll(logoImage, name, price, covertScoreToStar((int) filteredGoods.get(i).calculateAverageRate()), visitAndOff);
-
-            box.getChildren().add(vBox);
+            return box;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return box;
+
     }
 
 
@@ -238,7 +240,7 @@ public class MainMenu implements Initializable {
             int bytesRead;
 
             String fileName = dataInputStream.readUTF();
-            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/"+fileName);
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/" + fileName);
             long size = dataInputStream.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -246,10 +248,10 @@ public class MainMenu implements Initializable {
                 size -= bytesRead;
             }
 
-            System.out.println("File "+fileName+" received from Server.");
-            return "src/main/java/view/fileSender/"+fileName;
+            System.out.println("File " + fileName + " received from Server.");
+            return "src/main/java/view/fileSender/" + fileName;
         } catch (IOException ex) {
-            System.out.println("Exception: "+ex);
+            System.out.println("Exception: " + ex);
             return null;
         }
 

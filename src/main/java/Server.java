@@ -376,6 +376,8 @@ class ClientHandler extends Thread {
                     sendFile(account.getImagePath());
                 } else if (request.startsWith("receiveGoodFile_")) {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
+                } else if (request.startsWith("receiveVideoFile_")) {
+                    sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVideoPath());
                 } else if (request.startsWith("exit")) {
                     handleBankClient("exit");
                     disconnectClient();
