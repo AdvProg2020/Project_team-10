@@ -572,7 +572,11 @@ public class SellerPanel {
                     }
                     goodMenu.setCurrentGood(good);
                     mainPane.getChildren().remove(Login.currentPane);
-                    goodMenu.changePane();
+                    try {
+                        goodMenu.changePane();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
                 vBox.setAlignment(Pos.CENTER);
                 vBox.getChildren().addAll(name, price);
@@ -1240,7 +1244,11 @@ public class SellerPanel {
                 }
                 goodMenu.setCurrentGood(good);
                 mainPane.getChildren().remove(Login.currentPane);
-                goodMenu.changePane();
+                try {
+                    goodMenu.changePane();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
             goodPack.setAlignment(Pos.CENTER);
 

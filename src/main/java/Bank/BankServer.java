@@ -18,7 +18,7 @@ public class BankServer {
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(8888);
+        ServerSocket serverSocket = new ServerSocket(9999);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();

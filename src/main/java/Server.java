@@ -25,7 +25,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         FileHandler.updateDatabase();
-        ServerSocket serverSocket = new ServerSocket(8000);
+        ServerSocket serverSocket = new ServerSocket(6666);
         while (true) {
             System.out.println("Waiting for client...");
             Socket clientSocket = serverSocket.accept();
@@ -317,8 +317,8 @@ class ClientHandler extends Thread {
                 } else if (request.startsWith("payWithBankAccount")) {
                     BuyerManager.pay(Double.parseDouble(info[1]), Integer.parseInt(info[2]), ((Buyer) account), false);
                     String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
-                    System.out.println("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
-                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[1] + " 0 " + account.getBankAccountId() + " description");
+                    System.out.println("create_receipt " + token + " move " + info[1] + " " + account.getBankAccountId() + " 0 description");
+                    String receiptId = handleBankClient("create_receipt " + token + " move " + info[1] + " " + account.getBankAccountId() + " 0 description");
                     System.out.println("receiptId = " + receiptId);
                     System.out.println("pay: " + handleBankClient("pay " + receiptId));
 
@@ -378,6 +378,13 @@ class ClientHandler extends Thread {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
                 } else if (request.startsWith("receiveVideoFile_")) {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVideoPath());
+                } else if (request.startsWith("visit_")) {
+                    dataOutputStream.writeUTF(" " + Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVisitNumber());
+                    dataOutputStream.flush();
+                } else if (request.startsWith("visitIncrease_")) {
+                    Good good = Shop.getShop().getProductWithId(Integer.parseInt(info[1]));
+                    int number = good.getVisitNumber() + 1;
+                    good.setVisitNumber(number);
                 } else if (request.startsWith("exit")) {
                     handleBankClient("exit");
                     disconnectClient();
@@ -457,7 +464,7 @@ class ClientHandler extends Thread {
     }
 
     private String handleBankClient(String message) throws IOException {
-        Socket bankSocket = new Socket("localhost", 8888);
+        Socket bankSocket = new Socket("localhost", 9999);
         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(bankSocket.getOutputStream()));
         DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(bankSocket.getInputStream()));
         dataOutputStream.writeUTF(message);
