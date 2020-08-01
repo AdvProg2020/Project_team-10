@@ -1,0 +1,8 @@
+authtoken: 1f3AJAmfqImRf6gqhpsSeAmokMb_6YNV9MSsKJYFmRTayZeAQ
+tunnels:
+  shop:
+    addr: 6666
+    proto: tcp
+  bank:
+    addr: 8000
+    proto: tcp

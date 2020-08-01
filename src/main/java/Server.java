@@ -451,7 +451,7 @@ class ClientHandler extends Thread {
             dataOutputStream.flush();
             System.out.println("File " + fileName + " sent to client.");
         } catch (Exception e) {
-            System.err.println("File does not exist!");
+            System.err.println("File " + fileName + "does not exist!");
         }
     }
 

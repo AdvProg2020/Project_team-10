@@ -178,7 +178,7 @@ public class MainMenu implements Initializable {
                 Label price = new Label("$" + filteredGoods.get(i).getPrice() + "");
                 dataOutputStream.writeUTF("visit_" + filteredGoods.get(i).getId());
                 dataOutputStream.flush();
-                Label visit = new Label(dataInputStream.readUTF());
+                Label visit = new Label(" " + dataInputStream.readUTF());
                 visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
                 ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
                 eye.setFitHeight(15);
