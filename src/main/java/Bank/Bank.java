@@ -10,6 +10,7 @@ public class Bank {
     private List<Receipt> allReceipts = new ArrayList<>();
 
     private Bank() {
+
     }
 
     public static Bank getBank() {

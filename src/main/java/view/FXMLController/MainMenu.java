@@ -109,7 +109,7 @@ public class MainMenu implements Initializable {
     private Stage popupWindow;
 
     public MainMenu() throws IOException {
-        this.socket = new Socket("0.tcp.ngrok.io", 14259);
+        this.socket = new Socket("localhost", 8000);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -176,7 +176,9 @@ public class MainMenu implements Initializable {
                 logoImage.getStyleClass().add("goodImage");
                 Label name = new Label(filteredGoods.get(i).getName());
                 Label price = new Label("$" + filteredGoods.get(i).getPrice() + "");
-                Label visit = new Label(filteredGoods.get(i).getVisitNumber() + "");
+                dataOutputStream.writeUTF("visit_" + filteredGoods.get(i).getId());
+                dataOutputStream.flush();
+                Label visit = new Label(dataInputStream.readUTF());
                 visit.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-size: 12;-fx-text-fill: #0084ff;-fx-font-weight: bold;");
                 ImageView eye = new ImageView(new Image("file:src/main/java/view/image/eye.png"));
                 eye.setFitHeight(15);
@@ -196,7 +198,11 @@ public class MainMenu implements Initializable {
                     }
                     goodMenu.setCurrentGood(filteredGoods.get(finalI));
                     mainPane.getChildren().remove(mainMenu);
-                    goodMenu.changePane();
+                    try {
+                        goodMenu.changePane();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
 
                 HBox visitAndOff = new HBox(5);

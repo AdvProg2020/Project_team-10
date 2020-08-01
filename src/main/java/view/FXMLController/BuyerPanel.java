@@ -617,7 +617,9 @@ public class BuyerPanel {
         dataOutputStream.flush();
         Type buyerType = new TypeToken<Buyer>() {
         }.getType();
-        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), buyerType);
+        String res = dataInputStream.readUTF();
+        System.out.println(res);
+        onlineAccount = new Gson().fromJson(res, buyerType);
         main.onlineAccount = this.onlineAccount;
 
         for (BuyerLog log : ((Buyer) onlineAccount).getBuyerLogs()) {
@@ -681,7 +683,7 @@ public class BuyerPanel {
 
         Label goodTitle = new Label("  " + "Goods");
         goodTitle.setGraphic(line());
-        goodTitle.setPrefWidth(655);
+        goodTitle.setPrefWidth(703);
         goodTitle.getStyleClass().add("labelForDiscount");
 
         hBoxTitle.getChildren().addAll(sellerTitle, goodTitle, back(flowPane));
@@ -690,17 +692,17 @@ public class BuyerPanel {
         for (String sellerUsername : buyerLog.getSellersToHisGoods().keySet()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
-            hBox.setPadding(new Insets(0, 12, 0, 12));
+            hBox.setPadding(new Insets(0, 0, 0, 12));
             hBox.getStyleClass().add("hbox");
-            hBox.setPrefHeight(120);
+            hBox.setPrefHeight(150);
 
             Label sellerName = new Label("  " + sellerUsername);
             sellerName.setPrefWidth(200);
             sellerName.getStyleClass().add("labelForDiscount");
 
             HBox goods = new HBox();
-            goods.setStyle("-fx-background-color: white");
-            goods.setPrefSize(700, 120);
+            goods.setStyle("-fx-background-color: none");
+            goods.setPrefSize(758, 120);
             ScrollPane goodsScrollPane = new ScrollPane(goods);
             goodsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             goodsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -718,34 +720,31 @@ public class BuyerPanel {
                 Label number = new Label(good.getGoodsInBuyerCart().get(onlineAccount.getUsername()) + "x");
                 name.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
                 price.setStyle("-fx-font-family: 'Bahnschrift SemiBold SemiConden';" + " -fx-font-size: 14px;" + "-fx-font-weight: bold;");
-                number.setStyle("-fx-font-family: 'Myriad Pro';" + " -fx-font-size: 14px;");
+                number.setStyle("-fx-font-family: 'Franklin Gothic Medium Cond';" + " -fx-font-size: 13px;");
                 productBox.setAlignment(Pos.CENTER);
 
 
                 productBox.getChildren().addAll(logoImage, name, price, number);
 
-                if (good.getImagePath().contains("file.png")){
-
-                    try {
-                        dataOutputStream.writeUTF("receiveVideoFile_"+ good.getId());
-                        dataOutputStream.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                if (good.getImagePath().contains("file.png")) {
                     FileChooser fileChooser = new FileChooser();
                     Stage fileChooserWindow = new Stage();
                     Label don = new Label("Download");
-                    don.setPadding(new Insets(3,3,3,3));
-                    don.setStyle("-fx-background-color: #00b200;-fx-text-fill: white;");
+                    don.setPadding(new Insets(4, 4, 4, 4));
+                    don.getStyleClass().add("don");
                     productBox.getChildren().add(don);
                     don.setOnMouseClicked(event -> {
+                        try {
+                            dataOutputStream.writeUTF("receiveVideoFile_" + good.getId());
+                            dataOutputStream.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         File selectedVideoFile = fileChooser.showSaveDialog(fileChooserWindow);
                         receiveFile(selectedVideoFile);
                     });
 
                 }
-
                 goods.getChildren().add(productBox);
             }
 
@@ -769,10 +768,10 @@ public class BuyerPanel {
                 size -= bytesRead;
             }
 
-            System.out.println("File "+fileName+" received from Server.");
-            return "src/main/java/view/fileSender/"+fileName;
+            System.out.println("File " + fileName + " received from Server.");
+            return "src/main/java/view/fileSender/" + fileName;
         } catch (IOException ex) {
-            System.out.println("Exception: "+ex);
+            System.out.println("Exception: " + ex);
             return null;
         }
 
@@ -781,7 +780,7 @@ public class BuyerPanel {
     private ImageView back(FlowPane flowPane) {
         ImageView imageViewBack = new ImageView();
         imageViewBack.setOnMouseClicked(event -> {
-            flowPane.getChildren().clear();
+            buyerPaneScroll.getChildrenUnmodifiable().remove(flowPane);
             try {
                 buyerPaneScroll.setContent(showOrders());
             } catch (IOException e) {

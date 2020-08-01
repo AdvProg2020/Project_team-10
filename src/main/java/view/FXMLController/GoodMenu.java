@@ -244,7 +244,7 @@ public class GoodMenu {
         return root;
     }
 
-    public void changePane() {
+    public void changePane() throws IOException {
 
         ImageView videoShow = new ImageView();
         videoShow.getStyleClass().add("video");
@@ -254,7 +254,9 @@ public class GoodMenu {
         videoShow.setFitWidth(30);
         videoShow.setOnMouseClicked(event -> popupVideo());
 
-        currentGood.setVisitNumber(currentGood.getVisitNumber() + 1);
+        dataOutputStream.writeUTF("visitIncrease_" + currentGood.getId());
+        dataOutputStream.flush();
+
         AnchorPane scrollPack = new AnchorPane();
         scrollPack.setStyle("-fx-background-radius: 10;-fx-background-color: white;-fx-border-width: 1;-fx-border-color: #E3E3E3;-fx-border-radius: 10");
         scrollPack.setLayoutY(190);
@@ -346,7 +348,12 @@ public class GoodMenu {
         goodImage.setFitHeight(500);
         goodImage.setLayoutX(50);
         goodImage.setLayoutY(50);
-        if (currentGood.getNumber() > 0) {
+        dataOutputStream.writeUTF("get_product_" + currentGood.getId());
+        dataOutputStream.flush();
+        Type productType = new TypeToken<Good>() {
+        }.getType();
+        Good good = new Gson().fromJson(dataInputStream.readUTF(), productType);
+        if (good.getNumber() > 0) {
             isAvailable.setText("Available");
         } else {
             isAvailable.setText("Not available");

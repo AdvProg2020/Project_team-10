@@ -371,3 +371,14 @@
 .pagination {
     -fx-page-information-visible: false;
 }
+
+.don{
+    -fx-background-color: #00B200;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-font-family: "Franklin Gothic Medium Cond";
+}
+.don:hover{
+    -fx-background-color: #00d500;
+    -fx-cursor: hand;
+}
