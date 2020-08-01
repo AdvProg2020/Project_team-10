@@ -378,6 +378,11 @@ class ClientHandler extends Thread {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
                 } else if (request.startsWith("receiveVideoFile_")) {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVideoPath());
+                } else if (request.startsWith("getTypeOfFile")) {
+                    String path = Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVideoPath();
+                    System.out.println(path.split("\\.")[1]);
+                    dataOutputStream.writeUTF(path.split("\\.")[1]);
+                    dataOutputStream.flush();
                 } else if (request.startsWith("visit_")) {
                     dataOutputStream.writeUTF("" + Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVisitNumber());
                     dataOutputStream.flush();

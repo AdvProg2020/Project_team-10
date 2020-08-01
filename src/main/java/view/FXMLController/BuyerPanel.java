@@ -729,17 +729,27 @@ public class BuyerPanel {
                 if (good.getImagePath().contains("file.png")) {
                     FileChooser fileChooser = new FileChooser();
                     Stage fileChooserWindow = new Stage();
+
                     Label don = new Label("Download");
                     don.setPadding(new Insets(4, 4, 4, 4));
                     don.getStyleClass().add("don");
                     productBox.getChildren().add(don);
+
                     don.setOnMouseClicked(event -> {
+                        String typeFile = null;
                         try {
+                            dataOutputStream.writeUTF("getTypeOfFile_" + good.getId());
+                            dataOutputStream.flush();
+                            typeFile = dataInputStream.readUTF();
                             dataOutputStream.writeUTF("receiveVideoFile_" + good.getId());
                             dataOutputStream.flush();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        fileChooser.getExtensionFilters().add(
+                                new FileChooser.ExtensionFilter(typeFile + " Files", "*." + typeFile)
+                        );
+
                         File selectedVideoFile = fileChooser.showSaveDialog(fileChooserWindow);
                         receiveFile(selectedVideoFile);
                     });
