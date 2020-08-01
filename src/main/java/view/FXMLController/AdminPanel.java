@@ -94,6 +94,7 @@ public class AdminPanel {
     private Socket socket;
     private Account onlineAccount;
     private boolean isSeller;
+    private String fileName;
 
     public AdminPanel(AnchorPane mainPane, MainMenu main, AnchorPane mainMenu, Button user, Button btnLogin, Socket socket, Account onlineAccount) throws IOException {
         this.main = main;
@@ -596,16 +597,15 @@ public class AdminPanel {
         box.getChildren().add(submit);
         wageAndPrice.getChildren().addAll(wage, wageFiled, buyerAccountBalanced, buyerAccountBalancedField,box);
 
-        dataOutputStream.writeUTF("getShopCredit");
-        dataOutputStream.flush();
-        long shopCredit = Long.parseLong(dataInputStream.readUTF());
-        //todo
-
         ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/shop.png"));
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
 
-        Label shopPrice = new Label("$ Shop Price");
+        dataOutputStream.writeUTF("getShopCredit");
+        dataOutputStream.flush();
+        long shopCredit = Long.parseLong(dataInputStream.readUTF());
+
+        Label shopPrice = new Label("$ " + shopCredit);
         shopPrice.setStyle("-fx-text-fill: #00e429;-fx-font-family: 'Franklin Gothic Medium Cond';-fx-font-weight: bold;-fx-font-size: 25pt");
 
         VBox priceAndImage = new VBox(10);
@@ -1044,17 +1044,18 @@ public class AdminPanel {
             type = "admin";
         }
         if (selectedFile != null) {
-            File dest = new File("src/main/java/view/databaseMedia/userImage/" + Login.createTokenForFiles() + ".jpg");
-            copyFileUsingStream(selectedFile, dest);
-            String imagePath = dest.getPath();
+//            File dest = new File("src/main/java/view/databaseMedia/userImage/" + Login.createTokenForFiles() + ".jpg");
+//            copyFileUsingStream(selectedFile, dest);
+            String imagePath = selectedFile.getPath();
             if (username.length() > 0) {
                 if (CommandProcessor.checkPasswordInvalidation(password)) {
                     if (CommandProcessor.checkEmailInvalidation(email)) {
                         dataOutputStream.writeUTF("can_register_" + username);
                         dataOutputStream.flush();
                         if (dataInputStream.readUTF().equals("true")) {
+                            fileName = imagePath;
                             dataOutputStream.writeUTF("register_" + username + "_" + password + "_" + type + "_" + firstName
-                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + " " + "_" + imagePath);
+                                    + "_" + lastName + "_" + email + "_" + phoneNumber + "_" + " " + "_" + sendFile());
                             dataOutputStream.flush();
                             adminScrollPane.setContent(handelManageUsers());
                             popupWindow.close();
@@ -1085,6 +1086,29 @@ public class AdminPanel {
                 os.write(buffer, 0, length);
             }
         }
+    }
+
+    private String sendFile() throws IOException {
+        try {
+            File myFile = new File(fileName);
+            byte[] mybytearray = new byte[(int) myFile.length()];
+
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+
+            DataInputStream dis = new DataInputStream(bis);
+            dis.readFully(mybytearray, 0, mybytearray.length);
+
+            //Sending file name and file size to the server
+            dataOutputStream.writeUTF("sendFile_"+myFile.getName());
+            dataOutputStream.writeLong(mybytearray.length);
+            dataOutputStream.write(mybytearray, 0, mybytearray.length);
+            dataOutputStream.flush();
+            System.out.println("File "+fileName+" sent to Server.");
+        } catch (Exception e) {
+            System.err.println("Exceptionnnn: "+e);
+        }
+        return dataInputStream.readUTF();
     }
 
     private void fade(double fromValue, double toValue) {
