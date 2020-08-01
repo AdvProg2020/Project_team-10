@@ -378,6 +378,10 @@ class ClientHandler extends Thread {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getImagePath());
                 } else if (request.startsWith("receiveVideoFile_")) {
                     sendFile(Shop.getShop().getProductWithId(Integer.parseInt(info[1])).getVideoPath());
+                } else if (request.startsWith("getShopCredit")) {
+                    String token = handleBankClient("get_token shop javad1379");
+                    dataOutputStream.writeUTF(handleBankClient("get_balance " + token));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("exit")) {
                     handleBankClient("exit");
                     disconnectClient();

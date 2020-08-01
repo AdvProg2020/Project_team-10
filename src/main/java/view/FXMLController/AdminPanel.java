@@ -596,6 +596,11 @@ public class AdminPanel {
         box.getChildren().add(submit);
         wageAndPrice.getChildren().addAll(wage, wageFiled, buyerAccountBalanced, buyerAccountBalancedField,box);
 
+        dataOutputStream.writeUTF("getShopCredit");
+        dataOutputStream.flush();
+        long shopCredit = Long.parseLong(dataInputStream.readUTF());
+        //todo
+
         ImageView imageView = new ImageView(new Image("file:src/main/java/view/image/shop.png"));
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
