@@ -1,1 +1,1 @@
-[]
+[{"id":1,"goodsId":[5],"startDate":"Aug 1, 2020 1:53:30 AM","endDate":"Aug 14, 2020 1:53:30 AM","percent":50}]

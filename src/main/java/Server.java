@@ -113,10 +113,11 @@ class ClientHandler extends Thread {
                     Type goodsIdType = new TypeToken<List<Integer>>() {
                     }.getType();
                     List<Integer> goodsId = new Gson().fromJson(info[2], goodsIdType);
-                    Date startDate = AdminPanel.getDateByString(info[3] + " " + info[4]);
-                    Date endDate = AdminPanel.getDateByString(info[5] + " " + info[6]);
-                    SellerManager.addOff(account.getUsername(), goodsId, startDate, endDate, Integer.parseInt(info[7]));
+                    Date startDate = AdminPanel.getDateByString(info[3]);
+                    Date endDate = AdminPanel.getDateByString(info[4]);
+                    SellerManager.addOff(account.getUsername(), goodsId, startDate, endDate, Integer.parseInt(info[5]));
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAccountByUsername(account.getUsername())));
+                    dataOutputStream.flush();
                 } else if (request.startsWith("getAllCategories")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllCategories()));
                     dataOutputStream.flush();
@@ -150,8 +151,7 @@ class ClientHandler extends Thread {
                     dataOutputStream.writeUTF(BuyerManager.getPriceAfterApplyOff(account) + "");
                     dataOutputStream.flush();
                 } else if (request.startsWith("get_discount")) {
-                    String discount = request.split("_")[1];
-                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(discount))));
+                    dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getDiscountWithCode(Integer.parseInt(info[2]))));
                     dataOutputStream.flush();
                 } else if (request.startsWith("getAllDiscount")) {
                     dataOutputStream.writeUTF(new Gson().toJson(Shop.getShop().getAllDiscounts()));
@@ -197,14 +197,14 @@ class ClientHandler extends Thread {
                     dataOutputStream.writeUTF(new Gson().toJson((Shop.getShop().getAllSupporters())));
                     dataOutputStream.flush();
                 } else if (request.startsWith("create_discount")) {
-                    Date startDate = AdminPanel.getDateByString(info[2] + " " + info[3]);
-                    Date endDate = AdminPanel.getDateByString(info[4] + " " + info[5]);
-                    int percent = Integer.parseInt(info[6]);
-                    long maxAmount = Long.parseLong(info[7]);
-                    int number = Integer.parseInt(info[8]);
+                    Date startDate = AdminPanel.getDateByString(info[2]);
+                    Date endDate = AdminPanel.getDateByString(info[3]);
+                    int percent = Integer.parseInt(info[4]);
+                    long maxAmount = Long.parseLong(info[5]);
+                    int number = Integer.parseInt(info[6]);
                     Type selectedBuyersType = new TypeToken<List<String>>() {
                     }.getType();
-                    List<String> selectedBuyers = new Gson().fromJson(info[9], selectedBuyersType);
+                    List<String> selectedBuyers = new Gson().fromJson(info[7], selectedBuyersType);
                     AdminManager.createDiscount(startDate, endDate, percent, maxAmount, number, selectedBuyers);
                 } else if (request.startsWith("logout")) {
                     offlineAccount();
@@ -274,11 +274,13 @@ class ClientHandler extends Thread {
                     dataOutputStream.writeUTF(info[4]);
                     dataOutputStream.flush();
                 } else if (request.startsWith("getAuctionPrice_")) {
-                    dataOutputStream.writeUTF("" + Shop.getShop().getAuctionWithId(Integer.parseInt(info[1])).getPrice());
+                    dataOutputStream.writeUTF("" + Shop.getShop().getAuctionWithId(Integer.parseInt(info[1])).getPrice() +
+                            "_" + account.getCredit());
                     dataOutputStream.flush();
                 } else if (request.startsWith("setAuctionPrice_")) {
                     Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[2]));
                     auction.setPrice(Long.parseLong(info[1]));
+                    auction.setBuyerUsername(account.getUsername());
                 } else if (request.startsWith("disconnect_buyer")) {
                     dataOutputStream.writeUTF("disconnect_buyer");
                     dataOutputStream.flush();
@@ -321,7 +323,6 @@ class ClientHandler extends Thread {
                     String receiptId = handleBankClient("create_receipt " + token + " move " + info[1] + " " + account.getBankAccountId() + " 0 description");
                     System.out.println("receiptId = " + receiptId);
                     System.out.println("pay: " + handleBankClient("pay " + receiptId));
-
                 } else if (request.startsWith("increase_credit")) {
                     String token = handleBankClient("get_token " + account.getUsername() + " " + account.getPassword());
                     System.out.println("create_receipt " + token + " move " + info[2] + " " + account.getBankAccountId() + " 0 description");
@@ -356,8 +357,14 @@ class ClientHandler extends Thread {
                     auction.getBuyersInAuction().remove(account.getUsername());
                     dataOutputStream.writeUTF("disconnect_auction");
                     dataOutputStream.flush();
-                    dataOutputStream.writeUTF("" + account.getCredit());
-                    dataOutputStream.flush();
+//                    dataOutputStream.writeUTF("" + account.getCredit());
+//                    dataOutputStream.flush();
+                } else if (request.startsWith("finishAuction_")) {
+                    Auction auction = Shop.getShop().getAuctionWithId(Integer.parseInt(info[1]));
+                    if (auction.getBuyersInAuction() != null) {
+                        Buyer winner = ((Buyer) Shop.getShop().getAccountByUsername(auction.getBuyerUsername()));
+                        BuyerManager.pay(auction.getPrice(), -1, winner, true);
+                    }
                 } else if (request.startsWith("getWage")) {
                     dataOutputStream.writeUTF("" + Shop.getShop().getWage());
                     dataOutputStream.flush();

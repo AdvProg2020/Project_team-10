@@ -511,6 +511,13 @@ public class SellerPanel {
         hBoxTitle.getChildren().addAll(categoryName, startDate, endDate, goodText, imageViewPlus);
         flowPane.getChildren().add(hBoxTitle);
 
+        dataOutputStream.writeUTF("get_seller_" + onlineAccount.getUsername());
+        dataOutputStream.flush();
+        Type sellerType = new TypeToken<Seller>() {
+        }.getType();
+        onlineAccount = new Gson().fromJson(dataInputStream.readUTF(), sellerType);
+        main.onlineAccount = this.onlineAccount;
+
         for (Off off : ((Seller) onlineAccount).getOffs()) {
             HBox hBox = new HBox(0);
             hBox.setAlignment(Pos.CENTER_LEFT);
@@ -669,7 +676,7 @@ public class SellerPanel {
         selectAVideo.setPrefWidth(100);
         selectAVideo.getStyleClass().add("selectPhoto");
 
-        Button selectAFile= new Button("Upload file");
+        Button selectAFile = new Button("Upload file");
         selectAFile.setLayoutX(340);
         selectAFile.setLayoutY(256);
         selectAFile.setPrefWidth(100);
@@ -849,7 +856,7 @@ public class SellerPanel {
 
 
         loginPane.getChildren().addAll(exitButton(), goodName, company,
-                number, price, description, categoryPack, attributePack, title, submit, error,selectAFile);
+                number, price, description, categoryPack, attributePack, title, submit, error, selectAFile);
     }
 
     private boolean isAllFieldsFilled() {
@@ -890,7 +897,7 @@ public class SellerPanel {
 //            copyFileUsingStream(selectedVideoFile, destVideo);
             String videoPath = selectedVideoFile.getPath();
 
-            if (selectedImageFile== null){
+            if (selectedImageFile == null) {
                 dataOutputStream.writeUTF("create_product_" + goodName.getText() + "_" + company.getText() + "_" + number
                         + "_" + price + "_" + selectedCategory.getName() + "_" + new Gson().toJson(hashMap) + "_" + description.getText()
                         + "_" + sendFile("src/main/java/view/image/file.png") + "_" + sendFile(videoPath) + "_" + token);
@@ -926,7 +933,7 @@ public class SellerPanel {
             int bytesRead;
 
             String fileName = dataInputStream.readUTF();
-            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/"+fileName);
+            OutputStream output = new FileOutputStream("src/main/java/view/fileSender/" + fileName);
             long size = dataInputStream.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytesRead = dataInputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -934,10 +941,10 @@ public class SellerPanel {
                 size -= bytesRead;
             }
 
-            System.out.println("File "+fileName+" received from Server.");
-            return "src/main/java/view/fileSender/"+fileName;
+            System.out.println("File " + fileName + " received from Server.");
+            return "src/main/java/view/fileSender/" + fileName;
         } catch (IOException ex) {
-            System.out.println("Exception: "+ex);
+            System.out.println("Exception: " + ex);
             return null;
         }
 
@@ -955,13 +962,13 @@ public class SellerPanel {
             dis.readFully(mybytearray, 0, mybytearray.length);
 
             //Sending file name and file size to the server
-            dataOutputStream.writeUTF("sendFile_"+myFile.getName());
+            dataOutputStream.writeUTF("sendFile_" + myFile.getName());
             dataOutputStream.writeLong(mybytearray.length);
             dataOutputStream.write(mybytearray, 0, mybytearray.length);
             dataOutputStream.flush();
-            System.out.println("File "+path+" sent to Server.");
+            System.out.println("File " + path + " sent to Server.");
         } catch (Exception e) {
-            System.err.println("Exceptionnnn: "+e);
+            System.err.println("Exceptionnnn: " + e);
         }
         return dataInputStream.readUTF();
     }
@@ -1219,7 +1226,7 @@ public class SellerPanel {
         flowPane.getChildren().add(addGoodBox);
         for (Good good : ((Seller) onlineAccount).getGoods()) {
 
-            dataOutputStream.writeUTF("receiveGoodFile_"+ good.getId());
+            dataOutputStream.writeUTF("receiveGoodFile_" + good.getId());
             dataOutputStream.flush();
 
             VBox goodPack = new VBox();

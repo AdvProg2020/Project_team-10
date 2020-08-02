@@ -109,7 +109,7 @@ public class MainMenu implements Initializable {
     private Stage popupWindow;
 
     public MainMenu() throws IOException {
-        this.socket = new Socket("0.tcp.ngrok.io", 18939);
+        this.socket = new Socket("localhost", 8000);
         dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         filteredGoods = getAllProducts();
@@ -931,6 +931,11 @@ public class MainMenu implements Initializable {
             try {
                 dataOutputStream.writeUTF("disconnect_from_auction_" + auction.getId());
                 dataOutputStream.flush();
+                if (auction.getEndDate().isBefore(LocalDateTime.now())) {
+                    System.out.println("auction finished.");
+                    dataOutputStream.writeUTF("finishAuction_" + auction.getId());
+                    dataOutputStream.flush();
+                }
                 showAuction();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -968,30 +973,28 @@ public class MainMenu implements Initializable {
         suggest.setPrefSize(200, 25);
         suggest.getStyleClass().add("suggestBtn");
 
-        try {
-            dataOutputStream.writeUTF("getAuctionPrice_" + auction.getId());
-            dataOutputStream.flush();
-            String priceString = dataInputStream.readUTF();
-            currentPrice.setText("$" + priceString);
-            suggest.setOnMouseClicked(event -> {
-                if (auction.getEndDate().isBefore(LocalDateTime.now())) {
-                    suggest.setDisable(true);
-                } else {
-                    if (Integer.parseInt(price.getText()) > Integer.parseInt(priceString)) {
-                        currentPrice.setText("$" + price.getText());
-                        try {
-                            dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
-                            dataOutputStream.flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        price.clear();
+        dataOutputStream.writeUTF("getAuctionPrice_" + auction.getId());
+        dataOutputStream.flush();
+        String response = dataInputStream.readUTF();
+        String priceString = response.split("_")[0];
+        currentPrice.setText("$" + priceString);
+        suggest.setOnMouseClicked(event -> {
+            if (auction.getEndDate().isBefore(LocalDateTime.now())) {
+                suggest.setDisable(true);
+            } else {
+                long credit = Long.parseLong(response.split("_")[1]);
+                if (Integer.parseInt(price.getText()) > Integer.parseInt(priceString) && Integer.parseInt(price.getText()) < credit) {
+                    currentPrice.setText("$" + price.getText());
+                    try {
+                        dataOutputStream.writeUTF("setAuctionPrice_" + price.getText() + "_" + auction.getId());
+                        dataOutputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    price.clear();
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
+        });
 
 
         boxOfImageAndPrice.getChildren().addAll(imageView, name, currentPrice, time, price, suggest);

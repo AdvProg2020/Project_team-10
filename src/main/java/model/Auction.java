@@ -12,6 +12,7 @@ public class Auction {
     private LocalDateTime endDate;
     private long price;
     private List<String> buyersInAuction;
+    private String buyerUsername;
 
     public Auction(int id, Good good, LocalDateTime endDate, long price) {
         this.id = id;
@@ -44,5 +45,13 @@ public class Auction {
 
     public List<String> getBuyersInAuction() {
         return buyersInAuction;
+    }
+
+    public String getBuyerUsername() {
+        return buyerUsername;
+    }
+
+    public void setBuyerUsername(String buyerUsername) {
+        this.buyerUsername = buyerUsername;
     }
 }
